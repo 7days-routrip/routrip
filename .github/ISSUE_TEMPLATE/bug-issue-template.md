@@ -1,7 +1,7 @@
 ---
 name: bug-issue-template
 about: 버그 이슈 템플릿입니다.
-title: "[BUG]: "
+title: "[bug]: "
 labels: bug
 assignees: ''
 

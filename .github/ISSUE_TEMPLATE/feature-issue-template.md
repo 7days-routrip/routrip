@@ -1,7 +1,7 @@
 ---
 name: feature-issue-template
 about: 기능 이슈 템플릿입니다.
-title: ''
+title: "[feat]: "
 labels: feat
 assignees: ''
 
