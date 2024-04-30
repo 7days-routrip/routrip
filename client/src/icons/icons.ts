@@ -15,7 +15,8 @@ import { IoGrid as GridIcon } from "@react-icons/all-files/io5/IoGrid";
 import { IoList as ListIcon } from "@react-icons/all-files/io5/IoList";
 import { IoImageOutline as ThumbnailIcon } from "@react-icons/all-files/io5/IoImageOutline";
 import { FaCamera as CameraIcon } from "@react-icons/all-files/fa/FaCamera";
-import { FaBookmark as BookMark } from "@react-icons/all-files/fa/FaBookmark";
+import { FaBookmark as BookmarkIcon } from "@react-icons/all-files/fa/FaBookmark";
+import { FaSpinner as LoadingIcon } from "@react-icons/all-files/fa/FaSpinner";
 
 const icons = {
   JoinIcon,
@@ -35,7 +36,8 @@ const icons = {
   ListIcon,
   ThumbnailIcon,
   CameraIcon,
-  BookMark,
+  BookmarkIcon,
+  LoadingIcon,
 };
 
 export default icons;
