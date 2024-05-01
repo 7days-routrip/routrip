@@ -9,27 +9,31 @@ interface LayoutProps {
 
 const Layout = ({ children, isFull = false }: LayoutProps) => {
   return (
-    <WrapperStyle>
-      <Header />
-      <LayoutStyle $isFull={isFull}>{children}</LayoutStyle>
+    <WrapperStyle $isFull={isFull}>
+      <Header isFull={isFull} />
+      <LayoutStyle>{children}</LayoutStyle>
       <Footer />
     </WrapperStyle>
   );
 };
-const WrapperStyle = styled.div`
+
+interface WrapperStyleProps {
+  $isFull: boolean;
+}
+
+const WrapperStyle = styled.div<WrapperStyleProps>`
   height: 100vh;
   display: flex;
   flex-direction: column;
-`;
+  margin: 0 auto;
 
-interface LayoutStyleProps {
-  $isFull: boolean;
-}
-const LayoutStyle = styled.main<LayoutStyleProps>`
   width: 100%;
   max-width: ${({ $isFull }) => ($isFull ? "100%" : "1080px")};
+`;
+
+const LayoutStyle = styled.main`
   flex: 1;
-  margin: 80px auto 0;
+  margin-top: 80px;
 
   @media ${({ theme }) => theme.mediaQuery.mobile} {
     padding: 1.8rem 0.5rem;
