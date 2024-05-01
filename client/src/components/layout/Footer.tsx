@@ -4,7 +4,7 @@ import FooterLogo from "../../../public/assets/images/logo-footer.png";
 const Footer = () => {
   return (
     <FooterStyle>
-      <img src={FooterLogo} alt="footer logo" />
+      <img src={FooterLogo} alt="footer logo" width={"72px"} height={"55px"} />
       <div className="container">
         <div>2024, 7days</div>
         <div>copyrightⓒ</div>
@@ -21,8 +21,8 @@ const FooterStyle = styled.div`
   border-top: 1px solid #e7e7e7;
   gap: 20px;
   height: 150px;
-  width: 100%;
   max-width: 1080px;
+  width: 100%;
 `;
 
 export default Footer;
