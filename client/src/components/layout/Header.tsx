@@ -7,7 +7,7 @@ import { theme } from "../../styles/theme";
 
 const Header = () => {
   const { LoginIcon, JoinIcon, LogoutIcon, MyPageIcon } = icons;
-  const [isLogin, setIsLogin] = useState<boolean>(false);
+  const [isLogin, setIsLogin] = useState<boolean>(true);
 
   return (
     <HeaderStyle>
@@ -41,14 +41,14 @@ const Header = () => {
           </>
         ) : (
           <>
-            <Link to="/login" className="icon-text">
+            <IconText to="/login">
               <LoginIcon />
               <span>로그인</span>
-            </Link>
-            <Link to="/join" className="icon-text">
+            </IconText>
+            <IconText to="/join">
               <JoinIcon />
               <span>회원가입</span>
-            </Link>
+            </IconText>
           </>
         )}
       </div>
