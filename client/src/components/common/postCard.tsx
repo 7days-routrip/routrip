@@ -125,7 +125,7 @@ export const CardStyle = styled.div<CardStyleProps>`
   border-radius: ${({ theme }) => theme.borderRadius.default};
 
   @media (max-width: 768px) {
-    width: ${({ $view }) => ($view === "grid" ? "160px" : "300px")};
+    width: ${({ $view }) => ($view === "grid" ? "180px" : "300px")};
     height: ${({ $view }) => ($view === "grid" ? "200px" : "110px")};
   }
 `;
@@ -149,7 +149,7 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
   .comment > :first-child,
   .like > :first-child {
     color: ${({ theme }) => theme.color.primary};
-    margin-right: 0.5rem;
+    margin: 0 0.35rem;
     width: 1rem;
   }
 
@@ -162,15 +162,12 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
     align-items: center;
   }
 
-  .comment {
-    margin-right: 10px;
-  }
   .like {
     margin-right: 5px;
   }
 
   .feedback {
-    margin-right: 1rem;
+    margin-right: 0.5rem;
   }
 
   .autho-info {

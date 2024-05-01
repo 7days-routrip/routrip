@@ -1,7 +1,6 @@
-import icons from "@/icons/icons";
 import { Schedule as ISchedule } from "@/models/schedule.model";
 import styled from "styled-components";
-import { CardContentStyle, CardImageStyle, CardStyle, ScheduleStyle, ViewMode } from "./postCard";
+import { CardContentStyle, CardImageStyle, CardStyle, ViewMode } from "./postCard";
 
 interface Props {
   scheduleProps: ISchedule;
@@ -9,7 +8,6 @@ interface Props {
 }
 
 const ScheduleCard = ({ scheduleProps, view }: Props) => {
-  const PinIcon = icons.PinIcon;
   return (
     <ScheduleCardStyle $view={view}>
       <CardImageStyle $image={scheduleProps.image} $view={view} />
