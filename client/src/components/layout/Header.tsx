@@ -2,10 +2,13 @@ import styled from "styled-components";
 import logo from "../../../public/assets/images/logo-header.png";
 import icons from "../../icons/icons";
 import { Link } from "react-router-dom";
+import { useState } from "react";
 import { theme } from "../../styles/theme";
 
 const Header = () => {
-  const { LoginIcon, JoinIcon } = icons;
+  const { LoginIcon, JoinIcon, LogoutIcon, MyPageIcon } = icons;
+  const [isLogin, setIsLogin] = useState<boolean>(false);
+
   return (
     <HeaderStyle>
       <Link to="/">
@@ -25,14 +28,29 @@ const Header = () => {
         </ul>
       </nav>
       <div className="auth-icons">
-        <Link to="/login" className="icon-text">
-          <LoginIcon />
-          <span>로그인</span>
-        </Link>
-        <Link to="/join" className="icon-text">
-          <JoinIcon />
-          <span>회원가입</span>
-        </Link>
+        {isLogin ? (
+          <>
+            <IconText to="/logout" color="primary">
+              <LogoutIcon color={theme.color.primary} />
+              <span>로그아웃</span>
+            </IconText>
+            <IconText to="/mypage" color="primary">
+              <MyPageIcon color={theme.color.primary} />
+              <span>마이페이지</span>
+            </IconText>
+          </>
+        ) : (
+          <>
+            <Link to="/login" className="icon-text">
+              <LoginIcon />
+              <span>로그인</span>
+            </Link>
+            <Link to="/join" className="icon-text">
+              <JoinIcon />
+              <span>회원가입</span>
+            </Link>
+          </>
+        )}
       </div>
     </HeaderStyle>
   );
@@ -74,6 +92,20 @@ const HeaderStyle = styled.header`
     font-weight: bold;
     text-decoration: none;
     color: inherit;
+  }
+`;
+const IconText = styled(Link)`
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  cursor: pointer;
+  font-weight: bold;
+  text-decoration: none;
+  color: black;
+
+  span {
+    display: inline-block;
+    width: 70px;
   }
 `;
 
