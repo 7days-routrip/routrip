@@ -14,12 +14,6 @@ const ScheduleCard = ({ scheduleProps, view }: Props) => {
     <ScheduleCardStyle $view={view}>
       <CardImageStyle $image={scheduleProps.image} $view={view} />
       <CardContentStyle>
-        <ScheduleStyle>
-          <PinIcon />
-          <span>
-            {scheduleProps.continental} • {scheduleProps.country}
-          </span>
-        </ScheduleStyle>
         <h3 className="card-title">{scheduleProps.title}</h3>
         <p className="card-date">{scheduleProps.date}</p>
       </CardContentStyle>

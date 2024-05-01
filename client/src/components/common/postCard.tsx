@@ -116,7 +116,7 @@ export const CardStyle = styled.div<CardStyleProps>`
   align-items: center;
   flex-direction: ${({ $view }) => ($view === "grid" ? "column" : "row")};
   width: ${({ $view }) => ($view === "grid" ? "350px" : "800px")};
-  height: ${({ $view }) => ($view === "grid" ? "300px" : "150px")};
+  height: ${({ $view }) => ($view === "grid" ? "300px" : "140px")};
   p {
     margin: 2px;
   }
@@ -149,7 +149,8 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
   .comment > :first-child,
   .like > :first-child {
     color: ${({ theme }) => theme.color.primary};
-    margin: 2px;
+    margin-right: 0.5rem;
+    width: 1rem;
   }
 
   .writer,
@@ -160,6 +161,18 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
     justify-content: center;
     align-items: center;
   }
+
+  .comment {
+    margin-right: 10px;
+  }
+  .like {
+    margin-right: 5px;
+  }
+
+  .feedback {
+    margin-right: 1rem;
+  }
+
   .autho-info {
     display: flex;
     justify-content: space-between;
