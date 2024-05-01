@@ -4,13 +4,14 @@ import Footer from "./Footer";
 
 interface LayoutProps {
   children: React.ReactNode;
+  isFull?: boolean;
 }
 
-const Layout = ({ children }: LayoutProps) => {
+const Layout = ({ children, isFull = false }: LayoutProps) => {
   return (
     <WrapperStyle>
       <Header />
-      <LayoutStyle>{children}</LayoutStyle>
+      <LayoutStyle $isFull={isFull}>{children}</LayoutStyle>
       <Footer />
     </WrapperStyle>
   );
@@ -21,17 +22,17 @@ const WrapperStyle = styled.div`
   flex-direction: column;
 `;
 
-const LayoutStyle = styled.main`
+interface LayoutStyleProps {
+  $isFull: boolean;
+}
+const LayoutStyle = styled.main<LayoutStyleProps>`
   width: 100%;
+  max-width: ${({ $isFull }) => ($isFull ? "100%" : "1080px")};
   flex: 1;
   margin: 80px auto 0;
 
   @media ${({ theme }) => theme.mediaQuery.mobile} {
-    padding: 1.8rem 1.5rem;
-  }
-
-  @media ${({ theme }) => theme.mediaQuery.desktop} {
-    max-width: 1080px;
+    padding: 1.8rem 0.5rem;
   }
 `;
 

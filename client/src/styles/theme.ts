@@ -103,6 +103,6 @@ export const theme: Theme = {
   /* mediaQuery */
   mediaQuery: {
     mobile: "(min-width: 0) and (max-width: 768px)",
-    desktop: "(min-width: 769px) and (max-width: 1080px)",
+    desktop: "(min-width: 769px)",
   },
 };
