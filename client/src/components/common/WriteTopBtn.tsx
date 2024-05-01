@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { theme } from "../../styles/theme";
+import icons from "@/icons/icons";
 
 const WriteTopBtnStyle = styled.div`
   display: flex;
@@ -10,13 +11,12 @@ const WriteTopBtnStyle = styled.div`
 
 const Button = styled.button<{ primary?: boolean }>`
   border-radius: ${theme.borderRadius.write};
-  border: 2px solid ${(props) => (props.primary ? theme.color.primary : theme.color.white)};
+  border: 1px solid ${theme.color.primary};
   background-color: ${(props) => (props.primary ? theme.color.primary : theme.color.white)};
   color: ${(props) => (props.primary ? theme.color.white : theme.color.primary)};
   font-size: ${theme.buttonSize.medium.fontSize};
-  padding: ${theme.buttonSize.medium.padding};
+  padding: ${theme.buttonSize.small.padding};
   cursor: pointer;
-  box-shadow: ${theme.boxShadow.default};
 
   &:hover {
     opacity: 0.8;
@@ -32,13 +32,15 @@ const WriteTopBtn = () => {
     });
   };
 
+  const { TopIcon } = icons;
+
   return (
     <WriteTopBtnStyle>
       <Button primary={false} onClick={() => (window.location.href = "/write")}>
         글쓰기
       </Button>
       <Button primary onClick={handleScrollTop}>
-        Top
+        <TopIcon color="white" />
       </Button>
     </WriteTopBtnStyle>
   );
