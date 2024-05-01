@@ -1,39 +1,39 @@
+import icons from "@/icons/icons";
 import { Schedule as ISchedule } from "@/models/schedule.model";
 import styled from "styled-components";
+import { CardContentStyle, CardImageStyle, CardStyle, ScheduleStyle, ViewMode } from "./postCard";
 
-// props 로 받아야할꺼
-// - 이미지 값
-// - 여행경로
-// - 제목
-// - 일정 날짜
 interface Props {
   scheduleProps: ISchedule;
+  view: ViewMode;
 }
 
-const ScheduleCard = ({ scheduleProps }: Props) => {
+const ScheduleCard = ({ scheduleProps, view }: Props) => {
+  const PinIcon = icons.PinIcon;
   return (
-    <ScheduleCardStyle $img={scheduleProps.image}>
-      <div className="img"></div>
-      <div className="content">
-        <p>{scheduleProps.schedule}</p>
-        <h3>{scheduleProps.title}</h3>
-        <p>{scheduleProps.date}</p>
-      </div>
+    <ScheduleCardStyle $view={view}>
+      <CardImageStyle $image={scheduleProps.image} $view={view} />
+      <CardContentStyle>
+        <ScheduleStyle>
+          <PinIcon />
+          <span>
+            {scheduleProps.continental} • {scheduleProps.country}
+          </span>
+        </ScheduleStyle>
+        <h3 className="card-title">{scheduleProps.title}</h3>
+        <p className="card-date">{scheduleProps.date}</p>
+      </CardContentStyle>
     </ScheduleCardStyle>
   );
 };
 
-interface ScheduleCardStyleProps {
-  $img: string;
-}
+const ScheduleCardStyle = styled(CardStyle)`
+  width: ${({ $view }) => ($view === "grid" ? "300px" : "800px")};
+  height: ${({ $view }) => ($view === "grid" ? "250px" : "100px")};
 
-const ScheduleCardStyle = styled.div<ScheduleCardStyleProps>`
-  .img {
-    background-image: url(${({ $img }) => $img});
-    background-size: 100%;
-  }
-
-  .content {
+  @media (max-width: 768px) {
+    width: ${({ $view }) => ($view === "grid" ? "160px" : "300px")};
+    height: ${({ $view }) => ($view === "grid" ? "160px" : "80px")};
   }
 `;
 
