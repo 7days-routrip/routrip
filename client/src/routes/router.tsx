@@ -63,7 +63,7 @@ const routerArr = [
   {
     path: "/schedule",
     element: (
-      <Layout>
+      <Layout isFull={true}>
         <SchedulePage />
       </Layout>
     ),
