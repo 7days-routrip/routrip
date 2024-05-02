@@ -17,6 +17,8 @@ import { IoImageOutline as ThumbnailIcon } from "@react-icons/all-files/io5/IoIm
 import { FaCamera as CameraIcon } from "@react-icons/all-files/fa/FaCamera";
 import { FaBookmark as BookmarkIcon } from "@react-icons/all-files/fa/FaBookmark";
 import { FaSpinner as LoadingIcon } from "@react-icons/all-files/fa/FaSpinner";
+import { FaBars as HamburgerIcon } from "@react-icons/all-files/fa/FaBars";
+import { FaRegUser as MobileUserIcon } from "@react-icons/all-files/fa/FaRegUser";
 
 const icons = {
   JoinIcon,
@@ -38,6 +40,8 @@ const icons = {
   CameraIcon,
   BookmarkIcon,
   LoadingIcon,
+  HamburgerIcon,
+  MobileUserIcon,
 };
 
 export default icons;

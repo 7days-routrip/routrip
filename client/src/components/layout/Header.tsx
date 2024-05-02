@@ -6,29 +6,29 @@ import { useState } from "react";
 import { theme } from "../../styles/theme";
 
 const Header = () => {
-  const { LoginIcon, JoinIcon, LogoutIcon, MyPageIcon } = icons;
-  const [isLogin, setIsLogin] = useState<boolean>(true);
+  const { LoginIcon, JoinIcon, LogoutIcon, MyPageIcon, HamburgerIcon, MobileUserIcon } = icons;
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
     <HeaderStyle>
-      <Link to="/">
+      <Link to="/" className="logo-link">
         <img src={logo} alt="routrip logo" className="logo" />
       </Link>
-      <nav>
+      <nav className="desktop-nav">
         <ul>
           <li>
             <StyledLink to="/schedule">내 여행</StyledLink>
           </li>
           <li>
-            <StyledLink to="/post">국내 여행</StyledLink>
+            <StyledLink to="/post">국내 여행지</StyledLink>
           </li>
           <li>
-            <StyledLink to="/post">해외 여행</StyledLink>
+            <StyledLink to="/post">해외 여행지</StyledLink>
           </li>
         </ul>
       </nav>
-      <div className="auth-icons">
-        {isLogin ? (
+      <div className="desktop-auth-icons">
+        {isLoggedIn ? (
           <>
             <IconText to="/logout" color="primary">
               <LogoutIcon color={theme.color.primary} />
@@ -52,6 +52,10 @@ const Header = () => {
           </>
         )}
       </div>
+      <div className="mobile-auth-icons">
+        <HamburgerIcon />
+        <MobileUserIcon />
+      </div>
     </HeaderStyle>
   );
 };
@@ -64,12 +68,40 @@ const HeaderStyle = styled.header`
   justify-content: space-between;
   align-items: center;
   margin: 0 auto;
-  text-decoration: none;
   position: fixed;
   top: 0;
   left: 0;
   right: 0;
   z-index: 1000;
+
+  .desktop-nav,
+  .desktop-auth-icons {
+    display: flex;
+  }
+
+  .mobile-auth-icons {
+    display: none;
+  }
+
+  @media ${({ theme }) => theme.mediaQuery.mobile} {
+    .logo-link {
+      position: absolute;
+      left: 50%;
+      transform: translateX(-50%);
+    }
+    .desktop-nav,
+    .desktop-auth-icons {
+      display: none;
+    }
+    .mobile-auth-icons {
+      display: flex;
+      justify-content: flex-end;
+      margin-right: 20px;
+      width: 100%;
+      gap: 20px;
+      align-items: center;
+    }
+  }
 
   nav ul {
     display: flex;
@@ -94,6 +126,7 @@ const HeaderStyle = styled.header`
     color: inherit;
   }
 `;
+
 const IconText = styled(Link)`
   display: flex;
   align-items: center;
