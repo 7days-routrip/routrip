@@ -5,12 +5,16 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { theme } from "../../styles/theme";
 
-const Header = () => {
+interface Props {
+  isFull?: boolean;
+}
+
+const Header = ({ isFull = false }: Props) => {
   const { LoginIcon, JoinIcon, LogoutIcon, MyPageIcon, HamburgerIcon, MobileUserIcon } = icons;
   const [isLoggedIn, setIsLoggedIn] = useState(false);
 
   return (
-    <HeaderStyle>
+    <HeaderStyle $isFull={isFull}>
       <Link to="/" className="logo-link">
         <img src={logo} alt="routrip logo" className="logo" />
       </Link>
@@ -60,9 +64,13 @@ const Header = () => {
   );
 };
 
-const HeaderStyle = styled.header`
+export interface HeaderStyleProps {
+  $isFull: boolean;
+}
+
+const HeaderStyle = styled.header<HeaderStyleProps>`
   width: 100%;
-  max-width: 1080px;
+  max-width: ${({ $isFull }) => ($isFull ? "100%" : "1080px")};
   height: 80px;
   display: flex;
   justify-content: space-between;
