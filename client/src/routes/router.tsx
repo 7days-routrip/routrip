@@ -3,6 +3,8 @@ import ErrorPage from "@/pages/ErrorPage";
 import JoinPage from "@/pages/JoinPage";
 import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
+import PostPage from "@/pages/PostPage";
+import SchedulePage from "@/pages/SchedulePage";
 import { createBrowserRouter } from "react-router-dom";
 
 const routerArr = [
@@ -37,6 +39,32 @@ const routerArr = [
     element: (
       <Layout>
         <LoginPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/post",
+    element: (
+      <Layout>
+        <PostPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/schedule",
+    element: (
+      <Layout>
+        <SchedulePage />
       </Layout>
     ),
     errorElement: (

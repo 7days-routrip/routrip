@@ -1,13 +1,12 @@
 import { getToken, removeNickName, removeToken, setToken } from "@/stores/authStore";
+import { showConfirm } from "@/utils/showConfirm";
 import axios, { AxiosRequestConfig } from "axios";
 
-const BASE_URL = process.env.REACT_APP_BASE_URL;
-const DEFAULT_TIMEOUT = Number(process.env.REACT_APP_DEFAULT_TIMEOUT);
+const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 const createClient = (config?: AxiosRequestConfig) => {
   const axiosInstance = axios.create({
     baseURL: BASE_URL,
-    timeout: DEFAULT_TIMEOUT,
     headers: {
       "content-type": "application/json",
     },
@@ -46,8 +45,7 @@ const createClient = (config?: AxiosRequestConfig) => {
         removeToken();
         removeNickName();
 
-        window.alert(err.response.data.message);
-        window.location.href = "/login";
+        showConfirm(err.response.data.message, "/login");
         return;
       }
       return Promise.reject(err);

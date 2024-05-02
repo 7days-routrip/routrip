@@ -1,4 +1,4 @@
-type Colorkey =
+export type Colorkey =
   | "primary"
   | "black"
   | "white"
@@ -8,15 +8,15 @@ type Colorkey =
   | "borderGray"
   | "borderGray"
   | "routeGray";
-type ButtonSize = "large" | "medium" | "small";
-type FontSize = "xlarge" | "large" | "medium" | "small" | "xsmall";
-type MediaQuery = "mobile" | "desktop";
+export type ButtonSize = "large" | "medium" | "small";
+export type FontSize = "xlarge" | "large" | "medium" | "small" | "xsmall";
+export type MediaQuery = "mobile" | "desktop";
+export type ButtonScheme = "primary" | "secondary" | "normal";
+export type BorderRadius = "default" | "tab" | "write";
 
 interface Theme {
   borderRadius: {
-    tab: string;
-    default: string;
-    write: string;
+    [key in BorderRadius]: string;
   };
   color: {
     [key in Colorkey]: string;
@@ -25,6 +25,13 @@ interface Theme {
     [key in ButtonSize]: {
       fontSize: string;
       padding: string;
+    };
+  };
+  buttonScheme: {
+    [key in ButtonScheme]: {
+      color: string;
+      backgroundColor: string;
+      border: string;
     };
   };
   fontSize: {
@@ -82,6 +89,13 @@ export const theme: Theme = {
     },
   },
 
+  /* button-scheme */
+  buttonScheme: {
+    primary: { color: "#ffffff", backgroundColor: "#7aafff", border: "0" },
+    secondary: { color: "#7aafff", backgroundColor: "#ffffff", border: "1px solid #7aafff" },
+    normal: { color: "#333333", backgroundColor: "#ffffff", border: "1px solid #e7e7e7" },
+  },
+
   boxShadow: {
     default: "0 0 8px rgba(0, 0, 0, 0.3)",
   },
@@ -89,6 +103,6 @@ export const theme: Theme = {
   /* mediaQuery */
   mediaQuery: {
     mobile: "(min-width: 0) and (max-width: 768px)",
-    desktop: "(min-width: 769px) and (max-width: 1080px)",
+    desktop: "(min-width: 769px)",
   },
 };
