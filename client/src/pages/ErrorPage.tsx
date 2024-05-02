@@ -25,7 +25,7 @@ const ErrorPageStyle = styled.div`
     font-size: ${({ theme }) => theme.fontSize.xlarge};
     color: ${({ theme }) => theme.color.black};
     font-weight: bold;
-    margin-bottom: -10px;
+    margin-bottom: -5px;
   }
 
   p {
