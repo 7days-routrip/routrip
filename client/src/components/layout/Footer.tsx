@@ -19,7 +19,7 @@ const FooterStyle = styled.div`
   align-items: center;
   margin: 0 auto;
   border-top: 1px solid #e7e7e7;
-  gap: 20px;
+  gap: 16px;
   height: 150px;
   max-width: 1080px;
   width: 100%;
