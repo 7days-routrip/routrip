@@ -1,13 +1,14 @@
-import express, { Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import express, { NextFunction, Request, Response } from "express";
 
-import { CORS_ORIGIN } from "@/settings";
-import userRouter from "@/routes/users.routes";
-import tripRouter from "@/routes/trip.routes";
-import postsRouter from "@/routes/posts.routes";
 import likesRouter from "@/routes/likes.routes";
+import postsRouter from "@/routes/posts.routes";
 import spotRouter from "@/routes/spot.routes";
+import tripRouter from "@/routes/trip.routes";
+import userRouter from "@/routes/users.routes";
+import { CORS_ORIGIN } from "@/settings";
+import "reflect-metadata";
 
 const app = express();
 
