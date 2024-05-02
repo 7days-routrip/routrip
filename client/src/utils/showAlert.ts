@@ -1,7 +1,7 @@
 import "@/styles/customConfirm.css";
 import logoImage from "/assets/images/logo-profile.png";
 import ErrorImage from "/assets/images/logo-error.png";
-import { swalStyleButton } from "./showComfirm";
+import { swalStyleButton } from "./showConfirm";
 
 // type 값에 따라 일반 로고, error 로고가 나옴
 export const showAlert = (title: string, type: "logo" | "error") => {

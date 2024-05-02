@@ -1,4 +1,3 @@
-import { showAlert } from "@/utils/showAlert";
 import styled from "styled-components";
 
 const MainPage = () => {

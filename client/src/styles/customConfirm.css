@@ -50,6 +50,11 @@
   height: 48px;
 }
 
+.errorImage {
+  width: 30px;
+  height: 60px;
+}
+
 @media screen and (min-width: 1081px) {
   .popup {
     height: 250px;
@@ -62,5 +67,10 @@
   .image {
     width: 99px;
     height: 66px;
+  }
+
+  .errorImage {
+    width: 40px;
+    height: 70px;
   }
 }
