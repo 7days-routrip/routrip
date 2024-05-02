@@ -4,11 +4,10 @@ export interface Post {
   title: string;
   date: string;
   author: string;
+  userProfile: string;
   continental: string;
   country: string;
-  postsNum: string;
-  postsImg: string;
-  like: string;
   commentsNum: string;
-  profileImage: string; // 아직 api 에 명시 안됨
+  likesNum: string;
+  postsImg: string;
 }
