@@ -1,0 +1,76 @@
+.popup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  height: 200px;
+  width: 300px;
+  color: #333333;
+  font-weight: bold;
+  border-radius: 8px;
+}
+
+.confirmButton {
+  cursor: pointer;
+  color: #ffffff;
+  background-color: #7aafff;
+  border: none;
+  padding: 0.75rem 3rem;
+  border-radius: 30px;
+  margin-left: 5px;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.cancelButton {
+  cursor: pointer;
+  padding: 0.75rem 3rem;
+  border-radius: 30px;
+  margin-right: 5px;
+  color: #7aafff;
+  background-color: #ffffff;
+  border: 1px solid #7aafff;
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+.title {
+  color: #333333;
+  font-size: 1.5rem;
+  font-weight: bold;
+  font-family: "Nanum Pen Script";
+}
+
+.htmlContainer {
+  font-size: 1.5rem;
+  font-family: "Nanum Pen Script";
+}
+
+.image {
+  width: 80px;
+  height: 48px;
+}
+
+.errorImage {
+  width: 30px;
+  height: 60px;
+}
+
+@media screen and (min-width: 1081px) {
+  .popup {
+    height: 250px;
+    width: 350px;
+  }
+  .confirmButton,
+  .cancelButton {
+    padding: 0.5rem 2.5rem;
+  }
+  .image {
+    width: 99px;
+    height: 66px;
+  }
+
+  .errorImage {
+    width: 40px;
+    height: 70px;
+  }
+}
