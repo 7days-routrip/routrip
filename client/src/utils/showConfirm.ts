@@ -2,7 +2,7 @@ import Swal from "sweetalert2";
 import "@/styles/customConfirm.css";
 import logoImage from "/assets/images/logo-profile.png";
 
-const swalStyleButton = Swal.mixin({
+export const swalStyleButton = Swal.mixin({
   customClass: {
     popup: "popup", // 전체
     confirmButton: "confirmButton", // 확인
