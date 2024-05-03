@@ -1,13 +1,15 @@
-import express, { Request, Response, NextFunction } from "express";
+import likesRouter from "@/routes/likes.routes";
+import postsRouter from "@/routes/posts.routes";
+import spotRouter from "@/routes/spot.routes";
+import tripRouter from "@/routes/trip.routes";
+import userRouter from "@/routes/users.routes";
+import { CORS_ORIGIN } from "@/settings";
 import cookieParser from "cookie-parser";
 import cors from "cors";
-
-import { CORS_ORIGIN } from "@/settings";
-import userRouter from "@/routes/users.routes";
-import tripRouter from "@/routes/trip.routes";
-import postsRouter from "@/routes/posts.routes";
-import likesRouter from "@/routes/likes.routes";
-import spotRouter from "@/routes/spot.routes";
+import express, { NextFunction, Request, Response } from "express";
+import "reflect-metadata";
+import { AppDataSource } from "./config/ormSetting";
+import { Continents } from "./models/continents.model";
 
 const app = express();
 
@@ -25,6 +27,13 @@ app.use(
 );
 app.use(cookieParser());
 
+app.post("/test", async (req: Request, res: Response) => {
+  const repo = AppDataSource.getRepository("continents");
+  const contient = new Continents();
+  contient.name = "동아시아";
+  await repo.save(contient);
+  res.status(200);
+});
 app.use("/api/users", userRouter);
 app.use("/api/trip", tripRouter);
 app.use("/api/posts", postsRouter);
