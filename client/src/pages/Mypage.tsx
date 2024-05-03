@@ -20,11 +20,15 @@ const Mypage = () => {
   return (
     <MypageStyle>
       <ProfileCard ProfileProps={dummyData} />
-      <MypageTab />
+      {/* <MypageTab /> */}
     </MypageStyle>
   );
 };
 
-const MypageStyle = styled.div``;
+const MypageStyle = styled.div`
+  height: 100%;
+  width: 100%;
+  background-color: red;
+`;
 
 export default Mypage;

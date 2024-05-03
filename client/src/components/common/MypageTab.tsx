@@ -20,16 +20,17 @@ const MypageTab = () => {
 const MypageTabStyle = styled.div`
   display: flex;
   justify-content: flex-start;
+  width: 100%;
   align-items: center;
   white-space: nowrap;
   border-bottom: 1px solid ${({ theme }) => theme.color.borderGray};
 
-  /* @media (max-width: 768px) {
+  @media (max-width: 768px) {
     display: flex;
     width: 100%;
     justify-content: center;
     align-items: center;
-  } */
+  }
 `;
 
 export default MypageTab;

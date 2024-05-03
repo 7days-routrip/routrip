@@ -89,7 +89,6 @@ const ProfileCardStyle = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
-
     min-width: 768px;
     height: 130px;
   }
