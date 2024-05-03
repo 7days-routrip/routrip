@@ -1,7 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-
-import { Continents, Countries } from "@/models/categories.model";
-import { Journeys } from "./trips.model";
+import { Continents } from "@/models/continents.model";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Countries } from "./countries.model";
+import { Journeys } from "./journeys.model";
 import { Users } from "./users.model";
 
 @Entity()
@@ -15,11 +15,14 @@ export class Posts {
   @Column("text")
   content!: string;
 
+  @Column("blob", { nullable: true })
+  postsImg!: string;
+
   @ManyToOne((type) => Users)
   @JoinColumn({
-    name: "user_id",
+    name: "userId",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_users_posts_id",
+    foreignKeyConstraintName: "fkUsersPostsId",
   })
   userId!: Users;
 
@@ -29,7 +32,7 @@ export class Posts {
   @Column("timestamp", { default: () => "ON UPDATE CURRENT_TIMESTAMP" })
   updatedAt!: string;
 
-  @Column("varchar")
+  @Column("integer")
   expense!: string;
 
   @Column("datetime")
@@ -38,27 +41,27 @@ export class Posts {
   @Column("datetime")
   endDate!: string;
 
-  @OneToOne((type) => Journeys)
+  @ManyToOne((type) => Journeys)
   @JoinColumn({
-    name: "journey_id",
+    name: "journeyId",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_journeys_posts_id",
+    foreignKeyConstraintName: "fkJourneysPostsId",
   })
   journeyId!: Journeys;
 
   @ManyToOne((type) => Continents)
   @JoinColumn({
-    name: "coutinental_id",
+    name: "continentId",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_coutinental_posts_id",
+    foreignKeyConstraintName: "fkCoutinentalPostsId",
   })
-  continent!: Continents;
+  continentId!: Continents;
 
   @ManyToOne((type) => Countries)
   @JoinColumn({
-    name: "country_id",
+    name: "countryId",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_country_posts_id",
+    foreignKeyConstraintName: "fkCountryPostsId",
   })
-  country!: Countries;
+  countryId!: Countries;
 }

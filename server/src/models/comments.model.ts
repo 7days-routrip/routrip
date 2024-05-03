@@ -1,34 +1,34 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "./posts.model";
 import { Users } from "./users.model";
 
 @Entity()
-export class Journeys {
+export class Comments {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ nullable: false })
+  @Column("varchar", { length: 1000, nullable: false })
   content!: string;
 
-  @Column("datetime")
-  startDate!: string;
+  @Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
+  createdAt!: string;
 
-  @Column("datetime")
-  endDate!: string;
+  @Column("timestamp", { default: () => "ON UPDATE CURRENT_TIMESTAMP" })
+  updatedAt!: string;
 
-  @OneToOne((type) => Users)
+  @ManyToOne((type) => Users)
   @JoinColumn({
-    name: "user_id",
+    name: "userId",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_users_comments_id",
+    foreignKeyConstraintName: "fkUsersCommentsId",
   })
   userId!: Users;
 
-  @OneToOne((type) => Posts)
+  @ManyToOne((type) => Posts)
   @JoinColumn({
-    name: "routes_id",
+    name: "postId",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_posts_comments_id",
+    foreignKeyConstraintName: "fkPostsCommentsId",
   })
   postId!: Posts;
 }

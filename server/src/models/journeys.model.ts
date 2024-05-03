@@ -1,27 +1,27 @@
-import { Column, Entity, JoinColumn, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Routes } from "./routes.model";
 import { Users } from "./users.model";
-
 @Entity()
 export class Journeys {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column({ nullable: false })
+  @Column()
   title!: string;
 
-  @OneToOne((type) => Users)
+  @ManyToOne((type) => Users)
   @JoinColumn({
-    name: "user_id",
+    name: "userId",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_users_journeys_id",
+    foreignKeyConstraintName: "fkUsersJourneysId",
   })
   userId!: Users;
 
-  @OneToOne((type) => Routes)
+  @ManyToOne((type) => Routes)
   @JoinColumn({
-    name: "routes_id",
+    name: "routeId",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_routes_journeys_id",
+    foreignKeyConstraintName: "fkRoutesJourneysId",
   })
   routeId!: Routes;
 
@@ -30,12 +30,6 @@ export class Journeys {
 
   @Column("datetime")
   endDate!: string;
-}
-
-@Entity()
-export class Routes {
-  @PrimaryGeneratedColumn()
-  id!: number;
 }
 
 // @OneToOne((type) => Users)

@@ -1,13 +1,5 @@
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
-
-@Entity()
-export class Continents {
-  @PrimaryGeneratedColumn()
-  id!: number;
-
-  @Column()
-  name!: string;
-}
+import { Continents } from "./continents.model";
 
 @Entity()
 export class Countries {
@@ -16,12 +8,12 @@ export class Countries {
 
   @ManyToOne((type) => Continents)
   @JoinColumn({
-    name: "continental_id",
+    name: "continentId",
     referencedColumnName: "id",
-    foreignKeyConstraintName: "fk_country_coutinental_id",
+    foreignKeyConstraintName: "fkCountryCoutinentalId",
   })
-  continentalId!: Continents;
+  continentId!: Continents;
 
-  @Column()
+  @Column("varchar", { length: 100 })
   name!: string;
 }
