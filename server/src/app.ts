@@ -11,6 +11,7 @@ import "reflect-metadata";
 import { AppDataSource } from "./config/ormSetting";
 import { Continents } from "./models/continents.model";
 
+
 const app = express();
 
 app.use(express.json());
@@ -27,13 +28,20 @@ app.use(
 );
 app.use(cookieParser());
 
+
+import { Users } from "@/models/users.model";
+import { pool } from "./config/mariadb";
 app.post("/test", async (req: Request, res: Response) => {
-  const repo = AppDataSource.getRepository("continents");
-  const contient = new Continents();
-  contient.name = "동아시아";
-  await repo.save(contient);
-  res.status(200);
+  const user = new Users();
+  user.email = req.body.email;
+  user.nickName = req.body.nickName;
+  user.password = req.body.password;
+
+  const userRepository = AppDataSource.getRepository(Users);
+  await userRepository.save(user);
+
 });
+
 app.use("/api/users", userRouter);
 app.use("/api/trip", tripRouter);
 app.use("/api/posts", postsRouter);
