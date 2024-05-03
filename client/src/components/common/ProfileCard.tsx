@@ -15,11 +15,14 @@ const ProfileCard = ({ ProfileProps }: Props) => {
         <span className="user-nickname">{ProfileProps.nickname}</span>
         <section className="user-stats">
           <div className="user-schedules">일정 모음 {ProfileProps.journeysNum}개</div>
+          <div className="profile-dot">.</div>
           <div className="user-posts">여행글 {ProfileProps.postsNum}개</div>
+          <div className="profile-dot">.</div>
           <div className="user-comments">내 댓글 {ProfileProps.commentsNum}개</div>
         </section>
         <section className="user-likes">
-          <div className="likes-posts">좋아요 한글 {ProfileProps.likePostsNum}개</div>
+          <div className="likes-posts">좋아요 한글 {ProfileProps.likePostsNum}개 </div>
+          <div className="profile-dot">.</div>
           <div className="likes-places">내가 찜한 장소 {ProfileProps.likeSpotsNum}개</div>
         </section>
       </div>
@@ -34,7 +37,7 @@ interface ProfileImageStyleProps {
 const ProfileImageStyle = styled.div<ProfileImageStyleProps>`
   width: 6.25rem;
   height: 6.25rem;
-  background-image: url(${({ $image }) => ($image ? $image : DEFAULT_IMAGE)});
+  background-image: url(${({ $image }) => ($image ? "data:image/png;base64,${$image}" : DEFAULT_IMAGE)});
   background-color: ${({ theme }) => theme.color.white};
   background-size: 70% 60%;
   background-position: center;
@@ -60,10 +63,16 @@ const ProfileCardStyle = styled.div`
     width: 100%;
     height: inherit;
   }
-
+  .profile-dot,
   .user-nickname {
     font-size: ${({ theme }) => theme.fontSize.large};
     font-weight: bold;
+  }
+
+  .profile-dot {
+    text-align: center;
+    height: 10px;
+    line-height: 10px;
   }
 
   .user-stats,
