@@ -47,11 +47,12 @@ const ProfileImageStyle = styled.div<ProfileImageStyleProps>`
 
 const ProfileCardStyle = styled.div`
   width: 1080px;
-  height: 200px;
+  height: 150px;
   display: flex;
   justify-content: flex-start;
   padding: 1rem;
   align-items: center;
+  margin-bottom: 1.5rem;
 
   background-color: ${({ theme }) => theme.color.primary};
   color: ${({ theme }) => theme.color.white};
@@ -88,6 +89,7 @@ const ProfileCardStyle = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
+
     min-width: 768px;
     height: 130px;
   }
