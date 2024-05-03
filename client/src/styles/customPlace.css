@@ -1,0 +1,32 @@
+.popup {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  height: 400px;
+  width: 300px;
+  color: #333;
+  border-radius: 8px;
+  background-color: #fff;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.image {
+  width: 100%;
+  height: auto;
+  margin-bottom: 20px;
+}
+
+.confirmButton,
+.cancelButton {
+  padding: 10px 20px;
+  font-size: 16px;
+  border-radius: 5px;
+  margin: 10px;
+}
+
+.title,
+.htmlContainer {
+  text-align: center;
+  font-family: "Arial", sans-serif;
+}
