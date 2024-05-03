@@ -18,7 +18,6 @@ export const useAuth = () => {
   const navigate = useNavigate();
   // 상태
   const { storeLogin } = useAuthStore();
-  const [resetRequested, setResetRequested] = useState(false);
 
   const userLogin = async (data: LoginProps) => {
     try {
@@ -38,4 +37,6 @@ export const useAuth = () => {
       // 회원가입 실패
     }
   };
+
+  return { userLogin, userJoin };
 };
