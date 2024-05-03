@@ -6,7 +6,7 @@ interface Props {
 
 const MypageTabItem = ({ title, ative }: Props) => {
   return (
-    <MypageTabItemStyle onClick={() => console.log("안녕하세요")} $ative={ative}>
+    <MypageTabItemStyle onClick={() => console.log("구현해야함")} $ative={ative}>
       {title}
     </MypageTabItemStyle>
   );

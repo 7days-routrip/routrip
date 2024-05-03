@@ -26,9 +26,3 @@ const MypageTabStyle = styled.div`
 `;
 
 export default MypageTab;
-
-// 받는 매개변수 path, title
-// 필요한 기능 path를 통해 해당 주소로 이동? 아니지 탭을 써서 값만 바뀌는거네 ㅇㅇㅇ
-// 그럼 tabItem 을 만들고 그걸 나열하면 되는거 아닌가
-// 그리고 그거 값을 tanstack query 로 관리 한다고 보면 될꺼 같은데 ㅇㅇㅇ
-// path: string, title: string
