@@ -1,11 +1,9 @@
-
 import { Column, Entity, Index, PrimaryGeneratedColumn } from "typeorm";
 
 @Entity()
 export class Users {
   @PrimaryGeneratedColumn()
   id!: number;
-
 
   @Column({ length: 100 })
   @Index({ unique: true })
@@ -17,7 +15,6 @@ export class Users {
 
   @Column()
   password!: string;
-
 
   @Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
   createdAt!: string;

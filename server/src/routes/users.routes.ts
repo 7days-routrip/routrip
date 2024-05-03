@@ -1,6 +1,8 @@
 import express, { Request, Response, NextFunction } from "express";
+import usersController from "@/controller/users.controller";
 
 const router = express.Router();
-router.use(express.json());
+
+router.post("/join", usersController.join);
 
 export default router;

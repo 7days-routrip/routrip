@@ -1,3 +1,4 @@
+
 import likesRouter from "@/routes/likes.routes";
 import postsRouter from "@/routes/posts.routes";
 import spotRouter from "@/routes/spot.routes";
@@ -11,11 +12,11 @@ import "reflect-metadata";
 import { AppDataSource } from "./config/ormSetting";
 import { Continents } from "./models/continents.model";
 
-
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
   res.sendStatus(500);

@@ -1,3 +1,4 @@
+
 import { Comments } from "@/models/comments.model";
 import { Continents } from "@/models/continents.model";
 import { Countries } from "@/models/countries.model";
@@ -13,7 +14,6 @@ import { Users } from "@/models/users.model";
 import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USER } from "@/settings";
 import { DataSource } from "typeorm";
 
-
 export const AppDataSource = new DataSource({
   type: "mariadb",
   host: DB_HOST,
@@ -23,10 +23,10 @@ export const AppDataSource = new DataSource({
   database: DB_DATABASE,
   synchronize: true,
   logging: true,
-
   connectTimeout: 30000,
   entities: [Users, Comments, Continents, Countries, Journeys, Likes, Picks, Places, Posts, RouteDays, Routes, DaySeq],
 });
+
 AppDataSource.initialize()
   .then(() => {})
   .catch((error) => {
