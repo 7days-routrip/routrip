@@ -1,6 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Users } from "./users.model";
+
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Routes } from "./routes.model";
+import { Users } from "./users.model";
 
 @Entity()
 export class Journeys {
@@ -31,4 +32,6 @@ export class Journeys {
 
   @Column("datetime")
   endDate!: string;
+
 }
+

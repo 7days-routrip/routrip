@@ -1,13 +1,16 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Users } from "./users.model";
+
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "./posts.model";
+import { Users } from "./users.model";
+
 
 @Entity()
 export class Comments {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column("varchar", { length:1000, nullable: false })
+
+  @Column("varchar", { length: 1000, nullable: false })
   content!: string;
 
   @Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
@@ -31,4 +34,6 @@ export class Comments {
     foreignKeyConstraintName: "fkPostsCommentsId",
   })
   postId!: Posts;
+
 }
+

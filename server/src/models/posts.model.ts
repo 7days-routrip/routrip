@@ -1,5 +1,7 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToOne, PrimaryGeneratedColumn } from "typeorm";
+
 import { Continents } from "@/models/continents.model";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+
 import { Countries } from "./countries.model";
 import { Journeys } from "./journeys.model";
 import { Users } from "./users.model";

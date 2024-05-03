@@ -14,6 +14,6 @@ export class Countries {
   })
   continentId!: Continents;
 
-  @Column("varchar", {length:100})
+  @Column("varchar", { length: 100 })
   name!: string;
 }

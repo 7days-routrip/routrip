@@ -5,6 +5,7 @@ export class Continents {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Column("varchar", {length:30})
+
+  @Column("varchar", { length: 30 })
   name!: string;
 }

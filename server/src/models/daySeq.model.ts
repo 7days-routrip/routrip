@@ -1,29 +1,28 @@
-import { Column, Entity, JoinColumn, ManyToOne, OneToMany, OneToOne, PrimaryGeneratedColumn } from "typeorm";
-import { Routes } from "./routes.model";
-import { RouteDays } from "./routeDays.model";
-import { Places } from "./places.model";
 
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Places } from "./places.model";
+import { RouteDays } from "./routeDays.model";
 @Entity()
 export class DaySeq {
-    @PrimaryGeneratedColumn()
-    id!: string;
+  @PrimaryGeneratedColumn()
+  id!: string;
 
-    @ManyToOne((type) => RouteDays)
-    @JoinColumn({
-        name: "routeDayId",
-        referencedColumnName: "id",
-        foreignKeyConstraintName: "fkRouteDaysDaySeqId",
-      })
-    routeDayId!: RouteDays;
+  @ManyToOne((type) => RouteDays)
+  @JoinColumn({
+    name: "routeDayId",
+    referencedColumnName: "id",
+    foreignKeyConstraintName: "fkRouteDaysDaySeqId",
+  })
+  routeDayId!: RouteDays;
 
-    @Column({type:"integer"})
-    seq!: number;
+  @Column({ type: "integer" })
+  seq!: number;
 
-    @ManyToOne(() => Places, (places) => places.id)
-    @JoinColumn({
-        name: "placeId",
-        referencedColumnName: "id",
-        foreignKeyConstraintName: "fkDaySeqPlacesId",
-      })
-    placeId!: Places;
+  @ManyToOne(() => Places, (places) => places.id)
+  @JoinColumn({
+    name: "placeId",
+    referencedColumnName: "id",
+    foreignKeyConstraintName: "fkDaySeqPlacesId",
+  })
+  placeId!: Places;
 }

@@ -6,7 +6,7 @@ import { Users } from "./users.model";
 export class Picks {
   @PrimaryGeneratedColumn()
   id!: number;
-  
+
   @ManyToOne((type) => Users)
   @JoinColumn({
     name: "userId",

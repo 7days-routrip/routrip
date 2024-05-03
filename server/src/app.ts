@@ -1,14 +1,16 @@
-import cookieParser from "cookie-parser";
-import cors from "cors";
-import express, { NextFunction, Request, Response } from "express";
-
 import likesRouter from "@/routes/likes.routes";
 import postsRouter from "@/routes/posts.routes";
 import spotRouter from "@/routes/spot.routes";
 import tripRouter from "@/routes/trip.routes";
 import userRouter from "@/routes/users.routes";
 import { CORS_ORIGIN } from "@/settings";
+import cookieParser from "cookie-parser";
+import cors from "cors";
+import express, { NextFunction, Request, Response } from "express";
 import "reflect-metadata";
+import { AppDataSource } from "./config/ormSetting";
+import { Continents } from "./models/continents.model";
+
 
 const app = express();
 
@@ -26,7 +28,7 @@ app.use(
 );
 app.use(cookieParser());
 
-import { AppDataSource } from "@/config/ormSetting";
+
 import { Users } from "@/models/users.model";
 import { pool } from "./config/mariadb";
 app.post("/test", async (req: Request, res: Response) => {
