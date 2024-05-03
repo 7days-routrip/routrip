@@ -46,11 +46,10 @@ const ProfileImageStyle = styled.div<ProfileImageStyleProps>`
 `;
 
 const ProfileCardStyle = styled.div`
-  width: 1080px;
-  height: 150px;
+  width: 100%;
+  height: 200px;
   display: flex;
   justify-content: flex-start;
-  padding: 1rem;
   align-items: center;
   margin-bottom: 1.5rem;
 
@@ -72,6 +71,7 @@ const ProfileCardStyle = styled.div`
 
   .profile-dot {
     text-align: center;
+    width: 10px;
     height: 10px;
     line-height: 10px;
   }
@@ -80,17 +80,16 @@ const ProfileCardStyle = styled.div`
   .user-likes {
     display: flex;
     margin: 0.3rem 0;
+
+    gap: 0.5rem;
     width: auto;
     height: 20px;
-    div {
-      margin-right: 15px;
-    }
   }
 
   @media (max-width: 768px) {
     width: 100%;
-    min-width: 768px;
-    height: 130px;
+    padding: 0;
+    height: 100px;
   }
 `;
 

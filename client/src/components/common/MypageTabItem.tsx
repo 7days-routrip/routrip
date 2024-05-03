@@ -17,9 +17,8 @@ interface MypageTabItemStyleProps {
 }
 
 const MypageTabItemStyle = styled.button<MypageTabItemStyleProps>`
-  width: 15%;
-  height: 50px;
-  line-height: 50px;
+  width: 100%;
+  line-height: 40px;
   border: 1px solid ${({ theme }) => theme.color.borderGray};
   background-color: ${({ $ative, theme }) => ($ative ? theme.color.primary : theme.color.white)};
   color: ${({ $ative, theme }) => ($ative ? theme.color.white : theme.color.black)};
@@ -28,8 +27,6 @@ const MypageTabItemStyle = styled.button<MypageTabItemStyleProps>`
   text-align: center;
 
   @media (max-width: 768px) {
-    width: auto;
-    padding: 0 5px;
     height: 40px;
     line-height: 40px;
   }
