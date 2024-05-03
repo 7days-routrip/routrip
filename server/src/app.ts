@@ -1,13 +1,14 @@
-import express, { Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import express, { NextFunction, Request, Response } from "express";
 
-import { CORS_ORIGIN } from "@/settings";
-import userRouter from "@/routes/users.routes";
-import tripRouter from "@/routes/trip.routes";
-import postsRouter from "@/routes/posts.routes";
 import likesRouter from "@/routes/likes.routes";
+import postsRouter from "@/routes/posts.routes";
 import spotRouter from "@/routes/spot.routes";
+import tripRouter from "@/routes/trip.routes";
+import userRouter from "@/routes/users.routes";
+import { CORS_ORIGIN } from "@/settings";
+import "reflect-metadata";
 
 const app = express();
 
@@ -24,6 +25,20 @@ app.use(
   }),
 );
 app.use(cookieParser());
+
+import { AppDataSource } from "@/config/ormSetting";
+import { Users } from "@/models/users.model";
+import { pool } from "./config/mariadb";
+app.post("/test", async (req: Request, res: Response) => {
+  const user = new Users();
+  user.email = req.body.email;
+  user.nickName = req.body.nickName;
+  user.password = req.body.password;
+
+  const userRepository = AppDataSource.getRepository(Users);
+  await userRepository.save(user);
+
+});
 
 app.use("/api/users", userRouter);
 app.use("/api/trip", tripRouter);
