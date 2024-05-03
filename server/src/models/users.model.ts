@@ -5,12 +5,12 @@ export class Users {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @Index({ unique: true })
   @Column({ length: 100 })
+  @Index({ unique: true })
   email!: string;
 
-  @Index({ unique: true })
   @Column({ length: 50 })
+  @Index({ unique: true })
   nickName!: string;
 
   @Column()
@@ -19,6 +19,6 @@ export class Users {
   @Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
   createdAt!: string;
 
-  @Column("varchar", { length: 10, default: "일반"})
+  @Column("varchar", { default: "일반", length: 10 })
   type!: string;
 }

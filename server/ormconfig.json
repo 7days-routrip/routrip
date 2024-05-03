@@ -10,7 +10,9 @@
     "synchronize": true,
     "logging": false,
     "dropSchema": true,
-    "entities": ["./src/models/*.{ts,js}"],
+
+    "entities": ["./src/**/*.model.{ts,js}"],
+
     "subscribers": ["src/migration/*.ts"],
     "migrations": ["src/migration/*.ts"]
   },
@@ -24,7 +26,9 @@
     "database": "",
     "synchronize": false,
     "logging": true,
-    "entities": ["dist/models/*.js"],
+
+    "entities": ["dist/**/*.model.{ts,js}"],
+
     "subscribers": ["dist/migration/*.js"],
     "migrations": ["dist/migration/*.js"],
     "migrationsTableName": "migrations",

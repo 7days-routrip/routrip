@@ -12,7 +12,7 @@ const Layout = ({ children, isFull = false }: LayoutProps) => {
     <WrapperStyle $isFull={isFull}>
       <Header isFull={isFull} />
       <LayoutStyle>{children}</LayoutStyle>
-      <Footer />
+      <Footer isFull={isFull} />
     </WrapperStyle>
   );
 };
