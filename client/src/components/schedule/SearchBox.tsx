@@ -4,13 +4,14 @@ import Icons from "@/icons/icons";
 
 interface Props {
   placeholder: string;
+  onSearch: (keyword: string) => void;
 }
 
-const SearchBox = ({ placeholder }: Props) => {
+const SearchBox = ({ placeholder, onSearch }: Props) => {
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleSearch = () => {
-    // onSearch(searchTerm);
+    onSearch(searchTerm); //상위 컴포넌트의 상태 함수에 검색어 저장
     console.log(`검색 요청: ${searchTerm}`);
   };
 
@@ -46,6 +47,7 @@ const SearchBoxStyle = styled.div`
     border: 1px solid ${({ theme }) => theme.color.borderGray};
     border-radius: ${({ theme }) => theme.borderRadius.leftRadius};
     color: ${({ theme }) => theme.color.black};
+    font-size: 1rem;
   }
 
   .search-btn {
@@ -54,7 +56,12 @@ const SearchBoxStyle = styled.div`
     border-radius: ${({ theme }) => theme.borderRadius.rightRadius};
     border: 1px solid ${({ theme }) => theme.color.primary};
     padding: 6px;
+    font-size: 1rem;
     cursor: pointer;
+
+    &:hover {
+      opacity: 0.8;
+    }
   }
 `;
 

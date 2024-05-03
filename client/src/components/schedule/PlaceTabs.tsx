@@ -42,13 +42,15 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
 
 const TabsStyle = styled.div`
   width: 100%;
-  max-width: 400px;
+  max-height: 320px;
+  overflow-y: auto;
 
   .tab-header {
     display: flex;
 
     button {
       flex: 1;
+      font-weight: 600;
     }
   }
 
@@ -56,7 +58,7 @@ const TabsStyle = styled.div`
     border: 1px solid ${({ theme }) => theme.color.borderGray};
     border-top: none;
     border-radius: ${({ theme }) => theme.borderRadius.tabContainer};
-    padding: 1rem 0.5rem;
+    padding: 0.5rem;
   }
 `;
 

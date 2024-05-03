@@ -13,6 +13,7 @@ export type FontSize = "xlarge" | "large" | "medium" | "small" | "xsmall";
 export type MediaQuery = "mobile" | "desktop";
 export type ButtonScheme = "primary" | "secondary" | "normal";
 export type BorderRadius = "default" | "tab" | "write" | "tabContainer" | "leftRadius" | "rightRadius";
+export type BoxShadow = "default" | "itemShadow";
 
 interface Theme {
   borderRadius: {
@@ -41,7 +42,7 @@ interface Theme {
     [key in MediaQuery]: string;
   };
   boxShadow: {
-    default: string;
+    [key in BoxShadow]: string;
   };
 }
 
@@ -101,6 +102,7 @@ export const theme: Theme = {
 
   boxShadow: {
     default: "0 0 8px rgba(0, 0, 0, 0.3)",
+    itemShadow: "0px 4px 10px rgba(0, 0, 0, 0.4)",
   },
 
   /* mediaQuery */
