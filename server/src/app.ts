@@ -1,18 +1,21 @@
-import express, { Request, Response, NextFunction } from "express";
 import cookieParser from "cookie-parser";
 import cors from "cors";
+import express, { NextFunction, Request, Response } from "express";
 
-import { CORS_ORIGIN } from "@/settings";
-import userRouter from "@/routes/users.routes";
-import tripRouter from "@/routes/trip.routes";
-import postsRouter from "@/routes/posts.routes";
 import likesRouter from "@/routes/likes.routes";
+import postsRouter from "@/routes/posts.routes";
 import spotRouter from "@/routes/spot.routes";
+import tripRouter from "@/routes/trip.routes";
+import userRouter from "@/routes/users.routes";
+import { CORS_ORIGIN } from "@/settings";
+import "reflect-metadata";
+import { AppDataSource } from "./config/ormSetting";
 
 const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
   res.sendStatus(500);

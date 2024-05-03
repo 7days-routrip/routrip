@@ -1,5 +1,5 @@
 import "dotenv/config";
-export const CORS_ORIGIN = "http://localhost:3000";
+export const CORS_ORIGIN = "http://localhost:5173";
 export const DB_USER = process.env.DB_USER as string;
 export const DB_PASSWORD = process.env.DB_PASSWORD as string;
 export const DB_DATABASE = process.env.DB_DATABASE as string;
