@@ -17,7 +17,7 @@ export class Journeys {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkUsersJourneysId",
   })
-  userId!: Users;
+  userId!: Users | number;
 
   @ManyToOne((type) => Routes)
   @JoinColumn({
@@ -25,12 +25,12 @@ export class Journeys {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkRoutesJourneysId",
   })
-  routeId!: Routes;
+  routeId!: Routes | number;
 
-  @Column("datetime")
+  @Column("date")
   startDate!: string;
 
-  @Column("datetime")
+  @Column("date")
   endDate!: string;
 
 }
