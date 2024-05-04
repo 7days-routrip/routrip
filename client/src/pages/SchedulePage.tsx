@@ -11,8 +11,7 @@ import Button from "@/components/common/Button";
 import { showAlert } from "@/utils/showAlert";
 import DaySchedule from "@/components/schedule/DaySchedule";
 import { getDuration } from "@/utils/getDuration";
-import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
-import { makeMockPlaces } from "@/utils/makeMockSelectedPlaces";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { SelectedPlace, usePlaceStore } from "@/stores/placeStore";
 
 const SchedulePage = () => {
@@ -134,7 +133,7 @@ const SchedulePage = () => {
       const due = getDuration(startDate, endDate);
       setDuration(due);
 
-      const mockArr = Array.from({ length: due }, () => makeMockPlaces());
+      const mockArr = Array.from({ length: due }, () => []);
       setDayPerPlaces(mockArr);
       console.log(getDuration(startDate, endDate));
     }
@@ -175,16 +174,7 @@ const SchedulePage = () => {
             {/* 추가한 장소/내가 찜한 장소 탭 */}
             <PlaceTabs>
               <PlaceTabContent title="추가한 장소">
-                <Droppable droppableId="add-places">
-                  {(provided) => (
-                    <div>
-                      <div className="add-places-container" {...provided.droppableProps} ref={provided.innerRef}>
-                        <AddPlaceSchedule buttonTitle={<Icons.TrashIcon />} />
-                      </div>
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
+                <AddPlaceSchedule buttonTitle={<Icons.TrashIcon />} />
               </PlaceTabContent>
               <PlaceTabContent title="내가 찜한 장소">
                 <BookmarkPlace buttonTitle={"추가"} />
@@ -196,19 +186,7 @@ const SchedulePage = () => {
               일정 등록
             </Button>
             <div className="days">
-              {duration > 0 &&
-                dayPerPlaces.map((data, i) => (
-                  <Droppable droppableId={`day-schedule-index${i}`} key={i}>
-                    {(provided) => (
-                      <div>
-                        <div className="day-places-container" {...provided.droppableProps} ref={provided.innerRef}>
-                          <DaySchedule dayIdx={i} schedulePlaces={data} />
-                        </div>
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                ))}
+              {duration > 0 && dayPerPlaces.map((data, i) => <DaySchedule key={i} dayIdx={i} schedulePlaces={data} />)}
             </div>
           </div>
         </div>

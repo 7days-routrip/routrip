@@ -42,7 +42,7 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
 
 const TabsStyle = styled.div`
   width: 100%;
-  max-height: 320px;
+  max-height: 310px;
   overflow-y: auto;
 
   .tab-header {
@@ -55,6 +55,7 @@ const TabsStyle = styled.div`
   }
 
   .tab-content {
+    min-height: 80px;
     border: 1px solid ${({ theme }) => theme.color.borderGray};
     border-top: none;
     border-radius: ${({ theme }) => theme.borderRadius.tabContainer};

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import PlaceItem from "./PlaceItem";
 import { SelectedPlace } from "@/stores/placeStore";
 import { Place } from "@/models/place.model";
-import { Draggable } from "@hello-pangea/dnd";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
 
 interface Props {
   place: SelectedPlace[] | SelectedPlace | Place[] | Place;
@@ -15,17 +15,22 @@ const PlaceList = ({ place, buttonTitle, isDragDrop = false }: Props) => {
 
   if (isDragDrop) {
     return (
-      <PlaceListStyle>
-        {places.map((data, i) => (
-          <Draggable draggableId={(data as SelectedPlace).uuid} index={i} key={(data as SelectedPlace).uuid}>
-            {(provided, snapshot) => (
-              <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                <PlaceItem data={data} buttonTitle={buttonTitle} isActive={snapshot.isDragging ? true : false} />
-              </div>
-            )}
-          </Draggable>
-        ))}
-      </PlaceListStyle>
+      <Droppable droppableId="add-places">
+        {(provided) => (
+          <PlaceListStyle ref={provided.innerRef} {...provided.droppableProps}>
+            {places.map((data, i) => (
+              <Draggable draggableId={(data as SelectedPlace).uuid} index={i} key={(data as SelectedPlace).uuid}>
+                {(provided, snapshot) => (
+                  <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                    <PlaceItem data={data} buttonTitle={buttonTitle} isActive={snapshot.isDragging ? true : false} />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </PlaceListStyle>
+        )}
+      </Droppable>
     );
   }
 
