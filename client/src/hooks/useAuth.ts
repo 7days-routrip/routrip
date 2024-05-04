@@ -1,4 +1,4 @@
-import { authJoin, authLogin } from "@/apis/auth.api";
+import { LoginResponse, authJoin, authLogin } from "@/apis/auth.api";
 import { useAuthStore } from "@/stores/authStore";
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +21,7 @@ export const useAuth = () => {
   const userLogin = async (data: LoginProps) => {
     try {
       const loginRes = await authLogin(data);
-      storeLogin(loginRes.Authorization, loginRes.nickname);
+      storeLogin(loginRes.Authorization, loginRes.nickname, loginRes.userId);
       navigate("/");
     } catch (error) {
       // 로그인 실패

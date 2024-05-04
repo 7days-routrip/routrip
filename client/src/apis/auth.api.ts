@@ -6,8 +6,8 @@ export const authJoin = async (data: JoinProps) => {
   return response.data;
 };
 
-interface LoginResponse {
-  userId: string;
+export interface LoginResponse {
+  userId: number;
   nickname: string;
   Authorization: string;
 }
