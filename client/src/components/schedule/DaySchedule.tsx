@@ -1,5 +1,5 @@
 import { SelectedPlace } from "@/stores/placeStore";
-import { Draggable } from "@hello-pangea/dnd";
+import { Draggable, Droppable } from "@hello-pangea/dnd";
 import styled from "styled-components";
 import PlaceItem from "./PlaceItem";
 import Icons from "@/icons/icons";
@@ -19,21 +19,26 @@ const DaySchedule = ({ dayIdx, schedulePlaces }: Props) => {
       <div className="day-box" onClick={handleOnClickDay}>
         Day {dayIdx + 1}
       </div>
-      <div className="day-places-container">
-        {schedulePlaces.map((item, i) => (
-          <Draggable key={item.uuid} draggableId={item.uuid.toString()} index={i}>
-            {(provided, snapshot) => (
-              <div key={item.uuid} ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                <PlaceItem
-                  data={item}
-                  buttonTitle={<Icons.TrashIcon />}
-                  isActive={snapshot.isDragging ? true : false}
-                />
-              </div>
-            )}
-          </Draggable>
-        ))}
-      </div>
+      <Droppable droppableId={`day-schedule-index${dayIdx}`}>
+        {(provided) => (
+          <div className="day-places-container" {...provided.droppableProps} ref={provided.innerRef}>
+            {schedulePlaces.map((item, i) => (
+              <Draggable key={item.uuid} draggableId={item.uuid.toString()} index={i}>
+                {(provided, snapshot) => (
+                  <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                    <PlaceItem
+                      data={item}
+                      buttonTitle={<Icons.TrashIcon />}
+                      isActive={snapshot.isDragging ? true : false}
+                    />
+                  </div>
+                )}
+              </Draggable>
+            ))}
+            {provided.placeholder}
+          </div>
+        )}
+      </Droppable>
     </DayScheduleStyle>
   );
 };

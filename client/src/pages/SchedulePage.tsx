@@ -11,8 +11,7 @@ import Button from "@/components/common/Button";
 import { showAlert } from "@/utils/showAlert";
 import DaySchedule from "@/components/schedule/DaySchedule";
 import { getDuration } from "@/utils/getDuration";
-import { DragDropContext, DropResult, Droppable } from "@hello-pangea/dnd";
-import { makeMockPlaces } from "@/utils/makeMockSelectedPlaces";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { SelectedPlace, usePlaceStore } from "@/stores/placeStore";
 
 const SchedulePage = () => {
@@ -29,6 +28,12 @@ const SchedulePage = () => {
 
   const handleSchedule = () => {
     if (title && startDate && endDate) {
+      if (startDate > endDate) {
+        // 시작일이 종료일보다 이후인 경우 => 날짜 잘못 선택한 경우
+        showAlert("여행 시작일 또는 도착일을 잘못 입력했어요.\n여행 일자를 다시 선택해주세요.", "logo");
+        return;
+      }
+
       // 일정 등록 요청
       console.log("등록 완료");
       return;
@@ -131,11 +136,32 @@ const SchedulePage = () => {
 
   useEffect(() => {
     if (startDate && endDate) {
+      if (startDate > endDate) {
+        // 시작일이 종료일보다 이후인 경우 => 날짜 잘못 선택한 경우
+        showAlert("여행 시작일 또는 도착일을 잘못 입력했어요.\n여행 일자를 다시 선택해주세요.", "logo");
+
+        if (dayPerPlaces.flat().length > 0) {
+          console.log(dayPerPlaces.flat());
+          const updatedSelectedPlaces = [...dayPerPlaces.flat(), ...selectedPlaces];
+          usePlaceStore.setState({ places: updatedSelectedPlaces });
+        }
+
+        setDuration(0);
+        setDayPerPlaces([]);
+        return;
+      }
+
+      if (dayPerPlaces.flat().length > 0) {
+        console.log(dayPerPlaces.flat());
+        const updatedSelectedPlaces = [...dayPerPlaces.flat(), ...selectedPlaces];
+        usePlaceStore.setState({ places: updatedSelectedPlaces });
+      }
+
       const due = getDuration(startDate, endDate);
       setDuration(due);
 
-      const mockArr = Array.from({ length: due }, () => makeMockPlaces());
-      setDayPerPlaces(mockArr);
+      const defaultPlaces: SelectedPlace[][] = Array.from({ length: due }, () => []);
+      setDayPerPlaces(defaultPlaces);
       console.log(getDuration(startDate, endDate));
     }
   }, [startDate, endDate]);
@@ -155,11 +181,16 @@ const SchedulePage = () => {
                 placeholder="여행 일정 제목을 입력해주세요."
                 onChange={(e) => handleInputChange(e)}
               />
-              <fieldset className="input-container">
-                <legend>여행 시작일과 종료일을 선택해주세요</legend>
-                <input className="input-date" type="date" onChange={(e) => setStartDate(new Date(e.target.value))} />
-                <input className="input-date" type="date" onChange={(e) => setEndDate(new Date(e.target.value))} />
-              </fieldset>
+              <div className="input-container">
+                <fieldset className="input-data-container">
+                  <legend>여행 시작일</legend>
+                  <input className="input-date" type="date" onChange={(e) => setStartDate(new Date(e.target.value))} />
+                </fieldset>
+                <fieldset className="input-data-container">
+                  <legend>여행 종료일</legend>
+                  <input className="input-date" type="date" onChange={(e) => setEndDate(new Date(e.target.value))} />
+                </fieldset>
+              </div>
             </div>
 
             {/* 장소 선택/신규 장소 등록 탭 */}
@@ -175,16 +206,7 @@ const SchedulePage = () => {
             {/* 추가한 장소/내가 찜한 장소 탭 */}
             <PlaceTabs>
               <PlaceTabContent title="추가한 장소">
-                <Droppable droppableId="add-places">
-                  {(provided) => (
-                    <div>
-                      <div className="add-places-container" {...provided.droppableProps} ref={provided.innerRef}>
-                        <AddPlaceSchedule buttonTitle={<Icons.TrashIcon />} />
-                      </div>
-                      {provided.placeholder}
-                    </div>
-                  )}
-                </Droppable>
+                <AddPlaceSchedule buttonTitle={<Icons.TrashIcon />} />
               </PlaceTabContent>
               <PlaceTabContent title="내가 찜한 장소">
                 <BookmarkPlace buttonTitle={"추가"} />
@@ -196,19 +218,7 @@ const SchedulePage = () => {
               일정 등록
             </Button>
             <div className="days">
-              {duration > 0 &&
-                dayPerPlaces.map((data, i) => (
-                  <Droppable droppableId={`day-schedule-index${i}`} key={i}>
-                    {(provided) => (
-                      <div>
-                        <div className="day-places-container" {...provided.droppableProps} ref={provided.innerRef}>
-                          <DaySchedule dayIdx={i} schedulePlaces={data} />
-                        </div>
-                        {provided.placeholder}
-                      </div>
-                    )}
-                  </Droppable>
-                ))}
+              {duration > 0 && dayPerPlaces.map((data, i) => <DaySchedule key={i} dayIdx={i} schedulePlaces={data} />)}
             </div>
           </div>
         </div>
@@ -277,6 +287,7 @@ const SchedulePageStyle = styled.div`
       .input-title,
       .input-date {
         flex: 1;
+        width: 100%;
         border-radius: ${({ theme }) => theme.borderRadius.default};
         border: 1px solid ${({ theme }) => theme.color.borderGray};
         font-size: ${({ theme }) => theme.fontSize.small};
@@ -287,11 +298,18 @@ const SchedulePageStyle = styled.div`
 
     .input-container {
       display: flex;
-      flex-direction: column;
+      /* flex-direction: column; */
       width: 100%;
       padding: 0.2rem;
+      gap: 0.2rem;
       border-radius: ${({ theme }) => theme.borderRadius.default};
       border: 1px solid ${({ theme }) => theme.color.borderGray};
+
+      .input-data-container {
+        border: none;
+        padding: 0;
+        width: 50%;
+      }
 
       legend {
         font-size: ${({ theme }) => theme.fontSize.xsmall};
