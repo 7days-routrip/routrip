@@ -1,6 +1,5 @@
 import { authJoin, authLogin } from "@/apis/auth.api";
 import { useAuthStore } from "@/stores/authStore";
-import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 // 로그인

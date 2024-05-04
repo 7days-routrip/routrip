@@ -29,28 +29,3 @@ const ButtonStyle = styled.button<Omit<Props, "children">>`
   pointer-events: ${({ disabled }) => (disabled ? "none" : "auto")};
   cursor: ${({ disabled }) => (disabled ? "none" : "pointer")};
 `;
-
-interface BBProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  children: React.ReactNode;
-  $scheme: ButtonScheme;
-  $radius: BorderRadius;
-}
-
-export const BigButton = ({ children, $scheme, $radius, ...props }: BBProps) => {
-  return (
-    <BigButtonStyle $scheme="primary" $radius="default">
-      {children}
-    </BigButtonStyle>
-  );
-};
-
-const BigButtonStyle = styled.button<Omit<BBProps, "children">>`
-  width: 26rem;
-  white-space: nowrap;
-  font-size: 1.125rem;
-  padding: 0.75rem 3rem;
-  color: ${({ theme, $scheme }) => theme.buttonScheme[$scheme].color};
-  background-color: ${({ theme, $scheme }) => theme.buttonScheme[$scheme].backgroundColor};
-  border: ${({ theme, $scheme }) => theme.buttonScheme[$scheme].border};
-  border-radius: 8px;
-`;

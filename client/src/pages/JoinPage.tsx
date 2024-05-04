@@ -7,7 +7,7 @@ import { Link } from "react-router-dom";
 
 import icons from "@/icons/icons";
 import Title from "@/components/common/Title";
-import { BigButton } from "@/components/common/Button";
+import { Button } from "@/components/common/Button";
 import { emailOptions, nicknameOptions, passwordOptions } from "@/config/registerOptions";
 
 export const placeholderHander = (text: string) => {
@@ -16,6 +16,7 @@ export const placeholderHander = (text: string) => {
 export interface joinFormProps extends JoinProps {
   passwordConfirm: string;
 }
+export const allowedDomains = ["naver.com", "github.com", "yahoo.com", "daum.net", "kakao.com"];
 
 const JoinPage = () => {
   const { userJoin } = useAuth();
@@ -28,7 +29,6 @@ const JoinPage = () => {
   } = useForm<joinFormProps>();
 
   const onSubmit = (data: joinFormProps) => {
-    const allowedDomains = ["naver.com", "github.com", "yahoo.com", "daum.net", "kakao.com"];
     const [, domain] = data.email.split("@");
     if (!allowedDomains.includes(domain)) {
       setError("email", { message: "허용되지 않는 이메일 도메인입니다." }, { shouldFocus: true });
@@ -82,12 +82,12 @@ const JoinPage = () => {
             {errors.passwordConfirm && <small className="error-text">{errors.passwordConfirm.message}.</small>}
           </fieldset>
           <fieldset className="input-section">
-            <BigButton $scheme="primary" $radius="default">
+            <Button $scheme="primary" $radius="default" $size={"large"}>
               회원가입
-            </BigButton>
+            </Button>
           </fieldset>
 
-          <div className="info">
+          <div className="login-info">
             <div className="join-login">
               <span>가입되어 있으신가요?</span>
               <div className="login-link">
@@ -113,7 +113,7 @@ const JoinPage = () => {
   );
 };
 
-const WrapperStyle = styled.div`
+export const WrapperStyle = styled.div`
   width: 100%;
   height: 100%;
   display: flex;
@@ -121,29 +121,57 @@ const WrapperStyle = styled.div`
   align-items: center;
 `;
 
-const JoinPageStyle = styled.div`
+export const JoinPageStyle = styled.div`
   width: 28.28rem;
   height: auto;
   border: 1px solid ${({ theme }) => theme.color.borderGray};
+  box-shadow: 1px 1px 1px 1px ${({ theme }) => theme.color.borderGray};
+  border-radius: ${({ theme }) => theme.borderRadius.default};
   display: flex;
   flex-direction: column;
   align-items: center;
   justify-content: center;
 
-  .info {
+  form {
+    margin-top: 10px;
+  }
+
+  .login-info {
     display: flex;
     justify-content: center;
     align-items: center;
     flex-direction: column;
     width: 100%;
     font-size: ${({ theme }) => theme.fontSize.xsmall};
+    padding: 1rem;
   }
-  .join-login {
+
+  .login-link > :first-child {
+    margin-right: 5px;
+  }
+
+  .login-link > :nth-child(2),
+  .ps-link > :nth-child(1) {
+    text-decoration-line: none;
+    color: ${({ theme }) => theme.color.primary};
+  }
+
+  .join-login,
+  .reset-ps {
     display: flex;
     width: 100%;
     text-align: center;
     justify-content: center;
     gap: 1rem;
+    margin-bottom: 5px;
+    color: ${({ theme }) => theme.color.commentGray};
+  }
+  .join-login > :nth-child(2) {
+    color: ${({ theme }) => theme.color.black};
+  }
+
+  .reset-ps {
+    margin-bottom: 10px;
   }
   .error-text {
     padding-left: 1rem;
@@ -156,7 +184,6 @@ const JoinPageStyle = styled.div`
     align-items: center;
     width: 300px;
     height: 20px;
-    margin: 0.5rem 0;
   }
   .hr-sect > span {
     font-size: ${({ theme }) => theme.fontSize.xsmall};
@@ -174,10 +201,19 @@ const JoinPageStyle = styled.div`
   .input-section {
     border: 0;
     display: flex;
+
     flex-direction: column;
     justify-content: center;
-    gap: 1;
+    align-items: flex-start;
+    gap: 15px;
     margin: 0;
+
+    > button {
+      display: flex;
+      width: 100%;
+      justify-content: center;
+      flex: 1;
+    }
   }
 
   .social-icon {

@@ -34,8 +34,16 @@ const InputText = React.forwardRef(
 );
 
 const InputWrapperStyle = styled.div`
-  > :first-child {
-    margin-right: 1rem;
+  display: flex;
+  width: 100%;
+  justify-content: center;
+  gap: 1.5rem;
+  > button {
+    flex: 1;
+    display: flex;
+    width: 5rem;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
@@ -45,7 +53,7 @@ const InputTextStyle = styled.input<Pick<Props, "$inputsize">>`
   border-radius: ${({ theme }) => theme.borderRadius.default};
   font-size: 1rem;
   line-height: 1.5;
-  width: ${({ $inputsize }) => ($inputsize === "large" ? "26rem" : "18rem")};
+  width: ${({ $inputsize }) => ($inputsize === "large" ? "26rem" : "100%")};
   height: 40px;
   /* color: ${({ theme }) => theme.color.text}; */
 `;
