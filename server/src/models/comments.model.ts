@@ -1,6 +1,8 @@
+
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "./posts.model";
 import { Users } from "./users.model";
+
 
 @Entity()
 export class Comments {
@@ -32,3 +34,4 @@ export class Comments {
   })
   postId!: Posts | number;
 }
+

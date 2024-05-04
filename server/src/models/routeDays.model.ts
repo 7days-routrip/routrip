@@ -1,5 +1,7 @@
+
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Routes } from "./routes.model";
+
 
 @Entity()
 export class RouteDays {

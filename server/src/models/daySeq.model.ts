@@ -1,3 +1,4 @@
+
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Places } from "./places.model";
 import { RouteDays } from "./routeDays.model";

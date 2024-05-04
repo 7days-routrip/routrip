@@ -1,3 +1,4 @@
+
 import { Comments } from "@/models/comments.model";
 import { Continents } from "@/models/continents.model";
 import { Countries } from "@/models/countries.model";
@@ -26,8 +27,10 @@ export const AppDataSource = new DataSource({
   connectTimeout: 30000,
   entities: [Users, Comments, Continents, Countries, Journeys, Likes, Picks, Places, Posts, RouteDays, Routes, DaySeq],
 });
+
 AppDataSource.initialize()
   .then(() => {})
   .catch((error) => {
     console.log(error);
   });
+

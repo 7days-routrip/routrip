@@ -1,6 +1,8 @@
+
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Routes } from "./routes.model";
 import { Users } from "./users.model";
+
 @Entity()
 export class Journeys {
   @PrimaryGeneratedColumn()
@@ -30,12 +32,6 @@ export class Journeys {
 
   @Column("date")
   endDate!: string;
+
 }
 
-// @OneToOne((type) => Users)
-// @JoinColumn({
-//   name: "user_id",
-//   referencedColumnName: "id",
-//   foreignKeyConstraintName: "fk_users_journeys_id",
-// })
-// hotelId!: Users;

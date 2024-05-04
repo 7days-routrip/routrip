@@ -1,3 +1,4 @@
+
 import likesRouter from "@/routes/likes.routes";
 import postsRouter from "@/routes/posts.routes";
 import spotRouter from "@/routes/spots.routes";
@@ -13,6 +14,7 @@ const app = express();
 
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
+
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
   res.sendStatus(500);

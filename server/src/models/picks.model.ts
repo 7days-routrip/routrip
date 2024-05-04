@@ -23,5 +23,3 @@ export class Picks {
   })
   placeId!: Places[] | string;
 }
-
-//
