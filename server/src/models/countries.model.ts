@@ -12,7 +12,7 @@ export class Countries {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkCountryCoutinentalId",
   })
-  continentId!: Continents;
+  continentId!: Continents | number;
 
   @Column("varchar", { length: 100 })
   name!: string;

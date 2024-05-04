@@ -1,3 +1,4 @@
+
 import { Comments } from "@/models/comments.model";
 import { Continents } from "@/models/continents.model";
 import { Countries } from "@/models/countries.model";
@@ -12,7 +13,7 @@ import { Routes } from "@/models/routes.model";
 import { Users } from "@/models/users.model";
 import { DB_DATABASE, DB_HOST, DB_PASSWORD, DB_PORT, DB_USER } from "@/settings";
 import { DataSource } from "typeorm";
-process.env.NODE_ENV === "local";
+
 export const AppDataSource = new DataSource({
   type: "mariadb",
   host: DB_HOST,
@@ -20,13 +21,16 @@ export const AppDataSource = new DataSource({
   username: DB_USER,
   password: DB_PASSWORD,
   database: DB_DATABASE,
+  timezone: 'Asia/Seoul',
   synchronize: true,
   logging: true,
   connectTimeout: 30000,
   entities: [Users, Comments, Continents, Countries, Journeys, Likes, Picks, Places, Posts, RouteDays, Routes, DaySeq],
 });
+
 AppDataSource.initialize()
   .then(() => {})
   .catch((error) => {
     console.log(error);
   });
+

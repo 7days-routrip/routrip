@@ -1,5 +1,7 @@
+
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Routes } from "./routes.model";
+
 
 @Entity()
 export class RouteDays {
@@ -12,7 +14,7 @@ export class RouteDays {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkRoutesRouteDaysId",
   })
-  routeId!: Routes;
+  routeId!: Routes | number;
 
   @Column("integer", { nullable: true })
   day!: number;

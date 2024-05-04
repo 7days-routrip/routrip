@@ -1,11 +1,14 @@
+
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "./posts.model";
 import { Users } from "./users.model";
+
 
 @Entity()
 export class Comments {
   @PrimaryGeneratedColumn()
   id!: number;
+
 
   @Column("varchar", { length: 1000, nullable: false })
   content!: string;
@@ -22,7 +25,7 @@ export class Comments {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkUsersCommentsId",
   })
-  userId!: Users;
+  userId!: Users | number;
 
   @ManyToOne((type) => Posts)
   @JoinColumn({
@@ -30,5 +33,7 @@ export class Comments {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkPostsCommentsId",
   })
-  postId!: Posts;
+  postId!: Posts | number;
+
 }
+
