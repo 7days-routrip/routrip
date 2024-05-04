@@ -13,7 +13,7 @@ export class Likes {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkUsersLikesId",
   })
-  userId!: Users;
+  userId!: Users | number;
 
   @ManyToOne((type) => Posts)
   @JoinColumn({
@@ -21,5 +21,5 @@ export class Likes {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkPostsLikesId",
   })
-  postId!: Posts;
+  postId!: Posts | number;
 }

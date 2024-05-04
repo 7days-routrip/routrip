@@ -21,6 +21,7 @@ export const AppDataSource = new DataSource({
   username: DB_USER,
   password: DB_PASSWORD,
   database: DB_DATABASE,
+  timezone: 'Asia/Seoul',
   synchronize: true,
   logging: true,
   connectTimeout: 30000,

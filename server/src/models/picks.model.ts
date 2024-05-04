@@ -13,7 +13,7 @@ export class Picks {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkUsersPicksId",
   })
-  userId!: Users;
+  userId!: Users | number;
 
   @ManyToOne((type) => Places)
   @JoinColumn({
@@ -21,5 +21,5 @@ export class Picks {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkPlacesPicksId",
   })
-  placeId!: Places;
+  placeId!: Places | string;
 }

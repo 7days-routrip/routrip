@@ -25,7 +25,7 @@ export class Comments {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkUsersCommentsId",
   })
-  userId!: Users;
+  userId!: Users | number;
 
   @ManyToOne((type) => Posts)
   @JoinColumn({
@@ -33,7 +33,7 @@ export class Comments {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkPostsCommentsId",
   })
-  postId!: Posts;
+  postId!: Posts | number;
 
 }
 
