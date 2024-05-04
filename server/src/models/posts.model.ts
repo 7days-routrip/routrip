@@ -24,7 +24,7 @@ export class Posts {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkUsersPostsId",
   })
-  userId!: Users;
+  userId!: Users | number;
 
   @Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
   createdAt!: string;
@@ -35,10 +35,10 @@ export class Posts {
   @Column("integer")
   expense!: string;
 
-  @Column("datetime")
+  @Column("date")
   startDate!: string;
 
-  @Column("datetime")
+  @Column("date")
   endDate!: string;
 
   @ManyToOne((type) => Journeys)
@@ -47,7 +47,7 @@ export class Posts {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkJourneysPostsId",
   })
-  journeyId!: Journeys;
+  journeyId!: Journeys | number;
 
   @ManyToOne((type) => Continents)
   @JoinColumn({
@@ -55,7 +55,7 @@ export class Posts {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkCoutinentalPostsId",
   })
-  continentId!: Continents;
+  continentId!: Continents | number;
 
   @ManyToOne((type) => Countries)
   @JoinColumn({
@@ -63,5 +63,5 @@ export class Posts {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkCountryPostsId",
   })
-  countryId!: Countries;
+  countryId!: Countries | number;
 }

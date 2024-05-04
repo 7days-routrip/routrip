@@ -12,7 +12,7 @@ export class DaySeq {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkRouteDaysDaySeqId",
   })
-  routeDayId!: RouteDays;
+  routeDayId!: RouteDays | number;
 
   @Column({ type: "integer" })
   seq!: number;
@@ -23,5 +23,5 @@ export class DaySeq {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkDaySeqPlacesId",
   })
-  placeId!: Places;
+  placeId!: Places | string;
 }

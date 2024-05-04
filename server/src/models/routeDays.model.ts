@@ -12,7 +12,7 @@ export class RouteDays {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkRoutesRouteDaysId",
   })
-  routeId!: Routes;
+  routeId!: Routes | number;
 
   @Column("integer", { nullable: true })
   day!: number;
