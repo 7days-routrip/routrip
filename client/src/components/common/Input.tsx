@@ -3,7 +3,7 @@ import styled from "styled-components";
 import { Button } from "./Button";
 interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   placeholder?: string;
-  inputType?: "text" | "email" | "password" | "number";
+  inputType?: "text" | "email" | "password" | "number" | "passwordConfirm";
   $inputsize?: "large" | "small";
   isButton?: boolean;
 }

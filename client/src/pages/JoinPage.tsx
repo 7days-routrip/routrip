@@ -8,14 +8,14 @@ import { Link } from "react-router-dom";
 import icons from "@/icons/icons";
 import Title from "@/components/common/Title";
 import { BigButton } from "@/components/common/Button";
-
-export const errorTextHander = (text: string) => {
-  return text === "비밀번호" ? `${text}가 입력되지 않았습니다.` : `${text}이 입력되지 않았습니다.`;
-};
+import { emailOptions, nicknameOptions, passwordOptions } from "@/config/registerOptions";
 
 export const placeholderHander = (text: string) => {
   return `${text} 입력해주세요.`;
 };
+export interface joinFormProps extends JoinProps {
+  passwordConfirm: string;
+}
 
 const JoinPage = () => {
   const { userJoin } = useAuth();
@@ -23,10 +23,21 @@ const JoinPage = () => {
   const {
     register,
     handleSubmit,
+    setError,
     formState: { errors },
-  } = useForm<JoinProps>();
+  } = useForm<joinFormProps>();
 
-  const onSubmit = (data: JoinProps) => {
+  const onSubmit = (data: joinFormProps) => {
+    const allowedDomains = ["naver.com", "github.com", "yahoo.com", "daum.net", "kakao.com"];
+    const [, domain] = data.email.split("@");
+    if (!allowedDomains.includes(domain)) {
+      setError("email", { message: "허용되지 않는 이메일 도메인입니다." }, { shouldFocus: true });
+    }
+
+    // 비밀번호 대조
+    if (data.password !== data.passwordConfirm) {
+      setError("passwordConfirm", { message: "비밀번호가 일치 하지 않습니다." }, { shouldFocus: true });
+    }
     userJoin(data);
   };
   return (
@@ -38,37 +49,37 @@ const JoinPage = () => {
             <InputText
               placeholder={placeholderHander("이메일")}
               inputType="email"
-              {...register("email", { required: true })}
+              {...register("email", emailOptions)}
               isButton={true}
             />
-            {errors.email && <small className="error-text">{errorTextHander("이메일")}</small>}
+            {errors.email && <small className="error-text">{errors.email.message}</small>}
           </fieldset>
           <fieldset className="input-section">
             <InputText
               placeholder={placeholderHander("닉네임")}
-              inputType="email"
-              {...register("email", { required: true })}
+              inputType="text"
+              {...register("nickname", nicknameOptions)}
               isButton={true}
             />
-            {errors.email && <small className="error-text">{errorTextHander("닉네임")}</small>}
+            {errors.nickname && <small className="error-text">{errors.nickname.message}</small>}
           </fieldset>
           <fieldset className="input-section">
             <InputText
               placeholder={placeholderHander("비밀번호")}
               inputType="password"
               $inputsize="large"
-              {...register("password", { required: true })}
+              {...register("password", passwordOptions)}
             />
-            {errors.email && <small className="error-text">{errorTextHander("비밀번호")}</small>}
+            {errors.password && <small className="error-text">{errors.password.message}</small>}
           </fieldset>
           <fieldset className="input-section">
             <InputText
               placeholder={placeholderHander("비밀번호 확인")}
               inputType="password"
               $inputsize="large"
-              {...register("password", { required: true })}
+              {...register("passwordConfirm", passwordOptions)}
             />
-            {errors.email && <small className="error-text">{errorTextHander("비밀번호")}.</small>}
+            {errors.passwordConfirm && <small className="error-text">{errors.passwordConfirm.message}.</small>}
           </fieldset>
           <fieldset className="input-section">
             <BigButton $scheme="primary" $radius="default">
