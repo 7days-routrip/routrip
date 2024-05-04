@@ -6,10 +6,9 @@ import { Place } from "@/models/place.model";
 interface Props {
   data: SelectedPlace | Place;
   buttonTitle: React.ReactNode;
-  imgUrl?: string; // 추후 Place 모델에 imgUrl 넣어서 data에서 추출해야함
   isActive?: boolean;
 }
-const PlaceItem = ({ data, buttonTitle, imgUrl, isActive = false }: Props) => {
+const PlaceItem = ({ data, buttonTitle, isActive = false }: Props) => {
   const { addPlace, removePlace } = usePlaceStore();
 
   const handleOnClick = () => {
@@ -25,10 +24,8 @@ const PlaceItem = ({ data, buttonTitle, imgUrl, isActive = false }: Props) => {
   };
 
   return (
-    <PlaceItemStyle $url={imgUrl ? imgUrl : logoImage} $isActive={isActive}>
-      <div className="img-container">
-        <div className="place-img"></div>
-      </div>
+    <PlaceItemStyle $url={data.img ? data.img : logoImage} $isActive={isActive}>
+      <div className="place-img"></div>
       <div className="detail-container">
         <div className="place-title">{data.placeName}</div>
         <div className="place-address">{data.address}</div>
@@ -61,8 +58,9 @@ const PlaceItemStyle = styled.div<PlaceItemStyleProps>`
     background-size: cover;
     background-repeat: no-repeat;
     background-position: center;
+    border-radius: 4px;
     width: 45px;
-    height: 45px;
+    height: auto;
   }
 
   .detail-container {

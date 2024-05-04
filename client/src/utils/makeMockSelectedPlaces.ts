@@ -11,7 +11,7 @@ export const makeMockPlaces = (): SelectedPlace[] => {
   return Array.from({ length: 4 }, (_) => ({
     placeId: faker.helpers.rangeToNumber({ min: 0, max: 50 }).toString(),
     placeName: faker.lorem.word(),
-    address: faker.lorem.sentence(),
+    address: faker.lorem.sentence().slice(0, 30),
     location: {
       lat: 37.56226770000001,
       lng: 126.9921278,
