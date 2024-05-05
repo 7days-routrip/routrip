@@ -21,4 +21,7 @@ export class Users {
 
   @Column("varchar", { default: "일반", length: 10 })
   type!: string;
+
+  @Column("blob", { nullable: true })
+  profileImg!: string;
 }

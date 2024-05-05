@@ -1,3 +1,4 @@
+
 import express, { Request, Response, NextFunction } from "express";
 import { addToPlace, checkDuplicatePlaces, getPlaceDetail } from "@/controller/spots.ctl";
 
