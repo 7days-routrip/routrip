@@ -24,7 +24,7 @@ const PlaceItem = ({ data, buttonTitle, isActive = false }: Props) => {
   };
 
   return (
-    <PlaceItemStyle $url={data.img ? data.img : logoImage} $isActive={isActive}>
+    <PlaceItemStyle $url={data.placeImg ? data.placeImg : logoImage} $isActive={isActive}>
       <div className="place-img"></div>
       <div className="detail-container">
         <div className="place-title">{data.placeName}</div>

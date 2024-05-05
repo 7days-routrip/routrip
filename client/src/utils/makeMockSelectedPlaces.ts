@@ -16,8 +16,7 @@ export const makeMockPlaces = (): SelectedPlace[] => {
       lat: 37.56226770000001,
       lng: 126.9921278,
     },
-    tel: faker.phone.number().toString(),
-    img: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
+    placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
     uuid: uuidv4(),
   }));
 };
