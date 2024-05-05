@@ -49,3 +49,16 @@ export const postLikeRequestResult = async (repo: Repository<Likes>, userId: num
     return false;
   }
 };
+
+export const postUnlikeRequestResult = async (repo: Repository<Likes>, userId: number, postId: number) => {
+  try {
+    const repository = repo;
+    const result = await repository.delete({
+      userId: userId,
+      postId: postId,
+    });
+    return result.affected;
+  } catch (err) {
+    return false;
+  }
+};

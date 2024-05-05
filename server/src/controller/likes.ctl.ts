@@ -1,13 +1,20 @@
 import { AppDataSource } from "@/config/ormSetting";
 import {
-  BAD_REQUEST_LIKE_POST,
   CONFLICT_LIKE_POST,
+  NOT_FOUND_LIKE,
+  NOT_FOUND_POST,
   NOT_FOUND_USER_LIKES_POST,
   OK_LIKE_POST,
+  OK_UNLIKE_POST,
 } from "@/constants/message";
 import { Likes } from "@/models/likes.model";
 import { Posts } from "@/models/posts.model";
-import { alreadyLikePostCheck, postLikeListRequest, postLikeRequestResult } from "@/repository/likes.repo";
+import {
+  alreadyLikePostCheck,
+  postLikeListRequest,
+  postLikeRequestResult,
+  postUnlikeRequestResult,
+} from "@/repository/likes.repo";
 import { iListMapData } from "@/types/likes.types";
 import { setDate } from "@/utils/common";
 import { Request, Response } from "express";
@@ -48,27 +55,33 @@ export const postLikeRequest = async (req: Request, res: Response) => {
     // const userId = req.user?.id;
     const userId = 8;
     const checkPost = await alreadyLikePostCheck(likesRepo, userId, postId);
-    if (!checkPost) throw new Error("like is exist");
+    if (!checkPost) throw new Error("Like does not exist");
     const requsetResult = await postLikeRequestResult(likesRepo, userId, postId);
     if (!requsetResult) throw new Error("post isn't exist");
     res.status(StatusCodes.OK).json({ message: OK_LIKE_POST });
   } catch (err) {
     if (err instanceof Error) {
-      if (err.message === "like is exist")
+      if (err.message === "Like does not exist.")
         return res.status(StatusCodes.CONFLICT).json({ message: CONFLICT_LIKE_POST });
       if (err.message === "post isn't exist")
-        return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_LIKE_POST });
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: NOT_FOUND_POST });
     }
   }
 };
-export const postUnlikeRequest = () => {};
-
-// const listResult = await likesRepo
-//   .createQueryBuilder("likes")
-//   .leftJoin("likes.userId", "users")
-//   .leftJoin("likes.postId", "posts")
-//   .leftJoin("posts.continentId", "continents")
-//   .leftJoin("posts.countryId", "countries")
-//   .select(["posts.id", "users.nickName", "users.profileImg", "continents.name", "countries.name", "posts.postsImg","posts.startDate", "posts.endDate", "posts.createdAt"])
-//   .where("likes.userId = :id", { id: userId })
-//   .getRawMany();
+export const postUnlikeRequest = async (req: Request, res: Response) => {
+  try {
+    const likesRepo = AppDataSource.getRepository(Likes);
+    const postId = parseInt(req.params.id);
+    // const userId = req.user?.id;
+    const userId = 1;
+    const checkPost = await alreadyLikePostCheck(likesRepo, userId, postId);
+    if (checkPost) throw new Error("Like does not exist");
+    await postUnlikeRequestResult(likesRepo, userId, postId);
+    res.status(StatusCodes.OK).json({ message: OK_UNLIKE_POST });
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "Like does not exist")
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: NOT_FOUND_LIKE });
+    }
+  }
+};
