@@ -1,3 +1,4 @@
+import { Likes } from "@/models/likes.model";
 import { Posts } from "@/models/posts.model";
 import { Repository } from "typeorm";
 
@@ -17,5 +18,34 @@ export const postLikeListRequest = async (repo: Repository<Posts>, userId: numbe
     return listResult;
   } catch (err) {
     console.log(err);
+  }
+};
+
+export const alreadyLikePostCheck = async (repo: Repository<Likes>, userId: number, postId: number) => {
+  try {
+    const repository = repo;
+    const result = await repository
+      .createQueryBuilder("likes")
+      .where("likes.userId = :userId", { userId: userId })
+      .andWhere("likes.postId = :postId", { postId: postId })
+      .getRawOne();
+    if (result) throw new Error("already exist");
+    return true;
+  } catch (err) {
+    console.log(err);
+    return false;
+  }
+};
+
+export const postLikeRequestResult = async (repo: Repository<Likes>, userId: number, postId: number) => {
+  try {
+    const repository = repo;
+    const result = await repository.insert({
+      userId: userId,
+      postId: postId,
+    });
+    return result;
+  } catch (err) {
+    return false;
   }
 };

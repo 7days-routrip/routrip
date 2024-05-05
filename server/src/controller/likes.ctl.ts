@@ -1,14 +1,18 @@
 import { AppDataSource } from "@/config/ormSetting";
-import { NOT_FOUND_USER_LIKES_POST } from "@/constants/message";
+import {
+  BAD_REQUEST_LIKE_POST,
+  CONFLICT_LIKE_POST,
+  NOT_FOUND_USER_LIKES_POST,
+  OK_LIKE_POST,
+} from "@/constants/message";
+import { Likes } from "@/models/likes.model";
 import { Posts } from "@/models/posts.model";
-import { postLikeListRequest } from "@/repository/likes.repo";
+import { alreadyLikePostCheck, postLikeListRequest, postLikeRequestResult } from "@/repository/likes.repo";
 import { iListMapData } from "@/types/likes.types";
 import { setDate } from "@/utils/common";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
-// const queryRunner = AppDataSource.createQueryRunner();
-// queryRunner.connect();
 export const getLikesPostsList = async (req: Request, res: Response) => {
   const postsRepo = AppDataSource.getRepository(Posts);
   // const userId = req.user.id;
@@ -37,7 +41,26 @@ export const getLikesPostsList = async (req: Request, res: Response) => {
   });
   res.status(StatusCodes.OK).json(result);
 };
-export const postLikeRequest = () => {};
+export const postLikeRequest = async (req: Request, res: Response) => {
+  try {
+    const likesRepo = AppDataSource.getRepository(Likes);
+    const postId = parseInt(req.params.id);
+    // const userId = req.user?.id;
+    const userId = 8;
+    const checkPost = await alreadyLikePostCheck(likesRepo, userId, postId);
+    if (!checkPost) throw new Error("like is exist");
+    const requsetResult = await postLikeRequestResult(likesRepo, userId, postId);
+    if (!requsetResult) throw new Error("post isn't exist");
+    res.status(StatusCodes.OK).json({ message: OK_LIKE_POST });
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "like is exist")
+        return res.status(StatusCodes.CONFLICT).json({ message: CONFLICT_LIKE_POST });
+      if (err.message === "post isn't exist")
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_LIKE_POST });
+    }
+  }
+};
 export const postUnlikeRequest = () => {};
 
 // const listResult = await likesRepo
