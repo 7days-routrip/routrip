@@ -1,6 +1,7 @@
+
 import { Likes } from "@/models/likes.model";
 import { Posts } from "@/models/posts.model";
-import { Repository } from "typeorm";
+import { ObjectLiteral, Repository } from "typeorm";
 
 export const postLikeListRequest = async (repo: Repository<Posts>, userId: number) => {
   try {
@@ -20,6 +21,45 @@ export const postLikeListRequest = async (repo: Repository<Posts>, userId: numbe
     console.log(err);
   }
 };
+
+export const placeUnlikeRequestResult = async (repo: Repository<ObjectLiteral>, userId: number, placeId: number) => {
+  const repository = repo;
+  try {
+    const result = await repository.delete({
+      userId: userId,
+      placeId: placeId,
+    });
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const placeLikeRequestResult = async (repo: Repository<ObjectLiteral>, userId: number, placeId: number) => {
+  const repository = repo;
+  try {
+    const result = await repository.insert({
+      userId: userId,
+      placeId: placeId,
+    });
+    return result;
+  } catch (err) {
+    console.log(err);
+  }
+};
+
+export const alreadyLikePlaceCheck = async (repo: Repository<ObjectLiteral>, userId: number, placeId: number) => {
+  const repository = repo;
+  try {
+    const result = await repository
+      .createQueryBuilder("check")
+      .where("check.userId = :userId", { userId: userId })
+      .andWhere("check.placeId = :placeId", { placeId: placeId })
+      .getRawOne();
+
+    return result;
+  } catch (err) {
+    console.log(err);
 
 export const alreadyLikePostCheck = async (repo: Repository<Likes>, userId: number, postId: number) => {
   try {
