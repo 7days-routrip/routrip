@@ -1,11 +1,20 @@
-import { Place } from "@/models/place.model";
-import { makeMockPlaces } from "@/utils/makeMockSelectedPlaces";
-import { useQuery } from "@tanstack/react-query";
+// import { searchPlaceApi } from "@/apis/place.api";
+// import { queryKey } from "@/constants/queryKey";
+// import { Place } from "@/models/place.model";
+// import { makeMockPlaces, makeMockSearchPlace } from "@/utils/makeMockSelectedPlaces";
+// import { useQuery } from "@tanstack/react-query";
 
-const mockDataArr = makeMockPlaces();
-export const useSearchPlace = (keyword: string) => {
-  // const {data, isLoading} = useQuery({
+// export const useSearchPlace = (keyword: string) => {
+//   const { data, isLoading, error } = useQuery({
+//     queryKey: [queryKey.searchPlace, keyword],
+//     queryFn: () => (keyword ? searchPlaceApi(keyword) : Promise.resolve(null)),
+//   });
 
-  // })
-  return { placeData: mockDataArr, isSearchLoading: false };
-};
+//   const mockData = makeMockSearchPlace();
+
+//   return {
+//     placeData: data,
+//     // isSearchLoading: isLoading,
+//     // searchPlaceError: error
+//   };
+// };

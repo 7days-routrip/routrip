@@ -1,37 +1,46 @@
 import styled from "styled-components";
 import SearchBox from "./SearchBox";
 import PlaceList from "./PlaceList";
-import { useState } from "react";
-import { Place } from "@/models/place.model";
-
-const dataArr: Place[] = [
-  {
-    placeId: "0",
-    placeName: "롯데 타워",
-    address: "서울특별시 송파구 올림픽로 300",
-    tel: "02-3213-5000",
-  },
-  {
-    placeId: "1",
-    placeName: "도쿄 타워",
-    address: "서울특별시 송파구 올림픽로 300",
-    tel: "02-3213-5000",
-  },
-];
+import { useNearPlacesStore } from "@/stores/nearPlacesStore";
+import { SearchNearByPlacesParams, searchNearByPlaces } from "@/apis/map.api";
+import { useCenterStore } from "@/stores/mapStore";
+import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
 
 const AddNewPlace = () => {
-  const [searchKeyword, setSearchKeyword] = useState("");
+  const { nearPlaces, setNearPlaces } = useNearPlacesStore();
+  const { mapCenter, googleMap } = useCenterStore();
+  const { searchKeywordToGoogle, setSearchKeywordToGoogle } = useSearchKeywordStore();
 
-  // 구글 api 장소 검색 요청
+  const requestHandler = async (keyword: string) => {
+    // 구글 api 장소 검색 요청
+    const params: SearchNearByPlacesParams = {
+      keyword,
+      location: { lat: mapCenter.lat, lng: mapCenter.lng },
+      radius: 50000, // 최대 반경 5만 미터(50km)
+    };
+
+    await searchNearByPlaces(googleMap, params, setNearPlaces);
+  };
 
   return (
     <AddNewPlaceStyle>
-      <SearchBox placeholder="장소명을 검색하세요." onSearch={setSearchKeyword} />
-      <PlaceList place={dataArr} buttonTitle={"등록"} />
+      <small className="menual">💡 검색할 장소가 있는 나라 주변으로 지도를 먼저 움직여주세요</small>
+
+      <SearchBox
+        placeholder="장소명을 검색하세요."
+        searchKeyword={searchKeywordToGoogle}
+        requestHandler={requestHandler}
+        setSearchKeyword={setSearchKeywordToGoogle}
+      />
+      <PlaceList place={nearPlaces} buttonTitle={"등록"} />
     </AddNewPlaceStyle>
   );
 };
 
-const AddNewPlaceStyle = styled.div``;
+const AddNewPlaceStyle = styled.div`
+  .menual {
+    font-weight: 600;
+  }
+`;
 
 export default AddNewPlace;
