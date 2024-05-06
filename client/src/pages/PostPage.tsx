@@ -144,13 +144,14 @@ const PostPageStyle = styled.div`
     align-items: center;
     display: flex;
     gap: 10px;
-    width: 100%;
+    width: 790px;
     margin-top: 20px;
   }
 
   .post {
     border-radius: 0px;
     display: flex;
+    width: 790px;
     flex-wrap: wrap;
     gap: 14px;
   }
