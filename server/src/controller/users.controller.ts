@@ -24,11 +24,15 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   try {
     const results = await usersService.login(email, password);
     // 토큰 전달
+    res.setHeader("Authorization", `Bearer ${results.accessToken}`);
+    res.cookie("refresh_token", results.refreshToken, {
+      httpOnly: true,
+    });
 
     res.status(StatusCodes.OK).json({
       message: "로그인이 완료되었습니다.",
       userId: results.user.id,
-      nickName: results.user.nickName
+      nickName: results.user.nickName,
     });
   } catch (error) {
     return res.status(StatusCodes.BAD_REQUEST).json({

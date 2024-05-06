@@ -22,7 +22,7 @@ const findByEmail = async (email: string) => {
   });
 
   return user;
-}
+};
 
 const userRepository = {
   create,
