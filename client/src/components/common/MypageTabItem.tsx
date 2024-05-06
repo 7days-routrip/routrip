@@ -5,11 +5,7 @@ interface Props {
 }
 
 const MypageTabItem = ({ title, ative }: Props) => {
-  return (
-    <MypageTabItemStyle onClick={() => console.log("구현해야함")} $ative={ative}>
-      {title}
-    </MypageTabItemStyle>
-  );
+  return <MypageTabItemStyle $ative={ative}>{title}</MypageTabItemStyle>;
 };
 
 interface MypageTabItemStyleProps {
@@ -25,10 +21,12 @@ const MypageTabItemStyle = styled.button<MypageTabItemStyleProps>`
   border-radius: ${({ theme }) => theme.borderRadius.default};
   font-size: ${({ theme }) => theme.fontSize.medium};
   text-align: center;
+  padding: 0;
 
   @media (max-width: 768px) {
+    /* width: 5px; */
+    font-size: ${({ theme }) => theme.fontSize.xsmall};
     height: 40px;
-    line-height: 40px;
   }
 `;
 

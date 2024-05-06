@@ -35,8 +35,8 @@ interface ProfileImageStyleProps {
 }
 
 const ProfileImageStyle = styled.div<ProfileImageStyleProps>`
-  width: 6.25rem;
-  height: 6.25rem;
+  width: 6rem;
+  height: 6rem;
   background-image: url(${({ $image }) => ($image ? "data:image/png;base64,${$image}" : DEFAULT_IMAGE)});
   background-color: ${({ theme }) => theme.color.white};
   background-size: 70% 60%;
