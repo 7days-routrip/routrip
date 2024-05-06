@@ -19,6 +19,7 @@ import { FaBookmark as BookmarkIcon } from "@react-icons/all-files/fa/FaBookmark
 import { FaSpinner as LoadingIcon } from "@react-icons/all-files/fa/FaSpinner";
 import { FaBars as HamburgerIcon } from "@react-icons/all-files/fa/FaBars";
 import { FaRegUser as MobileUserIcon } from "@react-icons/all-files/fa/FaRegUser";
+import { FaSearch as SearchIcon } from "@react-icons/all-files/fa/FaSearch";
 
 const icons = {
   JoinIcon,
@@ -42,6 +43,7 @@ const icons = {
   LoadingIcon,
   HamburgerIcon,
   MobileUserIcon,
+  SearchIcon,
 };
 
 export default icons;
