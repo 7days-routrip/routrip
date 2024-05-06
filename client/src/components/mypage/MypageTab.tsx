@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import MypageTabItem from "../common/MypageTabItem";
 import { useState } from "react";
-import Button from "../common/Button";
+import { Button } from "../common/Button";
 import { queryKey } from "@/constants/queryKey";
 import { useMypage } from "@/hooks/useMypage";
 interface Props {}
@@ -16,7 +16,7 @@ const TABLIST = [
 
 const MypageTab = () => {
   const [activeTab, setActiveTab] = useState([true, false, false, false, false]);
-  const { switchMySchedules, switchMyPosts, switchComments, switchLikePost, switchLikePlace } = useMypage();
+  const { switchMySchedules, switchMyPosts, switchComments, switchLikePost } = useMypage(); // switchLikePlace
   const handleMypageTab = (tabIndex: number) => {
     const arr: boolean[] = new Array(5).fill(false);
     arr[tabIndex] = true;
@@ -36,7 +36,7 @@ const MypageTab = () => {
         switchLikePost();
         return;
       case 4:
-        switchLikePlace();
+        // switchLikePlace();
         return;
     }
   };
@@ -44,9 +44,9 @@ const MypageTab = () => {
     <MypageTabStyle>
       {TABLIST.map((item, idx) => (
         <Button
-          radius="default"
-          scheme={activeTab[idx] ? "primary" : "normal"}
-          size="large"
+          $radius="default"
+          $scheme={activeTab[idx] ? "primary" : "normal"}
+          $size="large"
           onClick={() => handleMypageTab(idx)}
           key={idx}
         >

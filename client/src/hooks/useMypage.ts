@@ -8,7 +8,7 @@ import {
 } from "@/apis/mypage.api";
 import { queryKey } from "@/constants/queryKey";
 import { Comment as IComment } from "@/models/comment.model";
-import { LikePlace } from "@/models/place.mode";
+// import { LikePlace } from "@/models/place.mode";
 import { Post } from "@/models/post.model";
 import { ProfileCard as IProfileCard } from "@/models/profile.model";
 import { Schedule } from "@/models/schedule.model";
@@ -20,7 +20,7 @@ export const useMypage = () => {
   const [schedules, setschedules] = useState<Schedule[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [comments, setComments] = useState<IComment[]>([]);
-  const [likePlace, setLikePlace] = useState<LikePlace[]>([]);
+  // const [likePlace, setLikePlace] = useState<LikePlace[]>([]);
 
   const switchProfile = () => {
     const nickname = getNickName();
@@ -46,26 +46,26 @@ export const useMypage = () => {
     fetchLikePost().then(({ posts }) => posts && setPosts(posts));
   };
 
-  const switchLikePlace = () => {
-    fetchLikePlace().then(({ places }) => places && setLikePlace(places));
-  };
+  // const switchLikePlace = () => {
+  //   fetchLikePlace().then(({ places }) => places && setLikePlace(places));
+  // };
 
   useEffect(() => {
     // switchMySchedules();
     // switchProfile();
   }, []);
 
+  // likePlace 가 지금 빠져 있음
   return {
     posts,
     profileInfo,
     schedules,
     comments,
-    likePlace,
+
     switchProfile,
     switchMySchedules,
     switchMyPosts,
     switchComments,
     switchLikePost,
-    switchLikePlace,
   };
 };
