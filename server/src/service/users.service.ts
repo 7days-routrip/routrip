@@ -1,5 +1,5 @@
 import { Users } from "@/models/users.model";
-import userRepository from "@/repository/users.repository";
+import userRepository from "@/repository/users.repo";
 import {
   JWT_ACCESS_EXPIRED_IN,
   JWT_ACCESS_SECRET,
