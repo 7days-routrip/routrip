@@ -6,12 +6,13 @@ interface Props extends React.InputHTMLAttributes<HTMLInputElement> {
   inputType?: "text" | "email" | "password" | "number" | "passwordConfirm";
   $inputsize?: "large" | "small";
   isButton?: boolean;
+  buttonText?: string;
+  onConfirm?: () => void;
+  isDisabled?: boolean;
 }
-
-// 포워드 방식의 컴포넌트
 const InputText = React.forwardRef(
   (
-    { placeholder, inputType, onChange, size, isButton = false, ...props }: Props,
+    { placeholder, inputType, onChange, size, isButton = false, buttonText, onConfirm, isDisabled, ...props }: Props,
     ref: ForwardedRef<HTMLInputElement>,
   ) => {
     return (
@@ -23,9 +24,10 @@ const InputText = React.forwardRef(
             $radius="default"
             type="button"
             $scheme="primary"
-            onClick={() => console.log("중복확인")}
+            onClick={onConfirm}
+            disabled={isDisabled}
           >
-            중복확인
+            {buttonText}
           </Button>
         )}
       </InputWrapperStyle>
@@ -41,6 +43,7 @@ const InputWrapperStyle = styled.div`
   > button {
     flex: 1;
     display: flex;
+
     width: 5rem;
     justify-content: center;
     align-items: center;

@@ -5,6 +5,7 @@ import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
 import Mypage from "@/pages/Mypage";
 import PostPage from "@/pages/PostPage";
+import RestPage from "@/pages/ResetPassword";
 import SchedulePage from "@/pages/SchedulePage";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -40,6 +41,19 @@ const routerArr = [
     element: (
       <Layout>
         <LoginPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/reset",
+    element: (
+      <Layout>
+        <RestPage />
       </Layout>
     ),
     errorElement: (

@@ -1,4 +1,4 @@
-import { LoginResponse, authJoin, authLogin } from "@/apis/auth.api";
+import { LoginResponse, authEmailComfirm, authJoin, authLogin, authReset } from "@/apis/auth.api";
 import { useAuthStore } from "@/stores/authStore";
 import { useNavigate } from "react-router-dom";
 
@@ -37,5 +37,23 @@ export const useAuth = () => {
     }
   };
 
-  return { userLogin, userJoin };
+  const userEmailComfirm = async (email: string) => {
+    try {
+      const EmailComfirmRes = await authEmailComfirm(email);
+      return EmailComfirmRes;
+    } catch (error) {
+      // 이메일 확인 과정 실패
+    }
+  };
+
+  const userPasswordReset = async (data: LoginProps) => {
+    try {
+      const passwordResetRes = await authReset(data);
+      return passwordResetRes;
+    } catch (error) {
+      // 비밀번호 리셋 실패
+    }
+  };
+
+  return { userLogin, userJoin, userEmailComfirm, userPasswordReset };
 };

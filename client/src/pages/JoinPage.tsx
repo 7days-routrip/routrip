@@ -9,6 +9,9 @@ import icons from "@/icons/icons";
 import Title from "@/components/common/Title";
 import { Button } from "@/components/common/Button";
 import { emailOptions, nicknameOptions, passwordOptions } from "@/config/registerOptions";
+import { useState } from "react";
+import { isEmailUnique, isNicknameUnique } from "@/apis/auth.api";
+import { emailRegex, nicknameRegex } from "@/constants/regexPatterns";
 
 export const placeholderHander = (text: string) => {
   return `${text} 입력해주세요.`;
@@ -18,6 +21,12 @@ export interface joinFormProps extends JoinProps {
 }
 export const allowedDomains = ["naver.com", "github.com", "yahoo.com", "daum.net", "kakao.com"];
 
+export const domainAuth = (email: string) => {
+  const [, domain] = email.split("@");
+  if (allowedDomains.includes(domain)) return true;
+  return false;
+};
+
 const JoinPage = () => {
   const { userJoin } = useAuth();
   const UserIcon = icons.MobileUserIcon;
@@ -25,13 +34,55 @@ const JoinPage = () => {
     register,
     handleSubmit,
     setError,
+    getValues,
+    clearErrors,
     formState: { errors },
   } = useForm<joinFormProps>();
+  const [emailUniqueCheck, setEmailUniqueCheck] = useState(false);
+  const [nicknameUniqueCheck, setNicknameUniqueCheck] = useState(false);
+
+  const checkEmail = () => {
+    const email = getValues().email;
+    if (!emailRegex.test(email)) {
+      setError("email", { message: "이메일형식이 올바르지 않습니다." }, { shouldFocus: true });
+      return;
+    }
+    if (!domainAuth(email)) {
+      setError("email", { message: "허용되지 않는 이메일 도메인입니다." }, { shouldFocus: true });
+      return;
+    }
+    isEmailUnique(email).then((res) => {
+      // res 가 성공 메시지면 이거
+      setEmailUniqueCheck((prev) => !prev);
+      clearErrors("email");
+    });
+  };
+
+  const checkNickname = () => {
+    const nickname = getValues().nickname;
+    if (!nicknameRegex.test(nickname)) {
+      setError(
+        "nickname",
+        { message: "최소 2 ~ 최대 8 글자, 영문 대소문자, 글자 단위 한글, 숫자" },
+        { shouldFocus: true },
+      );
+      return;
+    }
+    isNicknameUnique(nickname).then((res) => {
+      // res 가 성공 메시지면 이거
+      setNicknameUniqueCheck((prev) => !prev);
+      clearErrors("nickname");
+    });
+  };
 
   const onSubmit = (data: joinFormProps) => {
-    const [, domain] = data.email.split("@");
-    if (!allowedDomains.includes(domain)) {
-      setError("email", { message: "허용되지 않는 이메일 도메인입니다." }, { shouldFocus: true });
+    if (!emailUniqueCheck) {
+      setError("email", { message: "이메일 중복 확인이 되어 있지 않습니다." }, { shouldFocus: true });
+      return;
+    }
+    if (!nicknameUniqueCheck) {
+      setError("nickname", { message: "닉네임 중복 확인이 되어 있지 않습니다." }, { shouldFocus: true });
+      return;
     }
 
     // 비밀번호 대조
@@ -47,25 +98,31 @@ const JoinPage = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <fieldset className="input-section">
             <InputText
-              placeholder={placeholderHander("이메일")}
+              placeholder={placeholderHander("이메일을")}
               inputType="email"
               {...register("email", emailOptions)}
               isButton={true}
+              buttonText={emailUniqueCheck ? "인증 완료" : "중복 확인"}
+              onConfirm={checkEmail}
+              isDisabled={emailUniqueCheck ? true : false}
             />
             {errors.email && <small className="error-text">{errors.email.message}</small>}
           </fieldset>
           <fieldset className="input-section">
             <InputText
-              placeholder={placeholderHander("닉네임")}
+              placeholder={placeholderHander("닉네임을")}
               inputType="text"
               {...register("nickname", nicknameOptions)}
               isButton={true}
+              buttonText={nicknameUniqueCheck ? "인증 완료" : "중복 확인"}
+              onConfirm={checkNickname}
+              isDisabled={nicknameUniqueCheck ? true : false}
             />
             {errors.nickname && <small className="error-text">{errors.nickname.message}</small>}
           </fieldset>
           <fieldset className="input-section">
             <InputText
-              placeholder={placeholderHander("비밀번호")}
+              placeholder={placeholderHander("비밀번호를")}
               inputType="password"
               $inputsize="large"
               {...register("password", passwordOptions)}

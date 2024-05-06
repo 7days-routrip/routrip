@@ -7,12 +7,12 @@ import AddPlaceSchedule from "@/components/schedule/AddPlaceSchedule";
 import Icons from "@/icons/icons";
 import { useEffect, useState } from "react";
 import BookmarkPlace from "@/components/schedule/BookmarkPlace";
-import Button from "@/components/common/Button";
 import { showAlert } from "@/utils/showAlert";
 import DaySchedule from "@/components/schedule/DaySchedule";
 import { getDuration } from "@/utils/getDuration";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { SelectedPlace, usePlaceStore } from "@/stores/placeStore";
+import { Button } from "@/components/common/Button";
 
 const SchedulePage = () => {
   const [title, setTitle] = useState<string>("");
@@ -214,7 +214,13 @@ const SchedulePage = () => {
             </PlaceTabs>
           </div>
           <div className="day-schedule">
-            <Button className="schedule-btn" size="medium" scheme="primary" radius="default" onClick={handleSchedule}>
+            <Button
+              className="schedule-btn"
+              $size="medium"
+              $scheme="primary"
+              $radius="default"
+              onClick={handleSchedule}
+            >
               일정 등록
             </Button>
             <div className="days">

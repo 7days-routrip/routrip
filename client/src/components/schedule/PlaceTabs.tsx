@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Button from "@/components/common/Button";
+import { Button } from "../common/Button";
 
 interface PlaceTabContentProps {
   title: string;
@@ -26,9 +26,9 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
         {tabs.map((tab, i) => (
           <Button
             key={i}
-            size="medium"
-            scheme={activeIndex === i ? "primary" : "normal"}
-            radius="tab"
+            $size="medium"
+            $scheme={activeIndex === i ? "primary" : "normal"}
+            $radius="tab"
             onClick={() => setActiveIndex(i)}
           >
             {tab.props.title}
