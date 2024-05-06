@@ -2,31 +2,33 @@ import { AppDataSource } from "@/config/ormSetting";
 import {
   ALREADY_LIKE_PLACES,
   BAD_REQUEST_LIKE_PLACE,
-  NOT_FOUND_PLACES_LIST,
-  OK_LIKE_PLACE,
-  OK_UNLIKE_PLACE,
   CONFLICT_LIKE_POST,
   NOT_FOUND_LIKE,
+  NOT_FOUND_PLACES_LIST,
   NOT_FOUND_POST,
   NOT_FOUND_USER_LIKES_POST,
+  OK_LIKE_PLACE,
   OK_LIKE_POST,
+  OK_UNLIKE_PLACE,
   OK_UNLIKE_POST,
 } from "@/constants/message";
+import { Likes } from "@/models/likes.model";
 import { Picks } from "@/models/picks.model";
+import { Posts } from "@/models/posts.model";
 import {
   PlaceLikesListResult,
   alreadyLikePlaceCheck,
+  alreadyLikePostCheck,
   placeLikeRequestResult,
   placeUnlikeRequestResult,
-  alreadyLikePostCheck,
   postLikeListRequest,
   postLikeRequestResult,
   postUnlikeRequestResult,
 } from "@/repository/likes.repo";
-import { Request, Response } from "express";
-import { StatusCodes } from "http-status-codes";
 import { iListMapData } from "@/types/likes.types";
 import { setDate } from "@/utils/common";
+import { Request, Response } from "express";
+import { StatusCodes } from "http-status-codes";
 
 export const getPlaceLikesList = async (req: Request, res: Response) => {
   const picksRepo = AppDataSource.getRepository(Picks);
@@ -69,17 +71,17 @@ export const placeUnlikeRequest = async (req: Request, res: Response) => {
     return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_LIKE_PLACE });
   }
   res.status(StatusCodes.OK).json({ message: OK_UNLIKE_PLACE });
-  
+};
 export const getLikesPostsList = async (req: Request, res: Response) => {
   const postsRepo = AppDataSource.getRepository(Posts);
   // const userId = req.user.id;
   const userId = 1;
 
   const postLikeListResult = await postLikeListRequest(postsRepo, userId);
-  if (postLikeListResult.length === 0) {
+  if (postLikeListResult && postLikeListResult.length === 0) {
     return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_USER_LIKES_POST });
   }
-  const result = postLikeListResult.map((list: iListMapData) => {
+  const result = postLikeListResult?.map((list: iListMapData) => {
     const startDate = setDate(list.startDate);
     const endDate = setDate(list.endDate);
     const data = {

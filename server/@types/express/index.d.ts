@@ -6,6 +6,7 @@ declare module "express" {
       | {
           id: number;
           nickName: string;
+          isLoggedIn: boolean;
         }
       | undefined;
   }
