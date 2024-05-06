@@ -3,7 +3,7 @@ import { httpClient } from "./https";
 import { Comment } from "@/models/comment.model";
 import { Schedule } from "@/models/schedule.model";
 import { Post } from "@/models/post.model";
-import { LikePlace } from "@/models/likePlace.mode";
+import { LikePlace } from "@/models/place.mode";
 
 interface FetchMyPageResponse {
   type: Schedule[] | Comment[] | Post[];

@@ -1,4 +1,4 @@
-export interface LikePlace {
+export interface Place {
   placeId: string;
   placeName: string;
   address: string;

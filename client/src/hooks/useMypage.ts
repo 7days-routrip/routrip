@@ -8,7 +8,7 @@ import {
 } from "@/apis/mypage.api";
 import { queryKey } from "@/constants/queryKey";
 import { Comment as IComment } from "@/models/comment.model";
-import { LikePlace } from "@/models/likePlace.mode";
+import { LikePlace } from "@/models/place.mode";
 import { Post } from "@/models/post.model";
 import { ProfileCard as IProfileCard } from "@/models/profile.model";
 import { Schedule } from "@/models/schedule.model";
