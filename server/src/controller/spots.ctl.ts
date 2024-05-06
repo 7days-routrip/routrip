@@ -57,13 +57,13 @@ const checkDuplicatePlaces = async (req: Request, res: Response, next: NextFunct
 interface PlaceDetailDTO {
   id: string;
   placeName: string;
-  location: location;
+  location: Location;
   address: string;
   siteUrl: string;
   tel: string;
   openingHours: string[];
 }
-interface location {
+interface Location {
   lat: number;
   lng: number;
 }
@@ -72,11 +72,11 @@ const getPlaceDetail = async (req: Request, res: Response, next: NextFunction) =
   const placeRepository: Repository<Places> = AppDataSource.getRepository(Places);
   const placeId: string = req.params.id;
 
-  if (!placeId) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "잘못된 요청입니다.",
-    });
-  }
+  // if (!placeId) {
+  //   return res.status(StatusCodes.BAD_REQUEST).json({
+  //     message: "잘못된 요청입니다.",
+  //   });
+  // }
 
   let foundPlace: Places | null = await placeRepository.findOneBy({ id: placeId });
   if (!foundPlace) {
@@ -86,7 +86,7 @@ const getPlaceDetail = async (req: Request, res: Response, next: NextFunction) =
   }
 
   const locationStrArr: string[] = foundPlace["location"].split(", ");
-  const location: location = {
+  const location: Location = {
     lat: parseFloat(locationStrArr[0]),
     lng: parseFloat(locationStrArr[1]),
   };
@@ -106,4 +106,46 @@ const getPlaceDetail = async (req: Request, res: Response, next: NextFunction) =
   return res.status(StatusCodes.OK).json(placeDetailDTO);
 };
 
-export { addToPlace, checkDuplicatePlaces, getPlaceDetail };
+interface SearchPlaceDTO {
+  id: string;
+  placeName: string;
+  address: string;
+  location: Location;
+}
+const searchPlace = async (req: Request, res: Response, next: NextFunction) => {
+  const placeRepository: Repository<Places> = AppDataSource.getRepository(Places);
+
+  const { keyword } = req.body;
+
+  const places = await placeRepository
+    .createQueryBuilder()
+    .where("places.name LIKE :keyword", { keyword: `%${keyword}%` })
+    .getMany();
+
+  if (places.length === 0) {
+    return res.status(StatusCodes.NOT_FOUND).json({
+      message: "등록된 장소가 없습니다.\n신규 장소를 등록해 주세요.",
+    });
+  }
+
+  let searchedPlaces: SearchPlaceDTO[] = [];
+
+  places.forEach((place, idx) => {
+    const locationStrArr: string[] = place["location"].split(", ");
+    const location: Location = {
+      lat: parseFloat(locationStrArr[0]),
+      lng: parseFloat(locationStrArr[1]),
+    };
+    const searchedPlace: SearchPlaceDTO = {
+      id: place.id,
+      placeName: place.name,
+      address: place.address,
+      location: location,
+    };
+    searchedPlaces.push(searchedPlace);
+  });
+
+  return res.status(StatusCodes.OK).json(searchedPlaces);
+};
+
+export { addToPlace, checkDuplicatePlaces, getPlaceDetail, searchPlace };
