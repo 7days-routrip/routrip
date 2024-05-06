@@ -12,8 +12,21 @@ const create = async (email: string, hashedPassword: string, nickName: string) =
   await userRepository.save(user);
 };
 
+const findByEmail = async (email: string) => {
+  const userRepository = AppDataSource.getRepository(Users);
+
+  const user = await userRepository.findOne({
+    where: {
+      email,
+    },
+  });
+
+  return user;
+};
+
 const userRepository = {
   create,
+  findByEmail,
 };
 
 export default userRepository;
