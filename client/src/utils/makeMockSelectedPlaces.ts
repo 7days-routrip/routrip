@@ -1,4 +1,5 @@
-import { SelectedPlace } from "@/stores/placeStore";
+import { Place } from "@/models/place.model";
+import { SelectedPlace } from "@/stores/addPlaceStore";
 import { fakerKO as faker } from "@faker-js/faker";
 import { v4 as uuidv4 } from "uuid";
 
@@ -20,3 +21,14 @@ export const makeMockPlaces = (): SelectedPlace[] => {
     uuid: uuidv4(),
   }));
 };
+
+export const makeMockSearchPlace = (): Place => ({
+  placeId: faker.helpers.rangeToNumber({ min: 0, max: 50 }).toString(),
+  placeName: faker.lorem.word(),
+  address: faker.lorem.sentence().slice(0, 30),
+  location: {
+    lat: 37.56226770000001,
+    lng: 126.9921278,
+  },
+  placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
+});

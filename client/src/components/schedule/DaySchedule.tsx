@@ -1,4 +1,4 @@
-import { SelectedPlace } from "@/stores/placeStore";
+import { SelectedPlace } from "@/stores/addPlaceStore";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import styled from "styled-components";
 import PlaceItem from "./PlaceItem";

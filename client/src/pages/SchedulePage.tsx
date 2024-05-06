@@ -2,7 +2,6 @@ import AddNewPlace from "@/components/schedule/AddNewPlace";
 import { PlaceTabContent, PlaceTabs } from "@/components/schedule/PlaceTabs";
 import SelectPlace from "@/components/schedule/SelectPlace";
 import styled from "styled-components";
-import logoImage from "/assets/images/logo-profile.png";
 import AddPlaceSchedule from "@/components/schedule/AddPlaceSchedule";
 import Icons from "@/icons/icons";
 import { useEffect, useState } from "react";
@@ -12,7 +11,8 @@ import { showAlert } from "@/utils/showAlert";
 import DaySchedule from "@/components/schedule/DaySchedule";
 import { getDuration } from "@/utils/getDuration";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import { SelectedPlace, usePlaceStore } from "@/stores/placeStore";
+import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
+import ScheduleGoogleMap from "@/components/map/ScheduleGoogleMap";
 
 const SchedulePage = () => {
   const [title, setTitle] = useState<string>("");
@@ -20,7 +20,7 @@ const SchedulePage = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [duration, setDuration] = useState<number>(0);
   const [dayPerPlaces, setDayPerPlaces] = useState<SelectedPlace[][]>([[]]);
-  const selectedPlaces = usePlaceStore((state) => state.places);
+  const { places, setPlaces } = usePlaceStore();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -44,15 +44,12 @@ const SchedulePage = () => {
 
   const onDragEnd = (result: DropResult) => {
     if (!result.destination) return;
-
-    console.log(result);
-    console.log(selectedPlaces);
-
+    // console.log(result);
+    // console.log(places);
     const { source, destination } = result;
     const destinationId = destination.droppableId === "add-places" ? -1 : Number(destination.droppableId.at(-1));
     const sourceId = source.droppableId === "add-places" ? -1 : Number(source.droppableId.at(-1));
-
-    console.log(sourceId, destinationId);
+    // console.log(sourceId, destinationId);
 
     if (destinationId === sourceId && destinationId > -1 && sourceId > -1) {
       // 동일한 DaySchedule 내부에서 장소 아이템을 옮길 때
@@ -81,12 +78,12 @@ const SchedulePage = () => {
       setDayPerPlaces(updatedDayPerPlaces);
     } else if (destinationId === -1 && sourceId === -1) {
       // 전역으로 관리되는 selectedPlaces 내부에서의 이동
-      const movedItem = selectedPlaces[source.index];
-      const updatedSourceArr = [...selectedPlaces];
+      const movedItem = places[source.index];
+      const updatedSourceArr = [...places];
       updatedSourceArr.splice(source.index, 1); // 원래 위치에서 아이템 제거
       updatedSourceArr.splice(destination.index, 0, movedItem); // 목적지에 아이템 추가
 
-      usePlaceStore.setState({ places: updatedSourceArr });
+      setPlaces(updatedSourceArr);
     } else {
       if (sourceId > -1) {
         // 출발지는 DaySchedule 컴포넌트 -> 도착지는 전역 상태 selectedPlaces
@@ -94,7 +91,7 @@ const SchedulePage = () => {
         const updatedSourceArr = [...dayPerPlaces[sourceId]];
         updatedSourceArr.splice(source.index, 1); // 원래 위치에서 아이템 제거
 
-        let updatedDestinationArr = [...selectedPlaces];
+        let updatedDestinationArr = [...places];
         if (destinationId !== -1) {
           updatedDestinationArr = [...dayPerPlaces[destinationId]];
         }
@@ -104,11 +101,11 @@ const SchedulePage = () => {
         updatedDayPerPlaces[sourceId] = updatedSourceArr;
 
         setDayPerPlaces(updatedDayPerPlaces);
-        usePlaceStore.setState({ places: updatedDestinationArr });
+        setPlaces(updatedDestinationArr);
       } else {
         // 출발지는 전역 상태 selectedPlaces -> 도착지는 DaySchedule
-        const movedItem = selectedPlaces[source.index];
-        const updatedSourceArr = selectedPlaces.filter((_, index) => index !== source.index);
+        const movedItem = places[source.index];
+        const updatedSourceArr = places.filter((_, index) => index !== source.index);
 
         let updatedDestinationArr = [...dayPerPlaces[destinationId]];
         updatedDestinationArr.splice(destination.index, 0, movedItem); // 목적지에 아이템 추가
@@ -117,7 +114,7 @@ const SchedulePage = () => {
         updatedDayPerPlaces[destinationId] = updatedDestinationArr;
 
         setDayPerPlaces(updatedDayPerPlaces);
-        usePlaceStore.setState({ places: updatedSourceArr });
+        setPlaces(updatedSourceArr);
       }
     }
   };
@@ -142,7 +139,7 @@ const SchedulePage = () => {
 
         if (dayPerPlaces.flat().length > 0) {
           console.log(dayPerPlaces.flat());
-          const updatedSelectedPlaces = [...dayPerPlaces.flat(), ...selectedPlaces];
+          const updatedSelectedPlaces = [...dayPerPlaces.flat(), ...places];
           usePlaceStore.setState({ places: updatedSelectedPlaces });
         }
 
@@ -153,7 +150,7 @@ const SchedulePage = () => {
 
       if (dayPerPlaces.flat().length > 0) {
         console.log(dayPerPlaces.flat());
-        const updatedSelectedPlaces = [...dayPerPlaces.flat(), ...selectedPlaces];
+        const updatedSelectedPlaces = [...dayPerPlaces.flat(), ...places];
         usePlaceStore.setState({ places: updatedSelectedPlaces });
       }
 
@@ -170,7 +167,7 @@ const SchedulePage = () => {
     <DragDropContext onDragEnd={onDragEnd}>
       <SchedulePageStyle>
         <div className="map">
-          <img src={logoImage} height="100%" width="100%" />
+          <ScheduleGoogleMap />
         </div>
         <div className="trip-schedule-container">
           <div className="place-select-form">
@@ -241,6 +238,7 @@ const SchedulePageStyle = styled.div`
   .map {
     height: 100%;
     width: 50%;
+    min-height: 45vh;
   }
 
   .trip-schedule-container {
@@ -293,6 +291,11 @@ const SchedulePageStyle = styled.div`
         font-size: ${({ theme }) => theme.fontSize.small};
         padding: 6px 10px;
         color: ${({ theme }) => theme.color.black};
+
+        &:focus {
+          outline: none;
+          border: 1px solid ${({ theme }) => theme.color.primary};
+        }
       }
     }
 
