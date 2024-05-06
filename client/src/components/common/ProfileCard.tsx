@@ -35,8 +35,8 @@ interface ProfileImageStyleProps {
 }
 
 const ProfileImageStyle = styled.div<ProfileImageStyleProps>`
-  width: 6.25rem;
-  height: 6.25rem;
+  width: 6rem;
+  height: 6rem;
   background-image: url(${({ $image }) => ($image ? "data:image/png;base64,${$image}" : DEFAULT_IMAGE)});
   background-color: ${({ theme }) => theme.color.white};
   background-size: 70% 60%;
@@ -46,12 +46,12 @@ const ProfileImageStyle = styled.div<ProfileImageStyleProps>`
 `;
 
 const ProfileCardStyle = styled.div`
-  width: 1080px;
+  width: 100%;
   height: 200px;
   display: flex;
   justify-content: flex-start;
-  padding: 1rem;
   align-items: center;
+  margin-bottom: 1.5rem;
 
   background-color: ${({ theme }) => theme.color.primary};
   color: ${({ theme }) => theme.color.white};
@@ -71,6 +71,7 @@ const ProfileCardStyle = styled.div`
 
   .profile-dot {
     text-align: center;
+    width: 10px;
     height: 10px;
     line-height: 10px;
   }
@@ -79,17 +80,16 @@ const ProfileCardStyle = styled.div`
   .user-likes {
     display: flex;
     margin: 0.3rem 0;
+
+    gap: 0.5rem;
     width: auto;
     height: 20px;
-    div {
-      margin-right: 15px;
-    }
   }
 
   @media (max-width: 768px) {
     width: 100%;
-    min-width: 768px;
-    height: 130px;
+    padding: 0;
+    height: 100px;
   }
 `;
 
