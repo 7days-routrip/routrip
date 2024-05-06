@@ -18,8 +18,28 @@ const join = async (req: Request, res: Response, next: NextFunction) => {
   });
 };
 
+const login = async (req: Request, res: Response, next: NextFunction) => {
+  const { email, password } = req.body;
+
+  try {
+    const results = await usersService.login(email, password);
+    // 토큰 전달
+
+    res.status(StatusCodes.OK).json({
+      message: "로그인이 완료되었습니다.",
+      userId: results.user.id,
+      nickName: results.user.nickName
+    });
+  } catch (error) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: "아이디 또는 비밀번호가 일치하지 않습니다.",
+    });
+  }
+};
+
 const usersController = {
   join,
+  login,
 };
 
 export default usersController;
