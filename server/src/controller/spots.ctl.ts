@@ -8,11 +8,16 @@ const addToPlace = async (req: Request, res: Response, next: NextFunction) => {
   const place: Places = new Places();
   place.id = req.body.placeId;
   place.name = req.body.placeName;
-  place.location = req.body.location;
   place.address = req.body.address;
   place.siteUrl = req.body.siteUrl;
   place.tel = req.body.tel;
-  place.openingHours = req.body.openingHours;
+
+  const locationStr: string = req.body.location.lat + ", " + req.body.location.lng;
+  place.location = locationStr;
+
+  let locationArr: string[] = req.body.openingHours;
+  place.openingHours = locationArr.join(", ");
+
   // 이미지 추후 구현
   const placeRepository: Repository<Places> = AppDataSource.getRepository(Places);
   // todo: 구글 서버에 데이터 검증 부분 구현
@@ -80,13 +85,13 @@ const getPlaceDetail = async (req: Request, res: Response, next: NextFunction) =
     });
   }
 
-  const locationStrArr: string[] = foundPlace["location"].split(",");
+  const locationStrArr: string[] = foundPlace["location"].split(", ");
   const location: location = {
     lat: parseFloat(locationStrArr[0]),
     lng: parseFloat(locationStrArr[1]),
   };
 
-  const openingHoursArr: string[] = foundPlace["openingHours"].split(",");
+  const openingHoursArr: string[] = foundPlace["openingHours"].split(", ");
 
   let placeDetailDTO: PlaceDetailDTO = {
     id: foundPlace.id,
