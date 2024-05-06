@@ -1,6 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
 import Button from "@/components/common/Button";
+import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
+import { useMapStore } from "@/stores/mapStore";
+import { usePlaceStore } from "@/stores/addPlaceStore";
 
 interface PlaceTabContentProps {
   title: string;
@@ -17,8 +20,19 @@ interface PlaceTabsProps {
 }
 
 const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
+  const { googleMap, updateMapBounds } = useMapStore();
+  const { places } = usePlaceStore();
+  const { setMarkerType } = useShowMarkerTypeStore();
   const [activeIndex, setActiveIndex] = useState(active);
   const tabs = React.Children.toArray(children) as React.ReactElement<PlaceTabContentProps>[];
+
+  const onClickHandler = (i: number, title: string) => {
+    setActiveIndex(i);
+    if (title === "추가한 장소") {
+      setMarkerType("add");
+      updateMapBounds(googleMap, places);
+    }
+  };
 
   return (
     <TabsStyle>
@@ -29,7 +43,7 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
             size="medium"
             scheme={activeIndex === i ? "primary" : "normal"}
             radius="tab"
-            onClick={() => setActiveIndex(i)}
+            onClick={() => onClickHandler(i, tab.props.title)}
           >
             {tab.props.title}
           </Button>
@@ -44,6 +58,7 @@ const TabsStyle = styled.div`
   width: 100%;
   max-height: 285px;
   overflow-y: auto;
+  overflow-x: hidden;
 
   .tab-header {
     display: flex;

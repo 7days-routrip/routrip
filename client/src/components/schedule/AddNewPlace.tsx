@@ -3,12 +3,12 @@ import SearchBox from "./SearchBox";
 import PlaceList from "./PlaceList";
 import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { SearchNearByPlacesParams, searchNearByPlaces } from "@/apis/map.api";
-import { useCenterStore } from "@/stores/mapStore";
+import { useMapStore } from "@/stores/mapStore";
 import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
 
 const AddNewPlace = () => {
   const { nearPlaces, setNearPlaces } = useNearPlacesStore();
-  const { mapCenter, googleMap } = useCenterStore();
+  const { mapCenter, googleMap } = useMapStore();
   const { searchKeywordToGoogle, setSearchKeywordToGoogle } = useSearchKeywordStore();
 
   const requestHandler = async (keyword: string) => {
