@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import PlaceList from "./PlaceList";
-import { Place } from "@/models/place.model";
+import { Place } from "@/models/place.mode";
 
 const bookmarkPlaces: Place[] = [
   {

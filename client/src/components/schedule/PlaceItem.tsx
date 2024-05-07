@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import logoImage from "/assets/images/logo-profile.png"; // 임시로 사용할 장소 이미지
 import { SelectedPlace, usePlaceStore } from "@/stores/placeStore";
-import { Place } from "@/models/place.model";
+import { Place } from "@/models/place.mode";
 
 interface Props {
   data: SelectedPlace | Place;

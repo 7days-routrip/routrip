@@ -1,4 +1,4 @@
-import { Place } from "@/models/place.model";
+import { Place } from "@/models/place.mode";
 import { makeMockPlaces } from "@/utils/makeMockSelectedPlaces";
 import { useQuery } from "@tanstack/react-query";
 

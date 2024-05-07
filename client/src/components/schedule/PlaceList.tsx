@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import PlaceItem from "./PlaceItem";
 import { SelectedPlace } from "@/stores/placeStore";
-import { Place } from "@/models/place.model";
+import { Place } from "@/models/place.mode";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 
 interface Props {

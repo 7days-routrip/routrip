@@ -2,7 +2,7 @@ import styled from "styled-components";
 import SearchBox from "./SearchBox";
 import PlaceList from "./PlaceList";
 import { useState } from "react";
-import { Place } from "@/models/place.model";
+import { Place } from "@/models/place.mode";
 
 const dataArr: Place[] = [
   {
