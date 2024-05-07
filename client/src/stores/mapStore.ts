@@ -27,9 +27,8 @@ export const useMapStore = create<MapStore>((set) => ({
   updateMapBounds: (map: google.maps.Map | null, places: SelectedPlace[]) => {
     set((state) => {
       const bounds = new window.google.maps.LatLngBounds();
-      // console.log(map);
 
-      if (map) {
+      if (map && places.length > 0) {
         places.forEach((place) => {
           bounds.extend(new window.google.maps.LatLng(place.location.lat, place.location.lng));
         });
