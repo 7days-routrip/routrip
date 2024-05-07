@@ -20,7 +20,6 @@ const SchedulePage = () => {
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [duration, setDuration] = useState<number>(0);
-  // const [dayPerPlaces, setDayPerPlaces] = useState<SelectedPlace[][]>([[]]);
   const { dayPlaces, setDayPlaces } = useDayPlaceStore();
   const { places, setPlaces } = usePlaceStore();
 
@@ -82,8 +81,8 @@ const SchedulePage = () => {
       // 전역으로 관리되는 selectedPlaces 내부에서의 이동
       const movedItem = places[source.index];
       const updatedSourceArr = [...places];
-      updatedSourceArr.splice(source.index, 1); // 원래 위치에서 아이템 제거
-      updatedSourceArr.splice(destination.index, 0, movedItem); // 목적지에 아이템 추가
+      updatedSourceArr.splice(source.index, 1);
+      updatedSourceArr.splice(destination.index, 0, movedItem);
 
       setPlaces(updatedSourceArr);
     } else {
@@ -91,13 +90,13 @@ const SchedulePage = () => {
         // 출발지는 DaySchedule 컴포넌트 -> 도착지는 전역 상태 selectedPlaces
         const movedItem = dayPlaces[sourceId][source.index];
         const updatedSourceArr = [...dayPlaces[sourceId]];
-        updatedSourceArr.splice(source.index, 1); // 원래 위치에서 아이템 제거
+        updatedSourceArr.splice(source.index, 1);
 
         let updatedDestinationArr = [...places];
         if (destinationId !== -1) {
           updatedDestinationArr = [...dayPlaces[destinationId]];
         }
-        updatedDestinationArr.splice(destination.index, 0, movedItem); // 목적지에 아이템 추가
+        updatedDestinationArr.splice(destination.index, 0, movedItem);
 
         const updatedDayPerPlaces = [...dayPlaces];
         updatedDayPerPlaces[sourceId] = updatedSourceArr;
@@ -110,7 +109,7 @@ const SchedulePage = () => {
         const updatedSourceArr = places.filter((_, index) => index !== source.index);
 
         let updatedDestinationArr = [...dayPlaces[destinationId]];
-        updatedDestinationArr.splice(destination.index, 0, movedItem); // 목적지에 아이템 추가
+        updatedDestinationArr.splice(destination.index, 0, movedItem);
 
         const updatedDayPerPlaces = [...dayPlaces];
         updatedDayPerPlaces[destinationId] = updatedDestinationArr;

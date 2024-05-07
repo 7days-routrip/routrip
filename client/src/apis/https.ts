@@ -45,7 +45,9 @@ const createClient = (config?: AxiosRequestConfig) => {
         removeToken();
         removeNickName();
 
-        showConfirm(err.response.data.message, "/login");
+        showConfirm(err.response.data.message, () => {
+          window.location.href = "/login";
+        });
         return;
       }
       return Promise.reject(err);
