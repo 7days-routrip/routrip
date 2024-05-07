@@ -7,6 +7,7 @@ import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Button from "@/components/common/Button";
 import { theme } from "@/styles/theme";
 import icons from "@/icons/icons";
+import { start } from "repl";
 
 // 이미지를 리사이징 및 압축
 function resizeImage(file: Blob) {
@@ -121,15 +122,29 @@ function MyCustomUploadAdapterPlugin(editor: {
 const WritePage = () => {
   const [data, setData] = useState("");
   const [isDataUpdated, setIsDataUpdated] = useState(false);
+  const [bool, setBool] = useState(true);
   const [startDate, setStartDate] = useState<Date | null>(null);
   const [endDate, setEndDate] = useState<Date | null>(null);
-  const { CalendarIcon } = icons;
+  const [title, setTitle] = useState("");
 
   const handleSave = () => {
-    console.log("저장된 데이터:", data);
+    if (!title) {
+      setBool(false);
+    }
   };
 
   const formatDate = (date: string) => date.split("-").join(".");
+
+  const calculateDays = (startDate: any, endDate: any) => {
+    if (!startDate || !endDate) {
+      return 0; // 두 날짜 중 하나라도 유효하지 않으면 0을 반환
+    }
+    const diff = endDate - startDate; // 밀리초 단위의 차이
+    const days = Math.ceil(diff / (1000 * 60 * 60 * 24)); // 밀리초를 일 단위로 변환
+    return days + 1;
+  };
+
+  const DAYS = calculateDays(endDate, startDate);
 
   return (
     <WritePageStyle>
@@ -142,8 +157,14 @@ const WritePage = () => {
           <option>옵션1</option>
           <option>옵션2</option>
         </select>
-        <input type="text" className="title" placeholder="제목을 입력하세요." />
+        <input
+          type="text"
+          className="title"
+          placeholder="제목을 입력하세요."
+          onChange={(e) => setTitle(e.target.value)}
+        />
       </div>
+      {bool ? null : <p>제목을 입력해주세요</p>}
       <div className="info-container">
         <label>
           여행한 날짜
@@ -153,7 +174,7 @@ const WritePage = () => {
             endDate={endDate}
             onChange={(update) => {
               const [start, end] = update;
-              // 각 날짜를 독립적으로 업데이트
+
               if (start) setStartDate(start);
               if (end) setEndDate(end);
             }}
@@ -166,6 +187,7 @@ const WritePage = () => {
         </label>
         <label>내 일정 불러오기</label>
       </div>
+
       <CKEditor
         editor={ClassicEditor}
         config={{
@@ -194,6 +216,7 @@ const WritePage = () => {
           }
         }}
       />
+
       <div className="button-container">
         <Button size="large" scheme="secondary" radius="default">
           취소
@@ -246,6 +269,10 @@ const WritePageStyle = styled.div`
     display: flex;
     justify-content: center;
     gap: 20px;
+  }
+  p {
+    text-align: center;
+    color: red;
   }
 `;
 
