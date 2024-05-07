@@ -3,7 +3,8 @@ import { httpClient } from "./https";
 import { Comment } from "@/models/comment.model";
 import { Schedule } from "@/models/schedule.model";
 import { Post } from "@/models/post.model";
-import { LikePlace } from "@/models/place.mode";
+import { Place } from "@/models/place.mode";
+// import { LikePlace } from "@/models/place.mode";
 
 interface FetchMyPageResponse {
   type: Schedule[] | Comment[] | Post[];
@@ -47,12 +48,12 @@ export const fetchProfile = async () => {
 interface FetchMyPageParams {
   list: string;
 }
-interface FetchSchedulesResponse {
+interface FetchScheduleResponse {
   schedules: Schedule[];
 }
-export const fetchMySchedules = async (params: FetchMyPageParams) => {
+export const fetchMySchedule = async (params: FetchMyPageParams) => {
   try {
-    const response = await httpClient.get<FetchSchedulesResponse>("api/mypages", { params: params.list });
+    const response = await httpClient.get<FetchScheduleResponse>("api/mypages", { params: params.list });
     return response.data;
   } catch (error) {
     // 에러 처리
@@ -112,7 +113,7 @@ export const fetchLikePost = async () => {
 
 // 찜한 장소
 interface FetchPostResponse {
-  places: LikePlace[];
+  places: Place[];
 }
 export const fetchLikePlace = async () => {
   try {

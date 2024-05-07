@@ -10,7 +10,7 @@ interface Props {
 const ScheduleCard = ({ scheduleProps, view }: Props) => {
   return (
     <ScheduleCardStyle $view={view}>
-      <CardImageStyle $image={scheduleProps.image} $view={view} />
+      <CardImageStyle $image={scheduleProps.postImg} $view={view} />
       <CardContentStyle>
         <h3 className="card-title">{scheduleProps.title}</h3>
         <p className="card-date">{scheduleProps.date}</p>

@@ -30,11 +30,11 @@ const ProfileCard = ({ ProfileProps }: Props) => {
   );
 };
 
-interface ProfileImageStyleProps {
+export interface ProfileImageStyleProps {
   $image: string;
 }
 
-const ProfileImageStyle = styled.div<ProfileImageStyleProps>`
+export const ProfileImageStyle = styled.div<ProfileImageStyleProps>`
   width: 6rem;
   height: 6rem;
   background-image: url(${({ $image }) => ($image ? "data:image/png;base64,${$image}" : DEFAULT_IMAGE)});

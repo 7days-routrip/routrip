@@ -10,7 +10,6 @@ import Title from "@/components/common/Title";
 import { Button } from "@/components/common/Button";
 import { emailOptions, nicknameOptions, passwordOptions } from "@/config/registerOptions";
 import { useState } from "react";
-import { isEmailUnique, isNicknameUnique } from "@/apis/auth.api";
 import { emailRegex, nicknameRegex } from "@/constants/regexPatterns";
 
 export const placeholderHander = (text: string) => {
@@ -28,7 +27,7 @@ export const domainAuth = (email: string) => {
 };
 
 const JoinPage = () => {
-  const { userJoin } = useAuth();
+  const { userJoin, userNickCheck, userEmailCheck } = useAuth();
   const UserIcon = icons.MobileUserIcon;
   const {
     register,
@@ -51,7 +50,7 @@ const JoinPage = () => {
       setError("email", { message: "허용되지 않는 이메일 도메인입니다." }, { shouldFocus: true });
       return;
     }
-    isEmailUnique(email).then((res) => {
+    userEmailCheck(email).then((res) => {
       // res 가 성공 메시지면 이거
       setEmailUniqueCheck((prev) => !prev);
       clearErrors("email");
@@ -68,7 +67,7 @@ const JoinPage = () => {
       );
       return;
     }
-    isNicknameUnique(nickname).then((res) => {
+    userNickCheck(nickname).then((res) => {
       // res 가 성공 메시지면 이거
       setNicknameUniqueCheck((prev) => !prev);
       clearErrors("nickname");
