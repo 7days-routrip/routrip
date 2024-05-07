@@ -65,7 +65,7 @@ function resizeImage(file: Blob) {
             }
           },
           "image/jpeg",
-          0.1, // 품질 인자를 낮춤으로써 파일 크기 감소
+          0.4,
         );
       };
     };
