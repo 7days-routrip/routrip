@@ -8,8 +8,9 @@ export const getImageFromContent = async (contents: string) => {
   else return undefined;
 };
 
-export const getOffset = async (pageData: iPageDataProps) => {
-  const offset = pageData.pages * pageData.limit - pageData.limit;
+export const getOffset = async (pageData?: iPageDataProps) => {
+  if (typeof pageData === "undefined") return 0;
+  const offset = pageData?.pages * pageData?.limit - pageData?.limit;
   return offset;
 };
 

@@ -4,8 +4,7 @@ import express from "express";
 const router = express.Router();
 router.use(express.json());
 
-router.route("/").post(createPostRequest);
-router.route("/:area").get(getPostsListRequset);
-router.route("/:area/:id").get(getPostRequest);
+router.route("/").post(createPostRequest).get(getPostsListRequset);
+router.route("/:id").get(getPostRequest);
 
 export default router;
