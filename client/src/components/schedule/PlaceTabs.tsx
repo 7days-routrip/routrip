@@ -67,7 +67,7 @@ const TabsStyle = styled.div`
   }
 
   .tab-content {
-    min-height: 80px;
+    min-height: 100px;
     border: 1px solid ${({ theme }) => theme.color.borderGray};
     border-top: none;
     border-radius: ${({ theme }) => theme.borderRadius.tabContainer};
