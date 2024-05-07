@@ -1,4 +1,4 @@
-import MypageTab from "@/components/common/MypageTab";
+import MypageTab from "@/components/mypage/MypageTab";
 import MypageTabItem from "@/components/common/MypageTabItem";
 import styled from "styled-components";
 

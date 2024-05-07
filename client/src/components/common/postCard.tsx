@@ -47,21 +47,22 @@ const PostCard = ({ PostProps, view }: Props) => {
   );
 };
 
-interface CardImageStyleProps {
+interface CardImageStyleProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   $image: string;
   $view: string;
 }
 
-export const CardImageStyle = styled.div<CardImageStyleProps>`
+export const CardImageStyle = styled.button<CardImageStyleProps>`
   display: flex;
   width: ${({ $view }) => ($view === "grid" ? "100%" : "300px")};
   height: ${({ $view }) => ($view === "grid" ? "180px" : "100%")};
-
   align-items: center;
   justify-content: center;
   background-image: url(${({ $image }) => $image});
   background-position: center;
   background-size: cover;
+  border: 0;
+  cursor: pointer;
 
   border-radius: ${({ $view, theme }) => ($view === "grid" ? `${theme.borderRadius.tab}` : `8px 0 0 8px`)};
 
@@ -81,7 +82,6 @@ export const CardContentStyle = styled.div`
   overflow: hidden;
 
   .card-title {
-    width: 80%;
     margin: 1px;
     font-size: ${({ theme }) => theme.fontSize.medium};
     overflow: hidden;
@@ -116,7 +116,7 @@ export const CardStyle = styled.div<CardStyleProps>`
   align-items: center;
   flex-direction: ${({ $view }) => ($view === "grid" ? "column" : "row")};
   width: ${({ $view }) => ($view === "grid" ? "350px" : "800px")};
-  height: ${({ $view }) => ($view === "grid" ? "300px" : "140px")};
+  height: ${({ $view }) => ($view === "grid" ? "auto" : "150px")};
   p {
     margin: 2px;
   }
@@ -125,7 +125,7 @@ export const CardStyle = styled.div<CardStyleProps>`
   border-radius: ${({ theme }) => theme.borderRadius.default};
 
   @media (max-width: 768px) {
-    width: ${({ $view }) => ($view === "grid" ? "180px" : "300px")};
+    width: ${({ $view }) => ($view === "grid" ? "175px" : "300px")};
     height: ${({ $view }) => ($view === "grid" ? "200px" : "110px")};
   }
 `;
@@ -136,6 +136,8 @@ interface PostCardStyleProps {
 }
 
 const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
+  display: flex;
+
   .profile-img {
     background-image: url(${({ $profile }) => $profile});
     background-size: 2rem 1rem;
