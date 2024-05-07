@@ -55,10 +55,10 @@ const ScheduleGoogleMap = () => {
     setClickMarker(place);
 
     if (googleMap) {
+      googleMap.panTo(place.location); // 1. 마커 위치로 지도 이동
       const currentZoom = googleMap.getZoom() || 6;
       const targetZoom = Math.max(currentZoom, 12);
-      googleMap.setZoom(targetZoom); // 줌 비율 조정(확대)
-      googleMap.panTo(place.location); // 마커 위치로 지도 이동
+      googleMap.setZoom(targetZoom); // 2. 줌 비율 조정(확대)
     }
   };
 
