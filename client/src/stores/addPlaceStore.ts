@@ -18,7 +18,7 @@ export const usePlaceStore = create<PlaceStore>((set) => ({
   addPlace: (place: Place) => {
     const uuid = uuidv4();
     const selectedPlace: SelectedPlace = { ...place, uuid };
-    set((state) => ({ places: [...state.places, selectedPlace] }));
+    set((state) => ({ places: [selectedPlace, ...state.places] }));
   },
   removePlace: (uuid: string) => {
     set((state) => ({
