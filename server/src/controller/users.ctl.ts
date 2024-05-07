@@ -41,9 +41,41 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   }
 };
 
+const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
+  const { email } = req.body;
+
+  try {
+    await usersService.checkEmail(email);
+    res.status(StatusCodes.OK).json({
+      message: "사용 가능한 이메일입니다.",
+    });
+  } catch (error) {
+    return res.status(StatusCodes.CONFLICT).json({
+      message: "이미 존재하는 이메일입니다.",
+    });
+  }
+};
+
+const checkNickname = async (req: Request, res: Response, next: NextFunction) => {
+  const { nickname } = req.body;
+
+  try {
+    await usersService.checkNickname(nickname);
+    res.status(StatusCodes.OK).json({
+      message: "사용 가능한 닉네임입니다.",
+    });
+  } catch (error) {
+    return res.status(StatusCodes.CONFLICT).json({
+      message: "이미 존재하는 닉네임입니다.",
+    });
+  }
+};
+
 const usersController = {
   join,
   login,
+  checkEmail,
+  checkNickname,
 };
 
 export default usersController;

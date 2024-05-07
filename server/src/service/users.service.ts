@@ -37,9 +37,21 @@ const join = async (email: string, password: string, nickName: string) => {
   await userRepository.create(email, hashedPassword, nickName);
 };
 
+const checkEmail = async (email: string) => {
+  const user = await userRepository.findByEmail(email);
+  if (user) throw new Error("이미 존재하는 이메일입니다.");
+}
+
+const checkNickname = async (nickname: string) => {
+  const user = await userRepository.findByNickname(nickname);
+  if (user) throw new Error("이미 존재하는 닉네임입니다.");
+}
+
 const usersService = {
   join,
   login,
+  checkEmail,
+  checkNickname,
 };
 
 export default usersService;
