@@ -4,6 +4,6 @@ import usersController from "@/controller/users.ctl";
 const router = express.Router();
 
 router.post("/join", usersController.join);
-router.get("/login", usersController.login);
+router.post("/login", usersController.login);
 
 export default router;
