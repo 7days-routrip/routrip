@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { CardStyle } from "./postCard";
 import icons from "@/icons/icons";
-import { LikePlace } from "@/models/place.mode";
+import { LikePlace } from "@/models/place.model";
 
 interface Props {
   PlaceProps: LikePlace;

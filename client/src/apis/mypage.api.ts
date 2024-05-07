@@ -3,22 +3,7 @@ import { httpClient } from "./https";
 import { Comment } from "@/models/comment.model";
 import { Schedule } from "@/models/schedule.model";
 import { Post } from "@/models/post.model";
-import { Place } from "@/models/place.mode";
-// import { LikePlace } from "@/models/place.mode";
-
-interface FetchMyPageResponse {
-  type: Schedule[] | Comment[] | Post[];
-}
-
-// 내 일정, 게시글, 댓글
-// export const fetchMyPage = async (params: string) => {
-//   try {
-//     const response = await httpClient.get<FetchMyPageResponse>("api/mypages", { params: params });
-//     return response.data;
-//   } catch (error) {
-//     // 에러 처리
-//   }
-// };
+import { PlaceDetails } from "@/models/place.model";
 
 interface FetchProfileResponse {
   profile: Profile;
@@ -113,7 +98,7 @@ export const fetchLikePost = async () => {
 
 // 찜한 장소
 interface FetchPostResponse {
-  places: Place[];
+  places: PlaceDetails[];
 }
 export const fetchLikePlace = async () => {
   try {

@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import PlaceList from "./PlaceList";
-import { usePlaceStore } from "@/stores/placeStore";
+import { usePlaceStore } from "@/stores/addPlaceStore";
 
 interface Props {
   buttonTitle: React.ReactNode;
