@@ -1,9 +1,9 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Button from "@/components/common/Button";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useMapStore } from "@/stores/mapStore";
 import { usePlaceStore } from "@/stores/addPlaceStore";
+import { Button } from "@/components/common/Button";
 
 interface PlaceTabContentProps {
   title: string;
@@ -40,9 +40,9 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
         {tabs.map((tab, i) => (
           <Button
             key={i}
-            size="medium"
-            scheme={activeIndex === i ? "primary" : "normal"}
-            radius="tab"
+            $size="medium"
+            $scheme={activeIndex === i ? "primary" : "normal"}
+            $radius="tab"
             onClick={() => onClickHandler(i, tab.props.title)}
           >
             {tab.props.title}
