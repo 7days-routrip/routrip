@@ -5,6 +5,7 @@ import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
 import PostPage from "@/pages/PostPage";
 import SchedulePage from "@/pages/SchedulePage";
+import WritePage from "@/pages/WritePage";
 import { createBrowserRouter } from "react-router-dom";
 
 const routerArr = [
@@ -39,6 +40,19 @@ const routerArr = [
     element: (
       <Layout>
         <LoginPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/write",
+    element: (
+      <Layout>
+        <WritePage />
       </Layout>
     ),
     errorElement: (
