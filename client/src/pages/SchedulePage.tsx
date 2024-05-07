@@ -232,6 +232,7 @@ const SchedulePageStyle = styled.div`
   gap: 0.5em;
   width: 100%;
   height: 100%;
+
   user-select: none; /* 모든 요소의 사용자 선택 비활성화 */
   -moz-user-select: none; /* Firefox */
   -ms-user-select: none; /* Internet Explorer/Edge */
@@ -260,7 +261,6 @@ const SchedulePageStyle = styled.div`
       gap: 0.5rem;
       flex-shrink: 0;
       flex: 1;
-      padding-bottom: 10px;
 
       .schedule-btn {
         font-weight: 600;
@@ -303,7 +303,6 @@ const SchedulePageStyle = styled.div`
 
     .input-container {
       display: flex;
-      /* flex-direction: column; */
       width: 100%;
       padding: 0.2rem;
       gap: 0.2rem;
@@ -343,6 +342,11 @@ const SchedulePageStyle = styled.div`
         display: flex;
         align-items: center;
       }
+    }
+  }
+  @media (max-width: 1379px) {
+    .trip-schedule-container .days {
+      max-height: 40vh;
     }
   }
 `;

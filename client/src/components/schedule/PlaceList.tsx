@@ -49,6 +49,10 @@ const PlaceListStyle = styled.div`
   gap: 0.5em;
   margin: 0.5rem 0;
   width: 100%;
+
+  max-height: 180px;
+  overflow-y: auto;
+  overflow-x: hidden;
 `;
 
 export default PlaceList;

@@ -56,9 +56,6 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
 
 const TabsStyle = styled.div`
   width: 100%;
-  max-height: 285px;
-  overflow-y: auto;
-  overflow-x: hidden;
 
   .tab-header {
     display: flex;
