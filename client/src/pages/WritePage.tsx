@@ -121,8 +121,8 @@ function MyCustomUploadAdapterPlugin(editor: {
 const WritePage = () => {
   const [data, setData] = useState("");
   const [isDataUpdated, setIsDataUpdated] = useState(false);
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const { CalendarIcon } = icons;
 
   const handleSave = () => {
@@ -152,11 +152,10 @@ const WritePage = () => {
             startDate={startDate}
             endDate={endDate}
             onChange={(update) => {
-              if (Array.isArray(update)) {
-                const [start, end] = update;
-                if (start) setStartDate(start);
-                if (end) setEndDate(end);
-              }
+              const [start, end] = update;
+              // 각 날짜를 독립적으로 업데이트
+              if (start) setStartDate(start);
+              if (end) setEndDate(end);
             }}
             dateFormat="yyyy.MM.dd"
           />
