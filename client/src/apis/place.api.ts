@@ -4,27 +4,27 @@ import { showAlert } from "@/utils/showAlert";
 import { mockRealPlaceWithUuid } from "@/utils/makeMockSelectedPlaces";
 
 // 백엔드 서버로 장소 검색 요청
-// export const searchPlaceApi = async (keyword: string, setPlaces: (places: Place[]) => void) => {
-//   try {
-//     const { data } = await httpClient.get<Place[]>("/spots", { params: { keyword } });
-//     setPlaces(data);
-//     return data;
-//   } catch (err: any) {
-//     if (err.response.status === 404) {
-//       // showAlert(err.response.message,"error")
-//       showAlert("검색 결과가 없습니다.\n신규 장소로 먼저 등록해 주세요.", "error");
-//       return;
-//     }
-//     throw err;
-//   }
-// };
-
-// mock api
 export const searchPlaceApi = async (keyword: string, setPlaces: (places: Place[]) => void) => {
-  const data = mockRealPlaceWithUuid;
-  setPlaces(data);
-  return data;
+  try {
+    const { data } = await httpClient.get<Place[]>("/spots", { params: { keyword } });
+    setPlaces(data);
+    return data;
+  } catch (err: any) {
+    if (err.response.status === 404) {
+      // showAlert(err.response.message,"error")
+      showAlert("검색 결과가 없습니다.\n신규 장소로 먼저 등록해 주세요.", "error");
+      return;
+    }
+    throw err;
+  }
 };
+
+// 장소 검색 mock api
+// export const searchPlaceApi = async (keyword: string, setPlaces: (places: Place[]) => void) => {
+//   const data = mockRealPlaceWithUuid;
+//   setPlaces(data);
+//   return data;
+// };
 
 // 백엔드 서버로 장소 중복 체크 요청 -> api 수정 가능성 있음(id가 뭔지 모르겠음)
 export const checkPlaceApi = async (id: number) => {

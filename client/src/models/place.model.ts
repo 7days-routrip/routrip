@@ -5,7 +5,7 @@ export interface Location {
 }
 
 export interface Place {
-  placeId: string;
+  id: string;
   placeName: string;
   address: string;
   location: Location;

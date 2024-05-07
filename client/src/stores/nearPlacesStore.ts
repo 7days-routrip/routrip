@@ -2,7 +2,7 @@ import { Place } from "@/models/place.model";
 import { create } from "zustand";
 
 // {
-//   placeId: string;// place_id
+//   id: string;// place_id
 //   placeName: string; // name
 //   location: Location; // {lat: location.lat(), lng: location.lng()}
 //   address: string; // vicinity

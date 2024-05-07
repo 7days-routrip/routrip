@@ -34,7 +34,7 @@ export const searchNearByPlaces = async (
     ) => {
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
         // const places: Place[] = results.map((res) => ({
-        //   placeId: res.place_id || "",
+        //   id: res.place_id || "",
         //   placeName: res.name || "",
         //   location: {
         //     lat: res.geometry?.location?.lat() || 0,
@@ -52,7 +52,7 @@ export const searchNearByPlaces = async (
             res.vicinity,
           );
           return {
-            placeId: res.place_id || "",
+            id: res.place_id || "",
             placeName: res.name || "",
             location: {
               lat: res.geometry?.location?.lat() || 0,

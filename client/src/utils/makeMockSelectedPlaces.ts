@@ -10,7 +10,7 @@ export const getImgSrc = (id: number) => {
 // faker api 사용
 export const makeMockPlaces = (): SelectedPlace[] => {
   return Array.from({ length: 4 }, (_) => ({
-    placeId: faker.helpers.rangeToNumber({ min: 0, max: 50 }).toString(),
+    id: faker.helpers.rangeToNumber({ min: 0, max: 50 }).toString(),
     placeName: faker.lorem.word(),
     address: faker.lorem.sentence().slice(0, 30),
     location: {
@@ -23,7 +23,7 @@ export const makeMockPlaces = (): SelectedPlace[] => {
 };
 
 export const makeMockSearchPlace = (): Place => ({
-  placeId: faker.helpers.rangeToNumber({ min: 0, max: 50 }).toString(),
+  id: faker.helpers.rangeToNumber({ min: 0, max: 50 }).toString(),
   placeName: faker.lorem.word(),
   address: faker.lorem.sentence().slice(0, 30),
   location: {
@@ -36,7 +36,7 @@ export const makeMockSearchPlace = (): Place => ({
 // 추가한 장소 탭에 들어갈 실제 장소 데이터(지도에 마커 찍는 테스트를 하기 위한 데이터)
 export const mockRealPlaceWithUuid: SelectedPlace[] = [
   {
-    placeId: "ChIJeV24aepLZTURilEBIwX0GgQ",
+    id: "ChIJeV24aepLZTURilEBIwX0GgQ",
     placeName: "도미노피자 대전월평점",
     address: "서구 월평1동 524",
     location: {
@@ -47,7 +47,7 @@ export const mockRealPlaceWithUuid: SelectedPlace[] = [
     uuid: uuidv4(),
   },
   {
-    placeId: "ChIJGeYDXX9JZTURsFJQxqnBPws",
+    id: "ChIJGeYDXX9JZTURsFJQxqnBPws",
     placeName: "한밭수목원",
     address: "서구 둔산대로 169",
     location: {
@@ -58,7 +58,7 @@ export const mockRealPlaceWithUuid: SelectedPlace[] = [
     uuid: uuidv4(),
   },
   {
-    placeId: "ChIJW5uYTErLejUR6bNzZWaUIYk",
+    id: "ChIJW5uYTErLejUR6bNzZWaUIYk",
     placeName: "국립세종수목원",
     address: "세종특별자치시 수목원로 136",
     location: {
@@ -69,7 +69,7 @@ export const mockRealPlaceWithUuid: SelectedPlace[] = [
     uuid: uuidv4(),
   },
   {
-    placeId: "ChIJYYs2WETgZDURj1oD8SSByXQ",
+    id: "ChIJYYs2WETgZDURj1oD8SSByXQ",
     placeName: "미동산수목원",
     address: "청주시 상당구 미원면 수목원길 51",
     location: {
@@ -80,7 +80,7 @@ export const mockRealPlaceWithUuid: SelectedPlace[] = [
     uuid: uuidv4(),
   },
   {
-    placeId: "ChIJ-2aoP6TibzURLxExwXnmHWU",
+    id: "ChIJ-2aoP6TibzURLxExwXnmHWU",
     placeName: "대아수목원",
     address: "완주군 동상면 대아수목로 94-34",
     location: {
@@ -95,7 +95,7 @@ export const mockRealPlaceWithUuid: SelectedPlace[] = [
 // 추가한 장소 탭에 들어갈 실제 장소 데이터(지도에 마커 찍는 테스트를 하기 위한 데이터)
 export const mockRealPlaceWithoutUuid: Place[] = [
   {
-    placeId: "ChIJeV24aepLZTURilEBIwX0GgQ",
+    id: "ChIJeV24aepLZTURilEBIwX0GgQ",
     placeName: "도미노피자 대전월평점",
     address: "서구 월평1동 524",
     location: {
@@ -105,7 +105,7 @@ export const mockRealPlaceWithoutUuid: Place[] = [
     placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
   },
   {
-    placeId: "ChIJGeYDXX9JZTURsFJQxqnBPws",
+    id: "ChIJGeYDXX9JZTURsFJQxqnBPws",
     placeName: "한밭수목원",
     address: "서구 둔산대로 169",
     location: {
@@ -115,7 +115,7 @@ export const mockRealPlaceWithoutUuid: Place[] = [
     placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
   },
   {
-    placeId: "ChIJW5uYTErLejUR6bNzZWaUIYk",
+    id: "ChIJW5uYTErLejUR6bNzZWaUIYk",
     placeName: "국립세종수목원",
     address: "세종특별자치시 수목원로 136",
     location: {
@@ -125,7 +125,7 @@ export const mockRealPlaceWithoutUuid: Place[] = [
     placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
   },
   {
-    placeId: "ChIJYYs2WETgZDURj1oD8SSByXQ",
+    id: "ChIJYYs2WETgZDURj1oD8SSByXQ",
     placeName: "미동산수목원",
     address: "청주시 상당구 미원면 수목원길 51",
     location: {
@@ -135,7 +135,7 @@ export const mockRealPlaceWithoutUuid: Place[] = [
     placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
   },
   {
-    placeId: "ChIJ-2aoP6TibzURLxExwXnmHWU",
+    id: "ChIJ-2aoP6TibzURLxExwXnmHWU",
     placeName: "대아수목원",
     address: "완주군 동상면 대아수목로 94-34",
     location: {
