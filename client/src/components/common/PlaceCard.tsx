@@ -1,16 +1,16 @@
 import styled from "styled-components";
 import { CardStyle } from "./postCard";
+import { Place as IPlace } from "@/models/place.model";
 import icons from "@/icons/icons";
-import { LikePlace } from "@/models/place.mode";
 
 interface Props {
-  PlaceProps: LikePlace;
+  PlaceProps: IPlace;
 }
 
-const LikePlaceCard = ({ PlaceProps }: Props) => {
+const PlaceCard = ({ PlaceProps }: Props) => {
   const MarkIcon = icons.BookmarkIcon;
   return (
-    <LikePlaceCardStyle $view={"grid"}>
+    <PlaceCardStyle $view={"grid"}>
       <div className="card-header">
         <h3 className="card-title">{PlaceProps.placeName}</h3>
         <MarkIcon />
@@ -23,11 +23,11 @@ const LikePlaceCard = ({ PlaceProps }: Props) => {
         <span>연락처</span>
         <span>{PlaceProps.tel}</span>
       </div>
-    </LikePlaceCardStyle>
+    </PlaceCardStyle>
   );
 };
 
-const LikePlaceCardStyle = styled(CardStyle)`
+const PlaceCardStyle = styled(CardStyle)`
   width: 400px;
   height: 130px;
   display: flex;
@@ -85,4 +85,4 @@ const LikePlaceCardStyle = styled(CardStyle)`
   }
 `;
 
-export default LikePlaceCard;
+export default PlaceCard;

@@ -9,6 +9,7 @@ export class Comments {
   @PrimaryGeneratedColumn()
   id!: number;
 
+
   @Column("varchar", { length: 1000, nullable: false })
   content!: string;
 
@@ -33,5 +34,6 @@ export class Comments {
     foreignKeyConstraintName: "fkPostsCommentsId",
   })
   postId!: Posts | number;
+
 }
 

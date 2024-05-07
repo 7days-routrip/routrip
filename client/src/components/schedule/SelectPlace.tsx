@@ -1,20 +1,28 @@
 import styled from "styled-components";
 import SearchBox from "./SearchBox";
-import { useState } from "react";
-import { useSearchPlace } from "@/hooks/useSearchPlace";
 import PlaceList from "./PlaceList";
-import Loading from "@/components/common/Loading";
+import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
+import { searchPlaceApi } from "@/apis/place.api";
+import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
 
 const SelectPlace = () => {
-  const [searchKeyword, setSearchKeyword] = useState("");
-  const { placeData, isSearchLoading } = useSearchPlace(searchKeyword); // tanstack query
+  const { searchKeywordToServer, setSearchKeywordToServer } = useSearchKeywordStore();
+  const { searchPlace, setSearchPlace } = useSearchPlacesStore();
 
-  if (isSearchLoading) return <Loading />;
+  const requestHandler = async (keyword: string) => {
+    // 서버로 검색 요청
+    await searchPlaceApi(keyword, setSearchPlace);
+  };
 
   return (
     <SelectPlaceStyle>
-      <SearchBox placeholder="장소명을 검색하세요." onSearch={setSearchKeyword} />
-      <PlaceList place={placeData} buttonTitle={"추가"} />
+      <SearchBox
+        placeholder="장소명을 검색하세요."
+        searchKeyword={searchKeywordToServer}
+        requestHandler={requestHandler}
+        setSearchKeyword={setSearchKeywordToServer}
+      />
+      {searchPlace && <PlaceList place={searchPlace} buttonTitle={"추가"} />}
     </SelectPlaceStyle>
   );
 };

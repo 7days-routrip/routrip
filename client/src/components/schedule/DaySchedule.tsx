@@ -1,8 +1,11 @@
-import { SelectedPlace } from "@/stores/placeStore";
+import { SelectedPlace } from "@/stores/addPlaceStore";
 import { Draggable, Droppable } from "@hello-pangea/dnd";
 import styled from "styled-components";
 import PlaceItem from "./PlaceItem";
 import Icons from "@/icons/icons";
+import { useCallback } from "react";
+import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
+import { useMapStore } from "@/stores/mapStore";
 
 interface Props {
   dayIdx: number;
@@ -10,9 +13,16 @@ interface Props {
 }
 
 const DaySchedule = ({ dayIdx, schedulePlaces }: Props) => {
-  const handleOnClickDay = () => {
+  const { setMarkerType } = useShowMarkerTypeStore();
+  const { googleMap, updateMapBounds } = useMapStore();
+
+  const handleOnClickDay = useCallback(() => {
     console.log(`Day${dayIdx + 1} 클릭`);
-  };
+    console.log(schedulePlaces);
+
+    setMarkerType("day", dayIdx);
+    updateMapBounds(googleMap, schedulePlaces);
+  }, [dayIdx, schedulePlaces]);
 
   return (
     <DayScheduleStyle>

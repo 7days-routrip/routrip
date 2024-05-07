@@ -21,5 +21,5 @@ export class Picks {
     referencedColumnName: "id",
     foreignKeyConstraintName: "fkPlacesPicksId",
   })
-  placeId!: Places[] | string;
+  placeId!: Places | string;
 }

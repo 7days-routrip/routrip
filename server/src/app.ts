@@ -9,6 +9,8 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import "reflect-metadata";
+import { AppDataSource } from "./config/ormSetting";
+import { Continents } from "./models/continents.model";
 
 const app = express();
 
@@ -19,13 +21,13 @@ app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
   res.sendStatus(500);
 });
-app.use(cookieParser());
 app.use(
   cors({
     origin: CORS_ORIGIN,
     credentials: true,
   }),
 );
+app.use(cookieParser());
 
 app.use("/api/users", userRouter);
 app.use("/api/trips", tripRouter);
