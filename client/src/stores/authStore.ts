@@ -3,7 +3,7 @@ import { create } from "zustand";
 interface StoreState {
   nickName: string | null;
   isLoggedIn: boolean; // 상태 변수(state)
-  storeLogin: (token: string, name: string, user: number) => void; // 상태 변경 함수(action)
+  storeLogin: (name: string, user: number) => void; // 상태 변경 함수(action)
   storeLogout: () => void;
 }
 
@@ -41,12 +41,12 @@ export const removeUserId = () => {
   localStorage.removeItem("userId");
 };
 
+// token: string, 빠짐 // setToken(token);
 export const useAuthStore = create<StoreState>((set) => ({
   nickName: getToken() ? getNickName() : null,
   isLoggedIn: getToken() ? true : false, // 초기값 설정
-  storeLogin: (token: string, name: string, userId: number) => {
+  storeLogin: (name: string, userId: number) => {
     set({ isLoggedIn: true });
-    setToken(token);
     setNickName(name);
     setUserId(`${userId}`);
   },

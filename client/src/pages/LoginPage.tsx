@@ -1,4 +1,3 @@
-import styled from "styled-components";
 import { JoinPageStyle, WrapperStyle, allowedDomains, placeholderHander } from "./JoinPage";
 import Title from "@/components/common/Title";
 import { LoginProps, useAuth } from "@/hooks/useAuth";
@@ -65,7 +64,7 @@ const LoginPage = () => {
             <div className="reset-ps">
               <span>비밀번호를 찾으실건가요? </span>
               <div className="ps-link">
-                <Link to="/login">비밀번호 찾기</Link>
+                <Link to="/reset">비밀번호 찾기</Link>
               </div>
             </div>
             <div className="social-login">

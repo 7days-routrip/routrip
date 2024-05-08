@@ -27,6 +27,7 @@ const FooterStyle = styled.div<HeaderStyleProps>`
   gap: 16px;
   height: 80px;
   width: 100%;
+  flex-shrink: 0;
   max-width: ${({ $isFull }) => ($isFull ? "100%" : "1080px")};
 `;
 

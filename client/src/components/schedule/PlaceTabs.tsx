@@ -1,6 +1,10 @@
 import React, { useState } from "react";
 import styled from "styled-components";
-import Button from "@/components/common/Button";
+
+import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
+import { useMapStore } from "@/stores/mapStore";
+import { usePlaceStore } from "@/stores/addPlaceStore";
+import { Button } from "@/components/common/Button";
 
 interface PlaceTabContentProps {
   title: string;
@@ -17,8 +21,19 @@ interface PlaceTabsProps {
 }
 
 const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
+  const { googleMap, updateMapBounds } = useMapStore();
+  const { places } = usePlaceStore();
+  const { setMarkerType } = useShowMarkerTypeStore();
   const [activeIndex, setActiveIndex] = useState(active);
   const tabs = React.Children.toArray(children) as React.ReactElement<PlaceTabContentProps>[];
+
+  const onClickHandler = (i: number, title: string) => {
+    setActiveIndex(i);
+    if (title === "추가한 장소") {
+      setMarkerType("add");
+      updateMapBounds(googleMap, places);
+    }
+  };
 
   return (
     <TabsStyle>
@@ -26,10 +41,10 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
         {tabs.map((tab, i) => (
           <Button
             key={i}
-            size="medium"
-            scheme={activeIndex === i ? "primary" : "normal"}
-            radius="tab"
-            onClick={() => setActiveIndex(i)}
+            $size="medium"
+            $scheme={activeIndex === i ? "primary" : "normal"}
+            $radius="tab"
+            onClick={() => onClickHandler(i, tab.props.title)}
           >
             {tab.props.title}
           </Button>
@@ -42,8 +57,6 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
 
 const TabsStyle = styled.div`
   width: 100%;
-  max-height: 310px;
-  overflow-y: auto;
 
   .tab-header {
     display: flex;
@@ -55,7 +68,7 @@ const TabsStyle = styled.div`
   }
 
   .tab-content {
-    min-height: 80px;
+    min-height: 100px;
     border: 1px solid ${({ theme }) => theme.color.borderGray};
     border-top: none;
     border-radius: ${({ theme }) => theme.borderRadius.tabContainer};

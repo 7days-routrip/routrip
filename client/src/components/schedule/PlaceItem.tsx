@@ -1,7 +1,9 @@
 import styled from "styled-components";
 import logoImage from "/assets/images/logo-profile.png"; // 임시로 사용할 장소 이미지
-import { SelectedPlace, usePlaceStore } from "@/stores/placeStore";
+
+import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
 import { Place } from "@/models/place.model";
+import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 
 interface Props {
   data: SelectedPlace | Place;
@@ -10,13 +12,18 @@ interface Props {
 }
 const PlaceItem = ({ data, buttonTitle, isActive = false }: Props) => {
   const { addPlace, removePlace } = usePlaceStore();
+  const { setMarkerType } = useShowMarkerTypeStore();
 
   const handleOnClick = () => {
     if (buttonTitle === "추가") {
       addPlace(data);
+      setMarkerType("add");
     } else if (buttonTitle === "등록") {
       // 등록 요청하는 함수 호출
+      // 중복 장소 체크 -> 신규 장소 등록 순서로
+      setMarkerType("add");
     } else {
+      // 삭제 버튼 클릭 -> 삭제 버튼이 존재하는 장소 아이템의 타입은 반드시 uuid를 가진다.
       if ("uuid" in data) removePlace(data.uuid);
     }
     const title = typeof buttonTitle === "string" ? buttonTitle : "삭제";
@@ -24,7 +31,7 @@ const PlaceItem = ({ data, buttonTitle, isActive = false }: Props) => {
   };
 
   return (
-    <PlaceItemStyle $url={data.img ? data.img : logoImage} $isActive={isActive}>
+    <PlaceItemStyle $url={data.placeImg ? data.placeImg : logoImage} $isActive={isActive}>
       <div className="place-img"></div>
       <div className="detail-container">
         <div className="place-title">{data.placeName}</div>

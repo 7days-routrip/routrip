@@ -1,18 +1,18 @@
 import styled from "styled-components";
-import { useState } from "react";
 import Icons from "@/icons/icons";
 
 interface Props {
   placeholder: string;
-  onSearch: (keyword: string) => void;
+  searchKeyword: string;
+  requestHandler: (keyword: string) => void;
+  setSearchKeyword: (keyword: string) => void;
 }
 
-const SearchBox = ({ placeholder, onSearch }: Props) => {
-  const [searchTerm, setSearchTerm] = useState("");
-
+const SearchBox = ({ placeholder, searchKeyword, requestHandler, setSearchKeyword }: Props) => {
   const handleSearch = () => {
-    onSearch(searchTerm); //상위 컴포넌트의 상태 함수에 검색어 저장
-    console.log(`검색 요청: ${searchTerm}`);
+    // 구글로 검색 요청하는지 백엔드 서버로 검색 요청하는지 구분하는 type props나 핸들러 함수를 추가로 받아야 함
+    console.log(`검색 요청: ${searchKeyword}`);
+    requestHandler(searchKeyword);
   };
 
   const handleKeyDown = (e: React.KeyboardEvent<HTMLInputElement>) => {
@@ -20,14 +20,15 @@ const SearchBox = ({ placeholder, onSearch }: Props) => {
       handleSearch();
     }
   };
+
   return (
     <SearchBoxStyle>
       <input
         className="search-input"
         type="text"
         placeholder={placeholder}
-        value={searchTerm}
-        onChange={(e) => setSearchTerm(e.target.value)}
+        value={searchKeyword}
+        onChange={(e) => setSearchKeyword(e.target.value)}
         onKeyDown={handleKeyDown}
       />
       <button className="search-btn" onClick={handleSearch}>
@@ -48,6 +49,11 @@ const SearchBoxStyle = styled.div`
     border-radius: ${({ theme }) => theme.borderRadius.leftRadius};
     color: ${({ theme }) => theme.color.black};
     font-size: 1rem;
+
+    &:focus {
+      outline: none;
+      border: 1px solid ${({ theme }) => theme.color.primary};
+    }
   }
 
   .search-btn {

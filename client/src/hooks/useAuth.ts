@@ -1,4 +1,4 @@
-import { LoginResponse, authJoin, authLogin } from "@/apis/auth.api";
+import { LoginResponse, authEmailComfirm, authJoin, authLogin, authReset, isNicknameUnique } from "@/apis/auth.api";
 import { useAuthStore } from "@/stores/authStore";
 import { useNavigate } from "react-router-dom";
 
@@ -21,7 +21,7 @@ export const useAuth = () => {
   const userLogin = async (data: LoginProps) => {
     try {
       const loginRes = await authLogin(data);
-      storeLogin(loginRes.Authorization, loginRes.nickname, loginRes.userId);
+      storeLogin(loginRes.nickname, loginRes.userId);
       navigate("/");
     } catch (error) {
       // 로그인 실패
@@ -37,5 +37,41 @@ export const useAuth = () => {
     }
   };
 
-  return { userLogin, userJoin };
+  const userEmailComfirm = async (email: string) => {
+    try {
+      const EmailComfirmRes = await authEmailComfirm(email);
+      return EmailComfirmRes;
+    } catch (error) {
+      // 이메일 확인 과정 실패
+    }
+  };
+
+  const userPasswordReset = async (data: LoginProps) => {
+    try {
+      const passwordResetRes = await authReset(data);
+      return passwordResetRes;
+    } catch (error) {
+      // 비밀번호 리셋 실패
+    }
+  };
+
+  const userNickCheck = async (nickname: string) => {
+    try {
+      const checkNicknameRes = await isNicknameUnique(nickname);
+      return checkNicknameRes;
+    } catch (error) {
+      // 닉네임 중복 확인 실패
+    }
+  };
+
+  const userEmailCheck = async (email: string) => {
+    try {
+      const checkEmailRes = await authEmailComfirm(email);
+      return checkEmailRes;
+    } catch (error) {
+      // 이메일 중복 확인 실패
+    }
+  };
+
+  return { userLogin, userJoin, userEmailComfirm, userPasswordReset, userNickCheck, userEmailCheck };
 };
