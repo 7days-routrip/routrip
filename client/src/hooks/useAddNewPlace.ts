@@ -55,7 +55,9 @@ export const useAddNewPlace = (data: Place) => {
             };
             addPlace(addData);
             setMarkerType("add");
-          } catch (err: any) {}
+          } catch (err: any) {
+            showAlert("장소 정보를 불어오는데 실패했습니다.\n다른 장소를 등록해주세요.", "error");
+          }
         });
       } else {
         showAlert("서버에 문제가 발생했습니다.\n잠시 후 다시 시도해주세요.", "error");
