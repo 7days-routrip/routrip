@@ -5,21 +5,28 @@ import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { SearchNearByPlacesParams, searchNearByPlaces } from "@/apis/map.api";
 import { useMapStore } from "@/stores/mapStore";
 import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
+import { calculateSearchRadius } from "@/utils/calculateSearchRadius";
+import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 
 const AddNewPlace = () => {
   const { nearPlaces, setNearPlaces } = useNearPlacesStore();
   const { mapCenter, googleMap } = useMapStore();
+  const { setMarkerType } = useShowMarkerTypeStore();
   const { searchKeywordToGoogle, setSearchKeywordToGoogle } = useSearchKeywordStore();
 
   const requestHandler = async (keyword: string) => {
     // 구글 api 장소 검색 요청
+    const currentZoom = googleMap?.getZoom() || 6;
+    const radius = calculateSearchRadius(currentZoom);
+    console.log(currentZoom, radius);
     const params: SearchNearByPlacesParams = {
       keyword,
       location: { lat: mapCenter.lat, lng: mapCenter.lng },
-      radius: 50000, // 최대 반경 5만 미터(50km)
+      radius, //: 50000, // 최대 반경 5만 미터(50km)
     };
 
     await searchNearByPlaces(googleMap, params, setNearPlaces);
+    setMarkerType("searchGoogle");
   };
 
   return (

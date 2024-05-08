@@ -29,26 +29,33 @@ export const searchPlaceApi = async (keyword: string, setPlaces: (places: Place[
 // 백엔드 서버로 장소 중복 체크 요청
 export const checkPlaceApi = async (id: string) => {
   try {
-    // const { data } = await httpClient.post(`/spots/check${id}`);
-    // console.log(data);
-
+    const res = await httpClient.post(`/spots/check/${id}`);
+    return res.data;
     // const error = new Error("Duplicate place");
     // throw error;
 
-    return Promise.resolve("OK");
+    // return Promise.resolve("OK");
   } catch (err: any) {
     throw err;
   }
 };
 
 // 백엔드 서버로 신규 장소 등록 요청
-export const addNewPlaceApi = async () => {
+export const addNewPlaceApi = async (placeDetailData: PlaceDetails) => {
   try {
-    const { data } = await httpClient.post<PlaceDetails>(`/spots`);
+    const { data } = await httpClient.post<PlaceDetails>(`/spots`, placeDetailData);
     return data;
   } catch (err: any) {
     throw err;
   }
 };
 
-// 백엔드 서버로 장소 상세 정보 요청 -> 장소 상세보기 모달 컴포넌트
+// 백엔드 서버로 장소 상세 정보 요청 -> 장소 상세보기 모달 컴포넌트, 일정 등록 및 수정페이지에서 내가 찜한 장소
+export const getPlaceDetailApi = async (id: string) => {
+  try {
+    const { data } = await httpClient.get<PlaceDetails>(`/spots/${id}`);
+    return data;
+  } catch (err: any) {
+    throw err;
+  }
+};

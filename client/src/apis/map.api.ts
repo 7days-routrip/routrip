@@ -80,7 +80,7 @@ export const getPlaceDetail = async (map: google.maps.Map | null, placeId: strin
       ],
     };
 
-    return new Promise<Place>((resolve, reject) => {
+    return new Promise<PlaceDetails>((resolve, reject) => {
       const callback = (
         results: google.maps.places.PlaceResult | null,
         status: google.maps.places.PlacesServiceStatus,
@@ -100,14 +100,7 @@ export const getPlaceDetail = async (map: google.maps.Map | null, placeId: strin
             placeImg: results.photos ? results.photos[0].getUrl() : "",
           };
 
-          const detailData: Place = {
-            id: placeDetailData.id,
-            placeName: placeDetailData.placeName,
-            location: placeDetailData.location,
-            address: placeDetailData.address,
-            placeImg: placeDetailData.placeImg,
-          };
-          resolve(detailData);
+          resolve(placeDetailData);
         } else {
           reject(new Error("Failed to fetch place details"));
         }

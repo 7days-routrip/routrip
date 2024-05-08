@@ -4,6 +4,8 @@ import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useMapStore } from "@/stores/mapStore";
 import { usePlaceStore } from "@/stores/addPlaceStore";
 import { Button } from "@/components/common/Button";
+import { useNearPlacesStore } from "@/stores/nearPlacesStore";
+import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
 
 interface PlaceTabContentProps {
   title: string;
@@ -23,6 +25,8 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
   const { googleMap, updateMapBounds } = useMapStore();
   const { places } = usePlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
+  const { nearPlaces } = useNearPlacesStore();
+  const { searchPlace } = useSearchPlacesStore();
   const [activeIndex, setActiveIndex] = useState(active);
   const tabs = React.Children.toArray(children) as React.ReactElement<PlaceTabContentProps>[];
 
@@ -31,6 +35,12 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
     if (title === "추가한 장소") {
       setMarkerType("add");
       updateMapBounds(googleMap, places);
+    } else if (title === "장소 선택") {
+      setMarkerType("searchApi");
+      updateMapBounds(googleMap, searchPlace);
+    } else if (title === "신규 장소 등록") {
+      setMarkerType("searchGoogle");
+      updateMapBounds(googleMap, nearPlaces);
     }
   };
 

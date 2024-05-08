@@ -6,8 +6,14 @@ import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
 import InfoWindowBox from "./InfoWindowBox";
 import dayPlacePin from "/assets/images/pin-day-place.png";
 import addPlacePin from "/assets/images/pin-add-place.png";
+import searchPin from "/assets/images/pin-search-place.png";
+// import bookmarkPin from "/assets/images/pin-bookmark-place.png";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useDayPlaceStore } from "@/stores/dayPlaces";
+import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
+import { useNearPlacesStore } from "@/stores/nearPlacesStore";
+import { Place } from "@/models/place.model";
+import { isExistedInPlaceType, isExistedInSelectedPlaceType } from "@/utils/checkIsExisted";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAP_API_KEY || "";
 
@@ -21,17 +27,39 @@ const center = {
   lng: 90,
 };
 
+const createMarkers = (
+  places: (SelectedPlace | Place)[],
+  onClickMarker: (place: SelectedPlace | Place) => void,
+  iconUrl: string,
+) => {
+  return places.map((place, i) => (
+    <div key={i}>
+      <MarkerF
+        position={{ lat: place.location.lat, lng: place.location.lng }}
+        icon={{
+          url: iconUrl,
+          scaledSize: new window.google.maps.Size(38, 38),
+        }}
+        onClick={() => onClickMarker(place)}
+      />
+    </div>
+  ));
+};
+
 const ScheduleGoogleMap = () => {
   const { isLoaded } = useJsApiLoader({
     id: "google-map-script",
     googleMapsApiKey: apiKey,
     language: "ko",
   });
-  const { googleMap, mapCenter, setCenter, setGoogleMap } = useMapStore();
+
+  const { googleMap, mapCenter, setCenter, setGoogleMap, updateMapBounds } = useMapStore();
   const { places: addPlaces } = usePlaceStore(); // 실제로 사용할 전역 상태. 임시로 mockRealPlaceData를 사용
   const { markerType, dayIndex } = useShowMarkerTypeStore();
   const { dayPlaces } = useDayPlaceStore();
-  const [clickMarker, setClickMarker] = useState<SelectedPlace | null>(null);
+  const { searchPlace } = useSearchPlacesStore();
+  const { nearPlaces } = useNearPlacesStore();
+  const [clickMarker, setClickMarker] = useState<SelectedPlace | Place | null>(null);
 
   const handleChanged = useCallback(() => {
     if (googleMap && googleMap.getCenter()) {
@@ -39,7 +67,7 @@ const ScheduleGoogleMap = () => {
         lat: googleMap.getCenter()?.lat() || center.lat,
         lng: googleMap.getCenter()?.lng() || center.lng,
       });
-      console.log(googleMap.getCenter()?.lat(), googleMap.getCenter()?.lng());
+      // console.log(googleMap.getCenter()?.lat(), googleMap.getCenter()?.lng());
     }
   }, [googleMap, center]);
 
@@ -51,13 +79,14 @@ const ScheduleGoogleMap = () => {
     setGoogleMap(null);
   }, []);
 
-  const onclickMarker = (place: SelectedPlace) => {
+  const onclickMarker = (place: SelectedPlace | Place) => {
     setClickMarker(place);
 
     if (googleMap) {
       googleMap.panTo(place.location); // 1. 마커 위치로 지도 이동
       const currentZoom = googleMap.getZoom() || 6;
-      const targetZoom = Math.max(currentZoom, 12);
+      // console.log(currentZoom);
+      const targetZoom = Math.max(currentZoom, 15);
       googleMap.setZoom(targetZoom); // 2. 줌 비율 조정(확대)
     }
   };
@@ -69,14 +98,16 @@ const ScheduleGoogleMap = () => {
   };
 
   useEffect(() => {
-    if (markerType === "add" && clickMarker) {
-      const isExisted = addPlaces.find((place) => place.uuid === clickMarker.uuid);
+    if (!clickMarker) return;
 
-      if (!isExisted) setClickMarker(null);
-    } else if (markerType === "day" && clickMarker) {
-      const isExisted = dayPlaces[dayIndex as number].find((place) => place.uuid === clickMarker.uuid);
-
-      if (!isExisted) setClickMarker(null);
+    if (markerType === "add" && "uuid" in clickMarker) {
+      if (!isExistedInSelectedPlaceType(addPlaces, clickMarker.uuid)) setClickMarker(null);
+    } else if (markerType === "day" && "uuid" in clickMarker) {
+      if (!isExistedInSelectedPlaceType(dayPlaces[dayIndex as number], clickMarker.uuid)) setClickMarker(null);
+    } else if (markerType === "searchApi" && clickMarker) {
+      if (!isExistedInPlaceType(searchPlace, clickMarker.id)) setClickMarker(null);
+    } else if (markerType === "searchGoogle" && clickMarker) {
+      if (!isExistedInPlaceType(nearPlaces, clickMarker.id)) setClickMarker(null);
     }
   }, [addPlaces, dayPlaces, markerType, dayIndex]);
 
@@ -84,23 +115,24 @@ const ScheduleGoogleMap = () => {
     // 지도에 표시할 마커가 전부 보이도록 지도 경계선을 계산
     if (!googleMap) return;
 
-    const bounds = new google.maps.LatLngBounds();
-
-    if (markerType === "add") {
-      if (addPlaces.length === 0) return;
-      addPlaces.forEach((place) => {
-        bounds.extend(new google.maps.LatLng(place.location.lat, place.location.lng));
-      });
-    } else if (markerType === "day") {
-      const dayPlaceMarkers = dayPlaces[dayIndex as number];
-      if (dayPlaceMarkers.length === 0) return;
-      dayPlaceMarkers.forEach((place) => {
-        bounds.extend(new google.maps.LatLng(place.location.lat, place.location.lng));
-      });
+    let placeArr;
+    switch (markerType) {
+      case "add":
+        placeArr = addPlaces;
+        break;
+      case "day":
+        placeArr = dayPlaces[dayIndex as number];
+        break;
+      case "searchApi":
+        placeArr = searchPlace;
+        break;
+      case "searchGoogle":
+        placeArr = nearPlaces;
+        break;
     }
 
-    googleMap.fitBounds(bounds);
-  }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap]);
+    updateMapBounds(googleMap, placeArr);
+  }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlace, nearPlaces]);
 
   return isLoaded ? (
     <GoogleMap
@@ -113,51 +145,21 @@ const ScheduleGoogleMap = () => {
       onZoomChanged={handleChanged}
       onClick={onClickMap}
     >
-      {markerType === "add" &&
-        addPlaces.map((place) => (
-          <div key={place.uuid}>
-            <MarkerF
-              position={{ lat: place.location.lat, lng: place.location.lng }}
-              icon={{
-                url: addPlacePin,
-                scaledSize: new window.google.maps.Size(38, 38),
-              }}
-              onClick={() => onclickMarker(place)}
-            />
-            {clickMarker && (
-              <InfoWindowF
-                position={{ lat: clickMarker.location.lat, lng: clickMarker.location.lng }}
-                options={{ pixelOffset: new window.google.maps.Size(0, -40), maxWidth: 200 }}
-                onCloseClick={() => setClickMarker(null)}
-              >
-                <InfoWindowBox data={clickMarker} />
-              </InfoWindowF>
-            )}
-          </div>
-        ))}
+      {/* 장소 아이템 개수만큼 마커 컴포넌트 생성 */}
+      {markerType === "add" && createMarkers(addPlaces, onclickMarker, addPlacePin)}
+      {markerType === "day" && createMarkers(dayPlaces[dayIndex as number], onclickMarker, dayPlacePin)}
+      {markerType === "searchApi" && createMarkers(searchPlace, onclickMarker, searchPin)}
+      {markerType === "searchGoogle" && createMarkers(nearPlaces, onclickMarker, searchPin)}
 
-      {markerType === "day" &&
-        dayPlaces[dayIndex as number].map((place) => (
-          <div key={place.uuid}>
-            <MarkerF
-              position={{ lat: place.location.lat, lng: place.location.lng }}
-              icon={{
-                url: dayPlacePin,
-                scaledSize: new window.google.maps.Size(38, 38),
-              }}
-              onClick={() => onclickMarker(place)}
-            />
-            {clickMarker && (
-              <InfoWindowF
-                position={{ lat: clickMarker.location.lat, lng: clickMarker.location.lng }}
-                options={{ pixelOffset: new window.google.maps.Size(0, -40), maxWidth: 200 }}
-                onCloseClick={() => setClickMarker(null)}
-              >
-                <InfoWindowBox data={clickMarker} />
-              </InfoWindowF>
-            )}
-          </div>
-        ))}
+      {clickMarker && (
+        <InfoWindowF
+          position={{ lat: clickMarker.location.lat, lng: clickMarker.location.lng }}
+          options={{ pixelOffset: new window.google.maps.Size(0, -40), maxWidth: 200 }}
+          onCloseClick={() => setClickMarker(null)}
+        >
+          <InfoWindowBox data={clickMarker} />
+        </InfoWindowF>
+      )}
     </GoogleMap>
   ) : (
     <Loading />

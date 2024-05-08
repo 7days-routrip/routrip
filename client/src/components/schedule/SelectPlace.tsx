@@ -4,14 +4,17 @@ import PlaceList from "./PlaceList";
 import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
 import { searchPlaceApi } from "@/apis/place.api";
 import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
+import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 
 const SelectPlace = () => {
   const { searchKeywordToServer, setSearchKeywordToServer } = useSearchKeywordStore();
   const { searchPlace, setSearchPlace } = useSearchPlacesStore();
+  const { setMarkerType } = useShowMarkerTypeStore();
 
   const requestHandler = async (keyword: string) => {
     // 서버로 검색 요청
     await searchPlaceApi(keyword, setSearchPlace);
+    setMarkerType("searchApi");
   };
 
   return (
