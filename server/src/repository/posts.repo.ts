@@ -139,10 +139,11 @@ export const userPostLikedCheck = async (userId: number) => {
   return false;
 };
 
-export const updatepostResultRequest = async (updateData: iCreatePostProps, postId: string) => {
+export const updatepostResultRequest = async (updateData: iCreatePostProps, postId: string, userId: number) => {
   const repository = AppDataSource.getRepository(Posts);
   try {
-    const postImg = getPostImg(updateData.contents);
+    const postImg = await getImageFromContent(updateData.contents);
+    console.log(postImg);
     const result = await repository
       .createQueryBuilder()
       .update(Posts)

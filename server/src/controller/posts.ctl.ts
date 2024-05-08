@@ -9,7 +9,6 @@ import {
   OK_UPLOAD_POST,
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
-import { Posts } from "@/models/posts.model";
 import {
   createPost,
   delPostResultRequest,
@@ -26,22 +25,25 @@ import { StatusCodes } from "http-status-codes";
 //포스팅 추가
 export const createPostRequest = async (req: Request, res: Response) => {
   const inputData = req.body;
-  const user = req.user;
-  // const userId = req.user?.id;
-  const userId = 1;
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
   try {
-    if (!user?.isLoggedIn) throw new Error("not User");
-    const createPostRequestResult = await createPost(inputData, userId);
-    if (!createPostRequestResult) throw new Error("fail upload");
-    res.status(StatusCodes.OK).json({ message: OK_UPLOAD_POST });
+    if (req.user?.isLoggedIn) {
+      const userId = req.user?.id;
+      const createPostRequestResult = await createPost(inputData, userId);
+      if (!createPostRequestResult) throw new Error("fail upload");
+      res.status(StatusCodes.OK).json({ message: OK_UPLOAD_POST });
+    } else {
+      throw new Error("login required");
+    }
   } catch (err) {
     await queryRunner.rollbackTransaction();
     if (err instanceof Error) {
-      if (err.message === "not User") res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
-      if (err.message === "fail upload") res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_UPLOAD_POST });
+      if (err.message === "login required")
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+      if (err.message === "fail upload")
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_UPLOAD_POST });
     }
   } finally {
     await queryRunner.release();
@@ -166,14 +168,21 @@ export const editPostRequest = async (req: Request, res: Response) => {
   const postId = req.params.id;
 
   try {
-    const updatepostResult = await updatepostResultRequest(data, postId);
+    if (req.user?.isLoggedIn) {
+      const userId = req.user.id;
+      const updatepostResult = await updatepostResultRequest(data, postId, userId);
 
-    if (!updatepostResult) throw new Error("bad request");
-    res.status(StatusCodes.OK).json({ message: OK_UPDATE_POST });
+      if (!updatepostResult) throw new Error("bad request");
+      res.status(StatusCodes.OK).json({ message: OK_UPDATE_POST });
+    } else {
+      throw new Error("login required");
+    }
   } catch (err) {
     if (err instanceof Error) {
       if (err.message === "bad request")
         return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_UPDATE_POST });
+      if (err.message === "login required")
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
     }
   }
 };
@@ -187,6 +196,8 @@ export const delPostRequest = async (req: Request, res: Response) => {
   } catch (err) {
     if (err instanceof Error) {
       if (err.message === "bad request") return res.status(StatusCodes.BAD_REQUEST).json({ message: NOT_FOUND_POST });
+      if (err.message === "login required")
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
     }
   }
 };
