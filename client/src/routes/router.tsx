@@ -3,9 +3,12 @@ import ErrorPage from "@/pages/ErrorPage";
 import JoinPage from "@/pages/JoinPage";
 import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
+import Mypage from "@/pages/Mypage";
 import PostPage from "@/pages/PostPage";
+import ProfileEditPage from "@/pages/ProfileEditPage";
+import ProfileResetPassword from "@/pages/ProfileResetPassword";
+import RestPage from "@/pages/ResetPassword";
 import SchedulePage from "@/pages/SchedulePage";
-import WritePage from "@/pages/WritePage";
 import { createBrowserRouter } from "react-router-dom";
 
 const routerArr = [
@@ -49,10 +52,10 @@ const routerArr = [
     ),
   },
   {
-    path: "/write",
+    path: "/reset",
     element: (
       <Layout>
-        <WritePage />
+        <RestPage />
       </Layout>
     ),
     errorElement: (
@@ -77,8 +80,47 @@ const routerArr = [
   {
     path: "/schedule",
     element: (
-      <Layout>
+      <Layout isFull={true}>
         <SchedulePage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/mypage",
+    element: (
+      <Layout>
+        <Mypage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/me",
+    element: (
+      <Layout>
+        <ProfileEditPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/me/reset",
+    element: (
+      <Layout>
+        <ProfileResetPassword />
       </Layout>
     ),
     errorElement: (

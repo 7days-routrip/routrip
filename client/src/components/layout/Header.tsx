@@ -81,6 +81,8 @@ const HeaderStyle = styled.header<HeaderStyleProps>`
   left: 0;
   right: 0;
   z-index: 1000;
+  background-color: ${({ theme }) => theme.color.white};
+  padding: 0 0.8rem;
 
   .desktop-nav,
   .desktop-auth-icons {

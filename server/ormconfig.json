@@ -1,16 +1,18 @@
 [
   {
     "name": "test",
-    "type": "mysql",
-    "host": "localhost",
-    "port": 3306,
+    "type": "mariadb",
+    "host": "221.165.80.145",
+    "port": "3306",
     "username": "root",
-    "password": "",
-    "database": "typeorm-test",
+    "password": "xptmxm12",
+    "database": "routrip",
     "synchronize": true,
     "logging": false,
     "dropSchema": true,
-    "entities": ["src/entity/*.ts"],
+
+    "entities": ["./src/**/*.model.{ts,js}"],
+
     "subscribers": ["src/migration/*.ts"],
     "migrations": ["src/migration/*.ts"]
   },
@@ -24,12 +26,14 @@
     "database": "",
     "synchronize": false,
     "logging": true,
-    "entities": ["dist/entity/*.js"],
+
+    "entities": ["dist/**/*.model.{ts,js}"],
+
     "subscribers": ["dist/migration/*.js"],
     "migrations": ["dist/migration/*.js"],
     "migrationsTableName": "migrations",
     "cli": {
-      "entitiesDir": "src/entity",
+      "entitiesDir": "src/models",
       "migrationsDir": "src/migration",
       "subscribersDir": "src/subscriber"
     }
