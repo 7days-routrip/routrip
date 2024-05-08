@@ -1,4 +1,15 @@
+import {
+  BAD_REQUEST_ORIGIN_PASSWORD,
+  DATA_UPDATE_FAILED,
+  DATA_UPDATE_SUCCESSED,
+  NOT_FOUND_USER,
+  OK_RESET_PASSWORD,
+  OK_RESET_REQUEST,
+  UNAUTHORIZED_NOT_LOGIN,
+} from "@/constants/message";
+import userRepository from "@/repository/users.repo";
 import usersService from "@/service/users.service";
+import { iPatchData } from "@/types/users.types";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -71,11 +82,85 @@ const checkNickname = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
+const patchUserInfoRequest = async (req: Request, res: Response) => {
+  const patchData: iPatchData = req.body;
+  try {
+    if (req.user?.isLoggedIn) {
+      const userId = req.user.id;
+      const patchUserInfoResult = await userRepository.patchData(patchData, userId);
+      if (!patchUserInfoResult.success) throw new Error(patchUserInfoResult.msg);
+      res.status(StatusCodes.OK).json({ message: DATA_UPDATE_SUCCESSED });
+    } else {
+      throw new Error("login required");
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "login required")
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+      if (err.message === "user data don't update")
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: DATA_UPDATE_FAILED });
+    }
+  }
+};
+
+const resetRequest = async (req: Request, res: Response) => {
+  const data = req.body;
+  try {
+    const resetResult = await userRepository.resetCheck(data);
+    if (!resetResult.success) throw new Error(resetResult.msg);
+    res.status(StatusCodes.OK).json({ message: OK_RESET_REQUEST });
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "user does not exist")
+        return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_USER });
+    }
+  }
+};
+const resetPasswordRequest = async (req: Request, res: Response) => {
+  const data = req.body;
+  try {
+    const resetPasswordResult = await userRepository.resetPassword(data);
+    if (!resetPasswordResult.success) throw new Error(resetPasswordResult.msg);
+    res.status(StatusCodes.OK).json({ message: OK_RESET_PASSWORD });
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "user does not exist")
+        return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_USER });
+    }
+  }
+};
+const userResetPassword = async (req: Request, res: Response) => {
+  const data = req.body;
+  try {
+    if (req.user?.isLoggedIn) {
+      const userId = req.user.id;
+      const getUserData = await userRepository.getUserDataRequest(userId);
+      console.log(getUserData.createdAt);
+      if (!getUserData) throw new Error("login required");
+      const resetPasswordResult = await userRepository.userResetPassword(data, getUserData);
+      if (!resetPasswordResult?.success) throw new Error(resetPasswordResult?.msg);
+      res.status(StatusCodes.OK).json({ message: OK_RESET_PASSWORD });
+    } else {
+      throw new Error("login required");
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === ("login required" || "user does not exist"))
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+      if (err.message === "wrong password")
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_ORIGIN_PASSWORD });
+    }
+  }
+};
 const usersController = {
   join,
   login,
   checkEmail,
   checkNickname,
+  patchUserInfoRequest,
+  resetRequest,
+  resetPasswordRequest,
+  userResetPassword,
 };
 
 export default usersController;

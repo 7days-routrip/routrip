@@ -1,6 +1,8 @@
 import userRepository from "@/repository/users.repo";
 import { SALT_ROUND } from "@/settings";
+import { iUserResetCompareProps } from "@/types/users.types";
 import { getNewAccessToken, getNewRefreshToken } from "@/utils/token";
+import { StringColorFormat } from "@faker-js/faker";
 import bcrypt from "bcrypt";
 
 const login = async (email: string, password: string) => {
@@ -31,11 +33,19 @@ const checkNickname = async (nickname: string) => {
   if (user) throw new Error("이미 존재하는 닉네임입니다.");
 };
 
+const hashPassword = async (password: string) => {
+  return await bcrypt.hash(password, SALT_ROUND);
+};
+const comparePassword = async (password: string, hashPassword: string) => {
+  return await bcrypt.compare(password, hashPassword);
+};
 const usersService = {
   join,
   login,
   checkEmail,
   checkNickname,
+  hashPassword,
+  comparePassword,
 };
 
 export default usersService;

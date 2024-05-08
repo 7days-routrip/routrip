@@ -1,5 +1,14 @@
 // 사용자
 export const UNAUTHORIZED_NOT_LOGIN = "로그인 후 이용이 가능합니다.";
+export const DATA_UPDATE_FAILED = "개인 정보 수정이 실패했습니다.";
+export const DATA_UPDATE_SUCCESSED = "개인 정보 수정이 성공했습니다.";
+export const NOT_FOUND_USER = "존재하지 않은 사용자입니다.";
+export const OK_RESET_REQUEST = "비밀번호를 변경할 수 있습니다.";
+export const BE_WRITED_EMAIL = "이메일을 작성해야 합니다.";
+export const OK_RESET_PASSWORD = "비밀번호 변경이 완료되었습니다.";
+export const BAD_REQUEST_ORIGIN_PASSWORD = "현재비밀번호가 일치하지 않습니다.";
+//공용
+export const NOT_FOUND_DATA = "존재하지 않는 페이지 입니다.";
 // 찜하기/좋아요
 export const NOT_FOUND_PLACES_LIST = "찜한 장소가 없습니다.";
 export const NOT_FOUND_POST_LIST = "좋아요한 포스트가 없습니다.";
@@ -20,3 +29,5 @@ export const NOT_FOUND_POSTS_LIST = "게시글 목록이 없습니다.";
 export const OK_UPDATE_POST = "게시글을 수정하였습니다.";
 export const BAD_REQUEST_UPDATE_POST = "게시글 수정을 실패했습니다.";
 export const OK_DELETE_POST = "게시글이 삭제되었습니다.";
+//댓글
+export const NOT_FOUND_COMMENTS = "댓글이 존재하지 않습니다.";

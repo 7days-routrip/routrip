@@ -3,6 +3,7 @@ import postsRouter from "@/routes/posts.routes";
 import spotRouter from "@/routes/spots.routes";
 import journeyRouter from "@/routes/journeys.routes";
 import userRouter from "@/routes/users.routes";
+import commentRouter from "@/routes/comments.routes";
 import { CORS_ORIGIN } from "@/settings";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -31,5 +32,6 @@ app.use("/api/journeys", journeyRouter);
 app.use("/api/posts", postsRouter);
 app.use("/api/likes", likesRouter);
 app.use("/api/spots", spotRouter);
+app.use("/api/comments", commentRouter);
 
 export default app;
