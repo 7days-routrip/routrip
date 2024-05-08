@@ -1,4 +1,4 @@
-import { JWT_EXPIRED_IN, JWT_SECRET } from "@/settings";
+import { JWT_ACCESS_EXPIRED_IN, JWT_ACCESS_SECRET, JWT_REFRESH_EXPIRED_IN, JWT_REFRESH_SECRET } from "@/settings";
 import jwt, { JwtPayload } from "jsonwebtoken";
 
 const getCurrentDate = () => {
@@ -39,11 +39,26 @@ const getNewAccessToken = (userId: number, nickName: string): string => {
       userId: userId,
       nickName: nickName,
     },
-    JWT_SECRET,
+    JWT_ACCESS_SECRET,
     {
-      expiresIn: JWT_EXPIRED_IN,
+      expiresIn: JWT_ACCESS_EXPIRED_IN,
     },
   );
   return accessToken;
 };
-export { getNewAccessToken, validTokenCheck };
+
+const getNewRefreshToken = (userId: number, nickName: string): string => {
+  const refreshToken = jwt.sign(
+    {
+      userId: userId,
+      nickName: nickName,
+    },
+    JWT_REFRESH_SECRET,
+    {
+      expiresIn: JWT_REFRESH_EXPIRED_IN,
+    },
+  );
+  return refreshToken;
+}
+
+export { getNewAccessToken, getNewRefreshToken, validTokenCheck };
