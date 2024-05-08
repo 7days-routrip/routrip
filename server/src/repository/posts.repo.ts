@@ -10,7 +10,7 @@ import { Posts } from "@/models/posts.model";
 import { RouteDays } from "@/models/routeDays.model";
 import { Routes } from "@/models/routes.model";
 import { Users } from "@/models/users.model";
-import { getImageFromContent, getOffset, setAreaType } from "@/service/posts.service";
+import { getImageFromContent, getOffset, getPostImg, setAreaType } from "@/service/posts.service";
 import { iCreatePostProps, iPageDataProps, iSearchDataProps } from "@/types/posts.types";
 
 export const createPost = async (inputData: iCreatePostProps, userId: number) => {
@@ -22,7 +22,7 @@ export const createPost = async (inputData: iCreatePostProps, userId: number) =>
     postsRepo.userId = userId;
     postsRepo.continentId = inputData.continent;
     postsRepo.countryId = inputData.country;
-    postsRepo.expense = String(inputData.totalExpense);
+    postsRepo.expense = inputData.totalExpense;
     postsRepo.journeyId = inputData.journeyId;
     postsRepo.content = inputData.contents;
 
@@ -137,4 +137,52 @@ export const userPostLikedCheck = async (userId: number) => {
   const repo = AppDataSource.getRepository(Likes);
   if (userId) return await repo.existsBy({ userId: userId });
   return false;
+};
+
+export const updatepostResultRequest = async (updateData: iCreatePostProps, postId: string) => {
+  const repository = AppDataSource.getRepository(Posts);
+  try {
+    const postImg = getPostImg(updateData.contents);
+    const result = await repository
+      .createQueryBuilder()
+      .update(Posts)
+      .set({
+        title: updateData.title,
+        content: updateData.contents,
+        postsImg: postImg,
+        expense: updateData.totalExpense,
+        journeyId: updateData.journeyId,
+        continentId: updateData.continent,
+        countryId: updateData.country,
+        startDate: updateData.startDate,
+        endDate: updateData.endDate,
+      })
+      .where("id = :id", { id: postId })
+      .execute();
+
+    if (result.affected !== 1) throw new Error("bad request");
+    return true;
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "bad request") return false;
+    }
+  }
+};
+export const delPostResultRequest = async (postId: string) => {
+  const repository = AppDataSource.getRepository(Posts);
+  try {
+    const result = await repository
+      .createQueryBuilder()
+      .delete()
+      .from(Posts)
+      .where("id = :id", { id: postId })
+      .execute();
+
+    if (result.affected === 0) throw new Error("bad request");
+    return true;
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "bad request") return false;
+    }
+  }
 };

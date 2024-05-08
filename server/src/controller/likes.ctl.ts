@@ -31,74 +31,99 @@ import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 export const getPlaceLikesList = async (req: Request, res: Response) => {
-  const picksRepo = AppDataSource.getRepository(Picks);
   const userId = 1;
   // const userId = req.user.id;
-
-  const listResult = await PlaceLikesListResult(picksRepo, userId);
-  if (!listResult || listResult.length === 0)
-    return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_PLACES_LIST });
-  res.status(StatusCodes.OK).json(listResult);
+  try {
+    const listResult = await PlaceLikesListResult(userId);
+    if (!listResult || listResult.length === 0) throw new Error("does not exist Like Place");
+    const responsePlaceLikesList = listResult?.map((place) => {
+      const locationSplit = place.location.split(",");
+      return {
+        id: place.id,
+        placeName: place.name,
+        address: place.address,
+        location: {
+          lat: locationSplit[0].trim(),
+          lng: locationSplit[1].trim(),
+        },
+        placeImg: place.img,
+      };
+    });
+    res.status(StatusCodes.OK).json(responsePlaceLikesList);
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "does not exist Like Place")
+        return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_PLACES_LIST });
+    }
+  }
 };
 
 export const placeLikeRequest = async (req: Request, res: Response) => {
   const userId = 1;
   // const userId = req.user.id;
-  const placeId = parseInt(req.params.id);
-  const picksRepo = AppDataSource.getRepository(Picks);
-
-  const checkPlace = await alreadyLikePlaceCheck(picksRepo, userId, placeId);
-  if (checkPlace) {
-    return res.status(StatusCodes.CONFLICT).json({ message: ALREADY_LIKE_PLACES });
+  const placeId = req.params.id;
+  try {
+    const checkPlace = await alreadyLikePlaceCheck(userId, placeId);
+    console.log(checkPlace);
+    if (!checkPlace) throw new Error("exist place");
+    const requestResult = await placeLikeRequestResult(userId, placeId);
+    if (!requestResult) throw new Error("bad request");
+    res.status(StatusCodes.OK).json({ message: OK_LIKE_PLACE });
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "bad request")
+        return res.status(StatusCodes.NOT_FOUND).json({ message: BAD_REQUEST_LIKE_PLACE });
+      if (err.message === "exist place") return res.status(StatusCodes.CONFLICT).json({ message: ALREADY_LIKE_PLACES });
+    }
   }
-
-  const requestResult = await placeLikeRequestResult(picksRepo, userId, placeId);
-  if (!requestResult) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_LIKE_PLACE });
-  }
-  res.status(StatusCodes.OK).json({ message: OK_LIKE_PLACE });
 };
 
 export const placeUnlikeRequest = async (req: Request, res: Response) => {
-  const picksRepo = AppDataSource.getRepository(Picks);
-  const placeId = parseInt(req.params.id);
+  const placeId = req.params.id;
   const userId = 1;
   // const userId = req.user.id;
-
-  const requestResult = await placeUnlikeRequestResult(picksRepo, userId, placeId);
-
-  if (requestResult?.affected === 0) {
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_LIKE_PLACE });
+  try {
+    const requestResult = await placeUnlikeRequestResult(userId, placeId);
+    if (!requestResult) throw new Error("failed");
+    res.status(StatusCodes.OK).json({ message: OK_UNLIKE_PLACE });
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "failed")
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_LIKE_PLACE });
+    }
   }
-  res.status(StatusCodes.OK).json({ message: OK_UNLIKE_PLACE });
 };
 export const getLikesPostsList = async (req: Request, res: Response) => {
-  const postsRepo = AppDataSource.getRepository(Posts);
   // const userId = req.user.id;
   const userId = 1;
 
-  const postLikeListResult = await postLikeListRequest(postsRepo, userId);
-  if (postLikeListResult && postLikeListResult.length === 0) {
-    return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_USER_LIKES_POST });
+  try {
+    const postLikeListResult = await postLikeListRequest(userId);
+    if (postLikeListResult && postLikeListResult.length === 0) throw new Error("find not list");
+    const result = postLikeListResult?.map((list: iListMapData) => {
+      const startDate = setDate(list.startDate);
+      const endDate = setDate(list.endDate);
+      const data = {
+        id: list.id,
+        author: list.nickName,
+        profileImg: list.profileImg,
+        title: list.title,
+        date: startDate + "~" + endDate,
+        continent: list.continent,
+        country: list.country,
+        postsImg: list.postsImg,
+        commentsNum: list.commentsNum,
+        likesNum: list.likesNum,
+      };
+      return data;
+    });
+    res.status(StatusCodes.OK).json(result);
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "find not list")
+        return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_USER_LIKES_POST });
+    }
   }
-  const result = postLikeListResult?.map((list: iListMapData) => {
-    const startDate = setDate(list.startDate);
-    const endDate = setDate(list.endDate);
-    const data = {
-      id: list.id,
-      author: list.nickName,
-      profileImg: list.profileImg,
-      title: list.title,
-      date: startDate + "~" + endDate,
-      continent: list.continent,
-      country: list.country,
-      postsImg: list.postsImg,
-      commentsNum: list.commentsNum,
-      likesNum: list.likesNum,
-    };
-    return data;
-  });
-  res.status(StatusCodes.OK).json(result);
 };
 export const postLikeRequest = async (req: Request, res: Response) => {
   try {

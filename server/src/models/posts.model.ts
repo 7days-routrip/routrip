@@ -34,7 +34,7 @@ export class Posts {
   updatedAt!: string;
 
   @Column("integer")
-  expense!: string;
+  expense!: number;
 
   @Column("date")
   startDate!: string;

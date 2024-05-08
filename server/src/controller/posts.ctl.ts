@@ -1,13 +1,24 @@
 import { AppDataSource } from "@/config/ormSetting";
 import {
+  BAD_REQUEST_UPDATE_POST,
   BAD_REQUEST_UPLOAD_POST,
   NOT_FOUND_POST,
   NOT_FOUND_POSTS_LIST,
+  OK_DELETE_POST,
+  OK_UPDATE_POST,
   OK_UPLOAD_POST,
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
 import { Posts } from "@/models/posts.model";
-import { createPost, getAllPosts, getJourneyData, getPost, userPostLikedCheck } from "@/repository/posts.repo";
+import {
+  createPost,
+  delPostResultRequest,
+  getAllPosts,
+  getJourneyData,
+  getPost,
+  updatepostResultRequest,
+  userPostLikedCheck,
+} from "@/repository/posts.repo";
 import { iPagination, iSpotData } from "@/types/posts.types";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -152,6 +163,30 @@ export const getPostRequest = async (req: Request, res: Response) => {
 };
 export const editPostRequest = async (req: Request, res: Response) => {
   const data = req.body;
-  const repo = AppDataSource.getRepository(Posts);
-  // const result = await repo.update()
+  const postId = req.params.id;
+
+  try {
+    const updatepostResult = await updatepostResultRequest(data, postId);
+
+    if (!updatepostResult) throw new Error("bad request");
+    res.status(StatusCodes.OK).json({ message: OK_UPDATE_POST });
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "bad request")
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_UPDATE_POST });
+    }
+  }
+};
+
+export const delPostRequest = async (req: Request, res: Response) => {
+  const postId = req.params.id;
+  try {
+    const delPostResult = await delPostResultRequest(postId);
+    if (!delPostResult) throw new Error("bad request");
+    res.status(StatusCodes.OK).json({ message: OK_DELETE_POST });
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "bad request") return res.status(StatusCodes.BAD_REQUEST).json({ message: NOT_FOUND_POST });
+    }
+  }
 };
