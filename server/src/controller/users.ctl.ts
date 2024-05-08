@@ -3,10 +3,10 @@ import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
 
 const join = async (req: Request, res: Response, next: NextFunction) => {
-  const { email, password, nickName } = req.body;
+  const { email, password, nickname } = req.body;
 
   try {
-    await usersService.join(email, password, nickName);
+    await usersService.join(email, password, nickname);
   } catch (error) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       message: "잘못된 요청입니다.",
