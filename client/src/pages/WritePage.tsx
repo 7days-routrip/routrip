@@ -120,12 +120,13 @@ function MyCustomUploadAdapterPlugin(editor: {
 }
 
 const WritePage = () => {
+  const [title, setTitle] = useState("");
+  const [endDate, setEndDate] = useState<Date | null>(null);
+  const [startDate, setStartDate] = useState<Date | null>(null);
   const [data, setData] = useState("");
+  const [totalExpense, setTotalExpense] = useState("");
   const [isDataUpdated, setIsDataUpdated] = useState(false);
   const [bool, setBool] = useState(true);
-  const [startDate, setStartDate] = useState<Date | null>(null);
-  const [endDate, setEndDate] = useState<Date | null>(null);
-  const [title, setTitle] = useState("");
 
   const handleSave = () => {
     if (!title) {
@@ -134,17 +135,6 @@ const WritePage = () => {
   };
 
   const formatDate = (date: string) => date.split("-").join(".");
-
-  const calculateDays = (startDate: any, endDate: any) => {
-    if (!startDate || !endDate) {
-      return 0; // 두 날짜 중 하나라도 유효하지 않으면 0을 반환
-    }
-    const diff = endDate - startDate; // 밀리초 단위의 차이
-    const days = Math.ceil(diff / (1000 * 60 * 60 * 24)); // 밀리초를 일 단위로 변환
-    return days + 1;
-  };
-
-  const DAYS = calculateDays(endDate, startDate);
 
   return (
     <WritePageStyle>
@@ -174,7 +164,6 @@ const WritePage = () => {
             endDate={endDate}
             onChange={(update) => {
               const [start, end] = update;
-
               if (start) setStartDate(start);
               if (end) setEndDate(end);
             }}
@@ -183,7 +172,13 @@ const WritePage = () => {
         </label>
         <label>
           총 여행 경비
-          <input type="text" placeholder="금액을 입력해주세요.(₩)" />
+          <input
+            type="text"
+            placeholder="금액을 입력해주세요.(숫자만 입력)"
+            onChange={(e) => {
+              setTotalExpense(e.target.value);
+            }}
+          />
         </label>
         <label>내 일정 불러오기</label>
       </div>
