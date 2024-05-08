@@ -1,5 +1,11 @@
-
-import { getPlaceLikesList, placeLikeRequest, placeUnlikeRequest, getLikesPostsList, postLikeRequest, postUnlikeRequest } from "@/controller/likes.ctl";
+import {
+  getLikesPostsList,
+  getPlaceLikesList,
+  placeLikeRequest,
+  placeUnlikeRequest,
+  postLikeRequest,
+  postUnlikeRequest,
+} from "@/controller/likes.ctl";
 import express from "express";
 const router = express.Router();
 router.use(express.json());

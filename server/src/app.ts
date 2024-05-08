@@ -1,4 +1,3 @@
-
 import likesRouter from "@/routes/likes.routes";
 import postsRouter from "@/routes/posts.routes";
 import spotRouter from "@/routes/spots.routes";

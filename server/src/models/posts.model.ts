@@ -1,4 +1,3 @@
-
 import { Continents } from "@/models/continents.model";
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 
@@ -18,7 +17,7 @@ export class Posts {
   content!: string;
 
   @Column("blob", { nullable: true })
-  postsImg!: string;
+  postsImg!: string | undefined;
 
   @ManyToOne((type) => Users)
   @JoinColumn({
@@ -35,7 +34,7 @@ export class Posts {
   updatedAt!: string;
 
   @Column("integer")
-  expense!: string;
+  expense!: number;
 
   @Column("date")
   startDate!: string;

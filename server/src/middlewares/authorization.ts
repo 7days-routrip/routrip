@@ -1,4 +1,5 @@
 import { AppDataSource } from "@/config/ormSetting";
+import { UNAUTHORIZED_NOT_LOGIN } from "@/constants/message";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -8,7 +9,7 @@ const setRepo = (type: string) => {
 };
 const authorization = async (req: Request, res: Response, next: NextFunction) => {
   try {
-    if (typeof req.user !== "undefined") {
+    if (req.user?.isLoggedIn) {
       const itemId: number = parseInt(req.params.id);
       const userId: number = req.user.id;
       let repo;
@@ -23,12 +24,19 @@ const authorization = async (req: Request, res: Response, next: NextFunction) =>
       const findData = await repo?.findOneBy({ id: itemId });
       if (!findData || findData.userId !== userId) throw new Error("잘못된 접근입니다.");
       next();
+    } else {
+      throw new Error("user does not login");
     }
   } catch (err) {
     if (err instanceof Error) {
       if (err.message === "잘못된 접근입니다.") {
-        res.status(StatusCodes.FORBIDDEN).json({
+        return res.status(StatusCodes.FORBIDDEN).json({
           message: err.message,
+        });
+      }
+      if (err.message === "user does not login") {
+        return res.status(StatusCodes.UNAUTHORIZED).json({
+          message: UNAUTHORIZED_NOT_LOGIN,
         });
       }
     }
