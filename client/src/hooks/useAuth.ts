@@ -1,4 +1,13 @@
-import { LoginResponse, authEmailComfirm, authJoin, authLogin, authReset, isNicknameUnique } from "@/apis/auth.api";
+import {
+  LoginResponse,
+  authEmailComfirm,
+  authJoin,
+  authLogin,
+  authReset,
+  isNicknameUnique,
+  profileUpdate,
+  profileUpdateProp,
+} from "@/apis/auth.api";
 import { useAuthStore } from "@/stores/authStore";
 import { useNavigate } from "react-router-dom";
 
@@ -73,5 +82,14 @@ export const useAuth = () => {
     }
   };
 
-  return { userLogin, userJoin, userEmailComfirm, userPasswordReset, userNickCheck, userEmailCheck };
+  const userUpdate = async (data: profileUpdateProp) => {
+    try {
+      const userUpdateRes = await profileUpdate(data);
+      return userUpdateRes;
+    } catch (error) {
+      //  실패
+    }
+  };
+
+  return { userLogin, userJoin, userEmailComfirm, userPasswordReset, userNickCheck, userEmailCheck, userUpdate };
 };

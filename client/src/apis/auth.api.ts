@@ -16,7 +16,7 @@ export const authLogin = async (data: LoginProps) => {
   const response = await httpClient.post<LoginResponse>("api/users/login", data);
   return response.data;
 };
-interface authMessageResponse {
+export interface authMessageResponse {
   message: string;
 }
 
@@ -45,11 +45,11 @@ export const authReset = async (data: LoginProps) => {
 };
 
 // 프로필 수정 - 닉네임 or 이미지랑 같이?
-interface profileInfoUpdateProp {
-  nickname: string;
-  profile: string;
+export interface profileUpdateProp {
+  nickname?: string;
+  profile?: string;
 }
-export const profileInfoUpdate = async (data: profileInfoUpdateProp) => {
+export const profileUpdate = async (data: profileUpdateProp) => {
   try {
     const response = await httpClient.put<authMessageResponse>("api/users/me", data);
     return response.data;
@@ -59,7 +59,7 @@ export const profileInfoUpdate = async (data: profileInfoUpdateProp) => {
 };
 
 // 프로필 수정 - 비밀번호 변경
-interface profileResetProps {
+export interface profileResetProps {
   originPassword: string;
   newPassword: string;
 }

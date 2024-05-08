@@ -76,11 +76,11 @@ const JoinPage = () => {
 
   const onSubmit = (data: joinFormProps) => {
     if (!emailUniqueCheck) {
-      setError("email", { message: "이메일 중복 확인이 되어 있지 않습니다." }, { shouldFocus: true });
+      setError("email", { message: "이메일 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
       return;
     }
     if (!nicknameUniqueCheck) {
-      setError("nickname", { message: "닉네임 중복 확인이 되어 있지 않습니다." }, { shouldFocus: true });
+      setError("nickname", { message: "닉네임 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
       return;
     }
 
