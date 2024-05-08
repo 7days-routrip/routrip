@@ -11,7 +11,6 @@ import { useForm } from "react-hook-form";
 import { useAuth } from "@/hooks/useAuth";
 import { nicknameRegex } from "@/constants/regexPatterns";
 import { nicknameOptions } from "@/config/registerOptions";
-import constructWithOptions from "styled-components/dist/constructors/constructWithOptions";
 
 const dummyData: IProfileCard = {
   nickname: "김하늘누리",
