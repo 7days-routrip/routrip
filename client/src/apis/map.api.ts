@@ -1,4 +1,4 @@
-import { Location, Place } from "@/models/place.model";
+import { Location, Place, PlaceDetails } from "@/models/place.model";
 import { showAlert } from "@/utils/showAlert";
 
 export interface SearchNearByPlacesParams {
@@ -6,6 +6,7 @@ export interface SearchNearByPlacesParams {
   location: Location;
   radius: number;
 }
+
 export const searchNearByPlaces = async (
   map: google.maps.Map | null,
   params: SearchNearByPlacesParams,
@@ -33,34 +34,16 @@ export const searchNearByPlaces = async (
       status: google.maps.places.PlacesServiceStatus,
     ) => {
       if (status === google.maps.places.PlacesServiceStatus.OK && results) {
-        // const places: Place[] = results.map((res) => ({
-        //   id: res.place_id || "",
-        //   placeName: res.name || "",
-        //   location: {
-        //     lat: res.geometry?.location?.lat() || 0,
-        //     lng: res.geometry?.location?.lng() || 0,
-        //   },
-        //   address: res.vicinity || "",
-        // }));
+        const places: Place[] = results.map((res) => ({
+          id: res.place_id || "",
+          placeName: res.name || "",
+          location: {
+            lat: res.geometry?.location?.lat() || 0,
+            lng: res.geometry?.location?.lng() || 0,
+          },
+          address: res.vicinity || "",
+        }));
 
-        const places: Place[] = results.map((res) => {
-          console.log(
-            res.place_id,
-            res.name,
-            res.geometry?.location?.lat(),
-            res.geometry?.location?.lng(),
-            res.vicinity,
-          );
-          return {
-            id: res.place_id || "",
-            placeName: res.name || "",
-            location: {
-              lat: res.geometry?.location?.lat() || 0,
-              lng: res.geometry?.location?.lng() || 0,
-            },
-            address: res.vicinity || "",
-          };
-        });
         setPlaces(places);
       } else if (status === google.maps.places.PlacesServiceStatus.ZERO_RESULTS) {
         showAlert("검색 결과가 없습니다.\n검색할 장소 주변으로 지도를 이동시키고 다시 검색해주세요.", "logo");
@@ -77,21 +60,56 @@ export const searchNearByPlaces = async (
   }
 };
 
-// export const searchNearByPlaces = async (params: SearchNearByPlacesParams) => {
-//   try {
-//     const { keyword, location, radius } = params;
-//     const { lat, lng } = location;
-//     const queryString = new URLSearchParams({
-//       keyword,
-//       location: `${lat}%${lng}`,
-//       radius: radius.toString(),
-//       language: "ko",
-//       key: apiKey,
-//     }).toString();
+export const getPlaceDetail = async (map: google.maps.Map | null, placeId: string) => {
+  try {
+    if (!map) {
+      console.error("Map object is null");
+      return null;
+    }
 
-//     const { data } = await axios.get(`${searchNearByPlacesUrl}?${queryString}`);
-//     return data;
-//   } catch (err: any) {
-//     throw err;
-//   }
-// };
+    const request = {
+      placeId,
+      fields: [
+        "name",
+        "formatted_address",
+        "formatted_phone_number",
+        "geometry.location",
+        "opening_hours",
+        "photo",
+        "website",
+      ],
+    };
+
+    return new Promise<PlaceDetails>((resolve, reject) => {
+      const callback = (
+        results: google.maps.places.PlaceResult | null,
+        status: google.maps.places.PlacesServiceStatus,
+      ) => {
+        if (status === google.maps.places.PlacesServiceStatus.OK && results) {
+          const placeDetailData: PlaceDetails = {
+            id: placeId,
+            placeName: results.name || "",
+            location: {
+              lat: results.geometry?.location?.lat() || 0,
+              lng: results.geometry?.location?.lng() || 0,
+            },
+            address: results.formatted_address || "",
+            tel: results.formatted_phone_number || "",
+            openingHours: results.opening_hours?.weekday_text || [],
+            siteUrl: results.website || "",
+            placeImg: results.photos ? results.photos[0].getUrl() : "",
+          };
+
+          resolve(placeDetailData);
+        } else {
+          reject(new Error("Failed to fetch place details"));
+        }
+      };
+
+      const service = new google.maps.places.PlacesService(map);
+      service.getDetails(request, callback);
+    });
+  } catch (err: any) {
+    throw err;
+  }
+};

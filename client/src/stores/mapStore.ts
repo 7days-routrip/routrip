@@ -1,4 +1,4 @@
-import { Location } from "@/models/place.model";
+import { Location, Place } from "@/models/place.model";
 import { create } from "zustand";
 import { SelectedPlace } from "./addPlaceStore";
 
@@ -7,12 +7,11 @@ interface MapStore {
   googleMap: google.maps.Map | null;
   setCenter: (newCenter: Location) => void;
   setGoogleMap: (map: google.maps.Map | null) => void;
-  updateMapBounds: (map: google.maps.Map | null, places: SelectedPlace[]) => void;
+  updateMapBounds: (map: google.maps.Map | null, places: SelectedPlace[] | Place[]) => void;
 }
 
 const initialState: MapStore = {
   mapCenter: { lat: 38, lng: 128 }, // zoom 5
-  // mapCenter: { lat: 20, lng: 90 }, // zoom 2.6
   googleMap: null,
   setCenter: () => {},
   setGoogleMap: () => {},
@@ -24,13 +23,13 @@ export const useMapStore = create<MapStore>((set) => ({
   googleMap: initialState.googleMap,
   setCenter: (newCenter: Location) => set({ mapCenter: newCenter }),
   setGoogleMap: (map: google.maps.Map | null) => set({ googleMap: map }),
-  updateMapBounds: (map: google.maps.Map | null, places: SelectedPlace[]) => {
+  updateMapBounds: (map: google.maps.Map | null, places: SelectedPlace[] | Place[]) => {
     set((state) => {
-      const bounds = new window.google.maps.LatLngBounds();
+      const bounds = new google.maps.LatLngBounds();
 
       if (map && places.length > 0) {
         places.forEach((place) => {
-          bounds.extend(new window.google.maps.LatLng(place.location.lat, place.location.lng));
+          bounds.extend(new google.maps.LatLng(place.location.lat, place.location.lng));
         });
 
         map.fitBounds(bounds);

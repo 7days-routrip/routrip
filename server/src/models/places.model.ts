@@ -24,5 +24,4 @@ export class Places {
   siteUrl!: string;
 
   @Column({ length: 512, nullable: true })
-  img!: string; //base64 데이터로 변경
-}
+  img!: string;

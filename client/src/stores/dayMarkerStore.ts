@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type ClickType = "add" | "day";
+export type ClickType = "add" | "day" | "searchApi" | "searchGoogle";
 
 interface ShowMarkerTypeStore {
   markerType: ClickType;
@@ -9,9 +9,9 @@ interface ShowMarkerTypeStore {
 }
 
 export const useShowMarkerTypeStore = create<ShowMarkerTypeStore>((set) => ({
-  markerType: "add",
+  markerType: "searchApi",
   dayIndex: null,
   setMarkerType: (type: ClickType, dayIndex?: number) => {
-    set({ markerType: type, dayIndex: type === "add" ? null : dayIndex });
+    set({ markerType: type, dayIndex: type === "day" ? dayIndex : null });
   },
 }));
