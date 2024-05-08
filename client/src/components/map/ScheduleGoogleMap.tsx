@@ -54,10 +54,10 @@ const ScheduleGoogleMap = () => {
   });
 
   const { googleMap, mapCenter, setCenter, setGoogleMap, updateMapBounds } = useMapStore();
-  const { places: addPlaces } = usePlaceStore(); // 실제로 사용할 전역 상태. 임시로 mockRealPlaceData를 사용
+  const { addPlaces } = usePlaceStore(); // 실제로 사용할 전역 상태. 임시로 mockRealPlaceData를 사용
   const { markerType, dayIndex } = useShowMarkerTypeStore();
   const { dayPlaces } = useDayPlaceStore();
-  const { searchPlace } = useSearchPlacesStore();
+  const { searchPlaces } = useSearchPlacesStore();
   const { nearPlaces } = useNearPlacesStore();
   const [clickMarker, setClickMarker] = useState<SelectedPlace | Place | null>(null);
 
@@ -105,7 +105,7 @@ const ScheduleGoogleMap = () => {
     } else if (markerType === "day" && "uuid" in clickMarker) {
       if (!isExistedInSelectedPlaceType(dayPlaces[dayIndex as number], clickMarker.uuid)) setClickMarker(null);
     } else if (markerType === "searchApi" && clickMarker) {
-      if (!isExistedInPlaceType(searchPlace, clickMarker.id)) setClickMarker(null);
+      if (!isExistedInPlaceType(searchPlaces, clickMarker.id)) setClickMarker(null);
     } else if (markerType === "searchGoogle" && clickMarker) {
       if (!isExistedInPlaceType(nearPlaces, clickMarker.id)) setClickMarker(null);
     }
@@ -124,7 +124,7 @@ const ScheduleGoogleMap = () => {
         placeArr = dayPlaces[dayIndex as number];
         break;
       case "searchApi":
-        placeArr = searchPlace;
+        placeArr = searchPlaces;
         break;
       case "searchGoogle":
         placeArr = nearPlaces;
@@ -132,7 +132,7 @@ const ScheduleGoogleMap = () => {
     }
 
     updateMapBounds(googleMap, placeArr);
-  }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlace, nearPlaces]);
+  }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlaces, nearPlaces]);
 
   return isLoaded ? (
     <GoogleMap
@@ -148,7 +148,7 @@ const ScheduleGoogleMap = () => {
       {/* 장소 아이템 개수만큼 마커 컴포넌트 생성 */}
       {markerType === "add" && createMarkers(addPlaces, onclickMarker, addPlacePin)}
       {markerType === "day" && createMarkers(dayPlaces[dayIndex as number], onclickMarker, dayPlacePin)}
-      {markerType === "searchApi" && createMarkers(searchPlace, onclickMarker, searchPin)}
+      {markerType === "searchApi" && createMarkers(searchPlaces, onclickMarker, searchPin)}
       {markerType === "searchGoogle" && createMarkers(nearPlaces, onclickMarker, searchPin)}
 
       {clickMarker && (

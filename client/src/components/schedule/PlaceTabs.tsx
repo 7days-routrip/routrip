@@ -24,10 +24,10 @@ interface PlaceTabsProps {
 
 const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
   const { googleMap, updateMapBounds } = useMapStore();
-  const { places } = usePlaceStore();
+  const { addPlaces } = usePlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
   const { nearPlaces } = useNearPlacesStore();
-  const { searchPlace } = useSearchPlacesStore();
+  const { searchPlaces } = useSearchPlacesStore();
   const [activeIndex, setActiveIndex] = useState(active);
   const tabs = React.Children.toArray(children) as React.ReactElement<PlaceTabContentProps>[];
 
@@ -35,10 +35,10 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
     setActiveIndex(i);
     if (title === "추가한 장소") {
       setMarkerType("add");
-      updateMapBounds(googleMap, places);
+      updateMapBounds(googleMap, addPlaces);
     } else if (title === "장소 선택") {
       setMarkerType("searchApi");
-      updateMapBounds(googleMap, searchPlace);
+      updateMapBounds(googleMap, searchPlaces);
     } else if (title === "신규 장소 등록") {
       setMarkerType("searchGoogle");
       updateMapBounds(googleMap, nearPlaces);

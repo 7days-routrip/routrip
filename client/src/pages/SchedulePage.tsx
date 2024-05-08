@@ -22,7 +22,7 @@ const SchedulePage = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [duration, setDuration] = useState<number>(0);
   const { dayPlaces, setDayPlaces } = useDayPlaceStore();
-  const { places, setPlaces } = usePlaceStore();
+  const { addPlaces, setPlaces } = usePlaceStore();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -80,8 +80,8 @@ const SchedulePage = () => {
       setDayPlaces(updatedDayPerPlaces);
     } else if (destinationId === -1 && sourceId === -1) {
       // 전역으로 관리되는 selectedPlaces 내부에서의 이동
-      const movedItem = places[source.index];
-      const updatedSourceArr = [...places];
+      const movedItem = addPlaces[source.index];
+      const updatedSourceArr = [...addPlaces];
       updatedSourceArr.splice(source.index, 1);
       updatedSourceArr.splice(destination.index, 0, movedItem);
 
@@ -93,7 +93,7 @@ const SchedulePage = () => {
         const updatedSourceArr = [...dayPlaces[sourceId]];
         updatedSourceArr.splice(source.index, 1);
 
-        let updatedDestinationArr = [...places];
+        let updatedDestinationArr = [...addPlaces];
         if (destinationId !== -1) {
           updatedDestinationArr = [...dayPlaces[destinationId]];
         }
@@ -106,8 +106,8 @@ const SchedulePage = () => {
         setPlaces(updatedDestinationArr);
       } else {
         // 출발지는 전역 상태 selectedPlaces -> 도착지는 DaySchedule
-        const movedItem = places[source.index];
-        const updatedSourceArr = places.filter((_, index) => index !== source.index);
+        const movedItem = addPlaces[source.index];
+        const updatedSourceArr = addPlaces.filter((_, index) => index !== source.index);
 
         let updatedDestinationArr = [...dayPlaces[destinationId]];
         updatedDestinationArr.splice(destination.index, 0, movedItem);
@@ -141,8 +141,8 @@ const SchedulePage = () => {
 
         if (dayPlaces.flat().length > 0) {
           console.log(dayPlaces.flat());
-          const updatedSelectedPlaces = [...dayPlaces.flat(), ...places];
-          usePlaceStore.setState({ places: updatedSelectedPlaces });
+          const updatedSelectedPlaces = [...dayPlaces.flat(), ...addPlaces];
+          usePlaceStore.setState({ addPlaces: updatedSelectedPlaces });
         }
 
         setDuration(0);
@@ -152,8 +152,8 @@ const SchedulePage = () => {
 
       if (dayPlaces.flat().length > 0) {
         console.log(dayPlaces.flat());
-        const updatedSelectedPlaces = [...dayPlaces.flat(), ...places];
-        usePlaceStore.setState({ places: updatedSelectedPlaces });
+        const updatedSelectedPlaces = [...dayPlaces.flat(), ...addPlaces];
+        usePlaceStore.setState({ addPlaces: updatedSelectedPlaces });
       }
 
       const due = getDuration(startDate, endDate);

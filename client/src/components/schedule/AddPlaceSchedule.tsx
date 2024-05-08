@@ -7,7 +7,7 @@ interface Props {
 }
 
 const AddPlaceSchedule = ({ buttonTitle }: Props) => {
-  const selectedPlaces = usePlaceStore((state) => state.places);
+  const selectedPlaces = usePlaceStore((state) => state.addPlaces);
 
   return (
     <AddPlaceScheduleStyle>
