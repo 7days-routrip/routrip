@@ -1,4 +1,3 @@
-
 import { Column, Entity, PrimaryColumn } from "typeorm";
 
 @Entity()
@@ -24,7 +23,6 @@ export class Places {
   @Column({ length: 512, nullable: true })
   siteUrl!: string;
 
-  @Column({ type: "blob", nullable: true })
-  img!: Blob; //base64 데이터로 변경
-
+  @Column({ length: 512, nullable: true })
+  img!: string;
 }

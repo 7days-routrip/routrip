@@ -4,8 +4,17 @@ import { SpotsService } from "@/service/spots.service";
 import { PlaceDetailDTO, SearchPlaceDTO } from "@/types/spots.types";
 
 const addToPlace = async (req: Request, res: Response, next: NextFunction) => {
-  const { id, placeName, address, siteUrl, tel, location, openingHours } = req.body;
-  const result: boolean = await SpotsService.register(id, placeName, address, siteUrl, tel, location, openingHours);
+  const { id, placeName, address, siteUrl, tel, location, openingHours, placeImg } = req.body;
+  const result: boolean = await SpotsService.register(
+    id,
+    placeName,
+    address,
+    siteUrl,
+    tel,
+    location,
+    openingHours,
+    placeImg,
+  );
 
   if (result) {
     return res.status(StatusCodes.OK).json({
