@@ -68,6 +68,9 @@ const posts: Post[] = [
     postsImg: "../../public/assets/images/logo-footer.png",
   },
 ];
+interface PostPageStyleProps {
+  view: string;
+}
 
 const PostPage = () => {
   const { SearchIcon, GridIcon, ListIcon } = icons;
@@ -97,7 +100,7 @@ const PostPage = () => {
         });
 
   return (
-    <PostPageStyle>
+    <PostPageStyle view={view}>
       <div className="content-wrapper">
         <select>
           <option value="">전체</option>
@@ -110,25 +113,27 @@ const PostPage = () => {
           <SearchIcon />
         </div>
       </div>
-      <div className="btn-wrapper">
-        <select onChange={(e) => setSortOrder(e.target.value)}>
-          <option value="recent">최신순</option>
-          <option value="likes">인기순</option>
-        </select>
+      <div className="main-content">
+        <div className="btn-wrapper">
+          <select onChange={(e) => setSortOrder(e.target.value)}>
+            <option value="recent">최신순</option>
+            <option value="likes">인기순</option>
+          </select>
 
-        <GridIcon width="50px" height={"50px"} onClick={clickGridBtn} />
-        <ListIcon onClick={clickListBtn} />
-      </div>
-      <hr></hr>
-      <div className="post">
-        {sortedPosts.map((post) => (
-          <PostCard key={post.id} PostProps={post} view={view} />
-        ))}
+          <GridIcon width="50px" height={"50px"} onClick={clickGridBtn} />
+          <ListIcon onClick={clickListBtn} />
+        </div>
+        <hr></hr>
+        <div className="post">
+          {sortedPosts.map((post) => (
+            <PostCard key={post.id} PostProps={post} view={view} />
+          ))}
+        </div>
       </div>
     </PostPageStyle>
   );
 };
-const PostPageStyle = styled.div`
+const PostPageStyle = styled.div<PostPageStyleProps>`
   .content-wrapper {
     display: flex;
     margin: 0 auto;
@@ -152,12 +157,17 @@ const PostPageStyle = styled.div`
     border: 1px solid black;
     border-radius: ${({ theme }) => theme.borderRadius.default};
   }
+  .main-content {
+    width: ${(props) => (props.view === "list" ? "790px" : "1080px")};
+    margin: 0 auto;
+  }
 
   .btn-wrapper {
+    display: flex;
     justify-content: flex-end;
     align-items: center;
-    display: flex;
     gap: 10px;
+    text-align:rightl
     width: 790px;
     margin-top: 20px;
   }
@@ -165,9 +175,9 @@ const PostPageStyle = styled.div`
   .post {
     border-radius: 0px;
     display: flex;
-    width: 790px;
-    flex-wrap: wrap;
+    width: 1080px;
     gap: 14px;
+    flex-wrap: wrap;
   }
 `;
 
