@@ -12,6 +12,7 @@ const register = async (
   tel: string,
   location: Location,
   openingHours: string[],
+  img: string,
 ): Promise<boolean> => {
   const place: Places = new Places();
   place.id = id;
@@ -19,6 +20,7 @@ const register = async (
   place.address = address;
   place.siteUrl = siteUrl;
   place.tel = tel;
+  place.img = img;
 
   const locationStr: string = location.lat + ", " + location.lng;
   place.location = locationStr;
@@ -62,6 +64,7 @@ const getDetail = async (id: string): Promise<boolean | PlaceDetailDTO> => {
     siteUrl: foundPlace.siteUrl,
     tel: foundPlace.tel,
     openingHours: openingHoursArr,
+    placeImg: foundPlace.img,
   };
 
   return placeDetailDTO;
@@ -90,6 +93,7 @@ const search = async (keyword: string): Promise<boolean | SearchPlaceDTO[]> => {
       placeName: place.name,
       address: place.address,
       location: location,
+      placeImg: place.img,
     };
     searchedPlaces.push(searchedPlace);
   });

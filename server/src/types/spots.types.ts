@@ -6,6 +6,7 @@ interface PlaceDetailDTO {
   siteUrl: string;
   tel: string;
   openingHours: string[];
+  placeImg: string;
 }
 
 interface Location {
@@ -18,6 +19,7 @@ interface SearchPlaceDTO {
   placeName: string;
   address: string;
   location: Location;
+  placeImg: string;
 }
 
 export type { PlaceDetailDTO, Location, SearchPlaceDTO };
