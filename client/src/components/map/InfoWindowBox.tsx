@@ -1,9 +1,10 @@
 import { SelectedPlace } from "@/stores/addPlaceStore";
 import styled from "styled-components";
 import logoImage from "/assets/images/logo-profile.png";
+import { Place } from "@/models/place.model";
 
 interface Props {
-  data: SelectedPlace;
+  data: SelectedPlace | Place;
 }
 const InfoWindowBox = ({ data }: Props) => {
   return (

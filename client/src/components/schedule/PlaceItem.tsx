@@ -4,6 +4,8 @@ import logoImage from "/assets/images/logo-profile.png"; // 임시로 사용할 
 import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
 import { Place } from "@/models/place.model";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
+import { useAddNewPlace } from "@/hooks/useAddNewPlace";
+import { useDayPlaceStore } from "@/stores/dayPlaces";
 
 interface Props {
   data: SelectedPlace | Place;
@@ -13,18 +15,22 @@ interface Props {
 const PlaceItem = ({ data, buttonTitle, isActive = false }: Props) => {
   const { addPlace, removePlace } = usePlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
+  const { removeDayPlace } = useDayPlaceStore();
+  const { addNewPlaceMutate } = useAddNewPlace(data);
 
-  const handleOnClick = () => {
+  const handleOnClick = async () => {
     if (buttonTitle === "추가") {
       addPlace(data);
       setMarkerType("add");
     } else if (buttonTitle === "등록") {
-      // 등록 요청하는 함수 호출
-      // 중복 장소 체크 -> 신규 장소 등록 순서로
-      setMarkerType("add");
+      addNewPlaceMutate();
     } else {
       // 삭제 버튼 클릭 -> 삭제 버튼이 존재하는 장소 아이템의 타입은 반드시 uuid를 가진다.
-      if ("uuid" in data) removePlace(data.uuid);
+      // uuid는 절대 중복될 수 없으므로, 아래의 remove 액션 함수를 모두 호출하여 처리하는 것이 가능하다.
+      if ("uuid" in data) {
+        removePlace(data.uuid); // 추가한 장소 탭에 있는 아이템 삭제 버튼을 눌렀다면, 이 함수에 의해 삭제됨
+        removeDayPlace(data.uuid); // 각 day에 있는 아이템 삭제 버튼을 눌렀다면, 이 함수에 의해 삭제됨
+      }
     }
     const title = typeof buttonTitle === "string" ? buttonTitle : "삭제";
     console.log(title);
@@ -32,7 +38,7 @@ const PlaceItem = ({ data, buttonTitle, isActive = false }: Props) => {
 
   return (
     <PlaceItemStyle $url={data.placeImg ? data.placeImg : logoImage} $isActive={isActive}>
-      <div className="place-img"></div>
+      {buttonTitle !== "등록" && <div className="place-img"></div>}
       <div className="detail-container">
         <div className="place-title">{data.placeName}</div>
         <div className="place-address">{data.address}</div>
@@ -66,7 +72,7 @@ const PlaceItemStyle = styled.div<PlaceItemStyleProps>`
     background-repeat: no-repeat;
     background-position: center;
     border-radius: 4px;
-    width: 45px;
+    width: 50px;
     height: auto;
   }
 
@@ -93,6 +99,7 @@ const PlaceItemStyle = styled.div<PlaceItemStyleProps>`
     color: ${({ theme }) => theme.color.primary};
     font-weight: 600;
     background-color: ${({ theme }) => theme.color.white};
+    padding: 0;
   }
 `;
 
