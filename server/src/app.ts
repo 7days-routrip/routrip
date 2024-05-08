@@ -1,7 +1,7 @@
 import likesRouter from "@/routes/likes.routes";
 import postsRouter from "@/routes/posts.routes";
 import spotRouter from "@/routes/spots.routes";
-import tripRouter from "@/routes/trips.routes";
+import journeyRouter from "@/routes/journeys.routes";
 import userRouter from "@/routes/users.routes";
 import { CORS_ORIGIN } from "@/settings";
 import cookieParser from "cookie-parser";
@@ -27,7 +27,7 @@ app.use(
 );
 
 app.use("/api/users", userRouter);
-app.use("/api/trips", tripRouter);
+app.use("/api/journeys", journeyRouter);
 app.use("/api/posts", postsRouter);
 app.use("/api/likes", likesRouter);
 app.use("/api/spots", spotRouter);
