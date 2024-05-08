@@ -4,6 +4,7 @@ import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
 import { Place } from "@/models/place.model";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useAddNewPlace } from "@/hooks/useAddNewPlace";
+import { useDayPlaceStore } from "@/stores/dayPlaces";
 
 interface Props {
   data: SelectedPlace | Place;
@@ -13,6 +14,7 @@ interface Props {
 const PlaceItem = ({ data, buttonTitle, isActive = false }: Props) => {
   const { addPlace, removePlace } = usePlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
+  const { removeDayPlace } = useDayPlaceStore();
   const { addNewPlaceMutate } = useAddNewPlace(data);
 
   const handleOnClick = async () => {
@@ -23,7 +25,11 @@ const PlaceItem = ({ data, buttonTitle, isActive = false }: Props) => {
       addNewPlaceMutate();
     } else {
       // 삭제 버튼 클릭 -> 삭제 버튼이 존재하는 장소 아이템의 타입은 반드시 uuid를 가진다.
-      if ("uuid" in data) removePlace(data.uuid);
+      // uuid는 절대 중복될 수 없으므로, 아래의 remove 액션 함수를 모두 호출하여 처리하는 것이 가능하다.
+      if ("uuid" in data) {
+        removePlace(data.uuid); // 추가한 장소 탭에 있는 아이템 삭제 버튼을 눌렀다면, 이 함수에 의해 삭제됨
+        removeDayPlace(data.uuid); // 각 day에 있는 아이템 삭제 버튼을 눌렀다면, 이 함수에 의해 삭제됨
+      }
     }
     const title = typeof buttonTitle === "string" ? buttonTitle : "삭제";
     console.log(title);
