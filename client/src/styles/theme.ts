@@ -1,13 +1,4 @@
-export type Colorkey =
-  | "primary"
-  | "black"
-  | "white"
-  | "orange"
-  | "red"
-  | "commentGray"
-  | "borderGray"
-  | "borderGray"
-  | "routeGray";
+export type Colorkey = "primary" | "black" | "white" | "orange" | "red" | "commentGray" | "borderGray" | "routeGray";
 export type ButtonSize = "large" | "medium" | "small";
 export type FontSize = "xlarge" | "large" | "medium" | "small" | "xsmall";
 export type MediaQuery = "mobile" | "desktop";
