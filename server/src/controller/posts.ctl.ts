@@ -6,6 +6,7 @@ import {
   OK_UPLOAD_POST,
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
+import { Posts } from "@/models/posts.model";
 import { createPost, getAllPosts, getJourneyData, getPost, userPostLikedCheck } from "@/repository/posts.repo";
 import { iPagination, iSpotData } from "@/types/posts.types";
 import { Request, Response } from "express";
@@ -148,4 +149,9 @@ export const getPostRequest = async (req: Request, res: Response) => {
         return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_POST });
     }
   }
+};
+export const editPostRequest = async (req: Request, res: Response) => {
+  const data = req.body;
+  const repo = AppDataSource.getRepository(Posts);
+  // const result = await repo.update()
 };
