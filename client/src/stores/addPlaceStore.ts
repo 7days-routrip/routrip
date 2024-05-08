@@ -1,6 +1,6 @@
-import { Place } from "@/models/place.mode";
 import { create } from "zustand";
 import { v4 as uuidv4 } from "uuid";
+import { Place } from "@/models/place.model";
 
 export interface SelectedPlace extends Place {
   uuid: string;

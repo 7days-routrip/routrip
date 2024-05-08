@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import { CardStyle } from "./postCard";
 import icons from "@/icons/icons";
-import { LikePlace } from "@/models/place.model";
+import { PlaceDetails } from "@/models/place.model";
 
 interface Props {
-  PlaceProps: LikePlace;
+  PlaceProps: PlaceDetails;
 }
 
 const LikePlaceCard = ({ PlaceProps }: Props) => {

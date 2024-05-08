@@ -10,6 +10,8 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/hooks/useAuth";
 import { nicknameRegex } from "@/constants/regexPatterns";
+import { nicknameOptions } from "@/config/registerOptions";
+import constructWithOptions from "styled-components/dist/constructors/constructWithOptions";
 
 const dummyData: IProfileCard = {
   nickname: "김하늘누리",
@@ -22,7 +24,7 @@ const dummyData: IProfileCard = {
 };
 
 interface ProfileEditProps {
-  image: string;
+  image: FileList;
   nickname: string;
 }
 
@@ -37,6 +39,7 @@ const ProfileEditPage = () => {
     formState: { errors },
   } = useForm<ProfileEditProps>();
   const [nicknameUniqueCheck, setNicknameUniqueCheck] = useState(false);
+
   const fileInput = useRef("");
 
   const checkNickname = () => {
@@ -55,9 +58,15 @@ const ProfileEditPage = () => {
       clearErrors("nickname");
     });
   };
+  const fileToBlobURL = async (file: File) => {
+    const blob = new Blob([file], { type: file.type });
+    const imageUrl = URL.createObjectURL(blob);
+    return imageUrl;
+  };
 
   const onSubmit = (data: ProfileEditProps) => {
     // 로직 아직 미구현
+    // fileToBlobURL(data.image[0]);
   };
   return (
     <ProfileEditPageStyle>
@@ -67,10 +76,19 @@ const ProfileEditPage = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="edit-form">
             <div className="image-form">
-              <Title size="medium">프로필 사진</Title>
-              <ProfileEditImageStyle $image={""}> </ProfileEditImageStyle>
-              <AttachFileLabel htmlFor="profile-image">사진 변경</AttachFileLabel>
-              <AttachFileInput type="file" id="profile-image" accept="image/*"></AttachFileInput>
+              <div className="orofile-image">
+                <Title size="medium">프로필 사진</Title>
+                <ProfileEditImageStyle $image={""}> </ProfileEditImageStyle>
+              </div>
+              <div className="image-btn">
+                <AttachFileLabel htmlFor="profile-image">사진 변경</AttachFileLabel>
+                <AttachFileInput
+                  type="file"
+                  id="profile-image"
+                  {...register("image")}
+                  accept="image/*"
+                ></AttachFileInput>
+              </div>
             </div>
 
             <div className="profile-form">
@@ -79,6 +97,7 @@ const ProfileEditPage = () => {
                 <InputText
                   isButton={true}
                   inputType="text"
+                  {...register("nickname", nicknameOptions)}
                   buttonText={nicknameUniqueCheck ? "인증 완료" : "중복 확인"}
                   onConfirm={checkNickname}
                   $inputsize="small"
@@ -86,18 +105,18 @@ const ProfileEditPage = () => {
               </div>
               <div className="profile-password">
                 <span>비밀번호</span>
-                <Button $radius="default" $scheme="primary" $size="medium" onClick={() => console.log("안냥")}>
-                  변경
+                <Button $radius="default" $scheme="primary" $size="medium">
+                  <Link to={"/me/reset"}>비밀번호 변경</Link>
                 </Button>
               </div>
               <div className="profile-resign">
                 <span>회원 정보를 삭제하시겠어요?</span>
-                <Link to={"/me"}>회원 탈퇴</Link>
+                <Link to={"/"}>회원 탈퇴</Link>
               </div>
             </div>
           </div>
-          <div className="buttonSection">
-            <Button $radius="default" $scheme="primary" $size="large">
+          <div className="btn-section">
+            <Button $radius="default" type="submit" $scheme="primary" $size="large">
               저장
             </Button>
           </div>
@@ -109,6 +128,11 @@ const ProfileEditPage = () => {
 
 const ProfileEditPageStyle = styled(MypageStyle)`
   width: 100%;
+
+  a {
+    color: ${({ theme }) => theme.color.white};
+  }
+
   .edit-main {
     display: flex;
     justify-content: flex-start;
@@ -124,6 +148,13 @@ const ProfileEditPageStyle = styled(MypageStyle)`
     }
     .image-form {
       width: 100%;
+      display: flex;
+      justify-content: center;
+    }
+    .image-btn {
+      display: flex;
+      align-items: flex-end;
+      padding-bottom: 1rem;
     }
 
     .profile-form {
@@ -132,6 +163,27 @@ const ProfileEditPageStyle = styled(MypageStyle)`
       width: 100%;
       align-items: center;
       flex-direction: column;
+      gap: 2rem;
+      padding: 1rem 0;
+    }
+
+    .profile-password,
+    .profile-resign {
+      width: 100%;
+      display: flex;
+      justify-content: space-around;
+      align-items: center;
+    }
+
+    .profile-resign,
+    .profile-resign > a {
+      color: ${({ theme }) => theme.color.commentGray};
+    }
+
+    .btn-section {
+      margin: 1rem 0;
+      display: flex;
+      justify-content: end;
     }
 
     @media (max-width: 768px) {
@@ -153,8 +205,10 @@ const ProfileEditImageStyle = styled(ProfileImageStyle)<ProfileImageStyleProps>`
   border: 1px solid ${({ theme }) => theme.color.borderGray};
 `;
 const AttachFileLabel = styled.label`
-  width: 500px;
-  height: 500px;
+  width: 80px;
+  height: 40px;
+  text-align: center;
+  line-height: 40px;
   border-radius: ${({ theme }) => theme.borderRadius.default};
   background-color: ${({ theme }) => theme.color.primary};
   color: ${({ theme }) => theme.color.white};

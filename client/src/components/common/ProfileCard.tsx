@@ -21,7 +21,7 @@ const ProfileCard = ({ ProfileProps }: Props) => {
           <div className="user-comments">내 댓글 {ProfileProps.commentsNum}개</div>
         </section>
         <section className="user-likes">
-          <div className="likes-posts">좋아요 한글 {ProfileProps.likePostsNum}개 </div>
+          <div className="likes-posts">좋아요한 글 {ProfileProps.likePostsNum}개 </div>
           <div className="profile-dot">.</div>
           <div className="likes-places">내가 찜한 장소 {ProfileProps.likeSpotsNum}개</div>
         </section>
@@ -47,7 +47,7 @@ export const ProfileImageStyle = styled.div<ProfileImageStyleProps>`
 
 const ProfileCardStyle = styled.div`
   width: 100%;
-  height: 200px;
+  height: 130px;
   display: flex;
   justify-content: flex-start;
   align-items: center;

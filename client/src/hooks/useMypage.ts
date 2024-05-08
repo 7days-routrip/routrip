@@ -72,6 +72,7 @@ export const useComment = () => {
 
   return {
     comments: commentData?.comments,
+    isEmptyComments: commentData?.comments.length === 0,
     isCommentLoading,
     commentsRefetch,
   };
@@ -86,6 +87,7 @@ export const useLikePost = () => {
 
   return {
     likePosts: likePostData?.posts,
+    isEmptyLikePosts: likePostData?.posts.length === 0,
     isLikePostLoading,
     likePostRefetch,
   };
@@ -102,7 +104,8 @@ export const useLikePlace = () => {
     enabled: false,
   });
   return {
-    likePlaces: likePlaceData,
+    likePlaces: likePlaceData?.places,
+    isEmptyLikePlace: likePlaceData?.places.length === 0,
     isLikePlaceLoding,
     likePlaceRefetch,
   };

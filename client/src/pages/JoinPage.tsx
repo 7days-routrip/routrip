@@ -85,10 +85,9 @@ const JoinPage = () => {
     }
 
     // 비밀번호 대조
-    if (data.password !== data.passwordConfirm) {
-      setError("passwordConfirm", { message: "비밀번호가 일치 하지 않습니다." }, { shouldFocus: true });
-    }
-    userJoin(data);
+    if (data.password === data.passwordConfirm) {
+      userJoin(data);
+    } else setError("passwordConfirm", { message: "비밀번호가 일치 하지 않습니다." }, { shouldFocus: true });
   };
   return (
     <WrapperStyle>
@@ -208,7 +207,6 @@ export const JoinPageStyle = styled.div`
 
   .login-link > :nth-child(2),
   .ps-link > :nth-child(1) {
-    text-decoration-line: none;
     color: ${({ theme }) => theme.color.primary};
   }
 

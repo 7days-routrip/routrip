@@ -1,5 +1,4 @@
-import styled from "styled-components";
-import { JoinPageStyle, WrapperStyle, allowedDomains, domainAuth, placeholderHander } from "./JoinPage";
+import { JoinPageStyle, WrapperStyle, domainAuth, placeholderHander } from "./JoinPage";
 import Title from "@/components/common/Title";
 import InputText from "@/components/common/Input";
 import { emailOptions, passwordOptions } from "@/config/registerOptions";

@@ -43,3 +43,21 @@ export const authReset = async (data: LoginProps) => {
   const response = await httpClient.put<authMessageResponse>("api/users/reset", data);
   return response.data;
 };
+
+// 프로필 수정 - 닉네임 or 이미지랑 같이?
+
+// 프로필 수정 - 이미지
+
+// 프로필 수정 - 비밀번호 변경
+interface profeilResetProps {
+  originPassword: string;
+  newPassword: string;
+}
+export const fetchProfileRestPassword = async (data: profeilResetProps) => {
+  try {
+    const response = await httpClient.put<authMessageResponse>("api/users/me/reset", data);
+    return response.data;
+  } catch (error) {
+    // 실패
+  }
+};

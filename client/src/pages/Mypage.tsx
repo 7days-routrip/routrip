@@ -8,6 +8,9 @@ import { Schedule } from "@/models/schedule.model";
 import ScheduleCard from "@/components/common/scheduleCard";
 import { useComment, useLikePlace, useLikePost, usePost, useProfile, useSchedule } from "@/hooks/useMypage";
 import { Button } from "@/components/common/Button";
+import PostCard from "@/components/common/postCard";
+import CommentCard from "@/components/common/Comment";
+import LikePlaceCard from "@/components/common/LikePlaceCard";
 
 const TABLIST = [
   { name: "일정 모음" },
@@ -41,10 +44,10 @@ const Mypage = () => {
   const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState([true, false, false, false, false]);
   const { schedules, isEmptySchedules, scheduleRefetch } = useSchedule();
-  const { posts, postsRefetch } = usePost();
-  const { comments, commentsRefetch } = useComment();
-  const { likePosts, likePostRefetch } = useLikePost();
-  const { likePlaces, likePlaceRefetch } = useLikePlace();
+  const { posts, isEmptyPosts, postsRefetch } = usePost();
+  const { comments, isEmptyComments, commentsRefetch } = useComment();
+  const { likePosts, isEmptyLikePosts, likePostRefetch } = useLikePost();
+  const { likePlaces, isEmptyLikePlace, likePlaceRefetch } = useLikePlace();
   const { profileInfo } = useProfile();
 
   const handleMypageTab = (idx: number) => {
@@ -100,7 +103,18 @@ const Mypage = () => {
         {!isEmptySchedules && activeTab[0]
           ? schedules?.map((item, idx) => <ScheduleCard scheduleProps={item} key={idx} view="grid" />)
           : null}
-        {}
+        {!isEmptyPosts && activeTab[1]
+          ? posts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
+          : null}
+        {!isEmptyComments && activeTab[2]
+          ? comments?.map((item, idx) => <CommentCard CommentProps={item} key={idx} />)
+          : null}
+        {!isEmptyLikePosts && activeTab[3]
+          ? likePosts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
+          : null}
+        {!isEmptyLikePlace && activeTab[4]
+          ? likePlaces?.map((item, idx) => <LikePlaceCard PlaceProps={item} key={idx} />)
+          : null}
       </div>
     </MypageStyle>
   );
