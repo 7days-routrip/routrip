@@ -6,11 +6,9 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import Button from "@/components/common/Button";
 import { theme } from "@/styles/theme";
-import icons from "@/icons/icons";
-import { start } from "repl";
 
 // 이미지를 리사이징 및 압축
-function resizeImage(file: Blob) {
+async function resizeImage(file: Blob): Promise<Blob> {
   return new Promise((resolve, reject) => {
     const img = new Image();
     const canvas = document.createElement("canvas");
@@ -74,6 +72,7 @@ function resizeImage(file: Blob) {
     reader.readAsDataURL(file);
   });
 }
+
 // Base64 업로드 어댑터 구현
 class Base64UploadAdapter {
   loader;
@@ -81,27 +80,32 @@ class Base64UploadAdapter {
     this.loader = loader;
   }
 
-  // 파일을 읽고 Base64로 변환하는 로직
+  // 파일을 읽고 Blob으로 변환하는 로직
   async upload() {
     const file = await this.loader.file;
-    const resizedImage = await resizeImage(file);
+    const blob = await resizeImage(file);
 
     return new Promise((resolve, reject) => {
-      const reader = new FileReader();
-      reader.onload = () => {
-        resolve({ default: reader.result });
-      };
-      reader.onerror = (error) => {
-        console.error("FileReader error:", error);
-        reject(error);
-      };
-      if (resizedImage instanceof Blob) {
-        reader.readAsDataURL(resizedImage);
-      } else {
-        reject(new Error("Expected Blob, got something else"));
-      }
+      // Blob 데이터를 FormData에 담아서 서버에 전송
+      const formData = new FormData();
+      formData.append("image", blob, "image.jpg");
+
+      fetch("/api/upload", {
+        method: "POST",
+        body: formData,
+      })
+        .then((response) => response.json())
+        .then((result) => {
+          // 서버로부터 받은 이미지 URL을 resolve
+          resolve({ default: result.imageUrl });
+        })
+        .catch((error) => {
+          console.error("Error uploading image:", error);
+          reject(error);
+        });
     });
   }
+
   // 업로드 중단 처리
   abort() {
     console.log("Upload aborted.");
