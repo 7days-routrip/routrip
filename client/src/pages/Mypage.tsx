@@ -11,6 +11,7 @@ import { Button } from "@/components/common/Button";
 import PostCard from "@/components/common/postCard";
 import CommentCard from "@/components/common/Comment";
 import LikePlaceCard from "@/components/common/LikePlaceCard";
+import { Comment } from "@/models/comment.model";
 
 const TABLIST = [
   { name: "일정 모음" },
@@ -40,8 +41,14 @@ const dummyScheduleData: Schedule = {
   postImg: "",
 };
 
+const dummyComment: Comment = {
+  content: "흥흥 너무 졸려요 댓글이여",
+  createDate: "2024.05.08",
+  postId: 1,
+  postTitle: "아 졸려 글 제목이여",
+};
+
 const Mypage = () => {
-  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState([true, false, false, false, false]);
   const { schedules, isEmptySchedules, scheduleRefetch } = useSchedule();
   const { posts, isEmptyPosts, postsRefetch } = usePost();
@@ -99,22 +106,24 @@ const Mypage = () => {
             </Button>
           ))}
         </MypageTabStyle>
-
-        {!isEmptySchedules && activeTab[0]
-          ? schedules?.map((item, idx) => <ScheduleCard scheduleProps={item} key={idx} view="grid" />)
-          : null}
-        {!isEmptyPosts && activeTab[1]
-          ? posts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
-          : null}
-        {!isEmptyComments && activeTab[2]
-          ? comments?.map((item, idx) => <CommentCard CommentProps={item} key={idx} />)
-          : null}
-        {!isEmptyLikePosts && activeTab[3]
-          ? likePosts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
-          : null}
-        {!isEmptyLikePlace && activeTab[4]
-          ? likePlaces?.map((item, idx) => <LikePlaceCard PlaceProps={item} key={idx} />)
-          : null}
+        <div className="contents">
+          <CommentCard CommentProps={dummyComment} />
+          {!isEmptySchedules && activeTab[0]
+            ? schedules?.map((item, idx) => <ScheduleCard scheduleProps={item} key={idx} view="grid" />)
+            : null}
+          {!isEmptyPosts && activeTab[1]
+            ? posts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
+            : null}
+          {!isEmptyComments && activeTab[2]
+            ? comments?.map((item, idx) => <CommentCard CommentProps={item} key={idx} />)
+            : null}
+          {!isEmptyLikePosts && activeTab[3]
+            ? likePosts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
+            : null}
+          {!isEmptyLikePlace && activeTab[4]
+            ? likePlaces?.map((item, idx) => <LikePlaceCard PlaceProps={item} key={idx} />)
+            : null}
+        </div>
       </div>
     </MypageStyle>
   );
@@ -128,6 +137,13 @@ export const MypageStyle = styled.div`
 
   .main {
     width: 100%;
+  }
+
+  .contents {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
   }
 `;
 
