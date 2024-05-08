@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import logoImage from "/assets/images/logo-profile.png"; // 임시로 사용할 장소 이미지
+
 import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
 import { Place } from "@/models/place.model";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";

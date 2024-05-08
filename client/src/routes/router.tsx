@@ -5,6 +5,9 @@ import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
 import Mypage from "@/pages/Mypage";
 import PostPage from "@/pages/PostPage";
+import ProfileEditPage from "@/pages/ProfileEditPage";
+import ProfileResetPassword from "@/pages/ProfileResetPassword";
+import RestPage from "@/pages/ResetPassword";
 import SchedulePage from "@/pages/SchedulePage";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -49,6 +52,19 @@ const routerArr = [
     ),
   },
   {
+    path: "/reset",
+    element: (
+      <Layout>
+        <RestPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
     path: "/post",
     element: (
       <Layout>
@@ -79,6 +95,32 @@ const routerArr = [
     element: (
       <Layout>
         <Mypage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/me",
+    element: (
+      <Layout>
+        <ProfileEditPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/me/reset",
+    element: (
+      <Layout>
+        <ProfileResetPassword />
       </Layout>
     ),
     errorElement: (

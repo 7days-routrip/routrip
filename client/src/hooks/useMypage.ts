@@ -3,69 +3,110 @@ import {
   fetchLikePost,
   fetchMyComments,
   fetchMyPosts,
-  fetchMySchedules,
+  fetchMySchedule,
   fetchProfile,
 } from "@/apis/mypage.api";
 import { queryKey } from "@/constants/queryKey";
-import { Comment as IComment } from "@/models/comment.model";
-// import { LikePlace } from "@/models/place.mode";
-import { Post } from "@/models/post.model";
-import { ProfileCard as IProfileCard } from "@/models/profile.model";
-import { Schedule } from "@/models/schedule.model";
-import { getNickName } from "@/stores/authStore";
-import { useEffect, useState } from "react";
+import { useQuery } from "@tanstack/react-query";
 
-export const useMypage = () => {
-  const [profileInfo, setProfileInfo] = useState<IProfileCard>();
-  const [schedules, setschedules] = useState<Schedule[]>([]);
-  const [posts, setPosts] = useState<Post[]>([]);
-  const [comments, setComments] = useState<IComment[]>([]);
-  // const [likePlace, setLikePlace] = useState<LikePlace[]>([]);
+export const useSchedule = () => {
+  const {
+    data: ScheduleData,
+    isLoading: isScheduleLoding,
+    refetch: scheduleRefetch,
+  } = useQuery({
+    queryKey: ["schedule"],
+    queryFn: () => fetchMySchedule({ list: queryKey.schedule }),
+    enabled: false,
+  });
 
-  const switchProfile = () => {
-    const nickname = getNickName();
-    if (nickname === null) return;
-    fetchProfile().then(({ profile }) => profile && setProfileInfo({ ...profile, nickname }));
-  };
-
-  const switchMySchedules = () => {
-    fetchMySchedules({ list: queryKey.schedule }).then(({ schedules }) => {
-      schedules && setschedules(schedules);
-    });
-  };
-
-  const switchMyPosts = () => {
-    fetchMyPosts({ list: queryKey.post }).then(({ posts }) => posts && setPosts(posts));
-  };
-
-  const switchComments = () => {
-    fetchMyComments({ list: queryKey.comment }).then(({ comments }) => comments && setComments(comments));
-  };
-
-  const switchLikePost = () => {
-    fetchLikePost().then(({ posts }) => posts && setPosts(posts));
-  };
-
-  // const switchLikePlace = () => {
-  //   fetchLikePlace().then(({ places }) => places && setLikePlace(places));
-  // };
-
-  useEffect(() => {
-    // switchMySchedules();
-    // switchProfile();
-  }, []);
-
-  // likePlace 가 지금 빠져 있음
   return {
-    posts,
-    profileInfo,
-    schedules,
-    comments,
+    schedules: ScheduleData?.schedules,
+    isEmptySchedules: ScheduleData?.schedules.length === 0,
+    isScheduleLoding,
+    scheduleRefetch,
+  };
+};
 
-    switchProfile,
-    switchMySchedules,
-    switchMyPosts,
-    switchComments,
-    switchLikePost,
+export const useProfile = () => {
+  const { data: profileData, isLoading: isProfileLoding } = useQuery({
+    queryKey: ["profile"],
+    queryFn: () => fetchProfile(),
+  });
+
+  return {
+    profileInfo: profileData?.profile,
+    isProfileLoding,
+  };
+};
+
+export const usePost = () => {
+  const {
+    data: postData,
+    isLoading: isPostLoading,
+    refetch: postsRefetch,
+  } = useQuery({
+    queryKey: ["post"],
+    queryFn: () => fetchMyPosts({ list: queryKey.post }),
+    enabled: false,
+  });
+
+  return {
+    posts: postData?.posts,
+    isEmptyPosts: postData?.posts.length === 0,
+    isPostLoading,
+    postsRefetch,
+  };
+};
+
+export const useComment = () => {
+  const {
+    data: commentData,
+    isLoading: isCommentLoading,
+    refetch: commentsRefetch,
+  } = useQuery({
+    queryKey: ["comment"],
+    queryFn: () => fetchMyComments({ list: queryKey.comment }),
+    enabled: false,
+  });
+
+  return {
+    comments: commentData?.comments,
+    isEmptyComments: commentData?.comments.length === 0,
+    isCommentLoading,
+    commentsRefetch,
+  };
+};
+
+export const useLikePost = () => {
+  const {
+    data: likePostData,
+    isLoading: isLikePostLoading,
+    refetch: likePostRefetch,
+  } = useQuery({ queryKey: ["likePost"], queryFn: () => fetchLikePost(), enabled: false });
+
+  return {
+    likePosts: likePostData?.posts,
+    isEmptyLikePosts: likePostData?.posts.length === 0,
+    isLikePostLoading,
+    likePostRefetch,
+  };
+};
+
+export const useLikePlace = () => {
+  const {
+    data: likePlaceData,
+    isLoading: isLikePlaceLoding,
+    refetch: likePlaceRefetch,
+  } = useQuery({
+    queryKey: ["likePlace"],
+    queryFn: () => fetchLikePlace(),
+    enabled: false,
+  });
+  return {
+    likePlaces: likePlaceData?.places,
+    isEmptyLikePlace: likePlaceData?.places.length === 0,
+    isLikePlaceLoding,
+    likePlaceRefetch,
   };
 };

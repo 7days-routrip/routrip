@@ -1,6 +1,7 @@
 import styled from "styled-components";
 import SearchBox from "./SearchBox";
 import PlaceList from "./PlaceList";
+
 import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { SearchNearByPlacesParams, searchNearByPlaces } from "@/apis/map.api";
 import { useMapStore } from "@/stores/mapStore";

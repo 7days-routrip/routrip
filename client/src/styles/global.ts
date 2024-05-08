@@ -34,6 +34,11 @@ export const GlobalStyle = createGlobalStyle`
     ::-webkit-scrollbar-track {
       background-color: rgba(122, 175, 255, 0.1);
     }
+
+  }
+
+  a{
+    text-decoration-line: none;
   }
 
   svg, path {

@@ -10,6 +10,7 @@ import { showAlert } from "@/utils/showAlert";
 import DaySchedule from "@/components/schedule/DaySchedule";
 import { getDuration } from "@/utils/getDuration";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+
 import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
 import ScheduleGoogleMap from "@/components/map/ScheduleGoogleMap";
 import { useDayPlaceStore } from "@/stores/dayPlaces";

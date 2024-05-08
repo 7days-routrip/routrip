@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import PlaceList from "./PlaceList";
+
 import { makeMockSearchPlace } from "@/utils/makeMockSelectedPlaces";
 import { Place } from "@/models/place.model";
 
