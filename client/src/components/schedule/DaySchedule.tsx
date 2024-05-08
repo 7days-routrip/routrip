@@ -17,9 +17,6 @@ const DaySchedule = ({ dayIdx, schedulePlaces }: Props) => {
   const { googleMap, updateMapBounds } = useMapStore();
 
   const handleOnClickDay = useCallback(() => {
-    console.log(`Day${dayIdx + 1} 클릭`);
-    console.log(schedulePlaces);
-
     setMarkerType("day", dayIdx);
     updateMapBounds(googleMap, schedulePlaces);
   }, [dayIdx, schedulePlaces]);

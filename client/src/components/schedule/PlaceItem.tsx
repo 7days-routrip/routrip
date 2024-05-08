@@ -100,6 +100,11 @@ const PlaceItemStyle = styled.div<PlaceItemStyleProps>`
     font-weight: 600;
     background-color: ${({ theme }) => theme.color.white};
     padding: 0;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
   }
 `;
 

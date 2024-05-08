@@ -15,6 +15,7 @@ import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
 import ScheduleGoogleMap from "@/components/map/ScheduleGoogleMap";
 import { useDayPlaceStore } from "@/stores/dayPlaces";
 import { Button } from "@/components/common/Button";
+import { addNewSchedule } from "@/apis/schedule.api";
 
 const SchedulePage = () => {
   const [title, setTitle] = useState<string>("");
@@ -28,7 +29,7 @@ const SchedulePage = () => {
     setTitle(e.target.value);
   };
 
-  const handleSchedule = () => {
+  const handleSchedule = async () => {
     if (title && startDate && endDate) {
       if (startDate > endDate) {
         // 시작일이 종료일보다 이후인 경우 => 날짜 잘못 선택한 경우
@@ -37,6 +38,7 @@ const SchedulePage = () => {
       }
 
       // 일정 등록 요청
+      await addNewSchedule(title, startDate, endDate, dayPlaces);
       console.log("등록 완료");
       return;
     }
