@@ -10,13 +10,13 @@ const posts: Post[] = [
   {
     id: 1,
     title: "오션뷰를 보고 싶다면? 여기 !!",
-    date: "2024.03.12 ~ 2024.03.18",
+    date: "2024.03.14 ~ 2024.03.18",
     author: "여행조아",
     userProfile: "../../public/assets/images/logo-profile.png",
     continental: "Asia",
     country: "Japan",
     commentsNum: "12",
-    likesNum: "200",
+    likesNum: "210",
     postsImg: "../../public/assets/images/logo-footer.png",
   },
   {
@@ -28,43 +28,43 @@ const posts: Post[] = [
     continental: "Asia",
     country: "Japan",
     commentsNum: "12",
-    likesNum: "200",
+    likesNum: "190",
     postsImg: "../../public/assets/images/logo-footer.png",
   },
   {
     id: 3,
     title: "오션뷰를 보고 싶다면? 여기!",
-    date: "2024.03.12 ~ 2024.03.18",
+    date: "2024.03.09 ~ 2024.03.19",
     author: "여행조아",
     userProfile: "../../public/assets/images/logo-profile.png",
     continental: "Asia",
     country: "Japan",
     commentsNum: "12",
-    likesNum: "200",
+    likesNum: "240",
     postsImg: "../../public/assets/images/logo-footer.png",
   },
   {
     id: 4,
     title: "오션뷰를 보고 싶다면? 여기!",
-    date: "2024.03.12 ~ 2024.03.18",
+    date: "2024.03.11 ~ 2024.03.20",
     author: "여행조아",
     userProfile: "../../public/assets/images/logo-profile.png",
     continental: "Asia",
     country: "Japan",
     commentsNum: "12",
-    likesNum: "200",
+    likesNum: "280",
     postsImg: "../../public/assets/images/logo-footer.png",
   },
   {
     id: 4,
     title: "오션뷰를 보고 싶다면? 여기!",
-    date: "2024.03.12 ~ 2024.03.18",
+    date: "2024.03.11 ~ 2024.03.15",
     author: "여행조아",
     userProfile: "../../public/assets/images/logo-profile.png",
     continental: "Asia",
     country: "Japan",
     commentsNum: "12",
-    likesNum: "200",
+    likesNum: "120",
     postsImg: "../../public/assets/images/logo-footer.png",
   },
 ];
@@ -73,6 +73,7 @@ const PostPage = () => {
   const { SearchIcon, GridIcon, ListIcon } = icons;
 
   const [view, setView] = useState<ViewMode>("grid");
+  const [sortOrder, setSortOrder] = useState<string>("recent");
 
   const clickListBtn = () => {
     setView("list");
@@ -81,6 +82,19 @@ const PostPage = () => {
   const clickGridBtn = () => {
     setView("grid");
   };
+
+  const sortedPosts =
+    sortOrder === "recent"
+      ? [...posts].sort((a, b) => {
+          const dateA = a.date.split(" ~ ")[0];
+          const dateB = b.date.split(" ~ ")[0];
+          return new Date(dateB).getTime() - new Date(dateA).getTime();
+        })
+      : [...posts].sort((a, b) => {
+          const likesA = parseInt(a.likesNum, 10);
+          const likesB = parseInt(b.likesNum, 10);
+          return likesB - likesA;
+        });
 
   return (
     <PostPageStyle>
@@ -97,9 +111,9 @@ const PostPage = () => {
         </div>
       </div>
       <div className="btn-wrapper">
-        <select>
-          <option value="">최신순</option>
-          <option value="">인기순</option>
+        <select onChange={(e) => setSortOrder(e.target.value)}>
+          <option value="recent">최신순</option>
+          <option value="likes">인기순</option>
         </select>
 
         <GridIcon width="50px" height={"50px"} onClick={clickGridBtn} />
@@ -107,7 +121,7 @@ const PostPage = () => {
       </div>
       <hr></hr>
       <div className="post">
-        {posts.map((post) => (
+        {sortedPosts.map((post) => (
           <PostCard key={post.id} PostProps={post} view={view} />
         ))}
       </div>
