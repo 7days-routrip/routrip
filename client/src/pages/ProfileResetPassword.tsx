@@ -93,15 +93,17 @@ const ProfileResetPasswordStyle = styled.div`
   flex-direction: column;
   padding: 10px;
   .input-form {
-    padding: 10px 0;
+    padding: 1rem 0;
     border-top: 1px solid ${({ theme }) => theme.color.black};
     border-bottom: 1px solid ${({ theme }) => theme.color.black};
+
     .input-text {
       font-weight: 600;
     }
     .input-info {
       width: 90%;
       font-weight: 300;
+      margin-bottom: 1.5rem;
     }
     .text-color {
       color: ${({ theme }) => theme.color.orange};
