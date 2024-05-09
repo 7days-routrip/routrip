@@ -7,19 +7,9 @@ export class Likes {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne((type) => Users)
-  @JoinColumn({
-    name: "userId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkUsersLikesId",
-  })
-  userId!: Users | number;
+  @ManyToOne((type) => Users, { eager: true })
+  user!: Users;
 
-  @ManyToOne((type) => Posts)
-  @JoinColumn({
-    name: "postId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkPostsLikesId",
-  })
-  postId!: Posts | number;
+  @ManyToOne((type) => Posts, { eager: true })
+  post!: Posts;
 }

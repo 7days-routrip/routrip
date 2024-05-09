@@ -1,4 +1,3 @@
-
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Routes } from "./routes.model";
 import { Users } from "./users.model";
@@ -11,27 +10,15 @@ export class Journeys {
   @Column()
   title!: string;
 
-  @ManyToOne((type) => Users)
-  @JoinColumn({
-    name: "userId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkUsersJourneysId",
-  })
-  userId!: Users | number;
+  @ManyToOne((type) => Users, { lazy: true })
+  user!: Promise<Users>;
 
-  @ManyToOne((type) => Routes)
-  @JoinColumn({
-    name: "routeId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkRoutesJourneysId",
-  })
-  routeId!: Routes | number;
+  @ManyToOne((type) => Routes, { lazy: true })
+  route!: Promise<Routes>;
 
   @Column("date")
   startDate!: string;
 
   @Column("date")
   endDate!: string;
-
 }
-

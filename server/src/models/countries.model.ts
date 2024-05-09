@@ -6,13 +6,8 @@ export class Countries {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne((type) => Continents)
-  @JoinColumn({
-    name: "continentId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkCountryCoutinentalId",
-  })
-  continentId!: Continents | number;
+  @ManyToOne((type) => Continents, { eager: true })
+  continent!: Continents;
 
   @Column("varchar", { length: 100 })
   name!: string;
