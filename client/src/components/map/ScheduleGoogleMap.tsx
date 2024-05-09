@@ -2,7 +2,7 @@ import React, { useCallback, useEffect, useState } from "react";
 import { GoogleMap, InfoWindowF, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import Loading from "@/components/common/Loading";
 import { useMapStore } from "@/stores/mapStore";
-import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
+import { SelectedPlace, useAddPlaceStore } from "@/stores/addPlaceStore";
 import InfoWindowBox from "./InfoWindowBox";
 import dayPlacePin from "/assets/images/pin-day-place.png";
 import addPlacePin from "/assets/images/pin-add-place.png";
@@ -55,7 +55,7 @@ const ScheduleGoogleMap = () => {
   });
 
   const { googleMap, mapCenter, setCenter, setGoogleMap, updateMapBounds } = useMapStore();
-  const { addPlaces } = usePlaceStore(); // 실제로 사용할 전역 상태. 임시로 mockRealPlaceData를 사용
+  const { addPlaces } = useAddPlaceStore(); // 실제로 사용할 전역 상태. 임시로 mockRealPlaceData를 사용
   const { markerType, dayIndex } = useShowMarkerTypeStore();
   const { dayPlaces } = useDayPlaceStore();
   const { searchPlaces } = useSearchPlacesStore();
