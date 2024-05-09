@@ -8,18 +8,8 @@ export class Picks {
   id!: number;
 
   @ManyToOne((type) => Users)
-  @JoinColumn({
-    name: "userId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkUsersPicksId",
-  })
-  userId!: Users | number;
+  user!: Users;
 
   @ManyToOne((type) => Places)
-  @JoinColumn({
-    name: "placeId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkPlacesPicksId",
-  })
-  placeId!: Places[] | string;
+  place!: Places;
 }

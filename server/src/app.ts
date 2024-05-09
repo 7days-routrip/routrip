@@ -4,6 +4,8 @@ import spotRouter from "@/routes/spots.routes";
 import journeyRouter from "@/routes/journeys.routes";
 import userRouter from "@/routes/users.routes";
 import commentRouter from "@/routes/comments.routes";
+import mypageRouter from "@/routes/mypages.routes";
+import categoryRouter from "@/routes/categories.routes";
 import { CORS_ORIGIN } from "@/settings";
 import cookieParser from "cookie-parser";
 import cors from "cors";
@@ -33,5 +35,7 @@ app.use("/api/posts", postsRouter);
 app.use("/api/likes", likesRouter);
 app.use("/api/spots", spotRouter);
 app.use("/api/comments", commentRouter);
+app.use("/api/mypages", mypageRouter);
+app.use("/api/categories", categoryRouter);
 
 export default app;

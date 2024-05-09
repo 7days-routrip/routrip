@@ -19,11 +19,11 @@ export const createPost = async (inputData: iCreatePostProps, userId: number) =>
     postsRepo.title = inputData.title;
     postsRepo.startDate = inputData.startDate;
     postsRepo.endDate = inputData.endDate;
-    postsRepo.userId = userId;
-    postsRepo.continentId = inputData.continent;
-    postsRepo.countryId = inputData.country;
+    postsRepo.user.id = userId;
+    postsRepo.continent.id = inputData.continent;
+    postsRepo.country.id = inputData.country;
     postsRepo.expense = inputData.totalExpense;
-    postsRepo.journeyId = inputData.journeyId;
+    postsRepo.journey.id = inputData.journeyId;
     postsRepo.content = inputData.contents;
 
     const repImage = await getImageFromContent(inputData.contents);
@@ -135,7 +135,7 @@ export const getJourneyData = async (journeyId: number) => {
 };
 export const userPostLikedCheck = async (userId: number) => {
   const repo = AppDataSource.getRepository(Likes);
-  if (userId) return await repo.existsBy({ userId: userId });
+  if (userId) return await repo.existsBy({ user: { id: userId } });
   return false;
 };
 
@@ -152,9 +152,9 @@ export const updatepostResultRequest = async (updateData: iCreatePostProps, post
         content: updateData.contents,
         postsImg: postImg,
         expense: updateData.totalExpense,
-        journeyId: updateData.journeyId,
-        continentId: updateData.continent,
-        countryId: updateData.country,
+        journey: { id: updateData.journeyId },
+        continent: { id: updateData.continent },
+        country: { id: updateData.country },
         startDate: updateData.startDate,
         endDate: updateData.endDate,
       })

@@ -44,8 +44,8 @@ export const placeUnlikeRequestResult = async (userId: number, placeId: string) 
   const repository = AppDataSource.getRepository(Picks);
   try {
     const result = await repository.delete({
-      userId: userId,
-      placeId: placeId,
+      user: { id: userId },
+      place: { id: placeId },
     });
     if (result.affected === 0) throw new Error("failed");
     return true;
@@ -58,8 +58,8 @@ export const placeLikeRequestResult = async (userId: number, placeId: string) =>
   const repository = AppDataSource.getRepository(Picks);
   try {
     const result = await repository.insert({
-      userId: userId,
-      placeId: placeId,
+      user: { id: userId },
+      place: { id: placeId },
     });
     if (result.generatedMaps[0].id) return true;
   } catch (err) {
@@ -104,8 +104,8 @@ export const postLikeRequestResult = async (repo: Repository<Likes>, userId: num
   try {
     const repository = repo;
     const result = await repository.insert({
-      userId: userId,
-      postId: postId,
+      user: { id: userId },
+      post: { id: postId },
     });
     return result;
   } catch (err) {
@@ -117,8 +117,8 @@ export const postUnlikeRequestResult = async (repo: Repository<Likes>, userId: n
   try {
     const repository = repo;
     const result = await repository.delete({
-      userId: userId,
-      postId: postId,
+      user: { id: userId },
+      post: { id: postId },
     });
     return result.affected;
   } catch (err) {

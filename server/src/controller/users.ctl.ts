@@ -1,3 +1,4 @@
+import { AppDataSource } from "@/config/ormSetting";
 import {
   BAD_REQUEST_ORIGIN_PASSWORD,
   DATA_UPDATE_FAILED,
@@ -7,6 +8,7 @@ import {
   OK_RESET_REQUEST,
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
+import { Users } from "@/models/users.model";
 import userRepository from "@/repository/users.repo";
 import usersService from "@/service/users.service";
 import { iPatchData } from "@/types/users.types";

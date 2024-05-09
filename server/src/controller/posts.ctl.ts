@@ -9,6 +9,7 @@ import {
   OK_UPLOAD_POST,
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
+import { Posts } from "@/models/posts.model";
 import {
   createPost,
   delPostResultRequest,
@@ -101,7 +102,6 @@ export const getPostRequest = async (req: Request, res: Response) => {
   else userId = req.user?.id;
   try {
     const getPostResult = await getPost(postId);
-    console.log("getPostResult", getPostResult);
     if (getPostResult === null) throw new Error("doen't exist posts");
     const liked: boolean = await userPostLikedCheck(userId);
 

@@ -8,18 +8,8 @@ export class Likes {
   id!: number;
 
   @ManyToOne((type) => Users)
-  @JoinColumn({
-    name: "userId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkUsersLikesId",
-  })
-  userId!: Users | number;
+  user!: Users;
 
   @ManyToOne((type) => Posts)
-  @JoinColumn({
-    name: "postId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkPostsLikesId",
-  })
-  postId!: Posts | number;
+  post!: Posts;
 }
