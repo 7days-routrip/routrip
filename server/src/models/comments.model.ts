@@ -1,8 +1,6 @@
-
 import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
 import { Posts } from "./posts.model";
 import { Users } from "./users.model";
-
 
 @Entity()
 export class Comments {
@@ -18,20 +16,9 @@ export class Comments {
   @Column("timestamp", { default: () => "ON UPDATE CURRENT_TIMESTAMP" })
   updatedAt!: string;
 
-  @ManyToOne((type) => Users)
-  @JoinColumn({
-    name: "userId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkUsersCommentsId",
-  })
-  userId!: Users | number;
+  @ManyToOne((type) => Users, { eager: true })
+  user!: Users;
 
   @ManyToOne((type) => Posts)
-  @JoinColumn({
-    name: "postId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkPostsCommentsId",
-  })
-  postId!: Posts | number;
+  post!: Posts;
 }
-

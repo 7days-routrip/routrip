@@ -19,13 +19,8 @@ export class Posts {
   @Column("blob", { nullable: true })
   postsImg!: string | undefined;
 
-  @ManyToOne((type) => Users)
-  @JoinColumn({
-    name: "userId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkUsersPostsId",
-  })
-  userId!: Users | number;
+  @ManyToOne((type) => Users, { eager: true })
+  user!: Users;
 
   @Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
   createdAt!: string;
@@ -42,27 +37,12 @@ export class Posts {
   @Column("date")
   endDate!: string;
 
-  @ManyToOne((type) => Journeys)
-  @JoinColumn({
-    name: "journeyId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkJourneysPostsId",
-  })
-  journeyId!: Journeys | number;
+  @ManyToOne((type) => Journeys, { eager: true })
+  journey!: Journeys;
 
-  @ManyToOne((type) => Continents)
-  @JoinColumn({
-    name: "continentId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkCoutinentalPostsId",
-  })
-  continentId!: Continents | number;
+  @ManyToOne((type) => Continents, { eager: true })
+  continent!: Continents;
 
-  @ManyToOne((type) => Countries)
-  @JoinColumn({
-    name: "countryId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkCountryPostsId",
-  })
-  countryId!: Countries | number;
+  @ManyToOne((type) => Countries, { eager: true })
+  country!: Countries;
 }
