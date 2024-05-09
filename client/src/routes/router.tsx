@@ -8,6 +8,7 @@ import PostPage from "@/pages/PostPage";
 import ProfileEditPage from "@/pages/ProfileEditPage";
 import ProfileResetPassword from "@/pages/ProfileResetPassword";
 import RestPage from "@/pages/ResetPassword";
+import ScheduleDetailPage from "@/pages/ScheduleDetailPage";
 import SchedulePage from "@/pages/SchedulePage";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -82,6 +83,19 @@ const routerArr = [
     element: (
       <Layout isFull={true}>
         <SchedulePage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/schedule/:id",
+    element: (
+      <Layout isFull={true}>
+        <ScheduleDetailPage />
       </Layout>
     ),
     errorElement: (
