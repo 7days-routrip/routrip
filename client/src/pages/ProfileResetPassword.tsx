@@ -5,6 +5,7 @@ import { Button } from "@/components/common/Button";
 import { useForm } from "react-hook-form";
 import { passwordOptions } from "@/config/registerOptions";
 import { fetchProfileRestPassword } from "@/apis/auth.api";
+import { Link } from "react-router-dom";
 interface ResetPasswordProps {
   originPassword: string;
   newPassword: string;
@@ -67,7 +68,7 @@ const ProfileResetPassword = () => {
           </div>
           <div className="input-button">
             <Button $radius="default" $scheme="normal" $size="medium">
-              취소
+              <Link to={"/me"}>취소</Link>
             </Button>
             <Button $radius="default" $scheme="primary" $size="medium" type="submit">
               확인
@@ -110,7 +111,6 @@ const ProfileResetPasswordStyle = styled.div`
     }
 
     .error-text {
-      padding-left: 1rem;
       color: ${({ theme }) => theme.color.red};
     }
   }
@@ -124,6 +124,9 @@ const ProfileResetPasswordStyle = styled.div`
     justify-content: flex-end;
     align-items: center;
     gap: 10px;
+    a {
+      color: ${({ theme }) => theme.color.black};
+    }
   }
 
   @media (max-width: 768px) {

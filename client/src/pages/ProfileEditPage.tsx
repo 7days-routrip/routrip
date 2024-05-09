@@ -29,7 +29,7 @@ interface ProfileEditProps {
 }
 
 const ProfileEditPage = () => {
-  const { userNickCheck } = useAuth();
+  const { userNicknameCheck } = useAuth();
   const {
     register,
     handleSubmit,
@@ -43,22 +43,24 @@ const ProfileEditPage = () => {
   const [preview, setPreview] = useState<string>("");
   const { userUpdate } = useAuth();
 
+
   const checkNickname = () => {
     const nickname = getValues().nickname;
     if (!nicknameRegex.test(nickname)) {
       setError(
         "nickname",
-        { message: "최소 2 ~ 최대 8 글자, 영문 대소문자, 글자 단위 한글, 숫자" },
+        { message: "최소 2글자 ~ 최대 8글자, 영문 대소문자, 한글, 숫자입니다." },
         { shouldFocus: true },
       );
       return;
     }
-    userNickCheck(nickname).then((res) => {
+    userNicknameCheck(nickname).then((res) => {
       // res 가 성공 메시지면 이거
       setNicknameUniqueCheck((prev) => !prev);
       clearErrors("nickname");
     });
   };
+
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -120,6 +122,7 @@ const ProfileEditPage = () => {
 
             <div className="profile-form">
               <div className="profile-nickname">
+
                 <div className="nickname-input">
                   <span>닉네임</span>
                   <InputText
@@ -140,6 +143,7 @@ const ProfileEditPage = () => {
                 >
                   {nicknameUniqueCheck ? "인증 완료" : "중복 확인"}
                 </Button>
+
               </div>
               <div className="profile-password">
                 <span>비밀번호</span>
@@ -207,6 +211,9 @@ const ProfileEditPageStyle = styled(MypageStyle)`
       flex-direction: column;
       gap: 2rem;
       padding: 1rem 0;
+    }
+    .error-text {
+      color: ${({ theme }) => theme.color.red};
     }
 
     .nickname-input {
