@@ -1,4 +1,12 @@
-import { authEmailComfirm, authJoin, authLogin, authReset, isEmailUnique, isNicknameUnique } from "@/apis/auth.api";
+import {
+  authJoin,
+  authLogin,
+  authReset,
+  isEmailUnique,
+  isNicknameUnique,
+  profileUpdate,
+  profileUpdateProp,
+} from "@/apis/auth.api";
 import { setToken, useAuthStore } from "@/stores/authStore";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
@@ -36,7 +44,6 @@ export const useAuth = () => {
       const newAccessToken = loginRes.headers["authorization"];
       const userName = loginRes.data.nickName;
       const userId = loginRes.data.userId;
-      console.log(newAccessToken, "뭐냐 대체", loginRes);
       storeLogin(newAccessToken, userName, userId);
       navigate("/");
     } catch (error: any) {
@@ -98,7 +105,6 @@ export const useAuth = () => {
     } catch (error: any) {}
   };
 
-
   const userUpdate = async (data: profileUpdateProp) => {
     try {
       const userUpdateRes = await profileUpdate(data);
@@ -108,6 +114,5 @@ export const useAuth = () => {
     }
   };
 
-  return { userLogin, userJoin, userEmailComfirm, userPasswordReset, userNickCheck, userEmailCheck, userUpdate };
-
+  return { userLogin, userJoin, userPasswordReset, userNicknameCheck, userEmailCheck, userUpdate };
 };
