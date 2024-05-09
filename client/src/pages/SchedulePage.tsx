@@ -11,11 +11,16 @@ import DaySchedule from "@/components/schedule/DaySchedule";
 import { getDuration } from "@/utils/getDuration";
 import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 
-import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
+import { SelectedPlace, useAddPlaceStore } from "@/stores/addPlaceStore";
 import ScheduleGoogleMap from "@/components/map/ScheduleGoogleMap";
 import { useDayPlaceStore } from "@/stores/dayPlaces";
 import { Button } from "@/components/common/Button";
 import { addNewSchedule } from "@/apis/schedule.api";
+import { useNavigate } from "react-router-dom";
+import { showConfirm } from "@/utils/showConfirm";
+import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
+import { useNearPlacesStore } from "@/stores/nearPlacesStore";
+import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
 
 const SchedulePage = () => {
   const [title, setTitle] = useState<string>("");
@@ -23,7 +28,11 @@ const SchedulePage = () => {
   const [endDate, setEndDate] = useState<Date | null>(null);
   const [duration, setDuration] = useState<number>(0);
   const { dayPlaces, setDayPlaces } = useDayPlaceStore();
-  const { addPlaces, setPlaces } = usePlaceStore();
+  const { addPlaces, setPlaces } = useAddPlaceStore();
+  const { setMarkerType } = useShowMarkerTypeStore();
+  const { setNearPlaces } = useNearPlacesStore();
+  const { setSearchKeywordToServer, setSearchKeywordToGoogle } = useSearchKeywordStore();
+  const navigate = useNavigate();
 
   const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setTitle(e.target.value);
@@ -39,7 +48,21 @@ const SchedulePage = () => {
 
       // 일정 등록 요청
       await addNewSchedule(title, startDate, endDate, dayPlaces);
-      console.log("등록 완료");
+
+      showConfirm(
+        "일정 등록이 완료되었습니다.\n등록된 일정 리스트를 확인하러 갈까요?",
+        () => navigate("/mypage"),
+        () => navigate("/"),
+      );
+
+      // 북마크한 상태 제외한 나머지 일정 관련 전역 스토어 모두 초기화
+      setPlaces([]);
+      setMarkerType("searchApi");
+      setNearPlaces([]);
+      setDayPlaces([]);
+      setSearchKeywordToServer("");
+      setSearchKeywordToGoogle("");
+
       return;
     }
 
@@ -142,9 +165,8 @@ const SchedulePage = () => {
         showAlert("여행 시작일 또는 도착일을 잘못 입력했어요.\n여행 일자를 다시 선택해주세요.", "logo");
 
         if (dayPlaces.flat().length > 0) {
-          console.log(dayPlaces.flat());
           const updatedSelectedPlaces = [...dayPlaces.flat(), ...addPlaces];
-          usePlaceStore.setState({ addPlaces: updatedSelectedPlaces });
+          useAddPlaceStore.setState({ addPlaces: updatedSelectedPlaces });
         }
 
         setDuration(0);
@@ -153,9 +175,8 @@ const SchedulePage = () => {
       }
 
       if (dayPlaces.flat().length > 0) {
-        console.log(dayPlaces.flat());
         const updatedSelectedPlaces = [...dayPlaces.flat(), ...addPlaces];
-        usePlaceStore.setState({ addPlaces: updatedSelectedPlaces });
+        useAddPlaceStore.setState({ addPlaces: updatedSelectedPlaces });
       }
 
       const due = getDuration(startDate, endDate);
@@ -163,7 +184,6 @@ const SchedulePage = () => {
 
       const defaultPlaces: SelectedPlace[][] = Array.from({ length: due }, () => []);
       setDayPlaces(defaultPlaces);
-      console.log(getDuration(startDate, endDate));
     }
   }, [startDate, endDate]);
 
