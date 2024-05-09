@@ -2,7 +2,7 @@ import userRepository from "@/repository/users.repo";
 import { SALT_ROUND } from "@/settings";
 import { iUserResetCompareProps } from "@/types/users.types";
 import { getNewAccessToken, getNewRefreshToken } from "@/utils/token";
-import { StringColorFormat } from "@faker-js/faker";
+// import { StringColorFormat } from "@faker-js/faker";
 import bcrypt from "bcrypt";
 
 const login = async (email: string, password: string) => {
