@@ -59,18 +59,18 @@ export const useAddNewPlace = (data: Place) => {
 
       if (isNew) {
         // 3. 백엔드 장소 세부 정보 요청에 대해 404 에러를 받고, 추가 로직을 진행한 경우
-        showConfirm("이미 등록된 장소입니다.\n해당 장소를 추가하시겠어요?", () => {
-          addPlace(addData);
-          setMarkerType("add");
-        });
+        addPlace(addData);
+        setMarkerType("add");
 
         return;
       }
 
       // 4. 백엔드 장소 세부 정보 요청에 대해 200 OK를 받은 경우
       // 사용자의 선택을 확인하고 해당 장소를 프론트 전역 상태에 추가
-      addPlace(addData);
-      setMarkerType("add");
+      showConfirm("이미 등록된 장소입니다.\n해당 장소를 추가하시겠어요?", () => {
+        addPlace(addData);
+        setMarkerType("add");
+      });
     },
 
     onError: async (err: any) => {
