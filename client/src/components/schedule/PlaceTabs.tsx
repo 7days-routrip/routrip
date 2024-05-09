@@ -7,6 +7,8 @@ import { usePlaceStore } from "@/stores/addPlaceStore";
 import { Button } from "@/components/common/Button";
 import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
+import { useBookmarkPlaces } from "@/hooks/useBookmarkPlaces";
+import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";
 
 interface PlaceTabContentProps {
   title: string;
@@ -28,6 +30,7 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
   const { setMarkerType } = useShowMarkerTypeStore();
   const { nearPlaces } = useNearPlacesStore();
   const { searchPlaces } = useSearchPlacesStore();
+  const { bookmarkPlaces } = useBookmarkPlacesStore();
   const [activeIndex, setActiveIndex] = useState(active);
   const tabs = React.Children.toArray(children) as React.ReactElement<PlaceTabContentProps>[];
 
@@ -42,6 +45,9 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
     } else if (title === "신규 장소 등록") {
       setMarkerType("searchGoogle");
       updateMapBounds(googleMap, nearPlaces);
+    } else if (title === "내가 찜한 장소") {
+      setMarkerType("bookmarkList");
+      updateMapBounds(googleMap, bookmarkPlaces);
     }
   };
 

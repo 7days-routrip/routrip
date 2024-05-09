@@ -1,7 +1,6 @@
 import { Place, PlaceDetails } from "@/models/place.model";
 import { httpClient } from "./https";
 import { showAlert } from "@/utils/showAlert";
-import { mockRealPlaceWithUuid } from "@/utils/makeMockSelectedPlaces";
 
 // 백엔드 서버로 장소 검색 요청
 export const searchPlaceApi = async (keyword: string, setPlaces: (places: Place[]) => void) => {
@@ -10,6 +9,7 @@ export const searchPlaceApi = async (keyword: string, setPlaces: (places: Place[
     setPlaces(data);
     return data;
   } catch (err: any) {
+    console.log(err);
     if (err.response.status === 404) {
       // showAlert(err.response.message,"error")
       showAlert("검색 결과가 없습니다.\n신규 장소로 먼저 등록해 주세요.", "error");
@@ -19,22 +19,11 @@ export const searchPlaceApi = async (keyword: string, setPlaces: (places: Place[
   }
 };
 
-// 장소 검색 mock api
-// export const searchPlaceApi = async (keyword: string, setPlaces: (places: Place[]) => void) => {
-//   const data = mockRealPlaceWithUuid;
-//   setPlaces(data);
-//   return data;
-// };
-
-// 백엔드 서버로 장소 중복 체크 요청
+//백엔드 서버로 장소 중복 체크 요청
 export const checkPlaceApi = async (id: string) => {
   try {
-    const res = await httpClient.post(`/spots/check/${id}`);
-    return res.data;
-    // const error = new Error("Duplicate place");
-    // throw error;
-
-    // return Promise.resolve("OK");
+    const { data } = await httpClient.post(`/spots/check/${id}`);
+    return data;
   } catch (err: any) {
     throw err;
   }
@@ -54,6 +43,16 @@ export const addNewPlaceApi = async (placeDetailData: PlaceDetails) => {
 export const getPlaceDetailApi = async (id: string) => {
   try {
     const { data } = await httpClient.get<PlaceDetails>(`/spots/${id}`);
+    return data;
+  } catch (err: any) {
+    throw err;
+  }
+};
+
+// 찜한 장소 목록 조회 요청
+export const getBookmarkPlaces = async () => {
+  try {
+    const { data } = await httpClient.get<PlaceDetails[]>(`/places`);
     return data;
   } catch (err: any) {
     throw err;

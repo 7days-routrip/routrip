@@ -1,4 +1,4 @@
-import { Place } from "@/models/place.model";
+import { Place, PlaceDetails } from "@/models/place.model";
 import { SelectedPlace } from "@/stores/addPlaceStore";
 import { fakerKO as faker } from "@faker-js/faker";
 import { v4 as uuidv4 } from "uuid";
@@ -143,5 +143,34 @@ export const mockRealPlaceWithoutUuid: Place[] = [
       lng: 127.3037553,
     },
     placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
+  },
+];
+
+export const mockRealPlaceDetailWithoutUuid: PlaceDetails[] = [
+  {
+    id: "ChIJeV24aepLZTURilEBIwX0GgQ",
+    placeName: "도미노피자 대전월평점",
+    address: "서구 월평1동 524",
+    location: {
+      lat: 36.356299,
+      lng: 127.3649905,
+    },
+    placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
+    tel: "034-545-7879",
+    openingHours: ["aaaaa"],
+    siteUrl: "",
+  },
+  {
+    id: "ChIJGeYDXX9JZTURsFJQxqnBPws",
+    placeName: "한밭수목원",
+    address: "서구 둔산대로 169",
+    location: {
+      lat: 36.3683723,
+      lng: 127.3880555,
+    },
+    placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
+    tel: "034-545-7879",
+    openingHours: ["aaaaa"],
+    siteUrl: "",
   },
 ];

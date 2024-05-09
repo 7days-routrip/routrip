@@ -7,13 +7,14 @@ import InfoWindowBox from "./InfoWindowBox";
 import dayPlacePin from "/assets/images/pin-day-place.png";
 import addPlacePin from "/assets/images/pin-add-place.png";
 import searchPin from "/assets/images/pin-search-place.png";
-// import bookmarkPin from "/assets/images/pin-bookmark-place.png";
+import bookmarkPin from "/assets/images/pin-bookmark-place.png";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useDayPlaceStore } from "@/stores/dayPlaces";
 import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
 import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { Place } from "@/models/place.model";
 import { isExistedInPlaceType, isExistedInSelectedPlaceType } from "@/utils/checkIsExisted";
+import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAP_API_KEY || "";
 
@@ -59,6 +60,7 @@ const ScheduleGoogleMap = () => {
   const { dayPlaces } = useDayPlaceStore();
   const { searchPlaces } = useSearchPlacesStore();
   const { nearPlaces } = useNearPlacesStore();
+  const { bookmarkPlaces } = useBookmarkPlacesStore();
   const [clickMarker, setClickMarker] = useState<SelectedPlace | Place | null>(null);
 
   const handleChanged = useCallback(() => {
@@ -108,6 +110,8 @@ const ScheduleGoogleMap = () => {
       if (!isExistedInPlaceType(searchPlaces, clickMarker.id)) setClickMarker(null);
     } else if (markerType === "searchGoogle" && clickMarker) {
       if (!isExistedInPlaceType(nearPlaces, clickMarker.id)) setClickMarker(null);
+    } else if (markerType === "bookmarkList" && clickMarker) {
+      if (!isExistedInPlaceType(bookmarkPlaces, clickMarker.id)) setClickMarker(null);
     }
   }, [addPlaces, dayPlaces, markerType, dayIndex]);
 
@@ -128,6 +132,9 @@ const ScheduleGoogleMap = () => {
         break;
       case "searchGoogle":
         placeArr = nearPlaces;
+        break;
+      case "bookmarkList":
+        placeArr = bookmarkPlaces;
         break;
     }
 
@@ -150,6 +157,7 @@ const ScheduleGoogleMap = () => {
       {markerType === "day" && createMarkers(dayPlaces[dayIndex as number], onclickMarker, dayPlacePin)}
       {markerType === "searchApi" && createMarkers(searchPlaces, onclickMarker, searchPin)}
       {markerType === "searchGoogle" && createMarkers(nearPlaces, onclickMarker, searchPin)}
+      {markerType === "bookmarkList" && createMarkers(bookmarkPlaces, onclickMarker, bookmarkPin)}
 
       {clickMarker && (
         <InfoWindowF

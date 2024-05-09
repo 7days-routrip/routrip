@@ -1,5 +1,6 @@
 import { SelectedPlace } from "@/stores/addPlaceStore";
 import { httpClient } from "./https";
+import { showAlert } from "@/utils/showAlert";
 
 // 일정 등록 요청
 interface DaysField {
@@ -38,6 +39,6 @@ export const addNewSchedule = async (
     // const { data } = await httpClient.post("/journeys", bodyData);
     // return data;
   } catch (err: any) {
-    throw err;
+    showAlert("일정을 등록에 실패했습니다. 잠시 후 다시 시도해주세요.", "error");
   }
 };
