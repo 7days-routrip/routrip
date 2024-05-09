@@ -1,5 +1,7 @@
-import { LoginResponse, authEmailComfirm, authJoin, authLogin, authReset, isNicknameUnique } from "@/apis/auth.api";
+import { authEmailComfirm, authJoin, authLogin, authReset, isEmailUnique, isNicknameUnique } from "@/apis/auth.api";
 import { useAuthStore } from "@/stores/authStore";
+import { showAlert } from "@/utils/showAlert";
+import { showConfirm } from "@/utils/showConfirm";
 import { useNavigate } from "react-router-dom";
 
 // 로그인
@@ -13,6 +15,15 @@ export interface JoinProps extends LoginProps {
   nickname: string;
 }
 
+export const inputErrorStatusHandler = (error: any, statusList: number[]) => {
+  if (statusList.includes(error.response.status)) {
+    return error.response;
+  } else {
+    showAlert(error.data.message, "error");
+    return error;
+  }
+};
+
 export const useAuth = () => {
   const navigate = useNavigate();
   // 상태
@@ -23,34 +34,37 @@ export const useAuth = () => {
       const loginRes = await authLogin(data);
       storeLogin(loginRes.nickname, loginRes.userId);
       navigate("/");
-    } catch (error) {
-      // 로그인 실패
+    } catch (error: any) {
+      const errorResponse = error.response;
+      showAlert(`${errorResponse.data.message}`, "error");
     }
   };
 
   const userJoin = async (data: JoinProps) => {
     try {
       const joinRes = await authJoin(data);
-      navigate("/login");
-    } catch (error) {
-      // 회원가입 실패
+      showConfirm(joinRes.message, () => {
+        navigate("/login");
+      });
+    } catch (error: any) {
+      return inputErrorStatusHandler(error, []);
     }
   };
 
-  const userEmailComfirm = async (email: string) => {
-    try {
-      const EmailComfirmRes = await authEmailComfirm(email);
-      return EmailComfirmRes;
-    } catch (error) {
-      // 이메일 확인 과정 실패
-    }
-  };
+  // const userEmailComfirm = async (email: string) => {
+  //   try {
+  //     const EmailComfirmRes = await authEmailComfirm(email);
+  //     return EmailComfirmRes;
+  //   } catch (error: any) {
+  //     // 이메일 확인 과정 실패
+  //   }
+  // };
 
   const userPasswordReset = async (data: LoginProps) => {
     try {
       const passwordResetRes = await authReset(data);
       return passwordResetRes;
-    } catch (error) {
+    } catch (error: any) {
       // 비밀번호 리셋 실패
     }
   };
@@ -59,19 +73,19 @@ export const useAuth = () => {
     try {
       const checkNicknameRes = await isNicknameUnique({ nickname });
       return checkNicknameRes;
-    } catch (error) {
-      // 닉네임 중복 확인 실패
+    } catch (error: any) {
+      return inputErrorStatusHandler(error, [400, 409]);
     }
   };
 
   const userEmailCheck = async (email: string) => {
     try {
-      const checkEmailRes = await authEmailComfirm(email);
+      const checkEmailRes = await isEmailUnique({ email });
       return checkEmailRes;
-    } catch (error) {
-      // 이메일 중복 확인 실패
+    } catch (error: any) {
+      return inputErrorStatusHandler(error, [400, 409]);
     }
   };
 
-  return { userLogin, userJoin, userEmailComfirm, userPasswordReset, userNickCheck, userEmailCheck };
+  return { userLogin, userJoin, userPasswordReset, userNickCheck, userEmailCheck };
 };
