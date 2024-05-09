@@ -23,7 +23,7 @@ const AddNewPlace = () => {
     const params: SearchNearByPlacesParams = {
       keyword,
       location: { lat: mapCenter.lat, lng: mapCenter.lng },
-      radius, //: 50000, // 최대 반경 5만 미터(50km)
+      radius,
     };
 
     await searchNearByPlaces(googleMap, params, setNearPlaces);
@@ -32,7 +32,12 @@ const AddNewPlace = () => {
 
   return (
     <AddNewPlaceStyle>
-      <small className="menual">💡 검색할 장소가 있는 나라 주변으로 지도를 먼저 움직여주세요</small>
+      <small className="menual">
+        <span>💡 검색할 장소가 있는 나라 주변으로 지도를 먼저 움직여주세요. </span>
+        <span className="sub-menual">
+          (지도 중심에서 최대 {calculateSearchRadius(googleMap?.getZoom() || 6) / 1000}km 주변을 검색합니다.)
+        </span>
+      </small>
 
       <SearchBox
         placeholder="장소명을 검색하세요."
@@ -48,6 +53,10 @@ const AddNewPlace = () => {
 const AddNewPlaceStyle = styled.div`
   .menual {
     font-weight: 600;
+
+    .sub-menual {
+      color: ${({ theme }) => theme.color.commentGray};
+    }
   }
 `;
 
