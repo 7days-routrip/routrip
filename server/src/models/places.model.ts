@@ -25,3 +25,4 @@ export class Places {
 
   @Column({ length: 512, nullable: true })
   img!: string;
+}
