@@ -6,7 +6,7 @@ export class Countries {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne((type) => Continents)
+  @ManyToOne((type) => Continents, { eager: true })
   continent!: Continents;
 
   @Column("varchar", { length: 100 })

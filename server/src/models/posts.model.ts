@@ -19,7 +19,7 @@ export class Posts {
   @Column("blob", { nullable: true })
   postsImg!: string | undefined;
 
-  @ManyToOne((type) => Users)
+  @ManyToOne((type) => Users, { eager: true })
   user!: Users;
 
   @Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
@@ -37,12 +37,12 @@ export class Posts {
   @Column("date")
   endDate!: string;
 
-  @ManyToOne((type) => Journeys)
+  @ManyToOne((type) => Journeys, { eager: true })
   journey!: Journeys;
 
-  @ManyToOne((type) => Continents)
+  @ManyToOne((type) => Continents, { eager: true })
   continent!: Continents;
 
-  @ManyToOne((type) => Countries)
+  @ManyToOne((type) => Countries, { eager: true })
   country!: Countries;
 }

@@ -57,7 +57,7 @@ export const useAuth = () => {
 
   const userNickCheck = async (nickname: string) => {
     try {
-      const checkNicknameRes = await isNicknameUnique(nickname);
+      const checkNicknameRes = await isNicknameUnique({ nickname });
       return checkNicknameRes;
     } catch (error) {
       // 닉네임 중복 확인 실패

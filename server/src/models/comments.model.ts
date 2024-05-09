@@ -16,7 +16,7 @@ export class Comments {
   @Column("timestamp", { default: () => "ON UPDATE CURRENT_TIMESTAMP" })
   updatedAt!: string;
 
-  @ManyToOne((type) => Users)
+  @ManyToOne((type) => Users, { eager: true })
   user!: Users;
 
   @ManyToOne((type) => Posts)

@@ -7,9 +7,9 @@ export class Picks {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne((type) => Users)
+  @ManyToOne((type) => Users, { eager: true })
   user!: Users;
 
-  @ManyToOne((type) => Places)
+  @ManyToOne((type) => Places, { eager: true })
   place!: Places;
 }

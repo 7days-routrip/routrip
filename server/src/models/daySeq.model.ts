@@ -6,12 +6,12 @@ export class DaySeq {
   @PrimaryGeneratedColumn()
   id!: string;
 
-  @ManyToOne((type) => RouteDays)
-  routeDay!: RouteDays;
+  @ManyToOne((type) => RouteDays, { lazy: true })
+  routeDay!: Promise<RouteDays>;
 
   @Column({ type: "integer" })
   seq!: number;
 
-  @ManyToOne(() => Places)
+  @ManyToOne(() => Places, { eager: true })
   place!: Places;
 }

@@ -7,9 +7,9 @@ export class Likes {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne((type) => Users)
+  @ManyToOne((type) => Users, { eager: true })
   user!: Users;
 
-  @ManyToOne((type) => Posts)
+  @ManyToOne((type) => Posts, { eager: true })
   post!: Posts;
 }

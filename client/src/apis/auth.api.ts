@@ -21,14 +21,14 @@ interface authMessageResponse {
 }
 
 // 이메일 중복 확인
-export const isEmailUnique = async (email: string) => {
-  const response = await httpClient.post<authMessageResponse>("api/users/check/email", email);
+export const isEmailUnique = async (data: { email: string }) => {
+  const response = await httpClient.post<authMessageResponse>("api/users/check/email", data);
   return response.data;
 };
 
 // 닉네임 중복 확인
-export const isNicknameUnique = async (nickname: string) => {
-  const response = await httpClient.post<authMessageResponse>("api/users/check/nickname", nickname);
+export const isNicknameUnique = async (data: { nickname: string }) => {
+  const response = await httpClient.post<authMessageResponse>("api/users/check/nickname", data);
   return response.data;
 };
 
