@@ -4,7 +4,7 @@ import ProfileCard, { ProfileImageStyle, ProfileImageStyleProps } from "@/compon
 import { ProfileCard as IProfileCard } from "@/models/profile.model";
 import Title from "@/components/common/Title";
 import InputText from "@/components/common/Input";
-import { useRef, useState } from "react";
+import { useState } from "react";
 import { Button } from "@/components/common/Button";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
@@ -28,7 +28,7 @@ interface ProfileEditProps {
 }
 
 const ProfileEditPage = () => {
-  const { userNickCheck } = useAuth();
+  const { userNicknameCheck } = useAuth();
   const {
     register,
     handleSubmit,
@@ -39,28 +39,21 @@ const ProfileEditPage = () => {
   } = useForm<ProfileEditProps>();
   const [nicknameUniqueCheck, setNicknameUniqueCheck] = useState(false);
 
-  const fileInput = useRef("");
-
   const checkNickname = () => {
     const nickname = getValues().nickname;
     if (!nicknameRegex.test(nickname)) {
       setError(
         "nickname",
-        { message: "최소 2 ~ 최대 8 글자, 영문 대소문자, 글자 단위 한글, 숫자" },
+        { message: "최소 2글자 ~ 최대 8글자, 영문 대소문자, 한글, 숫자입니다." },
         { shouldFocus: true },
       );
       return;
     }
-    userNickCheck(nickname).then((res) => {
+    userNicknameCheck(nickname).then((res) => {
       // res 가 성공 메시지면 이거
       setNicknameUniqueCheck((prev) => !prev);
       clearErrors("nickname");
     });
-  };
-  const fileToBlobURL = async (file: File) => {
-    const blob = new Blob([file], { type: file.type });
-    const imageUrl = URL.createObjectURL(blob);
-    return imageUrl;
   };
 
   const onSubmit = (data: ProfileEditProps) => {
@@ -101,6 +94,7 @@ const ProfileEditPage = () => {
                   onConfirm={checkNickname}
                   $inputsize="small"
                 ></InputText>
+                {errors.nickname && <small className="error-text">{errors.nickname.message}</small>}
               </div>
               <div className="profile-password">
                 <span>비밀번호</span>
@@ -164,6 +158,9 @@ const ProfileEditPageStyle = styled(MypageStyle)`
       flex-direction: column;
       gap: 2rem;
       padding: 1rem 0;
+    }
+    .error-text {
+      color: ${({ theme }) => theme.color.red};
     }
 
     .profile-password,

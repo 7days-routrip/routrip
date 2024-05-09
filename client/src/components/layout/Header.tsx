@@ -4,6 +4,7 @@ import icons from "../../icons/icons";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { theme } from "../../styles/theme";
+import { useAuthStore } from "@/stores/authStore";
 
 interface Props {
   isFull?: boolean;
@@ -11,7 +12,8 @@ interface Props {
 
 const Header = ({ isFull = false }: Props) => {
   const { LoginIcon, JoinIcon, LogoutIcon, MyPageIcon, HamburgerIcon, MobileUserIcon } = icons;
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, storeLogout } = useAuthStore();
 
   return (
     <HeaderStyle $isFull={isFull}>
@@ -148,7 +150,7 @@ const IconText = styled(Link)`
 
   span {
     display: inline-block;
-    width: 70px;
+    width: 80px;
   }
 `;
 

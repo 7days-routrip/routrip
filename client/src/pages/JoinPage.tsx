@@ -28,7 +28,7 @@ export const domainAuth = (email: string) => {
 };
 
 const JoinPage = () => {
-  const { userJoin, userNickCheck, userEmailCheck } = useAuth();
+  const { userJoin, userNicknameCheck, userEmailCheck } = useAuth();
   const UserIcon = icons.MobileUserIcon;
   const {
     register,
@@ -73,7 +73,7 @@ const JoinPage = () => {
       );
       return;
     }
-    userNickCheck(nickname).then((res) => {
+    userNicknameCheck(nickname).then((res) => {
       // res 가 성공 메시지면 이거
       if (res.status === 200) {
         setNicknameUniqueCheck((prev) => !prev);
@@ -240,7 +240,6 @@ export const JoinPageStyle = styled.div`
     margin-bottom: 10px;
   }
   .error-text {
-    padding-left: 1rem;
     color: ${({ theme }) => theme.color.red};
   }
 

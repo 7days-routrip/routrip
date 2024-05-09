@@ -7,14 +7,14 @@ export const authJoin = async (data: JoinProps) => {
 };
 
 export interface LoginResponse {
+  message: string;
   userId: number;
-  nickname: string;
-  Authorization: string;
+  nickName: string;
 }
 
 export const authLogin = async (data: LoginProps) => {
-  const response = await httpClient.post<LoginResponse>("/users/login", data);
-  return response.data;
+  const response = await httpClient.post("/users/login", data);
+  return response;
 };
 interface authMessageResponse {
   message: string;

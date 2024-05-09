@@ -1,5 +1,5 @@
 import { authEmailComfirm, authJoin, authLogin, authReset, isEmailUnique, isNicknameUnique } from "@/apis/auth.api";
-import { useAuthStore } from "@/stores/authStore";
+import { setToken, useAuthStore } from "@/stores/authStore";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
 import { useNavigate } from "react-router-dom";
@@ -32,7 +32,11 @@ export const useAuth = () => {
   const userLogin = async (data: LoginProps) => {
     try {
       const loginRes = await authLogin(data);
-      storeLogin(loginRes.nickname, loginRes.userId);
+      const newAccessToken = loginRes.headers["authorization"];
+      const userName = loginRes.data.nickName;
+      const userId = loginRes.data.userId;
+      console.log(newAccessToken, "뭐냐 대체", loginRes);
+      storeLogin(newAccessToken, userName, userId);
       navigate("/");
     } catch (error: any) {
       const errorResponse = error.response;
@@ -43,6 +47,7 @@ export const useAuth = () => {
   const userJoin = async (data: JoinProps) => {
     try {
       const joinRes = await authJoin(data);
+
       showConfirm(joinRes.message, () => {
         navigate("/login");
       });
@@ -69,7 +74,7 @@ export const useAuth = () => {
     }
   };
 
-  const userNickCheck = async (nickname: string) => {
+  const userNicknameCheck = async (nickname: string) => {
     try {
       const checkNicknameRes = await isNicknameUnique({ nickname });
       return checkNicknameRes;
@@ -87,5 +92,10 @@ export const useAuth = () => {
     }
   };
 
-  return { userLogin, userJoin, userPasswordReset, userNickCheck, userEmailCheck };
+  const userLogout = async () => {
+    try {
+    } catch (error: any) {}
+  };
+
+  return { userLogin, userJoin, userPasswordReset, userNicknameCheck, userEmailCheck };
 };
