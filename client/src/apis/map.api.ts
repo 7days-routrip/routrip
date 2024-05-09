@@ -14,8 +14,7 @@ export const searchNearByPlaces = async (
 ) => {
   try {
     if (!map) {
-      console.error("Map object is null");
-      return null;
+      return Promise.reject(new Error("구글 지도를 로드하는데 실패했습니다."));
     }
 
     const { keyword, location, radius } = params;
