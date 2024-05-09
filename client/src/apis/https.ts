@@ -1,4 +1,5 @@
 import { getToken, removeNickName, removeToken, setToken } from "@/stores/authStore";
+import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
 import axios, { AxiosRequestConfig } from "axios";
 
@@ -50,7 +51,11 @@ const createClient = (config?: AxiosRequestConfig) => {
           window.location.href = "/login";
         });
         return;
+      } else if (err.response.status >= 500) {
+        showAlert("서버에 문제가 발생했습니다. 잠시 후에 다시 시도해주세요.", "error");
+        return;
       }
+
       return Promise.reject(err);
     },
   );

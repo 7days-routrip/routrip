@@ -1,13 +1,13 @@
 import styled from "styled-components";
 import PlaceList from "./PlaceList";
-import { usePlaceStore } from "@/stores/addPlaceStore";
+import { useAddPlaceStore } from "@/stores/addPlaceStore";
 
 interface Props {
   buttonTitle: React.ReactNode;
 }
 
 const AddPlaceSchedule = ({ buttonTitle }: Props) => {
-  const selectedPlaces = usePlaceStore((state) => state.places);
+  const selectedPlaces = useAddPlaceStore((state) => state.addPlaces);
 
   return (
     <AddPlaceScheduleStyle>

@@ -13,7 +13,7 @@ export const swalStyleButton = Swal.mixin({
   buttonsStyling: false, // SweetAlert2의 기본 버튼 스타일링 비활성화
 });
 
-export const showConfirm = (title: string, callback: () => void) => {
+export const showConfirm = (title: string, confirmCallback: () => void, cancelCallback?: () => void) => {
   const imageUrl = new URL(logoImage, import.meta.url).toString();
 
   swalStyleButton
@@ -27,7 +27,9 @@ export const showConfirm = (title: string, callback: () => void) => {
     })
     .then((result) => {
       if (result.isConfirmed) {
-        callback();
+        confirmCallback();
+      } else if (result.dismiss === Swal.DismissReason.cancel && cancelCallback) {
+        cancelCallback();
       }
     });
 };

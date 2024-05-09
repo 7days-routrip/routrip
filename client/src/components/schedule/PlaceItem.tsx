@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import logoImage from "/assets/images/logo-profile.png"; // 임시로 사용할 장소 이미지
 
-import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
+import { SelectedPlace, useAddPlaceStore } from "@/stores/addPlaceStore";
 import { Place } from "@/models/place.model";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useAddNewPlace } from "@/hooks/useAddNewPlace";
@@ -13,7 +13,7 @@ interface Props {
   isActive?: boolean;
 }
 const PlaceItem = ({ data, buttonTitle, isActive = false }: Props) => {
-  const { addPlace, removePlace } = usePlaceStore();
+  const { addPlace, removePlace } = useAddPlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
   const { removeDayPlace } = useDayPlaceStore();
   const { addNewPlaceMutate } = useAddNewPlace(data);
@@ -100,6 +100,11 @@ const PlaceItemStyle = styled.div<PlaceItemStyleProps>`
     font-weight: 600;
     background-color: ${({ theme }) => theme.color.white};
     padding: 0;
+
+    svg {
+      width: 1rem;
+      height: 1rem;
+    }
   }
 `;
 

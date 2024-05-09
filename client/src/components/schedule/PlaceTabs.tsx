@@ -3,10 +3,11 @@ import styled from "styled-components";
 
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useMapStore } from "@/stores/mapStore";
-import { usePlaceStore } from "@/stores/addPlaceStore";
+import { useAddPlaceStore } from "@/stores/addPlaceStore";
 import { Button } from "@/components/common/Button";
 import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
+import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";
 
 interface PlaceTabContentProps {
   title: string;
@@ -24,24 +25,29 @@ interface PlaceTabsProps {
 
 const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
   const { googleMap, updateMapBounds } = useMapStore();
-  const { places } = usePlaceStore();
+  const { addPlaces } = useAddPlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
   const { nearPlaces } = useNearPlacesStore();
-  const { searchPlace } = useSearchPlacesStore();
+  const { searchPlaces } = useSearchPlacesStore();
+  const { bookmarkPlaces } = useBookmarkPlacesStore();
   const [activeIndex, setActiveIndex] = useState(active);
   const tabs = React.Children.toArray(children) as React.ReactElement<PlaceTabContentProps>[];
 
   const onClickHandler = (i: number, title: string) => {
     setActiveIndex(i);
+
     if (title === "추가한 장소") {
       setMarkerType("add");
-      updateMapBounds(googleMap, places);
+      updateMapBounds(googleMap, addPlaces);
     } else if (title === "장소 선택") {
       setMarkerType("searchApi");
-      updateMapBounds(googleMap, searchPlace);
+      updateMapBounds(googleMap, searchPlaces);
     } else if (title === "신규 장소 등록") {
       setMarkerType("searchGoogle");
       updateMapBounds(googleMap, nearPlaces);
+    } else if (title === "내가 찜한 장소") {
+      setMarkerType("bookmarkList");
+      updateMapBounds(googleMap, bookmarkPlaces);
     }
   };
 
