@@ -2,6 +2,7 @@ import { authEmailComfirm, authJoin, authLogin, authReset, isEmailUnique, isNick
 import { setToken, useAuthStore } from "@/stores/authStore";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
+
 import { useNavigate } from "react-router-dom";
 
 // 로그인
@@ -97,5 +98,16 @@ export const useAuth = () => {
     } catch (error: any) {}
   };
 
-  return { userLogin, userJoin, userPasswordReset, userNicknameCheck, userEmailCheck };
+
+  const userUpdate = async (data: profileUpdateProp) => {
+    try {
+      const userUpdateRes = await profileUpdate(data);
+      return userUpdateRes;
+    } catch (error) {
+      //  실패
+    }
+  };
+
+  return { userLogin, userJoin, userEmailComfirm, userPasswordReset, userNickCheck, userEmailCheck, userUpdate };
+
 };

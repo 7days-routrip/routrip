@@ -4,13 +4,14 @@ import ProfileCard, { ProfileImageStyle, ProfileImageStyleProps } from "@/compon
 import { ProfileCard as IProfileCard } from "@/models/profile.model";
 import Title from "@/components/common/Title";
 import InputText from "@/components/common/Input";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Button } from "@/components/common/Button";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/hooks/useAuth";
 import { nicknameRegex } from "@/constants/regexPatterns";
 import { nicknameOptions } from "@/config/registerOptions";
+import { useQuery } from "@tanstack/react-query";
 
 const dummyData: IProfileCard = {
   nickname: "김하늘누리",
@@ -38,6 +39,10 @@ const ProfileEditPage = () => {
     formState: { errors },
   } = useForm<ProfileEditProps>();
   const [nicknameUniqueCheck, setNicknameUniqueCheck] = useState(false);
+  const [imgFile, setImgFile] = useState<File | null>();
+  const [preview, setPreview] = useState<string>("");
+  const { userUpdate } = useAuth();
+
 
   const checkNickname = () => {
     const nickname = getValues().nickname;
@@ -56,10 +61,41 @@ const ProfileEditPage = () => {
     });
   };
 
-  const onSubmit = (data: ProfileEditProps) => {
-    // 로직 아직 미구현
-    // fileToBlobURL(data.image[0]);
+
+  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const file = event.target.files?.[0];
+    if (file) {
+      if (file && file.type.substring(0, 5) === "image") {
+        setImgFile(file);
+      } else {
+        setImgFile(null);
+      }
+    }
   };
+
+  const onSubmit = (data: ProfileEditProps) => {
+    if (preview === "" && data.nickname === "") return;
+    if (data.nickname && !nicknameUniqueCheck) {
+      setError("nickname", { message: "닉네임 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
+      return;
+    }
+    userUpdate({ nickname: data.nickname, profile: preview });
+    clearErrors;
+  };
+
+  useEffect(() => {
+    if (imgFile) {
+      const reader = new FileReader();
+      reader.onloadend = () => {
+        const imgString = reader.result as string;
+        setPreview(imgString.substring(11));
+      };
+      reader.readAsDataURL(imgFile);
+    } else {
+      setPreview("");
+    }
+  }, [imgFile]);
+
   return (
     <ProfileEditPageStyle>
       <ProfileCard ProfileProps={dummyData} />
@@ -68,9 +104,9 @@ const ProfileEditPage = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <div className="edit-form">
             <div className="image-form">
-              <div className="orofile-image">
+              <div className="profile-image">
                 <Title size="medium">프로필 사진</Title>
-                <ProfileEditImageStyle $image={""}> </ProfileEditImageStyle>
+                <ProfileEditImageStyle $image={preview}> </ProfileEditImageStyle>
               </div>
               <div className="image-btn">
                 <AttachFileLabel htmlFor="profile-image">사진 변경</AttachFileLabel>
@@ -79,22 +115,35 @@ const ProfileEditPage = () => {
                   id="profile-image"
                   {...register("image")}
                   accept="image/*"
+                  onChange={handleFileChange}
                 ></AttachFileInput>
               </div>
             </div>
 
             <div className="profile-form">
               <div className="profile-nickname">
-                <span>닉네임</span>
-                <InputText
-                  isButton={true}
-                  inputType="text"
-                  {...register("nickname", nicknameOptions)}
-                  buttonText={nicknameUniqueCheck ? "인증 완료" : "중복 확인"}
-                  onConfirm={checkNickname}
-                  $inputsize="small"
-                ></InputText>
-                {errors.nickname && <small className="error-text">{errors.nickname.message}</small>}
+
+                <div className="nickname-input">
+                  <span>닉네임</span>
+                  <InputText
+                    inputType="text"
+                    {...register("nickname", nicknameOptions)}
+                    $inputsize="small"
+                    onChange={() => setNicknameUniqueCheck(false)}
+                  />
+                  {errors.nickname && <small className="error-text">{errors.nickname.message}</small>}
+                </div>
+                <Button
+                  $size="medium"
+                  $radius="default"
+                  $scheme="primary"
+                  type="button"
+                  onClick={checkNickname}
+                  disabled={nicknameUniqueCheck ? true : false}
+                >
+                  {nicknameUniqueCheck ? "인증 완료" : "중복 확인"}
+                </Button>
+
               </div>
               <div className="profile-password">
                 <span>비밀번호</span>
@@ -124,6 +173,10 @@ const ProfileEditPageStyle = styled(MypageStyle)`
 
   a {
     color: ${({ theme }) => theme.color.white};
+  }
+
+  span {
+    font-weight: 600;
   }
 
   .edit-main {
@@ -163,17 +216,43 @@ const ProfileEditPageStyle = styled(MypageStyle)`
       color: ${({ theme }) => theme.color.red};
     }
 
+    .nickname-input {
+      width: 61%;
+    }
+    .profile-nickname,
     .profile-password,
     .profile-resign {
       width: 100%;
       display: flex;
-      justify-content: space-around;
+      justify-content: space-between;
       align-items: center;
+      padding: 0 1rem;
     }
 
-    .profile-resign,
+    .profile-nickname {
+      align-items: center;
+      gap: 1rem;
+      small {
+        color: ${({ theme }) => theme.color.red};
+      }
+    }
+
+    .profile-nickname > button {
+      margin-top: 1rem;
+    }
+
+    .profile-resign {
+      margin-top: 2rem;
+    }
+
+    .profile-resign > :last-child {
+      margin-right: 2rem;
+    }
+
+    .profile-resign > span,
     .profile-resign > a {
       color: ${({ theme }) => theme.color.commentGray};
+      font-weight: 100;
     }
 
     .btn-section {
@@ -183,13 +262,18 @@ const ProfileEditPageStyle = styled(MypageStyle)`
     }
 
     @media (max-width: 768px) {
-      width: 300px;
+      width: 350px;
       height: auto;
       display: flex;
       flex-direction: column;
       justify-content: center;
       .edit-form {
         flex-direction: column;
+        height: auto;
+      }
+      .image-form {
+        justify-content: space-between;
+        padding: 0 1rem;
       }
     }
   }

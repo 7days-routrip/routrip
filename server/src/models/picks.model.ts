@@ -7,19 +7,9 @@ export class Picks {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne((type) => Users)
-  @JoinColumn({
-    name: "userId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkUsersPicksId",
-  })
-  userId!: Users | number;
+  @ManyToOne((type) => Users, { eager: true })
+  user!: Users;
 
-  @ManyToOne((type) => Places)
-  @JoinColumn({
-    name: "placeId",
-    referencedColumnName: "id",
-    foreignKeyConstraintName: "fkPlacesPicksId",
-  })
-  placeId!: Places[] | string;
+  @ManyToOne((type) => Places, { eager: true })
+  place!: Places;
 }
