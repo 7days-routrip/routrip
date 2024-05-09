@@ -15,8 +15,7 @@ export const useAddNewPlace = (data: Place) => {
 
   const { mutate: addNewPlaceMutate } = useMutation({
     mutationFn: async () => {
-      // 신규 장소 등록을 요청해야 하는지 확인하는 flag
-      let isNew = false; // 백엔드 서버로 세부 장소 조회 요청에 대한 결과로 404에러 받은 경우에 true
+      let isNew = false;
       let placeDetailData: PlaceDetails;
 
       // 1. 백엔드 서버로 세부 장소 조회 요청
@@ -26,8 +25,6 @@ export const useAddNewPlace = (data: Place) => {
         // 200 OK 응답
         placeDetailData = detailFromApi;
       } else {
-        // 세부 장소 조회 요청에서 오류난 경우
-        // 404 아닐 경우에는 추가 로직 수행할 필요 없으므로 onError에서 처리하도록 에러를 throw
         if (getPlaceDetailApiError && (getPlaceDetailApiError as any).response?.status !== 404) {
           throw getPlaceDetailApiError;
         }
@@ -47,7 +44,6 @@ export const useAddNewPlace = (data: Place) => {
         placeDetailData = placeDataFromApi;
       }
 
-      // 백엔드 서버로 세부 장소 조회 및 추가 로직에서 진행한 요청이 성공한 경우, data를 return
       return { placeDetailData, isNew };
     },
 
