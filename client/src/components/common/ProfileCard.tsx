@@ -1,7 +1,7 @@
 import { ProfileCard as IProfileCard } from "@/models/profile.model";
 import styled from "styled-components";
 
-export const DEFAULT_IMAGE = "assets/images/logo-profile.png";
+export const DEFAULT_IMAGE = "assets/images/logo-profile2.png";
 
 interface Props {
   ProfileProps: IProfileCard;
@@ -37,9 +37,10 @@ export interface ProfileImageStyleProps {
 export const ProfileImageStyle = styled.div<ProfileImageStyleProps>`
   width: 6rem;
   height: 6rem;
-  background-image: url(${({ $image }) => ($image ? "data:image/png;base64,${$image}" : DEFAULT_IMAGE)});
+
+  background-image: url(${({ $image }) => ($image ? `data:image/${$image}` : DEFAULT_IMAGE)});
   background-color: ${({ theme }) => theme.color.white};
-  background-size: 70% 60%;
+  background-size: 100%;
   background-position: center;
   border-radius: 50%;
   margin: 1rem;

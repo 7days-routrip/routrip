@@ -1,6 +1,6 @@
 import { create } from "zustand";
 
-export type ClickType = "add" | "day" | "searchApi" | "searchGoogle";
+export type ClickType = "add" | "day" | "searchApi" | "searchGoogle" | "bookmarkList";
 
 interface ShowMarkerTypeStore {
   markerType: ClickType;

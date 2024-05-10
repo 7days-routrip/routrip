@@ -44,7 +44,7 @@ const LoginPage = () => {
               placeholder={placeholderHander("비밀번호")}
               inputType="password"
               $inputsize="large"
-              {...register("password", passwordOptions)}
+              {...register("password")}
             />
             {errors.password && <small className="error-text">{errors.password.message}</small>}
           </fieldset>

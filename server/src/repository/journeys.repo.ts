@@ -1,9 +1,20 @@
 import { AppDataSource } from "@/config/ormSetting";
-import { DaySeq } from "@/models/daySeq.model";
 import { Journeys } from "@/models/journeys.model";
+import { DaySeq } from "@/models/daySeq.model";
 import { Places } from "@/models/places.model";
 import { RouteDays } from "@/models/routeDays.model";
 import { Routes } from "@/models/routes.model";
+import { Request, Response } from "express";
+
+const journeysRepository = AppDataSource.getRepository(Journeys);
+
+const getJourneysList = async (userId: number) => {
+  return journeysRepository.find({
+    where: {
+      user: { id: userId },
+    },
+  });
+};
 
 const getJourneyData = async (journeyId: number) => {
   const repo = AppDataSource.getRepository(Journeys);
@@ -25,5 +36,10 @@ const getJourneyData = async (journeyId: number) => {
   }
 };
 
-const journeysRepository = { getJourneyData };
-export default journeysRepository;
+const JourneysRepository = {
+  getJourneyData,
+  getJourneysList,
+  journeysRepository,
+};
+
+export default JourneysRepository;
