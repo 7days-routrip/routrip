@@ -4,4 +4,5 @@ export const queryKey = {
   post: "posts",
   comment: "comments",
   bookmarkPlaces: "bookmarkPlaces",
+  scheduleDetails: "scheduleDetails",
 };
