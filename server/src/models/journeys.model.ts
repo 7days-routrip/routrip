@@ -21,4 +21,7 @@ export class Journeys {
 
   @Column("date")
   endDate!: string;
+
+  @Column({ length: 512, nullable: true })
+  thumbnail!: string;
 }
