@@ -27,6 +27,13 @@ const join = async (email: string, password: string, nickName: string) => {
   await UserRepository.create(email, hashedPassword, nickName);
 };
 
+const reqUserWithdraw = async (userId: number) => {
+  const userDropResult = await userRepo.delete(userId);
+  console.log(userDropResult);
+  if (!userDropResult.affected || userDropResult.affected < 1) return { success: false, msg: "failed to withdraw" };
+  return { success: true };
+};
+
 const reqUsersUpdate = async (data: iPatchData, userId: number) => {
   const patch = {
     nickName: data.nickName,
@@ -86,6 +93,7 @@ const UsersService = {
   reqUsersUpdate,
   reqPasswordUpate,
   reqUserPasswordUpdate,
+  reqUserWithdraw,
 };
 
 export default UsersService;

@@ -1,11 +1,14 @@
 import {
   BAD_REQUEST_ORIGIN_PASSWORD,
   BAD_REQUEST_RESET_PASSWORD,
+  BAD_REQUEST_WITHDRAW,
   DATA_UPDATE_FAILED,
   DATA_UPDATE_SUCCESSED,
   NOT_FOUND_USER,
+  OK_LOGOUT,
   OK_RESET_PASSWORD,
   OK_RESET_REQUEST,
+  OK_WITHDRAW,
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
 import UsersService from "@/service/users.service";
@@ -50,7 +53,43 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 };
-
+const logout = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.isLoggedIn) {
+      res.setHeader("Authorization", "");
+      res.clearCookie("refresh_token");
+      res.status(StatusCodes.OK).json({ message: OK_LOGOUT });
+    } else {
+      throw new Error("login required");
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "login required")
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+    }
+  }
+};
+const userWithdraw = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.isLoggedIn) {
+      const userId = req.user.id as number;
+      const dataResult = await UsersService.reqUserWithdraw(userId);
+      if (!dataResult.success) throw new Error(dataResult.msg);
+      res.setHeader("Authorization", "");
+      res.clearCookie("refresh_token");
+      res.status(StatusCodes.OK).json({ message: OK_WITHDRAW });
+    } else {
+      throw new Error("login required");
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "login required")
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+      if (err.message === "failed to withdraw")
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_WITHDRAW });
+    }
+  }
+};
 const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.body;
 
@@ -163,6 +202,8 @@ const UsersController = {
   resetRequest,
   resetPasswordRequest,
   userResetPassword,
+  logout,
+  userWithdraw,
 };
 
 export default UsersController;
