@@ -4,10 +4,10 @@ import { StatusCodes } from "http-status-codes";
 
 const getJourneysList = async (req: Request, res: Response) => {
   const user = req.user;
-  if (!user) throw new Error("사용자 정보가 없습니다.\n로그인이 필요한 서비스입니다.");
 
   try {
-    const journeys = await JourneysService.getJourneysList(user.id);
+    if (!user) throw new Error("사용자 정보가 없습니다.\n로그인이 필요한 서비스입니다.");
+    const journeys = await JourneysService.getJourneysList(user.id as number);
 
     res.status(200).json(journeys);
   } catch (error: any) {
@@ -20,9 +20,9 @@ const getJourneysList = async (req: Request, res: Response) => {
 const getJourneyDetail = async (req: Request, res: Response) => {
   const user = req.user;
   const journeyId = Number(req.params.id);
-  if (!user?.isLoggedIn) throw new Error("사용자 정보가 없습니다.\n로그인이 필요한 서비스입니다.");
 
   try {
+    if (!user?.isLoggedIn) throw new Error("사용자 정보가 없습니다.\n로그인이 필요한 서비스입니다.");
     const journey = await JourneysService.getJourneyDetail(journeyId);
 
     res.status(200).json(journey);
@@ -35,7 +35,7 @@ const getJourneyDetail = async (req: Request, res: Response) => {
 
 const JourneysController = {
   getJourneysList,
-  getJourneyDetail
+  getJourneyDetail,
 };
 
 export default JourneysController;

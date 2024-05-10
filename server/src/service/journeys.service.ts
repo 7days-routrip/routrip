@@ -9,7 +9,7 @@ const getJourneysList = async (userId: number) => {
 };
 
 const getJourneyDetail = async (journeyId: number) => {
-  const result = await JourneysRepository.getJourneyDetail(journeyId);
+  const result = await JourneysRepository.getJourneyData(journeyId);
   if (!result.length) throw new Error("일정 정보를 찾을 수 없습니다.");
 
   let days = [];

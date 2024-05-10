@@ -9,18 +9,20 @@ import { Request, Response } from "express";
 const journeysRepository = AppDataSource.getRepository(Journeys);
 
 const getJourneysList = async (userId: number) => {
-  return journeysRepository.find({
+  const result = await journeysRepository.find({
     where: {
       user: { id: userId },
     },
   });
+
+  return result;
 };
 
-const getJourneyDetail = async (journeyId: number) => {
-  return journeysRepository
+const getJourneyData = async (journeyId: number) => {
+  const result = await journeysRepository
     .createQueryBuilder("jn")
     .select([
-      "jn.id, jn.title, jn.startDate, jn.endDate, rd.day, ds.seq, place.id as placeId, place.name, place.address, place.location, place.img",
+      "jn.id, jn.title, jn.startDate, jn.endDate, rd.day, ds.seq, place.id as placeId, place.name, place.address, place.openingHours, place.tel, place.location, place.img",
     ])
     .leftJoin(Routes, "rt", "rt.id = jn.routeId")
     .leftJoin(RouteDays, "rd", "rd.routeId = rt.id")
@@ -28,12 +30,13 @@ const getJourneyDetail = async (journeyId: number) => {
     .leftJoin(Places, "place", "place.id = ds.placeId")
     .where("jn.id =:journeyId", { journeyId })
     .getRawMany();
+
+  return result;
 };
 
 const JourneysRepository = {
   getJourneyData,
   getJourneysList,
-  getJourneyDetail,
   journeysRepository,
 };
 
