@@ -1,6 +1,6 @@
 import { AppDataSource } from "@/config/ormSetting";
-import { Journeys } from "@/models/journeys.model";
 import { DaySeq } from "@/models/daySeq.model";
+import { Journeys } from "@/models/journeys.model";
 import { Places } from "@/models/places.model";
 import { RouteDays } from "@/models/routeDays.model";
 import { Routes } from "@/models/routes.model";
@@ -9,11 +9,13 @@ import { Request, Response } from "express";
 const journeysRepository = AppDataSource.getRepository(Journeys);
 
 const getJourneysList = async (userId: number) => {
-  return journeysRepository.find({
+  const result = await journeysRepository.find({
     where: {
       user: { id: userId },
     },
   });
+
+  return result;
 };
 
 const getJourneyData = async (journeyId: number) => {

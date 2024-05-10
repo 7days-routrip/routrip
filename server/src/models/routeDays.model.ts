@@ -7,7 +7,7 @@ export class RouteDays {
   id!: number;
 
   @ManyToOne((type) => Routes)
-  route!: Promise<Routes>;
+  route!: Routes;
 
   @Column("integer", { nullable: true })
   day!: number;
