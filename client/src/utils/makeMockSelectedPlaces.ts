@@ -1,4 +1,5 @@
 import { Place, PlaceDetails } from "@/models/place.model";
+import { ScheduleDetails } from "@/models/schedule.model";
 import { SelectedPlace } from "@/stores/addPlaceStore";
 import { fakerKO as faker } from "@faker-js/faker";
 import { v4 as uuidv4 } from "uuid";
@@ -174,3 +175,24 @@ export const mockRealPlaceDetailWithoutUuid: PlaceDetails[] = [
     siteUrl: "",
   },
 ];
+
+export const mockScheduleDetailData: ScheduleDetails = {
+  id: 1,
+  title: "3일치 첫번째 여행일정",
+  startDate: "2024-05-10T00:00:00.000Z",
+  endDate: "2024-05-12T00:00:00.000Z",
+  days: [
+    {
+      day: 0,
+      spots: [
+        mockRealPlaceWithoutUuid[0],
+        mockRealPlaceWithoutUuid[1],
+        mockRealPlaceWithoutUuid[2],
+        mockRealPlaceWithoutUuid[3],
+        mockRealPlaceWithoutUuid[4],
+      ],
+    },
+    { day: 1, spots: [mockRealPlaceWithoutUuid[1], mockRealPlaceWithoutUuid[2], mockRealPlaceWithoutUuid[3]] },
+    { day: 2, spots: [] },
+  ],
+};

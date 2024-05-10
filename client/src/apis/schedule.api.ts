@@ -1,6 +1,9 @@
 import { SelectedPlace } from "@/stores/addPlaceStore";
 import { httpClient } from "./https";
 import { showAlert } from "@/utils/showAlert";
+import { mockScheduleDetailData } from "@/utils/makeMockSelectedPlaces";
+import { ScheduleDetails } from "@/models/schedule.model";
+import { convertScheduleDetails } from "@/utils/convertDataType";
 
 // 일정 등록 요청
 interface DaysField {
@@ -39,6 +42,29 @@ export const addNewSchedule = async (
     // const { data } = await httpClient.post("/journeys", bodyData);
     // return data;
   } catch (err: any) {
-    showAlert("일정을 등록에 실패했습니다. 잠시 후 다시 시도해주세요.", "error");
+    showAlert("일정을 등록에 실패했습니다.\n문제가 지속될 경우 고객센터로 문의해주세요.", "error");
+    return;
+  }
+};
+
+export const getScheduleDetails = async (id: string) => {
+  try {
+    // const { data } = await httpClient.get<ScheduleDetails>(`/journeys/${id}`);
+    // const convertData = convertScheduleDetails(data);
+    // return convertData;
+    const mockScheduleData = convertScheduleDetails(mockScheduleDetailData);
+    console.log(mockScheduleData);
+
+    return mockScheduleData;
+  } catch (err) {
+    throw err;
+  }
+};
+
+export const deleteSchedule = async (id: string) => {
+  try {
+    await httpClient.delete(`/journeys/${id}`);
+  } catch (err) {
+    throw err;
   }
 };
