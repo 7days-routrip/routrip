@@ -34,7 +34,6 @@ const createClient = (config?: AxiosRequestConfig) => {
   axiosInstance.interceptors.response.use(
     (res) => {
       const newAccessToken = res.headers.authorization;
-      console.log("실행된거 맞아?", res.headers);
       if (newAccessToken) {
         const token = newAccessToken.split(" ")[1];
         setToken(token);

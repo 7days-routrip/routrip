@@ -40,7 +40,7 @@ export const authEmailComfirm = async (email: string) => {
 
 // 비밀번호 초기화
 export const authReset = async (data: LoginProps) => {
-  const response = await httpClient.put<authMessageResponse>("/users/reset", data);
+  const response = await httpClient.patch<authMessageResponse>("/users/reset", data);
   return response;
 };
 
