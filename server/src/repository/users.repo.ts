@@ -35,10 +35,10 @@ const findByNickname = async (nickName: string) => {
 
   return user;
 };
-const userRepository = {
+const UserRepository = {
   create,
   findByEmail,
   findByNickname,
 };
 
-export default userRepository;
+export default UserRepository;

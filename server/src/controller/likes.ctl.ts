@@ -12,7 +12,7 @@ import {
   OK_UNLIKE_POST,
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
-import likesService from "@/service/likes.service";
+import LikesService from "@/service/likes.service";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -20,7 +20,7 @@ const likesPostAllData = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
       const userId = req.user.id as number;
-      const listResult = await likesService.reqLikesList(userId);
+      const listResult = await LikesService.reqLikesList(userId);
       if (!listResult?.success) throw new Error(listResult?.msg);
       res.status(StatusCodes.OK).json(listResult.data);
     } else {
@@ -42,10 +42,10 @@ const postLikeRequest = async (req: Request, res: Response) => {
       const postId = parseInt(req.params.id);
       const userId = req.user?.id as number;
 
-      const checkResult = await likesService.existDataCheck("likes", userId, postId);
+      const checkResult = await LikesService.existDataCheck("likes", userId, postId);
       if (checkResult?.success) throw new Error("it already liked exist");
 
-      const reqResult = await likesService.reqLikesInsertData(userId, postId);
+      const reqResult = await LikesService.reqLikesInsertData(userId, postId);
       if (!reqResult.success) throw new Error("Invalid request");
       res.status(StatusCodes.OK).json({ message: OK_LIKE_POST });
     } else {
@@ -69,10 +69,10 @@ const postUnlikeRequest = async (req: Request, res: Response) => {
       const postId = parseInt(req.params.id);
       const userId = req.user.id as number;
 
-      const checkResult = await likesService.existDataCheck("likes", userId, postId);
+      const checkResult = await LikesService.existDataCheck("likes", userId, postId);
       if (!checkResult?.success) throw new Error("Like does not exist");
 
-      const reqResult = await likesService.reqLikesDeleteData(userId, postId);
+      const reqResult = await LikesService.reqLikesDeleteData(userId, postId);
       if (!reqResult.success) throw new Error("Invalid request");
       res.status(StatusCodes.OK).json({ message: OK_UNLIKE_POST });
     } else {
@@ -92,7 +92,7 @@ const likesPlaceAllData = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
       const userId = req.user.id as number;
-      const listResult = await likesService.reqPicksList(userId);
+      const listResult = await LikesService.reqPicksList(userId);
       if (!listResult.success) throw new Error(listResult.msg);
       res.status(StatusCodes.OK).json(listResult.data);
     } else {
@@ -114,9 +114,9 @@ const placeLikeRequest = async (req: Request, res: Response) => {
       const placeId = req.params.id;
       const userId = req.user.id as number;
 
-      const checkResult = await likesService.existDataCheck("picks", userId, placeId);
+      const checkResult = await LikesService.existDataCheck("picks", userId, placeId);
       if (checkResult?.success) throw new Error("exist place");
-      const reqResult = await likesService.reqPicksInsertData(userId, placeId);
+      const reqResult = await LikesService.reqPicksInsertData(userId, placeId);
       if (!reqResult.success) throw new Error("bad request");
       res.status(StatusCodes.OK).json({ message: OK_LIKE_PLACE });
     } else {
@@ -137,7 +137,7 @@ const placeUnlikeRequest = async (req: Request, res: Response) => {
     if (req.user?.isLoggedIn) {
       const placeId = req.params.id;
       const userId = req.user.id as number;
-      const reqResult = await likesService.reqPicksDeleteData(userId, placeId);
+      const reqResult = await LikesService.reqPicksDeleteData(userId, placeId);
       if (!reqResult.success) throw new Error(reqResult.msg);
       res.status(StatusCodes.OK).json({ message: OK_UNLIKE_PLACE });
     } else {
@@ -153,7 +153,7 @@ const placeUnlikeRequest = async (req: Request, res: Response) => {
   }
 };
 
-const likesController = {
+const LikesController = {
   likesPlaceAllData,
   placeLikeRequest,
   placeUnlikeRequest,
@@ -161,4 +161,4 @@ const likesController = {
   postLikeRequest,
   postUnlikeRequest,
 };
-export default likesController;
+export default LikesController;

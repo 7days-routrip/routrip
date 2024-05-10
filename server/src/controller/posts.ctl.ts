@@ -9,7 +9,7 @@ import {
   OK_UPLOAD_POST,
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
-import postsService from "@/service/posts.service";
+import PostsService from "@/service/posts.service";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -21,7 +21,7 @@ const postsRequest = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
       const userId = req.user.id as number;
-      const dataResult = await postsService.reqPostInsertData(inputData, userId);
+      const dataResult = await PostsService.reqPostInsertData(inputData, userId);
       if (!dataResult.success) throw new Error(dataResult.msg);
       res.status(StatusCodes.OK).json({ message: OK_UPLOAD_POST });
     } else {
@@ -45,21 +45,18 @@ const postAllList = async (req: Request, res: Response) => {
     // abroad : 국외, home : 국내
     const query = req.query;
     const sort = query?.sort as string;
-    const pageData = {
-      pages: parseInt(query?.pages as string),
-      limit: parseInt(query?.limit as string),
-    };
+    const pages = parseInt(query?.pages as string);
     const searchData = {
       filter: query?.filter as string,
       keyword: query?.keyword as string,
     };
-    const listResult = await postsService.reqPostsList(area, pageData, sort, searchData, "list");
-    const pageResult = await postsService.reqPostsList(area, pageData, sort, searchData);
+    const listResult = await PostsService.reqPostsList(pages, area, undefined, sort, searchData, "list");
+    const pageResult = await PostsService.reqPostsList(pages, area, undefined, sort, searchData);
     if (listResult.success === false || pageResult.success === false) throw new Error(listResult.msg);
     res.status(StatusCodes.OK).json({
       posts: listResult.data,
       pagination: {
-        page: pageData.pages,
+        page: pages,
         totalPosts: pageResult.count,
       },
     });
@@ -79,7 +76,7 @@ const postRequest = async (req: Request, res: Response) => {
     if (req.user?.isLoggedIn) {
       userId = req.user.id;
     }
-    const postResult = await postsService.reqPostData(postId, userId);
+    const postResult = await PostsService.reqPostData(postId, userId);
     if (!postResult.success) throw new Error(postResult.msg);
     res.status(StatusCodes.OK).json(postResult.data);
   } catch (err) {
@@ -95,7 +92,7 @@ const postEditRequest = async (req: Request, res: Response) => {
     const postId = parseInt(req.params.id) as number;
     const userId = req.user?.id as number;
     if (req.user?.isLoggedIn) {
-      const editResult = await postsService.reqPostEditData(data, userId, postId);
+      const editResult = await PostsService.reqPostEditData(data, userId, postId);
       if (!editResult.success) throw new Error(editResult.msg);
       res.status(StatusCodes.OK).json({ message: OK_UPDATE_POST });
     } else {
@@ -114,7 +111,7 @@ const postDelRequest = async (req: Request, res: Response) => {
   try {
     const postId = parseInt(req.params.id) as number;
     if (req.user?.isLoggedIn) {
-      const delResult = await postsService.reqPostDelData(postId);
+      const delResult = await PostsService.reqPostDelData(postId);
       if (!delResult.success) throw new Error(delResult.msg);
       res.status(StatusCodes.OK).json({ message: OK_DELETE_POST });
     } else {

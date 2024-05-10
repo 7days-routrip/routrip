@@ -7,19 +7,20 @@ import { Likes } from "@/models/likes.model";
 import { Posts } from "@/models/posts.model";
 import { Users } from "@/models/users.model";
 import { getOffset, setAreaType } from "@/utils/posts.utils";
-import { iPageDataProps, iSearchDataProps } from "@/types/posts.types";
+import { iSearchDataProps } from "@/types/posts.types";
 
 export const getAllPosts = async (
-  area: string,
-  pageData?: iPageDataProps,
+  pages?: number,
+  area?: string,
+  userId?: number,
   sort?: string,
   searchData?: iSearchDataProps,
   type?: string,
 ) => {
   const postsRepo = AppDataSource.getRepository(Posts);
   try {
-    const offset: number = await getOffset(pageData);
-    const areaType = await setAreaType(area);
+    const offset = await getOffset(pages as number);
+    const areaType = await setAreaType(area as string);
     const result = await postsRepo
       .createQueryBuilder("posts")
       .select([
@@ -34,8 +35,13 @@ export const getAllPosts = async (
       .leftJoin(Users, "us", "us.id = posts.userId")
       .leftJoin(Journeys, "jn", "jn.id = posts.journeyId")
       .leftJoin(Countries, "coun", "coun.id = posts.countryId")
-      .leftJoin(Continents, "con", "con.id = posts.continentId")
-      .where("posts.countryId =:id", { id: areaType });
+      .leftJoin(Continents, "con", "con.id = posts.continentId");
+
+    if (area) {
+      await result.where("posts.countryId =:id", { id: areaType });
+    } else if (userId) {
+      await result.where("posts.userId =:id", { id: userId });
+    }
     if (searchData?.filter) {
       await result.andWhere("country like :filter", { filter: `%${searchData.filter}%` });
     } else if (searchData?.keyword) {
@@ -52,13 +58,14 @@ export const getAllPosts = async (
       await result.orderBy({ likesNum: "DESC", "posts.id": "DESC" });
     }
     if (type && type == "list") {
-      return await result.limit(pageData?.limit).offset(offset).getRawMany();
+      return await result.limit(8).offset(offset).getRawMany();
     } else {
       return await result.getCount();
     }
   } catch (err) {
+    console.log(err);
     return null;
   }
 };
-const postsRepository = { getAllPosts };
-export default postsRepository;
+const PostsRepository = { getAllPosts };
+export default PostsRepository;

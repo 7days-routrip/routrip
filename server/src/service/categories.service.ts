@@ -26,6 +26,6 @@ const reqCategoryList = async () => {
   return responseData;
 };
 
-const categoriesService = { reqCategoryList };
+const CategoriesService = { reqCategoryList };
 
-export default categoriesService;
+export default CategoriesService;

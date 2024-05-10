@@ -1,8 +1,11 @@
-import { getUserListDataRequest } from "@/controller/mypages.ctl";
+import MypagesController from "@/controller/mypages.ctl";
+import { authenticateUser } from "@/middlewares/authentication";
 import express from "express";
 const router = express.Router();
 router.use(express.json());
 
-router.route("/list").get(getUserListDataRequest);
+router.get("/comments", authenticateUser, MypagesController.commentUserAllList);
+router.get("/posts", authenticateUser, MypagesController.postUserAllList);
+router.get("/total-data-quantity", authenticateUser, MypagesController.userTotalData);
 
 export default router;

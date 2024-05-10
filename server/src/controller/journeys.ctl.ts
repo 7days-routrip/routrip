@@ -7,7 +7,7 @@ const getJourneysList = async (req: Request, res: Response) => {
   if (!user) throw new Error("사용자 정보가 없습니다.\n로그인이 필요한 서비스입니다.");
 
   try {
-    const journeys = await JourneysService.getJourneysList(user.id);
+    const journeys = await JourneysService.getJourneysList(user.id as number);
 
     res.status(200).json(journeys);
   } catch (error: any) {
@@ -20,5 +20,4 @@ const getJourneysList = async (req: Request, res: Response) => {
 const JourneysController = {
   getJourneysList,
 };
-
 export default JourneysController;

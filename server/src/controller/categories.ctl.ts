@@ -1,11 +1,11 @@
 import { NOT_FOUND_CATEGORY } from "@/constants/message";
-import categoriesService from "@/service/categories.service";
+import CategoriesService from "@/service/categories.service";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 const categoryAllListRequest = async (req: Request, res: Response) => {
   try {
-    const listResult = await categoriesService.reqCategoryList();
+    const listResult = await CategoriesService.reqCategoryList();
     if (!listResult) throw new Error("not found");
     res.status(StatusCodes.OK).json(listResult);
   } catch (err) {
@@ -15,5 +15,5 @@ const categoryAllListRequest = async (req: Request, res: Response) => {
   }
 };
 
-const categoriesController = { categoryAllListRequest };
-export default categoriesController;
+const CategoriesController = { categoryAllListRequest };
+export default CategoriesController;

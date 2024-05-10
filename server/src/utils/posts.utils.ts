@@ -1,7 +1,5 @@
-import { iPageDataProps } from "@/types/posts.types";
-
-export const getOffset = async (pageData?: iPageDataProps) => {
-  return typeof pageData === "undefined" ? 0 : pageData?.pages * pageData?.limit - pageData?.limit;
+export const getOffset = async (pages: number) => {
+  return typeof pages === "undefined" ? 0 : pages * 8 - 8;
 };
 
 export const setAreaType = async (area: string) => {

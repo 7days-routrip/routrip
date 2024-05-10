@@ -17,23 +17,19 @@ const getJourneysList = async (userId: number) => {
 };
 
 const getJourneyData = async (journeyId: number) => {
-  const repo = AppDataSource.getRepository(Journeys);
-  try {
-    const result = await repo
-      .createQueryBuilder("j")
-      .select([
-        "j.id, rd.day, ds.seq, place.name, place.address, place.tel, place.id as placeId, place.openingHours, place.img, place.location",
-      ])
-      .leftJoin(Routes, "rt", "rt.id = j.routeId")
-      .leftJoin(RouteDays, "rd", "rd.routeId = rt.id")
-      .leftJoin(DaySeq, "ds", "ds.routeDayId = rd.id")
-      .leftJoin(Places, "place", "place.id = ds.placeId")
-      .where("j.id =:id", { id: journeyId })
-      .getRawMany();
-    return result;
-  } catch (err) {
-    return null;
-  }
+  const result = await journeysRepository
+    .createQueryBuilder("jn")
+    .select([
+      "jn.id, jn.title, jn.startDate, jn.endDate, rd.day, ds.seq, place.id as placeId, place.name, place.address, place.openingHours, place.tel, place.location, place.img",
+    ])
+    .leftJoin(Routes, "rt", "rt.id = jn.routeId")
+    .leftJoin(RouteDays, "rd", "rd.routeId = rt.id")
+    .leftJoin(DaySeq, "ds", "ds.routeDayId = rd.id")
+    .leftJoin(Places, "place", "place.id = ds.placeId")
+    .where("jn.id =:journeyId", { journeyId })
+    .getRawMany();
+
+  return result;
 };
 
 const JourneysRepository = {

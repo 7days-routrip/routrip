@@ -66,7 +66,6 @@ const reqLikesList = async (userId: number) => {
   );
 
   if (likesResult.length === 0) return { success: false, msg: "find not list" };
-  console.log("return", returnData);
   return { success: true, data: returnData };
 };
 
@@ -119,7 +118,7 @@ const getTotalComment = async (postId: number) => {
   return await commentRepo.count({ where: { post: { id: postId } } });
 };
 
-const likesService = {
+const LikesService = {
   reqPicksList,
   reqPicksInsertData,
   reqPicksDeleteData,
@@ -128,4 +127,4 @@ const likesService = {
   reqLikesInsertData,
   reqLikesDeleteData,
 };
-export default likesService;
+export default LikesService;
