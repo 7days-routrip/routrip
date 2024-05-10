@@ -1,6 +1,6 @@
 import { AppDataSource } from "@/config/ormSetting";
 import { Users } from "@/models/users.model";
-import userRepository from "@/repository/users.repo";
+import UserRepository from "@/repository/users.repo";
 import { SALT_ROUND } from "@/settings";
 import { iPatchData, iResetPassword, iUserResetPasswordData } from "@/types/users.types";
 import { getNewAccessToken, getNewRefreshToken } from "@/utils/token";
@@ -10,11 +10,10 @@ import bcrypt from "bcrypt";
 const userRepo = AppDataSource.getRepository(Users);
 
 const login = async (email: string, password: string) => {
-  const user = await userRepository.findByEmail(email);
+  const user = await UserRepository.findByEmail(email);
   if (user && (await bcrypt.compare(password, user.password))) {
     const accessToken = getNewAccessToken(user.id, user.nickName);
     const refreshToken = getNewRefreshToken(user.id, user.nickName);
-    console.log(accessToken, refreshToken);
 
     return { user, accessToken, refreshToken };
   }
@@ -25,7 +24,7 @@ const login = async (email: string, password: string) => {
 const join = async (email: string, password: string, nickName: string) => {
   const hashedPassword = await bcrypt.hash(password, SALT_ROUND);
 
-  await userRepository.create(email, hashedPassword, nickName);
+  await UserRepository.create(email, hashedPassword, nickName);
 };
 
 const reqUsersUpdate = async (data: iPatchData, userId: number) => {
@@ -54,14 +53,14 @@ const reqUserPasswordUpdate = async (data: iUserResetPasswordData, userId: numbe
 };
 
 const checkEmail = async (email: string) => {
-  const user = await userRepository.findByEmail(email);
+  const user = await UserRepository.findByEmail(email);
 
   if (user) return { success: true, msg: "사용자가 존재합니다." };
   return { success: false, msg: "존재하지 않는 사용자 입니다." };
 };
 
 const checkNickname = async (nickname: string) => {
-  const user = await userRepository.findByNickname(nickname);
+  const user = await UserRepository.findByNickname(nickname);
   if (user) throw new Error("이미 존재하는 닉네임입니다.");
 };
 
@@ -76,7 +75,7 @@ const findUser = async (userId: number) => {
   return await userRepo.findOne({ where: { id: userId } });
 };
 
-const usersService = {
+const UsersService = {
   join,
   login,
   checkEmail,
@@ -89,4 +88,4 @@ const usersService = {
   reqUserPasswordUpdate,
 };
 
-export default usersService;
+export default UsersService;

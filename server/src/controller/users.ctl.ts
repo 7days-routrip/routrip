@@ -8,7 +8,7 @@ import {
   OK_RESET_REQUEST,
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
-import usersService from "@/service/users.service";
+import UsersService from "@/service/users.service";
 import { iPatchData } from "@/types/users.types";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -17,7 +17,7 @@ const join = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password, nickname } = req.body;
 
   try {
-    await usersService.join(email, password, nickname);
+    await UsersService.join(email, password, nickname);
   } catch (error) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       message: "잘못된 요청입니다.",
@@ -33,7 +33,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
 
   try {
-    const results = await usersService.login(email, password);
+    const results = await UsersService.login(email, password);
     // 토큰 전달
     res.setHeader("Authorization", `Bearer ${results.accessToken}`);
     res.cookie("refresh_token", results.refreshToken, {
@@ -55,7 +55,7 @@ const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.body;
 
   try {
-    const checkResult = await usersService.checkEmail(email);
+    const checkResult = await UsersService.checkEmail(email);
     if (checkResult.success) throw new Error(checkResult.msg);
     res.status(StatusCodes.OK).json({
       message: "사용 가능한 이메일입니다.",
@@ -71,7 +71,7 @@ const checkNickname = async (req: Request, res: Response, next: NextFunction) =>
   const { nickname } = req.body;
 
   try {
-    await usersService.checkNickname(nickname);
+    await UsersService.checkNickname(nickname);
     res.status(StatusCodes.OK).json({
       message: "사용 가능한 닉네임입니다.",
     });
@@ -87,7 +87,7 @@ const userInfoUpdateRequest = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
       const userId = req.user.id as number;
-      const updateResult = await usersService.reqUsersUpdate(patchData, userId);
+      const updateResult = await UsersService.reqUsersUpdate(patchData, userId);
       if (!updateResult.success) throw new Error(updateResult.msg);
       res.status(StatusCodes.OK).json({ message: DATA_UPDATE_SUCCESSED });
     } else {
@@ -106,7 +106,7 @@ const userInfoUpdateRequest = async (req: Request, res: Response) => {
 const resetRequest = async (req: Request, res: Response) => {
   const data = req.body;
   try {
-    const checkResult = await usersService.checkEmail(data.email);
+    const checkResult = await UsersService.checkEmail(data.email);
     if (!checkResult.success) throw new Error(checkResult.msg);
     res.status(StatusCodes.OK).json({ message: OK_RESET_REQUEST });
   } catch (err) {
@@ -119,7 +119,7 @@ const resetRequest = async (req: Request, res: Response) => {
 const resetPasswordRequest = async (req: Request, res: Response) => {
   const data = req.body;
   try {
-    const resetResult = await usersService.reqPasswordUpate(data);
+    const resetResult = await UsersService.reqPasswordUpate(data);
     if (!resetResult.success) throw new Error(resetResult.msg);
     res.status(StatusCodes.OK).json({ message: OK_RESET_PASSWORD });
   } catch (err) {
@@ -135,13 +135,11 @@ const userResetPassword = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
       const userId = req.user.id as number;
-      const getUserData = await usersService.findUser(userId);
-      console.log(getUserData);
-      if (!getUserData) throw new Error("login required");
-      const compareReuslt = await usersService.comparePassword(data.originPassword, getUserData.password);
-      console.log(compareReuslt);
-      if (!compareReuslt) throw new Error();
-      const resetResult = await usersService.reqUserPasswordUpdate(data, userId);
+      const getUserData = await UsersService.findUser(userId);
+      if (!getUserData) throw new Error("user does not exist");
+      const compareReuslt = await UsersService.comparePassword(data.originPassword, getUserData.password);
+      if (!compareReuslt) throw new Error("wrong password");
+      const resetResult = await UsersService.reqUserPasswordUpdate(data, userId);
       if (!resetResult?.success) throw new Error(resetResult?.msg);
       res.status(StatusCodes.OK).json({ message: OK_RESET_PASSWORD });
     } else {
@@ -156,7 +154,7 @@ const userResetPassword = async (req: Request, res: Response) => {
     }
   }
 };
-const usersController = {
+const UsersController = {
   join,
   login,
   checkEmail,
@@ -167,4 +165,4 @@ const usersController = {
   userResetPassword,
 };
 
-export default usersController;
+export default UsersController;

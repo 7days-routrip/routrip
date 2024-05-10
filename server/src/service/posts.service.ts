@@ -2,8 +2,8 @@ import { AppDataSource } from "@/config/ormSetting";
 import { Comments } from "@/models/comments.model";
 import { Likes } from "@/models/likes.model";
 import { Posts } from "@/models/posts.model";
-import postsRepository from "@/repository/posts.repo";
-import { iPageDataProps, iPostsInsertProps, iSearchDataProps, iSpotData, iSpots } from "@/types/posts.types";
+import PostsRepository from "@/repository/posts.repo";
+import { iPostsInsertProps, iSearchDataProps, iSpotData, iSpots } from "@/types/posts.types";
 import { setDateFromat } from "@/utils/posts.utils";
 import journeysRepository from "@/repository/journeys.repo";
 
@@ -28,13 +28,15 @@ const reqPostInsertData = async (data: iPostsInsertProps, userId: number) => {
   return { success: true };
 };
 const reqPostsList = async (
-  area: string,
-  pageData: iPageDataProps,
+  pages: number,
+  area?: string,
+  userId?: number,
   sort?: string,
   searchData?: iSearchDataProps,
   type?: string,
 ) => {
-  const postsResult = await postsRepository.getAllPosts(area, pageData, sort, searchData, type);
+  const postsResult = await PostsRepository.getAllPosts(pages, area, userId, sort, searchData, type);
+  console.log(postsResult);
   if (!postsResult || typeof postsResult === null) return { success: false, msg: "empty list of posts" };
   if (typeof postsResult !== "number") {
     const responsePostsData = await Promise.all(
@@ -176,8 +178,8 @@ const getPostComments = async (postId: number) => {
 const getPostImg = (content: string) => {
   return undefined;
 };
-const postsService = { reqPostInsertData, reqPostsList, reqPostData, reqPostEditData, reqPostDelData };
-export default postsService;
+const PostsService = { reqPostInsertData, reqPostsList, reqPostData, reqPostEditData, reqPostDelData };
+export default PostsService;
 
 // export const getImageFromContent = async (contents: string) => {
 //   const reg = /<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/g;

@@ -8,10 +8,6 @@ export interface iPostsInsertProps {
   journeyId: number;
   contents: string;
 }
-export interface iPageDataProps {
-  pages: number;
-  limit: number;
-}
 export interface iSearchDataProps {
   filter: string;
   keyword: string;

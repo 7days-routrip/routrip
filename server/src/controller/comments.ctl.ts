@@ -1,12 +1,12 @@
 import { NOT_FOUND_COMMENTS } from "@/constants/message";
-import commentsSevice from "@/service/comments.service";
+import CommentsSevice from "@/service/comments.service";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
 const postAllCommentsList = async (req: Request, res: Response) => {
   const postId = parseInt(req.params.postId);
   try {
-    const commentsResult = await commentsSevice.reqCommentsList(postId);
+    const commentsResult = await CommentsSevice.reqPostCommentsList(postId);
     if (!commentsResult.success) throw new Error(commentsResult.msg);
     res.status(StatusCodes.OK).json(commentsResult.data);
   } catch (err) {
@@ -17,5 +17,5 @@ const postAllCommentsList = async (req: Request, res: Response) => {
   }
 };
 
-const commentsController = { postAllCommentsList };
-export default commentsController;
+const CommentsController = { postAllCommentsList };
+export default CommentsController;
