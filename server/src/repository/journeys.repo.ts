@@ -5,7 +5,11 @@ import { Request, Response } from "express";
 const journeysRepository = AppDataSource.getRepository(Journeys);
 
 const getJourneysList = async (userId: number) => {
-  //journeysRepository.find({ userId });
+  return journeysRepository.find({
+    where: {
+      user: { id: userId },
+    },
+  });
 };
 
 const JourneysRepository = {
