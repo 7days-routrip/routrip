@@ -12,8 +12,17 @@ const getJourneysList = async (userId: number) => {
   });
 };
 
+const getJourneyDetail = async (journeyId: number) => {
+  return journeysRepository.findOne({
+    where: {
+      id: journeyId,
+    },
+  });
+}
+
 const JourneysRepository = {
   getJourneysList,
+  getJourneyDetail,
   journeysRepository,
 };
 

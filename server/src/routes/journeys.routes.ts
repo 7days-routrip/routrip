@@ -5,7 +5,7 @@ import express from "express";
 const router = express.Router();
 router.use(express.json());
 
-router.get("/:id");
+router.get("/:id", authenticateUser, JourneysController.getJourneyDetail);
 router.get("/", authenticateUser, JourneysController.getJourneysList);
 router.post("/");
 router.put("/:id");

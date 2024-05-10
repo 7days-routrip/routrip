@@ -8,8 +8,16 @@ const getJourneysList = async (userId: number) => {
   return results;
 };
 
+const getJourneyDetail = async (journeyId: number) => {
+  const result = await JourneysRepository.getJourneyDetail(journeyId);
+  if (!result) throw new Error("일정 정보가 없습니다.");
+
+  return result;
+}
+
 const JourneysService = {
   getJourneysList,
+  getJourneyDetail,
 };
 
 export default JourneysService;
