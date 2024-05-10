@@ -23,6 +23,3 @@ export interface iUserResetPasswordData {
   originPassword: string;
   newPassword: string;
 }
-export interface iUserResetCompareProps {
-  password: string;
-}

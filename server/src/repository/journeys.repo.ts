@@ -31,6 +31,7 @@ const getJourneyDetail = async (journeyId: number) => {
 };
 
 const JourneysRepository = {
+  getJourneyData,
   getJourneysList,
   getJourneyDetail,
   journeysRepository,

@@ -1,6 +1,7 @@
 import { Schedule as ISchedule } from "@/models/schedule.model";
 import styled from "styled-components";
 import { CardContentStyle, CardImageStyle, CardStyle, ViewMode } from "./postCard";
+import { Link } from "react-router-dom";
 
 interface Props {
   scheduleProps: ISchedule;
@@ -10,7 +11,9 @@ interface Props {
 const ScheduleCard = ({ scheduleProps, view }: Props) => {
   return (
     <ScheduleCardStyle $view={view}>
-      <CardImageStyle $image={scheduleProps.postImg} $view={view} />
+      <Link to={`/journeys/${scheduleProps.id}`}>
+        <CardImageStyle $image={scheduleProps.thumbnail} $view={view} />
+      </Link>
       <CardContentStyle>
         <h3 className="card-title">{scheduleProps.title}</h3>
         <p className="card-date">{scheduleProps.date}</p>
