@@ -1,4 +1,4 @@
-export interface iCreatePostProps {
+export interface iPostsInsertProps {
   title: string;
   startDate: string;
   endDate: string;
@@ -7,7 +7,6 @@ export interface iCreatePostProps {
   totalExpense: number;
   journeyId: number;
   contents: string;
-  author?: string;
 }
 export interface iPageDataProps {
   pages: number;
@@ -23,8 +22,11 @@ export interface iPagination {
   totalPosts?: number;
 }
 
+export interface iSpots {
+  day: number;
+  spot: iSpotData[];
+}
 export interface iSpotData {
-  seq: number;
   placeId: string;
   tel: string;
   name: string;

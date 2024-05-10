@@ -9,7 +9,7 @@ router.post("/login", usersController.login);
 router.post("/check/email", usersController.checkEmail);
 router.post("/check/nickname", usersController.checkNickname);
 
-router.patch("/me", authenticateUser, usersController.patchUserInfoRequest);
+router.patch("/me", authenticateUser, usersController.userInfoUpdateRequest);
 router.route("/reset").post(usersController.resetRequest).patch(usersController.resetPasswordRequest);
 router.patch("/me/reset", authenticateUser, usersController.userResetPassword);
 

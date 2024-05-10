@@ -1,9 +1,8 @@
-import { getCategoryListRequest } from "@/controller/categories.ctl";
-import { getUserListDataRequest } from "@/controller/mypages.ctl";
+import categoriesController from "@/controller/categories.ctl";
 import express from "express";
 const router = express.Router();
 router.use(express.json());
 
-router.get("/", getCategoryListRequest);
+router.get("/", categoriesController.categoryAllListRequest);
 
 export default router;

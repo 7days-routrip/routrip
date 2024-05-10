@@ -1,1 +1,2 @@
-import { Request, Response } from "express";
+const journeysService = {};
+export default journeysService;

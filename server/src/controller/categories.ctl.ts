@@ -1,31 +1,19 @@
-import { AppDataSource } from "@/config/ormSetting";
-import { Continents } from "@/models/continents.model";
-import { Countries } from "@/models/countries.model";
-import { getcontinentList } from "@/repository/categories.repo";
+import { NOT_FOUND_CATEGORY } from "@/constants/message";
+import categoriesService from "@/service/categories.service";
 import { Request, Response } from "express";
-export const getCategoryListRequest = async (req: Request, res: Response) => {
-  try {
-    const repo = AppDataSource.getRepository(Continents);
-    const ctrRepo = AppDataSource.getRepository(Countries);
-    const continentList = await repo.find();
-    const countryList = await ctrRepo.find({ relations: { continent: true } });
-    const responseData = continentList.map((value) => {
-      const countrydata = [];
-      for (let i = 0; i < countryList.length; i++) {
-        if (value.id == countryList[i].continent.id) {
-          countrydata.push({
-            id: countryList[i].id,
-            name: countryList[i].name,
-          });
-        }
-      }
-      return {
-        id: value.id,
-        name: value.name,
-        country: countrydata,
-      };
-    });
+import { StatusCodes } from "http-status-codes";
 
-    res.status(200).json(responseData);
-  } catch (err) {}
+const categoryAllListRequest = async (req: Request, res: Response) => {
+  try {
+    const listResult = await categoriesService.reqCategoryList();
+    if (!listResult) throw new Error("not found");
+    res.status(StatusCodes.OK).json(listResult);
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "not found") return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_CATEGORY });
+    }
+  }
 };
+
+const categoriesController = { categoryAllListRequest };
+export default categoriesController;

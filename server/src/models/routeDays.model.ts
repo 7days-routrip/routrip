@@ -6,7 +6,7 @@ export class RouteDays {
   @PrimaryGeneratedColumn()
   id!: number;
 
-  @ManyToOne((type) => Routes, { lazy: true })
+  @ManyToOne((type) => Routes)
   route!: Promise<Routes>;
 
   @Column("integer", { nullable: true })
