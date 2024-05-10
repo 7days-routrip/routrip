@@ -54,9 +54,9 @@ export const useAuth = () => {
 
   const userJoin = async (data: JoinProps) => {
     try {
-      const joinRes = await authJoin(data);
+      const res = await authJoin(data);
 
-      showConfirm(joinRes.message, () => {
+      showConfirm(res.message, () => {
         navigate("/login");
       });
     } catch (error: any) {
@@ -75,17 +75,18 @@ export const useAuth = () => {
 
   const userPasswordReset = async (data: LoginProps) => {
     try {
-      const passwordResetRes = await authReset(data);
-      return passwordResetRes;
+      const res = await authReset(data);
+      showAlert(`${res.data.message}`, "logo");
+      return;
     } catch (error: any) {
-      // 비밀번호 리셋 실패
+      return inputErrorStatusHandler(error, [400]);
     }
   };
 
   const userNicknameCheck = async (nickname: string) => {
     try {
-      const checkNicknameRes = await isNicknameUnique({ nickname });
-      return checkNicknameRes;
+      const res = await isNicknameUnique({ nickname });
+      return res;
     } catch (error: any) {
       return inputErrorStatusHandler(error, [400, 409]);
     }
@@ -93,8 +94,8 @@ export const useAuth = () => {
 
   const userEmailCheck = async (email: string) => {
     try {
-      const checkEmailRes = await isEmailUnique({ email });
-      return checkEmailRes;
+      const res = await isEmailUnique({ email });
+      return res;
     } catch (error: any) {
       return inputErrorStatusHandler(error, [400, 409]);
     }
@@ -107,8 +108,8 @@ export const useAuth = () => {
 
   const userUpdate = async (data: profileUpdateProp) => {
     try {
-      const userUpdateRes = await profileUpdate(data);
-      return userUpdateRes;
+      const res = await profileUpdate(data);
+      return res;
     } catch (error) {
       //  실패
     }
