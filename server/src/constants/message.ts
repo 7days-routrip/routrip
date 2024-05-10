@@ -8,6 +8,9 @@ export const BE_WRITED_EMAIL = "이메일을 작성해야 합니다.";
 export const OK_RESET_PASSWORD = "비밀번호 변경이 완료되었습니다.";
 export const BAD_REQUEST_RESET_PASSWORD = "비밀번호 변경이 실패했습니다.";
 export const BAD_REQUEST_ORIGIN_PASSWORD = "현재비밀번호가 일치하지 않습니다.";
+export const OK_LOGOUT = "로그아웃 되었습니다.";
+export const OK_WITHDRAW = "탈퇴 처리되었습니다.";
+export const BAD_REQUEST_WITHDRAW = "탈퇴를 실패했습니다.";
 //공용
 export const NOT_FOUND_DATA = "존재하지 않는 페이지 입니다.";
 //카테고리
