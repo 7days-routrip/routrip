@@ -245,7 +245,8 @@ const SchedulePage = () => {
               일정 등록
             </Button>
             <div className="days">
-              {duration > 0 && dayPlaces.map((data, i) => <DaySchedule key={i} dayIdx={i} schedulePlaces={data} />)}
+              {duration > 0 &&
+                dayPlaces.map((data, i) => <DaySchedule key={i} dayIdx={i} schedulePlaces={data} isDragDrop={true} />)}
             </div>
           </div>
         </div>

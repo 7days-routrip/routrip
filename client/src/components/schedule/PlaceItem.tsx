@@ -11,8 +11,9 @@ interface Props {
   data: SelectedPlace | Place;
   buttonTitle: React.ReactNode;
   isActive?: boolean;
+  disabled?: boolean;
 }
-const PlaceItem = ({ data, buttonTitle, isActive = false }: Props) => {
+const PlaceItem = ({ data, buttonTitle, isActive = false, disabled = false }: Props) => {
   const { addPlace, removePlace } = useAddPlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
   const { removeDayPlace } = useDayPlaceStore();
@@ -43,9 +44,11 @@ const PlaceItem = ({ data, buttonTitle, isActive = false }: Props) => {
         <div className="place-title">{data.placeName}</div>
         <div className="place-address">{data.address}</div>
       </div>
-      <button className="place-list-btn" onClick={handleOnClick}>
-        {buttonTitle}
-      </button>
+      {!disabled && (
+        <button className="place-list-btn" onClick={handleOnClick}>
+          {buttonTitle}
+        </button>
+      )}
     </PlaceItemStyle>
   );
 };

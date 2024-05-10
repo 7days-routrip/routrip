@@ -10,9 +10,11 @@ import { useMapStore } from "@/stores/mapStore";
 interface Props {
   dayIdx: number;
   schedulePlaces: SelectedPlace[];
+  isDragDrop?: boolean;
+  disabled?: boolean;
 }
 
-const DaySchedule = ({ dayIdx, schedulePlaces }: Props) => {
+const DaySchedule = ({ dayIdx, schedulePlaces, isDragDrop = false, disabled = false }: Props) => {
   const { setMarkerType } = useShowMarkerTypeStore();
   const { googleMap, updateMapBounds } = useMapStore();
 
@@ -21,31 +23,46 @@ const DaySchedule = ({ dayIdx, schedulePlaces }: Props) => {
     updateMapBounds(googleMap, schedulePlaces);
   }, [dayIdx, schedulePlaces]);
 
+  if (isDragDrop) {
+    return (
+      <DayScheduleStyle>
+        <div className="day-box" onClick={handleOnClickDay}>
+          Day {dayIdx + 1}
+        </div>
+        <Droppable droppableId={`day-schedule-index${dayIdx}`}>
+          {(provided) => (
+            <div className="day-places-container" {...provided.droppableProps} ref={provided.innerRef}>
+              {schedulePlaces.map((item, i) => (
+                <Draggable key={item.uuid} draggableId={item.uuid.toString()} index={i}>
+                  {(provided, snapshot) => (
+                    <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
+                      <PlaceItem
+                        data={item}
+                        buttonTitle={<Icons.TrashIcon />}
+                        isActive={snapshot.isDragging ? true : false}
+                      />
+                    </div>
+                  )}
+                </Draggable>
+              ))}
+              {provided.placeholder}
+            </div>
+          )}
+        </Droppable>
+      </DayScheduleStyle>
+    );
+  }
+
   return (
     <DayScheduleStyle>
       <div className="day-box" onClick={handleOnClickDay}>
         Day {dayIdx + 1}
       </div>
-      <Droppable droppableId={`day-schedule-index${dayIdx}`}>
-        {(provided) => (
-          <div className="day-places-container" {...provided.droppableProps} ref={provided.innerRef}>
-            {schedulePlaces.map((item, i) => (
-              <Draggable key={item.uuid} draggableId={item.uuid.toString()} index={i}>
-                {(provided, snapshot) => (
-                  <div ref={provided.innerRef} {...provided.draggableProps} {...provided.dragHandleProps}>
-                    <PlaceItem
-                      data={item}
-                      buttonTitle={<Icons.TrashIcon />}
-                      isActive={snapshot.isDragging ? true : false}
-                    />
-                  </div>
-                )}
-              </Draggable>
-            ))}
-            {provided.placeholder}
-          </div>
-        )}
-      </Droppable>
+      <div className="day-places-container">
+        {schedulePlaces.map((item) => (
+          <PlaceItem key={item.uuid} data={item} buttonTitle={<Icons.TrashIcon />} disabled={true} />
+        ))}
+      </div>
     </DayScheduleStyle>
   );
 };
