@@ -6,7 +6,7 @@ export class DaySeq {
   @PrimaryGeneratedColumn()
   id!: string;
 
-  @ManyToOne((type) => RouteDays, { lazy: true })
+  @ManyToOne((type) => RouteDays)
   routeDay!: Promise<RouteDays>;
 
   @Column({ type: "integer" })

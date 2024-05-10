@@ -34,20 +34,20 @@ const authorizeLikes = async (req: Request, res: Response, next: NextFunction) =
   try {
     if (req.user?.isLoggedIn) {
       const postId: number = parseInt(req.params.id);
-      const userId: number = req.user.id;
-      let repo = setRepo("likes") as Repository<Likes>;
-      const findData = await repo
-        ?.createQueryBuilder("likes")
-        .select(["likes.userId, likes.postId"])
-        .where("postId = :id", { id: postId })
-        .getRawMany();
-      let isChecked = false;
-      findData.map((item) => {
-        if (item.userId === userId) {
-          isChecked = true;
-        }
+      const userId = req.user.id as number;
+
+      //중복체크
+      const postRepo = setRepo("posts") as Repository<Posts>;
+      const postCheck = await postRepo.findOne({
+        where: { id: postId },
       });
-      if (!findData || isChecked === false) throw new Error("잘못된 접근입니다.");
+      if (postCheck === null) throw new Error("post does not exist");
+      //
+      const likeRepo = setRepo("likes") as Repository<Likes>;
+      const findData = await likeRepo.find({
+        where: { post: { id: postId }, user: { id: userId } },
+      });
+      if (!findData) throw new Error("잘못된 접근입니다.");
       next();
     } else {
       throw new Error("user does not login");
@@ -64,6 +64,11 @@ const authorizeLikes = async (req: Request, res: Response, next: NextFunction) =
           message: UNAUTHORIZED_NOT_LOGIN,
         });
       }
+      if (err.message === "post does not exist") {
+        return res.status(StatusCodes.NOT_FOUND).json({
+          message: NOT_FOUND_POST,
+        });
+      }
     }
   }
 };
@@ -71,7 +76,7 @@ const authorizePicks = async (req: Request, res: Response, next: NextFunction) =
   try {
     if (req.user?.isLoggedIn) {
       const placeId: string = req.params.id;
-      const userId: number = req.user.id;
+      const userId = req.user.id as number;
       let repo = (await setRepo("picks")) as Repository<Picks>;
       const findData = await repo
         ?.createQueryBuilder("picks")
@@ -109,7 +114,7 @@ const authorization = async (req: Request, res: Response, next: NextFunction) =>
     if (req.user?.isLoggedIn) {
       console.log(req.user);
       const itemId: number = parseInt(req.params.id);
-      const userId: number = req.user.id;
+      const userId = req.user.id as number;
       let repo;
       if (req.baseUrl.includes("journeys")) {
         repo = (await setRepo("journeys")) as Repository<Journeys>;
