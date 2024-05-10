@@ -86,6 +86,9 @@ export const useAddNewPlace = (data: Place) => {
         showAlert("해당 장소에 대한 정보를 불러올 수 없습니다.\n다른 장소를 등록해주세요.", "error");
       } else if (err.type === errorType.addNewPlaceApiError) {
         showAlert("해당 장소를 등록하는데 문제가 발생했습니다.\n잠시 후에 다시 시도해주세요.", "error");
+      } else {
+        showAlert("알 수 없는 오류가 발생했습니다.\n문제가 지속될 경우 고객센터로 문의해주세요.", "error");
+        console.error(err);
       }
     },
   });
