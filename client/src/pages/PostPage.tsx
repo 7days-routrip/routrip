@@ -5,6 +5,7 @@ import PostCard from "@/components/common/postCard";
 import { Post } from "@/models/post.model";
 import { useState } from "react";
 import { ViewMode } from "@/components/common/postCard";
+import { Link } from "react-router-dom";
 
 const posts: Post[] = [
   {
@@ -126,7 +127,9 @@ const PostPage = () => {
         <hr></hr>
         <div className="post">
           {sortedPosts.map((post) => (
-            <PostCard key={post.id} PostProps={post} view={view} />
+            <StyledLink key={post.id} to={`/post/${post.id}`}>
+              <PostCard key={post.id} PostProps={post} view={view} />
+            </StyledLink>
           ))}
         </div>
       </div>
@@ -179,6 +182,11 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
     gap: 14px;
     flex-wrap: wrap;
   }
+`;
+
+const StyledLink = styled(Link)`
+  text-decoration: none;
+  color: inherit;
 `;
 
 export default PostPage;
