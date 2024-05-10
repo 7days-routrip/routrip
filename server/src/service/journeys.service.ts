@@ -8,8 +8,50 @@ const getJourneysList = async (userId: number) => {
   return results;
 };
 
+const getJourneyDetail = async (journeyId: number) => {
+  const result = await JourneysRepository.getJourneyDetail(journeyId);
+  if (!result.length) throw new Error("일정 정보를 찾을 수 없습니다.");
+
+  let days = [];
+  for (let i = 0; i <= result[result.length - 1].day; i++) {
+    // day n일차
+    let spots = [];
+    for (let j = 0; j < result.length; j++) {
+      // 해당 day의 seq 데이터
+      if (result[j].day === i) {
+        const [lat, lng] = result[j].location.split(", ");
+        spots.push({
+          id: result[j].placeId,
+          placeName: result[j].name,
+          address: result[j].address,
+          location: {
+            lat: lat,
+            lng: lng,
+          },
+          placeImg: result[j].img,
+        });
+      }
+    }
+    days.push({
+      day: i,
+      spots: spots,
+    });
+  }
+
+  const journey = {
+    id: result[0].id,
+    title: result[0].title,
+    startDate: result[0].startDate,
+    endDate: result[0].endDate,
+    days: days,
+  };
+
+  return journey;
+};
+
 const JourneysService = {
   getJourneysList,
+  getJourneyDetail,
 };
 
 export default JourneysService;
