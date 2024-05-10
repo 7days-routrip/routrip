@@ -9,6 +9,7 @@ import ProfileEditPage from "@/pages/ProfileEditPage";
 import ProfileResetPassword from "@/pages/ProfileResetPassword";
 import RestPage from "@/pages/ResetPassword";
 import ScheduleDetailPage from "@/pages/ScheduleDetailPage";
+import ScheduleEditPage from "@/pages/ScheduleEditPage";
 import SchedulePage from "@/pages/SchedulePage";
 import { createBrowserRouter } from "react-router-dom";
 
@@ -94,8 +95,21 @@ const routerArr = [
   {
     path: "/schedule/:id",
     element: (
-      <Layout isFull={true}>
+      <Layout>
         <ScheduleDetailPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/schedule/:id/edit",
+    element: (
+      <Layout isFull={true}>
+        <ScheduleEditPage />
       </Layout>
     ),
     errorElement: (
