@@ -7,7 +7,7 @@ import { useState } from "react";
 import { ViewMode } from "@/components/common/postCard";
 import { Link } from "react-router-dom";
 
-const posts: Post[] = [
+export const posts: Post[] = [
   {
     id: 1,
     title: "오션뷰를 보고 싶다면? 여기 !!",
@@ -19,10 +19,11 @@ const posts: Post[] = [
     commentsNum: "12",
     likesNum: "210",
     postsImg: "../../public/assets/images/logo-footer.png",
+    createdAt: "2024-04-01",
   },
   {
     id: 2,
-    title: "오션뷰를 보고 싶다면? 여기!",
+    title: "제주에서의 3일",
     date: "2024.03.12 ~ 2024.03.18",
     author: "여행조아",
     userProfile: "../../public/assets/images/logo-profile.png",
@@ -31,10 +32,11 @@ const posts: Post[] = [
     commentsNum: "12",
     likesNum: "190",
     postsImg: "../../public/assets/images/logo-footer.png",
+    createdAt: "2024-04-11",
   },
   {
     id: 3,
-    title: "오션뷰를 보고 싶다면? 여기!",
+    title: "가까운 해외, 일본!",
     date: "2024.03.09 ~ 2024.03.19",
     author: "여행조아",
     userProfile: "../../public/assets/images/logo-profile.png",
@@ -43,10 +45,11 @@ const posts: Post[] = [
     commentsNum: "12",
     likesNum: "240",
     postsImg: "../../public/assets/images/logo-footer.png",
+    createdAt: "2024-04-13",
   },
   {
     id: 4,
-    title: "오션뷰를 보고 싶다면? 여기!",
+    title: "최고의 휴양지",
     date: "2024.03.11 ~ 2024.03.20",
     author: "여행조아",
     userProfile: "../../public/assets/images/logo-profile.png",
@@ -55,10 +58,11 @@ const posts: Post[] = [
     commentsNum: "12",
     likesNum: "280",
     postsImg: "../../public/assets/images/logo-footer.png",
+    createdAt: "2024-05-05",
   },
   {
     id: 4,
-    title: "오션뷰를 보고 싶다면? 여기!",
+    title: "겨울에 떠나는 삿포로",
     date: "2024.03.11 ~ 2024.03.15",
     author: "여행조아",
     userProfile: "../../public/assets/images/logo-profile.png",
@@ -67,6 +71,7 @@ const posts: Post[] = [
     commentsNum: "12",
     likesNum: "120",
     postsImg: "../../public/assets/images/logo-footer.png",
+    createdAt: "2024-03-17",
   },
 ];
 interface PostPageStyleProps {
@@ -90,9 +95,7 @@ const PostPage = () => {
   const sortedPosts =
     sortOrder === "recent"
       ? [...posts].sort((a, b) => {
-          const dateA = a.date.split(" ~ ")[0];
-          const dateB = b.date.split(" ~ ")[0];
-          return new Date(dateB).getTime() - new Date(dateA).getTime();
+          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
         })
       : [...posts].sort((a, b) => {
           const likesA = parseInt(a.likesNum, 10);
