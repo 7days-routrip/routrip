@@ -72,7 +72,7 @@ const getDetail = async (id: string): Promise<boolean | PlaceDetailDTO> => {
 
 const search = async (keyword: string): Promise<boolean | SearchPlaceDTO[]> => {
   const places = await placeRepository
-    .createQueryBuilder()
+    .createQueryBuilder("places")
     .where("places.name LIKE :keyword", { keyword: `%${keyword}%` })
     .getMany();
 
