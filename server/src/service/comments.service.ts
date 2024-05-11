@@ -29,5 +29,14 @@ const addComment = async (userId: number, postId: number, content: string) => {
   return result;
 };
 
-const CommentsService = { reqPostCommentsList, reqCommentsList, addComment };
+const updateComment = async (userId: number, postId: number, content: string, commentId: number) => {
+  const comment = await commentRepo.findOne({ where: { id: commentId, post: { id: postId }, user: { id: userId } } });
+  console.log(comment);
+  if (!comment) throw new Error("잘못된 요청입니다.");
+  comment.content = content;
+  const result = await commentRepo.save(comment);
+  return result;
+};
+
+const CommentsService = { reqPostCommentsList, reqCommentsList, addComment, updateComment };
 export default CommentsService;
