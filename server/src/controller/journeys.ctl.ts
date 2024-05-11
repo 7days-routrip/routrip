@@ -12,12 +12,16 @@ const addJourney = async (req: Request, res: Response, next: NextFunction) => {
 
   const user = req.user;
 
-  let dummyUser = {
-    id: 6,
-    nickName: "jh",
-    isLoggedIn: true,
-  };
-  JourneysService.register(title, startDate, endDate, days, dummyUser);
+  try {
+    JourneysService.register(title, startDate, endDate, days, user);
+    return res.status(StatusCodes.OK).json({
+      message: "일정 등록이 완료되었습니다.",
+    });
+  } catch (e) {
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: "잘못된 요청입니다.",
+    });
+  }
 };
 
 const getJourneysList = async (req: Request, res: Response) => {

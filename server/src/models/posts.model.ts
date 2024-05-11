@@ -1,5 +1,5 @@
 import { Continents } from "@/models/continents.model";
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 
 import { Countries } from "./countries.model";
 import { Journeys } from "./journeys.model";
@@ -25,7 +25,8 @@ export class Posts {
   @Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
   createdAt!: string;
 
-  @Column("timestamp", { default: () => "ON UPDATE CURRENT_TIMESTAMP" })
+  @Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
+  @UpdateDateColumn()
   updatedAt!: string;
 
   @Column("integer")

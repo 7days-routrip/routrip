@@ -1,4 +1,4 @@
-import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn } from "typeorm";
+import { Column, Entity, JoinColumn, ManyToOne, PrimaryGeneratedColumn, UpdateDateColumn } from "typeorm";
 import { Posts } from "./posts.model";
 import { Users } from "./users.model";
 
@@ -13,7 +13,8 @@ export class Comments {
   @Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
   createdAt!: string;
 
-  @Column("timestamp", { default: () => "ON UPDATE CURRENT_TIMESTAMP" })
+  @Column("timestamp", { default: () => "CURRENT_TIMESTAMP" })
+  @UpdateDateColumn()
   updatedAt!: string;
 
   @ManyToOne((type) => Users, { eager: true })
