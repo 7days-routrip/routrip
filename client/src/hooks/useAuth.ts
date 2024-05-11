@@ -7,7 +7,7 @@ import {
   profileUpdate,
   profileUpdateProp,
 } from "@/apis/auth.api";
-import { setToken, useAuthStore } from "@/stores/authStore";
+import { useAuthStore } from "@/stores/authStore";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
 

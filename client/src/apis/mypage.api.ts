@@ -12,7 +12,7 @@ interface FetchProfileResponse {
 // 내 프로필
 export const fetchProfile = async () => {
   try {
-    const response = await httpClient.get<FetchProfileResponse>("api/mypages/total-data-quantity");
+    const response = await httpClient.get<FetchProfileResponse>("/mypages/total-data-quantity");
     return response.data;
   } catch (error) {
     // 에러 처리
@@ -33,50 +33,37 @@ export const fetchProfile = async () => {
 interface FetchMyPageParams {
   list: string;
 }
-interface FetchScheduleResponse {
-  schedules: Schedule[];
-}
+
 export const fetchMySchedule = async (params: FetchMyPageParams) => {
   try {
-    const response = await httpClient.get<FetchScheduleResponse>("api/mypages", { params: params.list });
-    return response.data;
+    const { data } = await httpClient.get<Schedule[]>("/mypages/journeys");
+    return data;
   } catch (error) {
     // 에러 처리
-    return {
-      schedules: [],
-    };
+    return [];
   }
 };
 
 // 내 게시글
-interface FetchPostsResponse {
-  posts: Post[];
-}
+
 export const fetchMyPosts = async (params: FetchMyPageParams) => {
   try {
-    const response = await httpClient.get<FetchPostsResponse>("api/mypages", { params: params.list });
-    return response.data;
+    const { data } = await httpClient.get<Post[]>("/mypages/posts");
+    return data;
   } catch (error) {
     // 에러 처리
-    return {
-      posts: [],
-    };
+    return [];
   }
 };
 
 // 내 댓글
-interface FetchCommentsResponse {
-  comments: Comment[];
-}
 export const fetchMyComments = async (params: FetchMyPageParams) => {
   try {
-    const response = await httpClient.get<FetchCommentsResponse>("api/mypages", { params: params });
-    return response.data;
+    const { data } = await httpClient.get<Comment[]>("/mypages/comments");
+    return data;
   } catch (error) {
     // 에러 처리
-    return {
-      comments: [],
-    };
+    return [];
   }
 };
 
@@ -86,28 +73,22 @@ interface FetchPostResponse {
 }
 export const fetchLikePost = async () => {
   try {
-    const response = await httpClient.get<FetchPostResponse>("api/likes/place");
-    return response.data;
+    const { data } = await httpClient.get<Post[]>("/likes/place");
+    return data;
   } catch (error) {
     // 에러 처리
-    return {
-      posts: [],
-    };
+    return [];
   }
 };
 
 // 찜한 장소
-interface FetchPostResponse {
-  places: PlaceDetails[];
-}
+
 export const fetchLikePlace = async () => {
   try {
-    const response = await httpClient.get<FetchPostResponse>("api/likes/places");
+    const response = await httpClient.get<PlaceDetails[]>("/likes/places");
     return response.data;
   } catch (error) {
     // 에러 처리
-    return {
-      places: [],
-    };
+    return [];
   }
 };

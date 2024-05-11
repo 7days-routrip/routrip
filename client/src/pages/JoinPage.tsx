@@ -213,13 +213,15 @@ export const JoinPageStyle = styled.div`
     padding: 1rem;
   }
 
-  .login-link > :first-child {
-    margin-right: 5px;
+  .ps-link > :nth-child(2),
+  .login-link > :nth-child(2) {
+    color: ${({ theme }) => theme.color.primary};
   }
 
-  .login-link > :nth-child(2),
-  .ps-link > :nth-child(1) {
-    color: ${({ theme }) => theme.color.primary};
+  .ps-link > :first-child,
+  .login-link > :first-child {
+    margin: 0 5px 2px 0;
+    color: ${({ theme }) => theme.color.routeGray};
   }
 
   .join-login,

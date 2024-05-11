@@ -18,7 +18,6 @@ export const setNickName = (name: string) => {
 
 export const getToken = () => {
   const token = localStorage.getItem("token");
-  console.log("야 로그인했어!");
   return token; // 로컬 스토리지에 "token"필드가 없는 경우엔 null을 반환
 };
 

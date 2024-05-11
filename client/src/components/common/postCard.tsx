@@ -60,7 +60,7 @@ const PostCard = ({ PostProps, view }: Props) => {
   );
 };
 
-interface CardImageStyleProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
+export interface CardImageStyleProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   $image: string;
   $view: string;
 }
