@@ -1,16 +1,17 @@
 import express, { Request, Response, NextFunction } from "express";
-import usersController from "@/controller/users.ctl";
+import UsersController from "@/controller/users.ctl";
 import { authenticateUser } from "@/middlewares/authentication";
 
 const router = express.Router();
 
-router.post("/join", usersController.join);
-router.post("/login", usersController.login);
-router.post("/check/email", usersController.checkEmail);
-router.post("/check/nickname", usersController.checkNickname);
-
-router.patch("/me", authenticateUser, usersController.patchUserInfoRequest);
-router.route("/reset").post(usersController.resetRequest).patch(usersController.resetPasswordRequest);
-router.patch("/me/reset", authenticateUser, usersController.userResetPassword);
+router.post("/join", UsersController.join);
+router.post("/login", UsersController.login);
+router.post("/check/email", UsersController.checkEmail);
+router.post("/check/nickname", UsersController.checkNickname);
+router.delete("/", authenticateUser, UsersController.userWithdraw);
+router.post("/logout", authenticateUser, UsersController.logout);
+router.patch("/me", authenticateUser, UsersController.userInfoUpdateRequest);
+router.route("/reset").post(UsersController.resetRequest).patch(UsersController.resetPasswordRequest);
+router.patch("/me/reset", authenticateUser, UsersController.userResetPassword);
 
 export default router;

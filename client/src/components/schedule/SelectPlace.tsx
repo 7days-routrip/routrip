@@ -8,12 +8,12 @@ import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 
 const SelectPlace = () => {
   const { searchKeywordToServer, setSearchKeywordToServer } = useSearchKeywordStore();
-  const { searchPlace, setSearchPlace } = useSearchPlacesStore();
+  const { searchPlaces, setSearchPlaces } = useSearchPlacesStore();
   const { setMarkerType } = useShowMarkerTypeStore();
 
   const requestHandler = async (keyword: string) => {
     // 서버로 검색 요청
-    await searchPlaceApi(keyword, setSearchPlace);
+    await searchPlaceApi(keyword, setSearchPlaces);
     setMarkerType("searchApi");
   };
 
@@ -25,7 +25,7 @@ const SelectPlace = () => {
         requestHandler={requestHandler}
         setSearchKeyword={setSearchKeywordToServer}
       />
-      {searchPlace && <PlaceList place={searchPlace} buttonTitle={"추가"} />}
+      {searchPlaces && <PlaceList place={searchPlaces} buttonTitle={"추가"} />}
     </SelectPlaceStyle>
   );
 };

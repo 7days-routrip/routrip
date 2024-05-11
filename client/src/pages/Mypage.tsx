@@ -1,5 +1,4 @@
-import ProfileCard from "@/components/common/ProfileCard";
-import { ProfileCard as IProfileCard } from "@/models/profile.model";
+import { Profile } from "@/models/profile.model";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { getToken } from "@/stores/authStore";
@@ -12,6 +11,7 @@ import PostCard from "@/components/common/postCard";
 import CommentCard from "@/components/common/Comment";
 import LikePlaceCard from "@/components/common/LikePlaceCard";
 import { Comment } from "@/models/comment.model";
+import ProfileCard from "@/components/common/ProfileCard";
 
 const TABLIST = [
   { name: "일정 모음" },
@@ -24,8 +24,8 @@ const TABLIST = [
 interface Props {}
 
 // 더미 데이터들
-const dummyData: IProfileCard = {
-  nickname: "김하늘누리",
+const dummyData: Profile = {
+  nickName: "김하늘누리",
   profile: "",
   journeysNum: 5,
   postsNum: 5,
@@ -37,8 +37,9 @@ const dummyData: IProfileCard = {
 const dummyScheduleData: Schedule = {
   id: 1,
   title: "post title",
-  date: "post createdAt",
-  postImg: "",
+  startDate: "string",
+  endDate: "string",
+  thumbnail: "",
 };
 
 const dummyComment: Comment = {
@@ -89,9 +90,10 @@ const Mypage = () => {
     }
     scheduleRefetch();
   }, []);
+
   return (
     <MypageStyle>
-      <ProfileCard ProfileProps={dummyData} />
+      <ProfileCard ProfileProps={profileInfo ? profileInfo : dummyData} />
       <div className="main">
         <MypageTabStyle>
           {TABLIST.map((item, idx) => (
@@ -107,7 +109,6 @@ const Mypage = () => {
           ))}
         </MypageTabStyle>
         <div className="contents">
-          <CommentCard CommentProps={dummyComment} />
           {!isEmptySchedules && activeTab[0]
             ? schedules?.map((item, idx) => <ScheduleCard scheduleProps={item} key={idx} view="grid" />)
             : null}
@@ -143,7 +144,7 @@ export const MypageStyle = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
   }
 `;
 

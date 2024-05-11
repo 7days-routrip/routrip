@@ -11,6 +11,7 @@ import { Link } from "react-router-dom";
 const LoginPage = () => {
   const { userLogin } = useAuth();
   const UserIcon = icons.MobileUserIcon;
+  const ResetIcon = icons.ResetIcon;
   const {
     register,
     handleSubmit,
@@ -22,6 +23,7 @@ const LoginPage = () => {
     const [, domain] = data.email.split("@");
     if (!allowedDomains.includes(domain)) {
       setError("email", { message: "허용되지 않는 이메일 도메인입니다." }, { shouldFocus: true });
+      return;
     }
     userLogin(data);
   };
@@ -44,7 +46,7 @@ const LoginPage = () => {
               placeholder={placeholderHander("비밀번호")}
               inputType="password"
               $inputsize="large"
-              {...register("password", passwordOptions)}
+              {...register("password")}
             />
             {errors.password && <small className="error-text">{errors.password.message}</small>}
           </fieldset>
@@ -58,12 +60,13 @@ const LoginPage = () => {
               <span>아직 회원이 아니신가요?</span>
               <div className="login-link">
                 <UserIcon />
-                <Link to="/login">로그인하러 가기</Link>
+                <Link to="/join">회원가입 가기</Link>
               </div>
             </div>
             <div className="reset-ps">
               <span>비밀번호를 찾으실건가요? </span>
               <div className="ps-link">
+                <ResetIcon />
                 <Link to="/reset">비밀번호 찾기</Link>
               </div>
             </div>

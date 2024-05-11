@@ -1,27 +1,20 @@
-import {
-  getLikesPostsList,
-  getPlaceLikesList,
-  placeLikeRequest,
-  placeUnlikeRequest,
-  postLikeRequest,
-  postUnlikeRequest,
-} from "@/controller/likes.ctl";
+import LikesController from "@/controller/likes.ctl";
 import { authenticateUser } from "@/middlewares/authentication";
-import { authorization, authorizeLikes, authorizePicks } from "@/middlewares/authorization";
+import { authorizeLikes, authorizePicks } from "@/middlewares/authorization";
 import express from "express";
 const router = express.Router();
 router.use(express.json());
 
-router.get("/places", authenticateUser, getPlaceLikesList);
+router.get("/places", authenticateUser, LikesController.likesPlaceAllData);
 router
   .route("/places/:id")
-  .post(authenticateUser, placeLikeRequest)
-  .delete(authenticateUser, authorizePicks, placeUnlikeRequest);
+  .post(authenticateUser, LikesController.placeLikeRequest)
+  .delete(authenticateUser, authorizePicks, LikesController.placeUnlikeRequest);
 
-router.get("/posts", authenticateUser, getLikesPostsList);
+router.get("/posts", authenticateUser, LikesController.likesPostAllData);
 router
   .route("/posts/:id")
-  .post(authenticateUser, postLikeRequest)
-  .delete(authenticateUser, authorizeLikes, postUnlikeRequest);
+  .post(authenticateUser, authorizeLikes, LikesController.postLikeRequest)
+  .delete(authenticateUser, authorizeLikes, LikesController.postUnlikeRequest);
 
 export default router;
