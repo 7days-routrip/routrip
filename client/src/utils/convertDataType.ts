@@ -9,6 +9,10 @@ export const convertScheduleDetails = (data: ScheduleDetails): ScheduleDetailsWi
     spots: item.spots.map((spot) => ({
       ...spot,
       uuid: uuidv4(),
+      location: {
+        lat: Number(spot.location.lat),
+        lng: Number(spot.location.lng),
+      },
     })),
   }));
 
