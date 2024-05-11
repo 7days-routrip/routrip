@@ -80,110 +80,106 @@ interface PostPageStyleProps {
 
 const PostPage = () => {
   const { SearchIcon, GridIcon, ListIcon } = icons;
-
   const [view, setView] = useState<ViewMode>("grid");
   const [sortOrder, setSortOrder] = useState<string>("recent");
 
-  const clickListBtn = () => {
-    setView("list");
-  };
-
-  const clickGridBtn = () => {
-    setView("grid");
-  };
+  const clickListBtn = () => setView("list");
+  const clickGridBtn = () => setView("grid");
 
   const sortedPosts =
     sortOrder === "recent"
-      ? [...posts].sort((a, b) => {
-          return new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime();
-        })
-      : [...posts].sort((a, b) => {
-          const likesA = parseInt(a.likesNum, 10);
-          const likesB = parseInt(b.likesNum, 10);
-          return likesB - likesA;
-        });
+      ? [...posts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
+      : [...posts].sort((a, b) => parseInt(b.likesNum, 10) - parseInt(a.likesNum, 10));
 
   return (
     <PostPageStyle view={view}>
-      <div className="content-wrapper">
-        <select>
-          <option value="">전체</option>
-          <option value="일본">일본</option>
-          <option value="중국">중국</option>
-          <option value="홍콩">홍콩/마카오/대만</option>
-        </select>
-        <div className="input-wrapper">
-          <input type="search" placeholder="검색어를 입력하세요." />
-          <SearchIcon />
+      <div className="main-content">
+        <div className="control-wrapper">
+          <div className="btn-wrapper">
+            <select onChange={(e) => setSortOrder(e.target.value)}>
+              <option value="recent">최신순</option>
+              <option value="likes">인기순</option>
+            </select>
+            <div className="input-wrapper">
+              <input type="search" placeholder="검색어를 입력하세요." />
+              <SearchIcon />
+            </div>
+          </div>
+          <div className="view-toggle">
+            <GridIcon width="24px" height="24px" onClick={clickGridBtn} />
+            <ListIcon width="24px" height="24px" onClick={clickListBtn} />
+          </div>
         </div>
       </div>
-      <div className="main-content">
-        <div className="btn-wrapper">
-          <select onChange={(e) => setSortOrder(e.target.value)}>
-            <option value="recent">최신순</option>
-            <option value="likes">인기순</option>
-          </select>
 
-          <GridIcon width="50px" height={"50px"} onClick={clickGridBtn} />
-          <ListIcon onClick={clickListBtn} />
-        </div>
-        <hr></hr>
-        <div className="post">
-          {sortedPosts.map((post) => (
-            <StyledLink key={post.id} to={`/post/${post.id}`}>
-              <PostCard key={post.id} PostProps={post} view={view} />
-            </StyledLink>
-          ))}
-        </div>
+      <div className="post">
+        {sortedPosts.map((post) => (
+          <StyledLink key={post.id} to={`/post/${post.id}`}>
+            <PostCard key={post.id} PostProps={post} view={view} />
+          </StyledLink>
+        ))}
       </div>
     </PostPageStyle>
   );
 };
+
 const PostPageStyle = styled.div<PostPageStyleProps>`
-  .content-wrapper {
+  .main-content {
     display: flex;
-    margin: 0 auto;
-    height: 50px;
-    gap: 20px;
-    max-width: 790px;
-  }
-  input {
-    border: none;
-    width: 100%;
-    height: 100%;
+    justify-content: center;
+    align-items: center;
+    width: ${(props) => (props.view === "list" ? "790px" : "1080px")};
+    border-bottom: 1px solid #e7e7e7;
+    padding: 0px 0px 20px 0px;
+    margin: 10px auto 20px auto;
   }
 
-  .input-wrapper {
-    width: 100%;
+  .control-wrapper {
     display: flex;
-    position: relative;
-    padding: 10px;
     justify-content: space-between;
     align-items: center;
-    border: 1px solid black;
-    border-radius: ${({ theme }) => theme.borderRadius.default};
+    width: 960px;
+    gap: 20px;
   }
-  .main-content {
-    width: ${(props) => (props.view === "list" ? "790px" : "1080px")};
-    margin: 0 auto;
+
+  select {
+    padding: 8px;
   }
 
   .btn-wrapper {
     display: flex;
-    justify-content: flex-end;
-    align-items: center;
     gap: 10px;
-    text-align:rightl
-    width: 790px;
-    margin-top: 20px;
+    align-items: center;
+  }
+
+  .input-wrapper {
+    display: flex;
+    align-items: center;
+    border: 1px solid black;
+    width: 360px;
+    padding: 8px;
+    border-radius: ${({ theme }) => theme.borderRadius.default};
+  }
+
+  input {
+    border: none;
+    flex-grow: 1;
+    padding: 0 8px;
+    font-size: 16px;
+    outline: none;
+  }
+
+  .view-toggle {
+    display: flex;
+    gap: 10px;
   }
 
   .post {
-    border-radius: 0px;
     display: flex;
-    width: 1080px;
-    gap: 14px;
     flex-wrap: wrap;
+    gap: 14px;
+    justify-content: center;
+    width: 1080px; // Adjust as needed
   }
 `;
 
