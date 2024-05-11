@@ -199,13 +199,7 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
     align-items: center;
   }
 
-  .like {
-    margin-right: 5px;
-  }
-
   .feedback {
-    margin-top: 10px;
-    margin-right: 0.5rem;
     display: flex;
     width: ${({ $view }) => ($view === "grid" ? "100%" : "auto")};
     justify-content: ${({ $view }) => ($view === "grid" ? "space-between" : "center")};
