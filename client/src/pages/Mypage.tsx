@@ -37,8 +37,9 @@ const dummyData: IProfileCard = {
 const dummyScheduleData: Schedule = {
   id: 1,
   title: "post title",
-  date: "post createdAt",
-  postImg: "",
+  startDate: "string",
+  endDate: "string",
+  thumbnail: "",
 };
 
 const dummyComment: Comment = {
@@ -55,7 +56,7 @@ const Mypage = () => {
   const { comments, isEmptyComments, commentsRefetch } = useComment();
   const { likePosts, isEmptyLikePosts, likePostRefetch } = useLikePost();
   const { likePlaces, isEmptyLikePlace, likePlaceRefetch } = useLikePlace();
-  const { profileInfo } = useProfile();
+  // const { profileInfo } = useProfile();
 
   const handleMypageTab = (idx: number) => {
     const newActiveTab = new Array(5).fill(false);
@@ -89,6 +90,8 @@ const Mypage = () => {
     }
     scheduleRefetch();
   }, []);
+
+  console.log(schedules);
   return (
     <MypageStyle>
       <ProfileCard ProfileProps={dummyData} />
@@ -107,7 +110,6 @@ const Mypage = () => {
           ))}
         </MypageTabStyle>
         <div className="contents">
-          <CommentCard CommentProps={dummyComment} />
           {!isEmptySchedules && activeTab[0]
             ? schedules?.map((item, idx) => <ScheduleCard scheduleProps={item} key={idx} view="grid" />)
             : null}
@@ -143,7 +145,7 @@ export const MypageStyle = styled.div`
     display: flex;
     flex-direction: column;
     justify-content: center;
-    align-items: center;
+    align-items: flex-start;
   }
 `;
 

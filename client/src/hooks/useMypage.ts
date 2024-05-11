@@ -7,6 +7,7 @@ import {
   fetchProfile,
 } from "@/apis/mypage.api";
 import { queryKey } from "@/constants/queryKey";
+import { Schedule } from "@/models/schedule.model";
 import { useQuery } from "@tanstack/react-query";
 
 export const useSchedule = () => {
@@ -21,8 +22,8 @@ export const useSchedule = () => {
   });
 
   return {
-    schedules: ScheduleData?.schedules,
-    isEmptySchedules: ScheduleData?.schedules.length === 0,
+    schedules: ScheduleData,
+    isEmptySchedules: ScheduleData?.length === 0,
     isScheduleLoding,
     scheduleRefetch,
   };
@@ -36,6 +37,7 @@ export const useProfile = () => {
 
   return {
     profileInfo: profileData?.profile,
+
     isProfileLoding,
   };
 };
@@ -52,8 +54,8 @@ export const usePost = () => {
   });
 
   return {
-    posts: postData?.posts,
-    isEmptyPosts: postData?.posts.length === 0,
+    posts: postData,
+    isEmptyPosts: postData?.length === 0,
     isPostLoading,
     postsRefetch,
   };
@@ -71,8 +73,8 @@ export const useComment = () => {
   });
 
   return {
-    comments: commentData?.comments,
-    isEmptyComments: commentData?.comments.length === 0,
+    comments: commentData,
+    isEmptyComments: commentData?.length === 0,
     isCommentLoading,
     commentsRefetch,
   };
@@ -86,8 +88,8 @@ export const useLikePost = () => {
   } = useQuery({ queryKey: ["likePost"], queryFn: () => fetchLikePost(), enabled: false });
 
   return {
-    likePosts: likePostData?.posts,
-    isEmptyLikePosts: likePostData?.posts.length === 0,
+    likePosts: likePostData,
+    isEmptyLikePosts: likePostData?.length === 0,
     isLikePostLoading,
     likePostRefetch,
   };
@@ -104,8 +106,8 @@ export const useLikePlace = () => {
     enabled: false,
   });
   return {
-    likePlaces: likePlaceData?.places,
-    isEmptyLikePlace: likePlaceData?.places.length === 0,
+    likePlaces: likePlaceData,
+    isEmptyLikePlace: likePlaceData?.length === 0,
     isLikePlaceLoding,
     likePlaceRefetch,
   };
