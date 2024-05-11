@@ -26,7 +26,7 @@ export interface JoinProps extends LoginProps {
   nickname: string;
 }
 
-export const inputErrorStatusHandler = (error: any, statusList: number[]) => {
+export const fetchErrorStatusHandler = (error: any, statusList: number[]) => {
   if (statusList.includes(error.response.status)) {
     return error.response;
   } else {
@@ -62,7 +62,7 @@ export const useAuth = () => {
         navigate("/login");
       });
     } catch (error: any) {
-      return inputErrorStatusHandler(error, []);
+      return fetchErrorStatusHandler(error, []);
     }
   };
 
@@ -81,7 +81,7 @@ export const useAuth = () => {
       showAlert(`${res.data.message}`, "logo");
       return;
     } catch (error: any) {
-      return inputErrorStatusHandler(error, [400]);
+      return fetchErrorStatusHandler(error, [400]);
     }
   };
 
@@ -90,7 +90,7 @@ export const useAuth = () => {
       const res = await isNicknameUnique({ nickname });
       return res;
     } catch (error: any) {
-      return inputErrorStatusHandler(error, [400, 409]);
+      return fetchErrorStatusHandler(error, [400, 409]);
     }
   };
 
@@ -99,7 +99,7 @@ export const useAuth = () => {
       const res = await isEmailUnique({ email });
       return res;
     } catch (error: any) {
-      return inputErrorStatusHandler(error, [400, 409]);
+      return fetchErrorStatusHandler(error, [400, 409]);
     }
   };
 
