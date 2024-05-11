@@ -34,3 +34,4 @@ export const BAD_REQUEST_UPDATE_POST = "게시글 수정을 실패했습니다."
 export const OK_DELETE_POST = "게시글이 삭제되었습니다.";
 //댓글
 export const NOT_FOUND_COMMENTS = "댓글이 존재하지 않습니다.";
+export const OK_UPLOAD_COMMENT = "댓글 등록이 완료되었습니다.";
