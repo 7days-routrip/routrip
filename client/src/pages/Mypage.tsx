@@ -1,5 +1,4 @@
-import ProfileCard from "@/components/common/ProfileCard";
-import { ProfileCard as IProfileCard } from "@/models/profile.model";
+import { Profile } from "@/models/profile.model";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { getToken } from "@/stores/authStore";
@@ -12,6 +11,7 @@ import PostCard from "@/components/common/postCard";
 import CommentCard from "@/components/common/Comment";
 import LikePlaceCard from "@/components/common/LikePlaceCard";
 import { Comment } from "@/models/comment.model";
+import ProfileCard from "@/components/common/ProfileCard";
 
 const TABLIST = [
   { name: "일정 모음" },
@@ -24,8 +24,8 @@ const TABLIST = [
 interface Props {}
 
 // 더미 데이터들
-const dummyData: IProfileCard = {
-  nickname: "김하늘누리",
+const dummyData: Profile = {
+  nickName: "김하늘누리",
   profile: "",
   journeysNum: 5,
   postsNum: 5,
@@ -56,7 +56,7 @@ const Mypage = () => {
   const { comments, isEmptyComments, commentsRefetch } = useComment();
   const { likePosts, isEmptyLikePosts, likePostRefetch } = useLikePost();
   const { likePlaces, isEmptyLikePlace, likePlaceRefetch } = useLikePlace();
-  // const { profileInfo } = useProfile();
+  const { profileInfo } = useProfile();
 
   const handleMypageTab = (idx: number) => {
     const newActiveTab = new Array(5).fill(false);
@@ -91,10 +91,9 @@ const Mypage = () => {
     scheduleRefetch();
   }, []);
 
-  console.log(schedules);
   return (
     <MypageStyle>
-      <ProfileCard ProfileProps={dummyData} />
+      <ProfileCard ProfileProps={profileInfo ? profileInfo : dummyData} />
       <div className="main">
         <MypageTabStyle>
           {TABLIST.map((item, idx) => (

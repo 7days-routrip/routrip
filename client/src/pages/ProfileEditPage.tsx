@@ -1,7 +1,7 @@
 import styled from "styled-components";
 import { MypageStyle } from "./Mypage";
 import ProfileCard, { ProfileImageStyle, ProfileImageStyleProps } from "@/components/common/ProfileCard";
-import { ProfileCard as IProfileCard } from "@/models/profile.model";
+import { Profile } from "@/models/profile.model";
 import Title from "@/components/common/Title";
 import InputText from "@/components/common/Input";
 import { useEffect, useRef, useState } from "react";
@@ -12,9 +12,10 @@ import { useAuth } from "@/hooks/useAuth";
 import { nicknameRegex } from "@/constants/regexPatterns";
 import { nicknameOptions } from "@/config/registerOptions";
 import { useQuery } from "@tanstack/react-query";
+import { useProfile } from "@/hooks/useMypage";
 
-const dummyData: IProfileCard = {
-  nickname: "김하늘누리",
+const dummyData: Profile = {
+  nickName: "김하늘누리",
   profile: "",
   journeysNum: 5,
   postsNum: 5,
@@ -30,6 +31,7 @@ interface ProfileEditProps {
 
 const ProfileEditPage = () => {
   const { userNicknameCheck } = useAuth();
+  const { profileInfo } = useProfile();
   const {
     register,
     handleSubmit,
@@ -42,7 +44,6 @@ const ProfileEditPage = () => {
   const [imgFile, setImgFile] = useState<File | null>();
   const [preview, setPreview] = useState<string>("");
   const { userUpdate } = useAuth();
-
 
   const checkNickname = () => {
     const nickname = getValues().nickname;
@@ -60,7 +61,6 @@ const ProfileEditPage = () => {
       clearErrors("nickname");
     });
   };
-
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
@@ -95,10 +95,9 @@ const ProfileEditPage = () => {
       setPreview("");
     }
   }, [imgFile]);
-
   return (
     <ProfileEditPageStyle>
-      <ProfileCard ProfileProps={dummyData} />
+      <ProfileCard ProfileProps={profileInfo ? profileInfo : dummyData} />
       <main className="edit-main">
         <Title size="large">사용자 프로필 수정</Title>
         <form onSubmit={handleSubmit(onSubmit)}>
@@ -106,7 +105,7 @@ const ProfileEditPage = () => {
             <div className="image-form">
               <div className="profile-image">
                 <Title size="medium">프로필 사진</Title>
-                <ProfileEditImageStyle $image={preview}> </ProfileEditImageStyle>
+                <ProfileEditImageStyle $image={profileInfo?.profile ? profileInfo?.profile : preview} />
               </div>
               <div className="image-btn">
                 <AttachFileLabel htmlFor="profile-image">사진 변경</AttachFileLabel>
@@ -122,7 +121,6 @@ const ProfileEditPage = () => {
 
             <div className="profile-form">
               <div className="profile-nickname">
-
                 <div className="nickname-input">
                   <span>닉네임</span>
                   <InputText
@@ -143,7 +141,6 @@ const ProfileEditPage = () => {
                 >
                   {nicknameUniqueCheck ? "인증 완료" : "중복 확인"}
                 </Button>
-
               </div>
               <div className="profile-password">
                 <span>비밀번호</span>

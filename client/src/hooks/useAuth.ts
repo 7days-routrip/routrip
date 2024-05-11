@@ -1,7 +1,9 @@
 import {
   authJoin,
   authLogin,
+  authLogout,
   authReset,
+  fetchProfileRestPassword,
   isEmailUnique,
   isNicknameUnique,
   profileUpdate,
@@ -103,6 +105,8 @@ export const useAuth = () => {
 
   const userLogout = async () => {
     try {
+      const res = await authLogout();
+      return res;
     } catch (error: any) {}
   };
 
@@ -115,5 +119,22 @@ export const useAuth = () => {
     }
   };
 
-  return { userLogin, userJoin, userPasswordReset, userNicknameCheck, userEmailCheck, userUpdate };
+  const userNewPasswordReset = (originPassword: string, newPassword: string) => {
+    try {
+      fetchProfileRestPassword({ originPassword, newPassword }).then(() => {
+        navigate("/me");
+      });
+    } catch (error) {}
+  };
+
+  return {
+    userLogin,
+    userJoin,
+    userLogout,
+    userPasswordReset,
+    userNicknameCheck,
+    userEmailCheck,
+    userUpdate,
+    userNewPasswordReset,
+  };
 };

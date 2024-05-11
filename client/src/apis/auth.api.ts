@@ -1,5 +1,6 @@
 import { JoinProps, LoginProps } from "@/hooks/useAuth";
 import { httpClient } from "./https";
+import { getToken } from "@/stores/authStore";
 
 export const authJoin = async (data: JoinProps) => {
   const response = await httpClient.post("/users/join", data);
@@ -16,9 +17,19 @@ export const authLogin = async (data: LoginProps) => {
   const response = await httpClient.post("/users/login", data);
   return response;
 };
+
 export interface authMessageResponse {
   message: string;
 }
+
+export const authLogout = async () => {
+  const response = await httpClient.post<authMessageResponse>("/users/logout", {
+    headers: {
+      Authorization: getToken(),
+    },
+  });
+  return response;
+};
 
 // 이메일 중복 확인
 export const isEmailUnique = async (data: { email: string }) => {
@@ -65,7 +76,7 @@ export interface profileResetProps {
 }
 export const fetchProfileRestPassword = async (data: profileResetProps) => {
   try {
-    const response = await httpClient.put<authMessageResponse>("/users/me/reset", data);
+    const response = await httpClient.patch<authMessageResponse>("/users/me/reset", data);
     return response;
   } catch (error) {
     // 실패
