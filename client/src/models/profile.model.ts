@@ -5,8 +5,5 @@ export interface Profile {
   likePostsNum: number;
   likeSpotsNum: number;
   profile: string;
-}
-
-export interface ProfileCard extends Profile {
-  nickname: string;
+  nickName: string;
 }

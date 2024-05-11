@@ -2,18 +2,19 @@ import React, { useCallback, useEffect, useState } from "react";
 import { GoogleMap, InfoWindowF, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import Loading from "@/components/common/Loading";
 import { useMapStore } from "@/stores/mapStore";
-import { SelectedPlace, usePlaceStore } from "@/stores/addPlaceStore";
+import { SelectedPlace, useAddPlaceStore } from "@/stores/addPlaceStore";
 import InfoWindowBox from "./InfoWindowBox";
 import dayPlacePin from "/assets/images/pin-day-place.png";
 import addPlacePin from "/assets/images/pin-add-place.png";
 import searchPin from "/assets/images/pin-search-place.png";
-// import bookmarkPin from "/assets/images/pin-bookmark-place.png";
+import bookmarkPin from "/assets/images/pin-bookmark-place.png";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useDayPlaceStore } from "@/stores/dayPlaces";
 import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
 import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { Place } from "@/models/place.model";
 import { isExistedInPlaceType, isExistedInSelectedPlaceType } from "@/utils/checkIsExisted";
+import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAP_API_KEY || "";
 
@@ -54,12 +55,30 @@ const ScheduleGoogleMap = () => {
   });
 
   const { googleMap, mapCenter, setCenter, setGoogleMap, updateMapBounds } = useMapStore();
-  const { places: addPlaces } = usePlaceStore(); // 실제로 사용할 전역 상태. 임시로 mockRealPlaceData를 사용
+  const { addPlaces } = useAddPlaceStore(); // 실제로 사용할 전역 상태. 임시로 mockRealPlaceData를 사용
   const { markerType, dayIndex } = useShowMarkerTypeStore();
   const { dayPlaces } = useDayPlaceStore();
-  const { searchPlace } = useSearchPlacesStore();
+  const { searchPlaces } = useSearchPlacesStore();
   const { nearPlaces } = useNearPlacesStore();
+  const { bookmarkPlaces } = useBookmarkPlacesStore();
   const [clickMarker, setClickMarker] = useState<SelectedPlace | Place | null>(null);
+
+  const getPlaceArr = () => {
+    switch (markerType) {
+      case "add":
+        return addPlaces;
+      case "day":
+        return dayPlaces[dayIndex as number];
+      case "searchApi":
+        return searchPlaces;
+      case "searchGoogle":
+        return nearPlaces;
+      case "bookmarkList":
+        return bookmarkPlaces;
+      default:
+        return [];
+    }
+  };
 
   const handleChanged = useCallback(() => {
     if (googleMap && googleMap.getCenter()) {
@@ -84,9 +103,9 @@ const ScheduleGoogleMap = () => {
 
     if (googleMap) {
       googleMap.panTo(place.location); // 1. 마커 위치로 지도 이동
+
       const currentZoom = googleMap.getZoom() || 6;
-      // console.log(currentZoom);
-      const targetZoom = Math.max(currentZoom, 15);
+      const targetZoom = Math.max(currentZoom, 14);
       googleMap.setZoom(targetZoom); // 2. 줌 비율 조정(확대)
     }
   };
@@ -94,6 +113,7 @@ const ScheduleGoogleMap = () => {
   const onClickMap = () => {
     if (clickMarker) {
       setClickMarker(null);
+      // updateMapBounds(googleMap, getPlaceArr());
     }
   };
 
@@ -105,9 +125,11 @@ const ScheduleGoogleMap = () => {
     } else if (markerType === "day" && "uuid" in clickMarker) {
       if (!isExistedInSelectedPlaceType(dayPlaces[dayIndex as number], clickMarker.uuid)) setClickMarker(null);
     } else if (markerType === "searchApi" && clickMarker) {
-      if (!isExistedInPlaceType(searchPlace, clickMarker.id)) setClickMarker(null);
+      if (!isExistedInPlaceType(searchPlaces, clickMarker.id)) setClickMarker(null);
     } else if (markerType === "searchGoogle" && clickMarker) {
       if (!isExistedInPlaceType(nearPlaces, clickMarker.id)) setClickMarker(null);
+    } else if (markerType === "bookmarkList" && clickMarker) {
+      if (!isExistedInPlaceType(bookmarkPlaces, clickMarker.id)) setClickMarker(null);
     }
   }, [addPlaces, dayPlaces, markerType, dayIndex]);
 
@@ -115,24 +137,8 @@ const ScheduleGoogleMap = () => {
     // 지도에 표시할 마커가 전부 보이도록 지도 경계선을 계산
     if (!googleMap) return;
 
-    let placeArr;
-    switch (markerType) {
-      case "add":
-        placeArr = addPlaces;
-        break;
-      case "day":
-        placeArr = dayPlaces[dayIndex as number];
-        break;
-      case "searchApi":
-        placeArr = searchPlace;
-        break;
-      case "searchGoogle":
-        placeArr = nearPlaces;
-        break;
-    }
-
-    updateMapBounds(googleMap, placeArr);
-  }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlace, nearPlaces]);
+    updateMapBounds(googleMap, getPlaceArr());
+  }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlaces, nearPlaces]);
 
   return isLoaded ? (
     <GoogleMap
@@ -148,8 +154,9 @@ const ScheduleGoogleMap = () => {
       {/* 장소 아이템 개수만큼 마커 컴포넌트 생성 */}
       {markerType === "add" && createMarkers(addPlaces, onclickMarker, addPlacePin)}
       {markerType === "day" && createMarkers(dayPlaces[dayIndex as number], onclickMarker, dayPlacePin)}
-      {markerType === "searchApi" && createMarkers(searchPlace, onclickMarker, searchPin)}
+      {markerType === "searchApi" && createMarkers(searchPlaces, onclickMarker, searchPin)}
       {markerType === "searchGoogle" && createMarkers(nearPlaces, onclickMarker, searchPin)}
+      {markerType === "bookmarkList" && createMarkers(bookmarkPlaces, onclickMarker, bookmarkPin)}
 
       {clickMarker && (
         <InfoWindowF

@@ -1,14 +1,17 @@
 import {
   BAD_REQUEST_ORIGIN_PASSWORD,
+  BAD_REQUEST_RESET_PASSWORD,
+  BAD_REQUEST_WITHDRAW,
   DATA_UPDATE_FAILED,
   DATA_UPDATE_SUCCESSED,
   NOT_FOUND_USER,
+  OK_LOGOUT,
   OK_RESET_PASSWORD,
   OK_RESET_REQUEST,
+  OK_WITHDRAW,
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
-import userRepository from "@/repository/users.repo";
-import usersService from "@/service/users.service";
+import UsersService from "@/service/users.service";
 import { iPatchData } from "@/types/users.types";
 import { Request, Response, NextFunction } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -17,7 +20,7 @@ const join = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password, nickname } = req.body;
 
   try {
-    await usersService.join(email, password, nickname);
+    await UsersService.join(email, password, nickname);
   } catch (error) {
     return res.status(StatusCodes.BAD_REQUEST).json({
       message: "잘못된 요청입니다.",
@@ -33,13 +36,12 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
   const { email, password } = req.body;
 
   try {
-    const results = await usersService.login(email, password);
+    const results = await UsersService.login(email, password);
     // 토큰 전달
     res.setHeader("Authorization", `Bearer ${results.accessToken}`);
     res.cookie("refresh_token", results.refreshToken, {
       httpOnly: true,
     });
-
     res.status(StatusCodes.OK).json({
       message: "로그인이 완료되었습니다.",
       userId: results.user.id,
@@ -51,12 +53,49 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     });
   }
 };
-
+const logout = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.isLoggedIn) {
+      res.setHeader("Authorization", "");
+      res.clearCookie("refresh_token");
+      res.status(StatusCodes.OK).json({ message: OK_LOGOUT });
+    } else {
+      throw new Error("login required");
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "login required")
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+    }
+  }
+};
+const userWithdraw = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.isLoggedIn) {
+      const userId = req.user.id as number;
+      const dataResult = await UsersService.reqUserWithdraw(userId);
+      if (!dataResult.success) throw new Error(dataResult.msg);
+      res.setHeader("Authorization", "");
+      res.clearCookie("refresh_token");
+      res.status(StatusCodes.OK).json({ message: OK_WITHDRAW });
+    } else {
+      throw new Error("login required");
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "login required")
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+      if (err.message === "failed to withdraw")
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_WITHDRAW });
+    }
+  }
+};
 const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
   const { email } = req.body;
 
   try {
-    await usersService.checkEmail(email);
+    const checkResult = await UsersService.checkEmail(email);
+    if (checkResult.success) throw new Error(checkResult.msg);
     res.status(StatusCodes.OK).json({
       message: "사용 가능한 이메일입니다.",
     });
@@ -71,7 +110,7 @@ const checkNickname = async (req: Request, res: Response, next: NextFunction) =>
   const { nickname } = req.body;
 
   try {
-    await usersService.checkNickname(nickname);
+    await UsersService.checkNickname(nickname);
     res.status(StatusCodes.OK).json({
       message: "사용 가능한 닉네임입니다.",
     });
@@ -82,13 +121,13 @@ const checkNickname = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-const patchUserInfoRequest = async (req: Request, res: Response) => {
+const userInfoUpdateRequest = async (req: Request, res: Response) => {
   const patchData: iPatchData = req.body;
   try {
     if (req.user?.isLoggedIn) {
-      const userId = req.user.id;
-      const patchUserInfoResult = await userRepository.patchData(patchData, userId);
-      if (!patchUserInfoResult.success) throw new Error(patchUserInfoResult.msg);
+      const userId = req.user.id as number;
+      const updateResult = await UsersService.reqUsersUpdate(patchData, userId);
+      if (!updateResult.success) throw new Error(updateResult.msg);
       res.status(StatusCodes.OK).json({ message: DATA_UPDATE_SUCCESSED });
     } else {
       throw new Error("login required");
@@ -97,7 +136,7 @@ const patchUserInfoRequest = async (req: Request, res: Response) => {
     if (err instanceof Error) {
       if (err.message === "login required")
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
-      if (err.message === "user data don't update")
+      if (err.message === "failed to update")
         return res.status(StatusCodes.BAD_REQUEST).json({ message: DATA_UPDATE_FAILED });
     }
   }
@@ -106,12 +145,12 @@ const patchUserInfoRequest = async (req: Request, res: Response) => {
 const resetRequest = async (req: Request, res: Response) => {
   const data = req.body;
   try {
-    const resetResult = await userRepository.resetCheck(data);
-    if (!resetResult.success) throw new Error(resetResult.msg);
+    const checkResult = await UsersService.checkEmail(data.email);
+    if (!checkResult.success) throw new Error(checkResult.msg);
     res.status(StatusCodes.OK).json({ message: OK_RESET_REQUEST });
   } catch (err) {
     if (err instanceof Error) {
-      if (err.message === "user does not exist")
+      if (err.message === "존재하지 않는 사용자 입니다.")
         return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_USER });
     }
   }
@@ -119,26 +158,28 @@ const resetRequest = async (req: Request, res: Response) => {
 const resetPasswordRequest = async (req: Request, res: Response) => {
   const data = req.body;
   try {
-    const resetPasswordResult = await userRepository.resetPassword(data);
-    if (!resetPasswordResult.success) throw new Error(resetPasswordResult.msg);
+    const resetResult = await UsersService.reqPasswordUpate(data);
+    if (!resetResult.success) throw new Error(resetResult.msg);
     res.status(StatusCodes.OK).json({ message: OK_RESET_PASSWORD });
   } catch (err) {
     if (err instanceof Error) {
-      if (err.message === "user does not exist")
-        return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_USER });
+      if (err.message === "failed to update")
+        return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_RESET_PASSWORD });
     }
   }
 };
+
 const userResetPassword = async (req: Request, res: Response) => {
   const data = req.body;
   try {
     if (req.user?.isLoggedIn) {
-      const userId = req.user.id;
-      const getUserData = await userRepository.getUserDataRequest(userId);
-      console.log(getUserData.createdAt);
-      if (!getUserData) throw new Error("login required");
-      const resetPasswordResult = await userRepository.userResetPassword(data, getUserData);
-      if (!resetPasswordResult?.success) throw new Error(resetPasswordResult?.msg);
+      const userId = req.user.id as number;
+      const getUserData = await UsersService.findUser(userId);
+      if (!getUserData) throw new Error("user does not exist");
+      const compareReuslt = await UsersService.comparePassword(data.originPassword, getUserData.password);
+      if (!compareReuslt) throw new Error("wrong password");
+      const resetResult = await UsersService.reqUserPasswordUpdate(data, userId);
+      if (!resetResult?.success) throw new Error(resetResult?.msg);
       res.status(StatusCodes.OK).json({ message: OK_RESET_PASSWORD });
     } else {
       throw new Error("login required");
@@ -152,15 +193,17 @@ const userResetPassword = async (req: Request, res: Response) => {
     }
   }
 };
-const usersController = {
+const UsersController = {
   join,
   login,
   checkEmail,
   checkNickname,
-  patchUserInfoRequest,
+  userInfoUpdateRequest,
   resetRequest,
   resetPasswordRequest,
   userResetPassword,
+  logout,
+  userWithdraw,
 };
 
-export default usersController;
+export default UsersController;

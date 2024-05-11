@@ -14,8 +14,7 @@ export const searchNearByPlaces = async (
 ) => {
   try {
     if (!map) {
-      console.error("Map object is null");
-      return null;
+      return Promise.reject(new Error("구글 지도를 로드하는데 실패했습니다."));
     }
 
     const { keyword, location, radius } = params;
@@ -63,8 +62,7 @@ export const searchNearByPlaces = async (
 export const getPlaceDetail = async (map: google.maps.Map | null, placeId: string) => {
   try {
     if (!map) {
-      console.error("Map object is null");
-      return null;
+      return Promise.reject(new Error("구글 지도를 로드하는데 실패했습니다."));
     }
 
     const request = {
@@ -102,7 +100,7 @@ export const getPlaceDetail = async (map: google.maps.Map | null, placeId: strin
 
           resolve(placeDetailData);
         } else {
-          reject(new Error("Failed to fetch place details"));
+          reject(new Error("구글에서 세부 장소 정보를 가져오는데 실패했습니다."));
         }
       };
 

@@ -1,4 +1,5 @@
-import { Place } from "@/models/place.model";
+import { Place, PlaceDetails } from "@/models/place.model";
+import { ScheduleDetails } from "@/models/schedule.model";
 import { SelectedPlace } from "@/stores/addPlaceStore";
 import { fakerKO as faker } from "@faker-js/faker";
 import { v4 as uuidv4 } from "uuid";
@@ -145,3 +146,53 @@ export const mockRealPlaceWithoutUuid: Place[] = [
     placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
   },
 ];
+
+export const mockRealPlaceDetailWithoutUuid: PlaceDetails[] = [
+  {
+    id: "ChIJeV24aepLZTURilEBIwX0GgQ",
+    placeName: "도미노피자 대전월평점",
+    address: "서구 월평1동 524",
+    location: {
+      lat: 36.356299,
+      lng: 127.3649905,
+    },
+    placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
+    tel: "034-545-7879",
+    openingHours: ["aaaaa"],
+    siteUrl: "",
+  },
+  {
+    id: "ChIJGeYDXX9JZTURsFJQxqnBPws",
+    placeName: "한밭수목원",
+    address: "서구 둔산대로 169",
+    location: {
+      lat: 36.3683723,
+      lng: 127.3880555,
+    },
+    placeImg: getImgSrc(faker.helpers.rangeToNumber({ min: 0, max: 50 })),
+    tel: "034-545-7879",
+    openingHours: ["aaaaa"],
+    siteUrl: "",
+  },
+];
+
+export const mockScheduleDetailData: ScheduleDetails = {
+  id: 1,
+  title: "3일치 첫번째 여행일정",
+  startDate: "2024-05-10T00:00:00.000Z",
+  endDate: "2024-05-12T00:00:00.000Z",
+  days: [
+    {
+      day: 0,
+      spots: [
+        mockRealPlaceWithoutUuid[0],
+        mockRealPlaceWithoutUuid[1],
+        mockRealPlaceWithoutUuid[2],
+        mockRealPlaceWithoutUuid[3],
+        mockRealPlaceWithoutUuid[4],
+      ],
+    },
+    { day: 1, spots: [mockRealPlaceWithoutUuid[1], mockRealPlaceWithoutUuid[2], mockRealPlaceWithoutUuid[3]] },
+    { day: 2, spots: [] },
+  ],
+};

@@ -11,6 +11,7 @@ import { Button } from "@/components/common/Button";
 import { emailOptions, nicknameOptions, passwordOptions } from "@/config/registerOptions";
 import { useState } from "react";
 import { emailRegex, nicknameRegex } from "@/constants/regexPatterns";
+import { showAlert } from "@/utils/showAlert";
 
 export const placeholderHander = (text: string) => {
   return `${text} 입력해주세요.`;
@@ -18,7 +19,15 @@ export const placeholderHander = (text: string) => {
 export interface joinFormProps extends JoinProps {
   passwordConfirm: string;
 }
-export const allowedDomains = ["naver.com", "github.com", "yahoo.com", "daum.net", "kakao.com"];
+export const allowedDomains = [
+  "naver.com",
+  "github.com",
+  "yahoo.com",
+  "daum.net",
+  "kakao.com",
+  "routrip.com",
+  "test.com",
+];
 
 export const domainAuth = (email: string) => {
   const [, domain] = email.split("@");
@@ -27,7 +36,7 @@ export const domainAuth = (email: string) => {
 };
 
 const JoinPage = () => {
-  const { userJoin, userNickCheck, userEmailCheck } = useAuth();
+  const { userJoin, userNicknameCheck, userEmailCheck } = useAuth();
   const UserIcon = icons.MobileUserIcon;
   const {
     register,
@@ -51,9 +60,14 @@ const JoinPage = () => {
       return;
     }
     userEmailCheck(email).then((res) => {
-      // res 가 성공 메시지면 이거
-      setEmailUniqueCheck((prev) => !prev);
-      clearErrors("email");
+      if (res.status === 200) {
+        setEmailUniqueCheck((prev) => !prev);
+        clearErrors("email");
+      } else if (res.status === 409) {
+        setError("email", { message: res.data.message }, { shouldFocus: true });
+      } else {
+        showAlert(res.data.message, "error");
+      }
     });
   };
 
@@ -67,20 +81,24 @@ const JoinPage = () => {
       );
       return;
     }
-    userNickCheck(nickname).then((res) => {
+    userNicknameCheck(nickname).then((res) => {
       // res 가 성공 메시지면 이거
-      setNicknameUniqueCheck((prev) => !prev);
-      clearErrors("nickname");
+      if (res.status === 200) {
+        setNicknameUniqueCheck((prev) => !prev);
+        clearErrors("nickname");
+      } else if (res.status === 409) {
+        setError("nickname", { message: res.data.message }, { shouldFocus: true });
+      }
     });
   };
 
   const onSubmit = (data: joinFormProps) => {
     if (!emailUniqueCheck) {
-      setError("email", { message: "이메일 중복 확인이 되어 있지 않습니다." }, { shouldFocus: true });
+      setError("email", { message: "이메일 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
       return;
     }
     if (!nicknameUniqueCheck) {
-      setError("nickname", { message: "닉네임 중복 확인이 되어 있지 않습니다." }, { shouldFocus: true });
+      setError("nickname", { message: "닉네임 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
       return;
     }
 
@@ -102,6 +120,7 @@ const JoinPage = () => {
               isButton={true}
               buttonText={emailUniqueCheck ? "인증 완료" : "중복 확인"}
               onConfirm={checkEmail}
+              onChange={() => setEmailUniqueCheck(false)}
               isDisabled={emailUniqueCheck ? true : false}
             />
             {errors.email && <small className="error-text">{errors.email.message}</small>}
@@ -114,6 +133,7 @@ const JoinPage = () => {
               isButton={true}
               buttonText={nicknameUniqueCheck ? "인증 완료" : "중복 확인"}
               onConfirm={checkNickname}
+              onChange={() => setNicknameUniqueCheck(false)}
               isDisabled={nicknameUniqueCheck ? true : false}
             />
             {errors.nickname && <small className="error-text">{errors.nickname.message}</small>}
@@ -201,13 +221,15 @@ export const JoinPageStyle = styled.div`
     padding: 1rem;
   }
 
-  .login-link > :first-child {
-    margin-right: 5px;
+  .ps-link > :nth-child(2),
+  .login-link > :nth-child(2) {
+    color: ${({ theme }) => theme.color.primary};
   }
 
-  .login-link > :nth-child(2),
-  .ps-link > :nth-child(1) {
-    color: ${({ theme }) => theme.color.primary};
+  .ps-link > :first-child,
+  .login-link > :first-child {
+    margin: 0 5px 2px 0;
+    color: ${({ theme }) => theme.color.routeGray};
   }
 
   .join-login,
@@ -228,7 +250,6 @@ export const JoinPageStyle = styled.div`
     margin-bottom: 10px;
   }
   .error-text {
-    padding-left: 1rem;
     color: ${({ theme }) => theme.color.red};
   }
 

@@ -36,7 +36,7 @@ const LayoutStyle = styled.main`
   margin-top: 80px;
 
   @media ${({ theme }) => theme.mediaQuery.mobile} {
-    padding: 1.8rem 0.5rem;
+    padding: 0.5rem;
   }
 `;
 
