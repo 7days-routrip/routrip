@@ -41,7 +41,6 @@ export const removeUserId = () => {
   localStorage.removeItem("userId");
 };
 
-//  빠짐  //
 export const useAuthStore = create<StoreState>((set) => ({
   nickName: getToken() ? getNickName() : null,
   isLoggedIn: getToken() ? true : false, // 초기값 설정

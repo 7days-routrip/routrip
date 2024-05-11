@@ -7,7 +7,6 @@ import {
   fetchProfile,
 } from "@/apis/mypage.api";
 import { queryKey } from "@/constants/queryKey";
-import { Schedule } from "@/models/schedule.model";
 import { useQuery } from "@tanstack/react-query";
 
 export const useSchedule = () => {
@@ -36,8 +35,7 @@ export const useProfile = () => {
   });
 
   return {
-    profileInfo: profileData?.profile,
-
+    profileInfo: profileData,
     isProfileLoding,
   };
 };
@@ -105,6 +103,7 @@ export const useLikePlace = () => {
     queryFn: () => fetchLikePlace(),
     enabled: false,
   });
+
   return {
     likePlaces: likePlaceData,
     isEmptyLikePlace: likePlaceData?.length === 0,

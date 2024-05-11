@@ -23,6 +23,7 @@ const LoginPage = () => {
     const [, domain] = data.email.split("@");
     if (!allowedDomains.includes(domain)) {
       setError("email", { message: "허용되지 않는 이메일 도메인입니다." }, { shouldFocus: true });
+      return;
     }
     userLogin(data);
   };

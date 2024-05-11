@@ -6,6 +6,7 @@ import { useForm } from "react-hook-form";
 import { passwordOptions } from "@/config/registerOptions";
 import { fetchProfileRestPassword } from "@/apis/auth.api";
 import { Link } from "react-router-dom";
+import { useAuth } from "@/hooks/useAuth";
 interface ResetPasswordProps {
   originPassword: string;
   newPassword: string;
@@ -20,10 +21,11 @@ const ProfileResetPassword = () => {
 
     formState: { errors },
   } = useForm<ResetPasswordProps>();
+  const { userNewPasswordReset } = useAuth();
 
   const onSubmit = (data: ResetPasswordProps) => {
     if (data.newPassword === data.passwordConfirm) {
-      fetchProfileRestPassword({ originPassword: data.originPassword, newPassword: data.newPassword });
+      userNewPasswordReset(data.originPassword, data.newPassword);
     } else setError("passwordConfirm", { message: "비밀번호가 일치 하지 않습니다." }, { shouldFocus: true });
   };
   return (

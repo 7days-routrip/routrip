@@ -19,7 +19,15 @@ export const placeholderHander = (text: string) => {
 export interface joinFormProps extends JoinProps {
   passwordConfirm: string;
 }
-export const allowedDomains = ["naver.com", "github.com", "yahoo.com", "daum.net", "kakao.com", "routrip.com"];
+export const allowedDomains = [
+  "naver.com",
+  "github.com",
+  "yahoo.com",
+  "daum.net",
+  "kakao.com",
+  "routrip.com",
+  "test.com",
+];
 
 export const domainAuth = (email: string) => {
   const [, domain] = email.split("@");

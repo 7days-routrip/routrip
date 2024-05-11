@@ -1,30 +1,25 @@
-import { Profile } from "@/models/profile.model";
 import { httpClient } from "./https";
 import { Comment } from "@/models/comment.model";
 import { Schedule } from "@/models/schedule.model";
 import { Post } from "@/models/post.model";
 import { PlaceDetails } from "@/models/place.model";
-
-interface FetchProfileResponse {
-  profile: Profile;
-}
+import { Profile } from "@/models/profile.model";
 
 // 내 프로필
 export const fetchProfile = async () => {
   try {
-    const response = await httpClient.get<FetchProfileResponse>("/mypages/total-data-quantity");
-    return response.data;
+    const { data } = await httpClient.get<Profile>("/mypages/total-data-quantity");
+    return data;
   } catch (error) {
     // 에러 처리
     return {
-      profile: {
-        journeysNum: 0,
-        postsNum: 0,
-        commentsNum: 0,
-        likePostsNum: 0,
-        likeSpotsNum: 0,
-        profile: "",
-      },
+      journeysNum: 0,
+      postsNum: 0,
+      commentsNum: 0,
+      likePostsNum: 0,
+      likeSpotsNum: 0,
+      profile: "",
+      nickName: "",
     };
   }
 };
@@ -85,8 +80,8 @@ export const fetchLikePost = async () => {
 
 export const fetchLikePlace = async () => {
   try {
-    const response = await httpClient.get<PlaceDetails[]>("/likes/places");
-    return response.data;
+    const { data } = await httpClient.get<PlaceDetails[]>("/likes/places");
+    return data;
   } catch (error) {
     // 에러 처리
     return [];
