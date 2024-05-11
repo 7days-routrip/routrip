@@ -199,13 +199,7 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
     align-items: center;
   }
 
-  .like {
-    margin-right: 5px;
-  }
-
   .feedback {
-    margin-top: 10px;
-    margin-right: 0.5rem;
     display: flex;
     width: ${({ $view }) => ($view === "grid" ? "100%" : "auto")};
     justify-content: ${({ $view }) => ($view === "grid" ? "space-between" : "center")};
@@ -229,9 +223,7 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.fontSize.xsmall};
     flex-direction: ${({ $view }) => ($view === "grid" ? "column" : "row")};
-    .feedback {
-      margin-top: 0;
-    }
+
     .author-info {
       flex-direction: column;
       align-items: flex-start;
