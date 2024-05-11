@@ -10,15 +10,18 @@ export class Journeys {
   @Column()
   title!: string;
 
-  @ManyToOne((type) => Users, { lazy: true })
-  user!: Promise<Users>;
+  @ManyToOne((type) => Users)
+  user!: Users;
 
-  @ManyToOne((type) => Routes, { lazy: true })
-  route!: Promise<Routes>;
-
-  @Column("date")
-  startDate!: string;
+  @ManyToOne((type) => Routes)
+  route!: Routes;
 
   @Column("date")
-  endDate!: string;
+  startDate!: Date;
+
+  @Column("date")
+  endDate!: Date;
+
+  @Column({ length: 512, nullable: true })
+  thumbnail!: string;
 }
