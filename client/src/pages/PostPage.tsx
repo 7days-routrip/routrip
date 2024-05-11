@@ -17,7 +17,7 @@ export const posts: Post[] = [
     continental: "Asia",
     country: "Japan",
     commentsNum: "12",
-    likesNum: "210",
+    likesNum: "21",
     postsImg: "../../public/assets/images/logo-footer.png",
     createdAt: "2024-04-01",
   },
@@ -30,7 +30,7 @@ export const posts: Post[] = [
     continental: "Asia",
     country: "Japan",
     commentsNum: "12",
-    likesNum: "190",
+    likesNum: "79",
     postsImg: "../../public/assets/images/logo-footer.png",
     createdAt: "2024-04-11",
   },
@@ -43,7 +43,7 @@ export const posts: Post[] = [
     continental: "Asia",
     country: "Japan",
     commentsNum: "12",
-    likesNum: "240",
+    likesNum: "20",
     postsImg: "../../public/assets/images/logo-footer.png",
     createdAt: "2024-04-13",
   },
@@ -56,7 +56,7 @@ export const posts: Post[] = [
     continental: "Asia",
     country: "Japan",
     commentsNum: "12",
-    likesNum: "280",
+    likesNum: "91",
     postsImg: "../../public/assets/images/logo-footer.png",
     createdAt: "2024-05-05",
   },
@@ -69,7 +69,7 @@ export const posts: Post[] = [
     continental: "Asia",
     country: "Japan",
     commentsNum: "12",
-    likesNum: "120",
+    likesNum: "88",
     postsImg: "../../public/assets/images/logo-footer.png",
     createdAt: "2024-03-17",
   },
@@ -179,7 +179,31 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
     flex-wrap: wrap;
     gap: 14px;
     justify-content: center;
-    width: 1080px; // Adjust as needed
+    width: 1080px;
+  }
+
+  @media (max-width: 768px) {
+    .main-content {
+      width: 100%;
+    }
+
+    .control-wrapper {
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .btn-wrapper,
+    .input-wrapper,
+    .view-toggle {
+      width: 100%;
+    }
+    .view-toggle {
+      justify-content: flex-end;
+    }
+
+    .post {
+      width: 100%;
+    }
   }
 `;
 
