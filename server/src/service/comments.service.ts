@@ -38,5 +38,12 @@ const updateComment = async (userId: number, postId: number, content: string, co
   return result;
 };
 
-const CommentsService = { reqPostCommentsList, reqCommentsList, addComment, updateComment };
+const deleteComment = async (userId: number, commentId: number) => {
+  const comment = await commentRepo.findOne({ where: { id: commentId, user: { id: userId } } });
+  if (!comment) throw new Error("잘못된 요청입니다.");
+  const result = await commentRepo.remove(comment);
+  return result;
+};
+
+const CommentsService = { reqPostCommentsList, reqCommentsList, addComment, updateComment, deleteComment };
 export default CommentsService;
