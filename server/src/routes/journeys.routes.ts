@@ -9,7 +9,7 @@ router.use(express.json());
 
 router.get("/:id", authenticateUser, authorization, JourneysController.getJourneyDetail);
 router.post("/", authenticateUser, JourneysController.addJourney);
-router.put("/:id");
-router.delete("/:id");
+router.put("/:id", authenticateUser, authorization, JourneysController.modifyJourney);
+router.delete("/:id", authenticateUser, authorization, JourneysController.deleteJourney);
 
 export default router;
