@@ -92,6 +92,7 @@ const WritePage = () => {
     formData.forEach((value, key) => {
       console.log(`${key}:`, value);
     });
+    console.log(formData)
 
     const textBlob = new Blob([data], { type: "text/html" });
     formData.append("contents", textBlob);
@@ -100,7 +101,8 @@ const WritePage = () => {
       method: "POST",
       body: formData,
       headers: {
-        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+        getSetCookie : "refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJuaWNrTmFtZSI6IuuRpeuRpeydtCIsImlhdCI6MTcxNTUxMDYzOCwiZXhwIjoxNzE2NzIwMjM4fQ.0u1no8PGrkZMXMQm6n_V2ZokU6XQyY5ry6cnXGESLIc; Path=/; HttpOnly",
+        Authorization: "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJuaWNrTmFtZSI6IuuRpeuRpeydtCIsImlhdCI6MTcxNTUxMDYzOCwiZXhwIjoxNzE1NTEyNDM4fQ.rtuwN3BidCsA1Z4g8CyfXcK1oQXExbB1VnE_qB_qsPs",
       },
     })
       .then((response) => response.json())
