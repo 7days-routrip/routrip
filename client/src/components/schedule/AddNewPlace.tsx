@@ -19,7 +19,7 @@ const AddNewPlace = () => {
     // 구글 api 장소 검색 요청
     const currentZoom = googleMap?.getZoom() || 6;
     const radius = calculateSearchRadius(currentZoom);
-    console.log(currentZoom, radius);
+    // console.log(currentZoom, radius, mapCenter);
     const params: SearchNearByPlacesParams = {
       keyword,
       location: { lat: mapCenter.lat, lng: mapCenter.lng },
