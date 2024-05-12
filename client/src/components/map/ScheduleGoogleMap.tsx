@@ -55,7 +55,7 @@ const ScheduleGoogleMap = () => {
   });
 
   const { googleMap, mapCenter, setCenter, setGoogleMap, updateMapBounds } = useMapStore();
-  const { addPlaces } = useAddPlaceStore(); // 실제로 사용할 전역 상태. 임시로 mockRealPlaceData를 사용
+  const { addPlaces } = useAddPlaceStore();
   const { markerType, dayIndex } = useShowMarkerTypeStore();
   const { dayPlaces } = useDayPlaceStore();
   const { searchPlaces } = useSearchPlacesStore();
@@ -86,7 +86,6 @@ const ScheduleGoogleMap = () => {
         lat: googleMap.getCenter()?.lat() || center.lat,
         lng: googleMap.getCenter()?.lng() || center.lng,
       });
-      // console.log(googleMap.getCenter()?.lat(), googleMap.getCenter()?.lng());
     }
   }, [googleMap, center]);
 
@@ -105,7 +104,7 @@ const ScheduleGoogleMap = () => {
       googleMap.panTo(place.location); // 1. 마커 위치로 지도 이동
 
       const currentZoom = googleMap.getZoom() || 6;
-      const targetZoom = Math.max(currentZoom, 14);
+      const targetZoom = Math.max(currentZoom, 12);
       googleMap.setZoom(targetZoom); // 2. 줌 비율 조정(확대)
     }
   };
@@ -113,7 +112,6 @@ const ScheduleGoogleMap = () => {
   const onClickMap = () => {
     if (clickMarker) {
       setClickMarker(null);
-      // updateMapBounds(googleMap, getPlaceArr());
     }
   };
 
