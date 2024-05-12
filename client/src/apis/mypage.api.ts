@@ -43,7 +43,7 @@ export const fetchMySchedule = async (params: FetchMyPageParams) => {
 
 export const fetchMyPosts = async (params: FetchMyPageParams) => {
   try {
-    const { data } = await httpClient.get<Post[]>("/mypages/posts");
+    const { data } = await httpClient.get<Post[]>("/mypages/posts?pages=1");
     return data;
   } catch (error) {
     // 에러 처리

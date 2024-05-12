@@ -59,6 +59,9 @@ const reqUserPasswordUpdate = async (data: iUserResetPasswordData, userId: numbe
   return { success: true };
 };
 
+const reqImageUpload = async (path: string, userId: number) => {
+  return await userRepo.update(userId, { profileImg: path });
+};
 const checkEmail = async (email: string) => {
   const user = await UserRepository.findByEmail(email);
 
@@ -94,6 +97,7 @@ const UsersService = {
   reqPasswordUpate,
   reqUserPasswordUpdate,
   reqUserWithdraw,
+  reqImageUpload,
 };
 
 export default UsersService;

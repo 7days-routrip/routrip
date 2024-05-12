@@ -125,6 +125,8 @@ const userInfoUpdateRequest = async (req: Request, res: Response) => {
   const patchData: iPatchData = req.body;
   try {
     if (req.user?.isLoggedIn) {
+      console.log(req.file);
+      console.log(req.body);
       const userId = req.user.id as number;
       const updateResult = await UsersService.reqUsersUpdate(patchData, userId);
       if (!updateResult.success) throw new Error(updateResult.msg);
@@ -193,6 +195,26 @@ const userResetPassword = async (req: Request, res: Response) => {
     }
   }
 };
+
+const userUploadProfileImg = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.isLoggedIn) {
+      const userId = req.user.id as number;
+      const file = req.file as Express.MulterS3.File;
+      await UsersService.reqImageUpload(file.location, userId);
+      res.status(StatusCodes.OK).json({
+        url: file.location,
+      });
+    } else {
+      throw new Error("login required");
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === ("login required" || "user does not exist"))
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+    }
+  }
+};
 const UsersController = {
   join,
   login,
@@ -204,6 +226,7 @@ const UsersController = {
   userResetPassword,
   logout,
   userWithdraw,
+  userUploadProfileImg,
 };
 
 export default UsersController;

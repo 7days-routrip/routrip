@@ -178,13 +178,9 @@ const getPostComments = async (postId: number) => {
 const getPostImg = (content: string) => {
   return undefined;
 };
-const PostsService = { reqPostInsertData, reqPostsList, reqPostData, reqPostEditData, reqPostDelData };
+
+const reqImageUpload = async (url: string, postId: number) => {
+  return await postRepo.update(postId, { postsImg: url });
+};
+const PostsService = { reqPostInsertData, reqPostsList, reqPostData, reqPostEditData, reqPostDelData, reqImageUpload };
 export default PostsService;
-
-// export const getImageFromContent = async (contents: string) => {
-//   const reg = /<img[^>]*src=[\"']?([^>\"']+)[\"']?[^>]*>/g;
-//   // const repImage = await testContent.match(reg);
-//   const repImage = await contents.match(reg);
-
-//   return typeof contents !== null ? repImage?.map((value) => value)[0] : undefined;
-// };

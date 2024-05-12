@@ -10,6 +10,7 @@ import {
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
 import PostsService from "@/service/posts.service";
+import { __Client } from "@aws-sdk/client-s3";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -24,6 +25,7 @@ const postsRequest = async (req: Request, res: Response) => {
       const dataResult = await PostsService.reqPostInsertData(inputData, userId);
       if (!dataResult.success) throw new Error(dataResult.msg);
       res.status(StatusCodes.OK).json({ message: OK_UPLOAD_POST });
+      queryRunner.commitTransaction();
     } else {
       throw new Error("login required");
     }
@@ -126,6 +128,26 @@ const postDelRequest = async (req: Request, res: Response) => {
     }
   }
 };
-const postsController = { postsRequest, postAllList, postRequest, postEditRequest, postDelRequest };
+const postUploadImg = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.isLoggedIn) {
+      const postId = parseInt(req.params.id);
+      const file = req.file as Express.MulterS3.File;
+      await PostsService.reqImageUpload(file.location, postId);
+      res.status(StatusCodes.OK).json({
+        url: file.location,
+      });
+    } else {
+      throw new Error("login required");
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === ("login required" || "user does not exist"))
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+    }
+  }
+};
+
+const postsController = { postsRequest, postAllList, postRequest, postEditRequest, postDelRequest, postUploadImg };
 
 export default postsController;
