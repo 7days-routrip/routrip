@@ -14,6 +14,11 @@ const WriteTopBtnStyle = styled.div`
   align-items: center;
   z-index: 1;
   min-height: 50px;
+
+  @media ${({ theme }) => theme.mediaQuery.mobile} {
+    bottom: 20px;
+    right: 20px;
+  }
 `;
 
 interface WriteTopBtnProps {
