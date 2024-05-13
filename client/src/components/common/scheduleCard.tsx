@@ -12,7 +12,7 @@ interface Props {
 const ScheduleCard = ({ scheduleProps, view }: Props) => {
   return (
     <ScheduleCardStyle $view={view}>
-      <Link to={`/journeys/${scheduleProps.id}`}>
+      <Link to={`/schedule/${scheduleProps.id}`}>
         <SchedulerImageStyle $image={scheduleProps.thumbnail ? scheduleProps.thumbnail : ""} $view={view} />
       </Link>
       <CardContentStyle>

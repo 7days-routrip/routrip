@@ -12,6 +12,7 @@ import CommentCard from "@/components/common/Comment";
 import LikePlaceCard from "@/components/common/LikePlaceCard";
 import { Comment } from "@/models/comment.model";
 import ProfileCard from "@/components/common/ProfileCard";
+import { fetchMyPosts } from "@/apis/mypage.api";
 
 const TABLIST = [
   { name: "일정 모음" },
