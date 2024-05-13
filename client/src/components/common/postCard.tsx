@@ -18,7 +18,7 @@ const PostCard = ({ PostProps, view }: Props) => {
   const CommentIcon = icons.CommentIcon;
   return (
     <PostCardStyle $profile={PostProps.userProfile} $view={view}>
-      <Link to={`/posts/${PostProps.id}`}>
+      <Link to={`/post/${PostProps.id}`}>
         <CardImageStyle $image={PostProps.postsImg} $view={view} />
       </Link>
 

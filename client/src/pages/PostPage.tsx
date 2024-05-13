@@ -1,6 +1,5 @@
 import styled from "styled-components";
 import icons from "@/icons/icons";
-
 import PostCard from "@/components/common/postCard";
 import { Post } from "@/models/post.model";
 import { useEffect, useRef, useState } from "react";
@@ -31,74 +30,6 @@ const regions = [
   { id: 4, name: "남아메리카", countries: ["브라질", "아르헨티나", "칠레", "페루", "콜롬비아"] },
   { id: 5, name: "북아메리카", countries: ["미국", "캐나다", "멕시코"] },
   { id: 6, name: "오세아니아", countries: ["호주", "뉴질랜드"] },
-];
-
-export const posts: Post[] = [
-  {
-    id: 1,
-    title: "오션뷰를 보고 싶다면? 여기 !!",
-    date: "2024.03.14 ~ 2024.03.18",
-    author: "여행조아",
-    userProfile: "../../public/assets/images/logo-profile.png",
-    continental: "Asia",
-    country: "Japan",
-    commentsNum: "12",
-    likesNum: "23",
-    postsImg: "../../public/assets/images/logo-footer.png",
-    createdAt: "2024-04-01",
-  },
-  {
-    id: 2,
-    title: "제주에서의 3일",
-    date: "2024.03.12 ~ 2024.03.18",
-    author: "여행조아",
-    userProfile: "../../public/assets/images/logo-profile.png",
-    continental: "Asia",
-    country: "Japan",
-    commentsNum: "12",
-    likesNum: "79",
-    postsImg: "../../public/assets/images/logo-footer.png",
-    createdAt: "2024-04-11",
-  },
-  {
-    id: 3,
-    title: "가까운 해외, 일본!",
-    date: "2024.03.09 ~ 2024.03.19",
-    author: "여행조아",
-    userProfile: "../../public/assets/images/logo-profile.png",
-    continental: "Asia",
-    country: "Japan",
-    commentsNum: "12",
-    likesNum: "20",
-    postsImg: "../../public/assets/images/logo-footer.png",
-    createdAt: "2024-04-13",
-  },
-  {
-    id: 4,
-    title: "최고의 휴양지",
-    date: "2024.03.11 ~ 2024.03.20",
-    author: "여행조아",
-    userProfile: "../../public/assets/images/logo-profile.png",
-    continental: "Asia",
-    country: "Japan",
-    commentsNum: "12",
-    likesNum: "91",
-    postsImg: "../../public/assets/images/logo-footer.png",
-    createdAt: "2024-05-05",
-  },
-  {
-    id: 4,
-    title: "겨울에 떠나는 삿포로",
-    date: "2024.03.11 ~ 2024.03.15",
-    author: "여행조아",
-    userProfile: "../../public/assets/images/logo-profile.png",
-    continental: "Asia",
-    country: "Japan",
-    commentsNum: "12",
-    likesNum: "88",
-    postsImg: "../../public/assets/images/logo-footer.png",
-    createdAt: "2024-03-17",
-  },
 ];
 
 interface PostPageStyleProps {
