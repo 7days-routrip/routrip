@@ -81,6 +81,9 @@ const MainPageStyle = styled.div`
     margin-bottom: 0.1rem;
   }
 
+  ul {
+    padding: 0;
+  }
   .guide-post-container {
     width: 100%;
     display: flex;
