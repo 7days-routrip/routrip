@@ -5,7 +5,8 @@ import { theme } from "@/styles/theme";
 import icons from "@/icons/icons";
 import Dropdown from "@/components/common/Dropdown";
 import { Link } from "react-router-dom";
-import Button from "@/components/common/Button";
+import { Button } from "@/components/common/Button";
+
 import { useState } from "react";
 
 const PostDetailPage = () => {
@@ -64,10 +65,10 @@ const PostDetailPage = () => {
         <p>여행 1일차 즐거웠습니다!</p>
       </div>
       <div className="btn-wrapper">
-        <Button size="medium" scheme="primary" radius="default">
+        <Button $size="medium" $scheme="primary" $radius="default">
           <LikeIcon /> {post.likesNum}
         </Button>
-        <Button size="medium" scheme="secondary" radius="default">
+        <Button $size="medium" $scheme="secondary" $radius="default">
           목록
         </Button>
       </div>
