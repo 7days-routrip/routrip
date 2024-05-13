@@ -31,9 +31,16 @@ const postUserAllList = async (req: Request, res: Response) => {
       const userId = req.user.id as number;
       const sort = req.query?.sort as string;
       const pages = parseInt(req.query?.pages as string);
-      const listResult = await PostsService.reqPostsList(pages, undefined, userId, sort, undefined, "list");
-      if (!listResult.success) throw new Error(listResult.msg);
-      res.status(StatusCodes.OK).json(listResult.data);
+      const listResult = await PostsService.reqAllPostsList(pages, undefined, userId, sort, undefined, "list");
+      const pageResult = await PostsService.reqAllPostsList(pages, undefined, userId, sort, undefined);
+      if (listResult.success === false || pageResult.success === false) throw new Error(listResult.msg);
+      res.status(StatusCodes.OK).json({
+        posts: listResult.data,
+        pagination: {
+          page: pages,
+          totalPosts: pageResult.count,
+        },
+      });
     } else {
       throw new Error("login required");
     }
@@ -75,5 +82,5 @@ const getJourneysList = async (req: Request, res: Response) => {
   }
 };
 
-const MypagesController = { commentUserAllList, postUserAllList, userTotalData, getJourneysList, };
+const MypagesController = { commentUserAllList, postUserAllList, userTotalData, getJourneysList };
 export default MypagesController;

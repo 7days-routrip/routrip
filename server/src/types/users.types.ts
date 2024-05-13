@@ -1,5 +1,3 @@
-import { StringColorFormat } from "@faker-js/faker";
-
 export interface iAuthUserData {
   id?: number;
   nickname?: string;
@@ -7,7 +5,7 @@ export interface iAuthUserData {
 }
 
 export interface iPatchData {
-  nickName?: string;
+  nickname?: string;
   profileImg?: string;
 }
 
