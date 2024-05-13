@@ -23,13 +23,17 @@ const GuidePostCard = ({ PostPops }: Props) => {
 };
 
 const GuidePostCardStyle = styled(MainPostCardStyle)`
+  flex: 1;
+  width: 100%;
+  /* min-width: 200px; */
+
   .title {
     width: 100%;
     color: ${({ theme }) => theme.color.white};
   }
 
   @media (max-width: 768px) {
-    width: 100px;
+    /* min-width: 100px; */
     height: 140px;
 
     .title > h1 {
@@ -39,12 +43,13 @@ const GuidePostCardStyle = styled(MainPostCardStyle)`
 `;
 
 const GuideCardImageStyle = styled(CardImageStyle)`
-  width: 200px;
+  width: 100%;
+  /* max-width: 250px; */
   height: 280px;
   border-radius: ${({ theme }) => theme.borderRadius.default};
 
   @media (max-width: 768px) {
-    width: 100px;
+    /* width: 100px; */
     height: 140px;
   }
 `;

@@ -36,6 +36,7 @@ const MainPostCard = ({ PostPops }: Props) => {
 
 export const MainPostCardStyle = styled.div`
   position: relative;
+  width: 100%;
 
   h1 {
     margin: 0;
@@ -68,6 +69,7 @@ export const MainPostCardStyle = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   .title {
@@ -96,12 +98,13 @@ export const MainPostCardStyle = styled.div`
   }
 
   @media (max-width: 768px) {
-    width: 170px;
-    height: 100px;
+    /* max-width: 170px; */
+    /* height: 100px; */
   }
 `;
 
 const MainCardImageStyle = styled(CardImageStyle)`
   border-radius: ${({ theme }) => theme.borderRadius.default};
+  width: 100%;
 `;
 export default MainPostCard;
