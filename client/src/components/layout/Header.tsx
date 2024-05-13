@@ -4,6 +4,8 @@ import icons from "../../icons/icons";
 import { Link } from "react-router-dom";
 import { useState } from "react";
 import { theme } from "../../styles/theme";
+import { useAuthStore } from "@/stores/authStore";
+import { useAuth } from "@/hooks/useAuth";
 
 interface Props {
   isFull?: boolean;
@@ -11,8 +13,15 @@ interface Props {
 
 const Header = ({ isFull = false }: Props) => {
   const { LoginIcon, JoinIcon, LogoutIcon, MyPageIcon, HamburgerIcon, MobileUserIcon } = icons;
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
+  // const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const { isLoggedIn, storeLogout } = useAuthStore();
+  const { userLogout } = useAuth();
 
+  const logoutHandler = () => {
+    userLogout().then(() => {
+      storeLogout();
+    });
+  };
   return (
     <HeaderStyle $isFull={isFull}>
       <Link to="/" className="logo-link">
@@ -34,7 +43,7 @@ const Header = ({ isFull = false }: Props) => {
       <div className="desktop-auth-icons">
         {isLoggedIn ? (
           <>
-            <IconText to="/logout" color="primary">
+            <IconText onClick={logoutHandler} to={"/"} color="primary">
               <LogoutIcon color={theme.color.primary} />
               <span>로그아웃</span>
             </IconText>
@@ -81,6 +90,8 @@ const HeaderStyle = styled.header<HeaderStyleProps>`
   left: 0;
   right: 0;
   z-index: 1000;
+  background-color: ${({ theme }) => theme.color.white};
+  padding: 0 0.8rem;
 
   .desktop-nav,
   .desktop-auth-icons {
@@ -146,7 +157,7 @@ const IconText = styled(Link)`
 
   span {
     display: inline-block;
-    width: 70px;
+    width: 80px;
   }
 `;
 
