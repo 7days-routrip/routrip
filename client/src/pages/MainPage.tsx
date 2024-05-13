@@ -1,11 +1,13 @@
+import CategoryCard from "@/components/common/CategoryCard";
+import GuidePostCard from "@/components/common/GuidePostCard";
 import MainPostCard from "@/components/common/MainPostCard";
-import PostCard from "@/components/common/postCard";
+
 import { Post } from "@/models/post.model";
 import styled from "styled-components";
 
 const dummyPost: Post = {
   id: 1,
-  title: "가짜로 여행을 떠나는 진짜 여행!",
+  title: "서울 여행 가이드",
   date: "2024.03.12-2024.03.18",
   author: "김아무개",
   userProfile: "",
@@ -21,7 +23,9 @@ const MainPage = () => {
   // return <MainPageStyle>MainPageStyle</MainPageStyle>;
   return (
     <MainPageStyle>
-      <MainPostCard PostPops={dummyPost} />
+      {/* <MainPostCard PostPops={dummyPost} /> */}
+      <GuidePostCard PostPops={dummyPost} />
+      {/* <CategoryCard /> */}
     </MainPageStyle>
   );
 };
