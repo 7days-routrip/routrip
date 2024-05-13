@@ -71,7 +71,7 @@ export const CardImageStyle = styled.div<CardImageStyleProps>`
   height: ${({ $view }) => ($view === "grid" ? "170px" : "150px")};
   align-items: center;
   justify-content: center;
-  background-image: url(${({ $image }) => ($image ? `data:image/${$image}` : DEFAULT_IMAGE)});
+  background-image: url(${({ $image }) => ($image ? $image : DEFAULT_IMAGE)});
   background-position: center;
   background-size: cover;
   border: 0;
