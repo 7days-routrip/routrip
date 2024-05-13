@@ -40,9 +40,7 @@ export const addNewSchedule = async ({ title, startDate, endDate, allDaysPlaces 
 export const getScheduleDetails = async (id: string) => {
   try {
     const { data } = await httpClient.get<ScheduleDetails>(`/journeys/${id}`);
-    // console.log(data);
-    const convertData = convertScheduleDetails(data);
-    return convertData;
+    return data;
   } catch (err) {
     console.error("api ", err);
     throw err;
