@@ -36,7 +36,7 @@ const reqUserWithdraw = async (userId: number) => {
 
 const reqUsersUpdate = async (data: iPatchData, userId: number) => {
   const patch = {
-    nickName: data.nickName,
+    nickName: data.nickname,
     profileImg: data.profileImg,
   };
   const userUpdateResult = await userRepo.update(userId, patch);

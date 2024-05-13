@@ -8,8 +8,9 @@ import express from "express";
 const router = express.Router();
 router.use(express.json());
 
-router.post("/:id/upload/img", awsUpload.postsUpload.single("postImg"), PostsController.postUploadImg);
+router.post("/:id/upload/img", awsUpload.postsUpload.single("posts"), PostsController.postUploadImg);
 router.route("/").post(authenticateUser, PostsController.postsRequest).get(PostsController.postAllList);
+router.get("/all/hot", PostsController.postHotList);
 router
   .route("/:id")
   .get(authenticateUser, PostsController.postRequest)
