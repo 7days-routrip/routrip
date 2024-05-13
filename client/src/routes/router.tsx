@@ -4,6 +4,7 @@ import JoinPage from "@/pages/JoinPage";
 import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
 import PostDetailPage from "@/pages/PostDetailPage";
+import PostEditPage from "@/pages/PostEditPage";
 import PostPage from "@/pages/PostPage";
 import SchedulePage from "@/pages/SchedulePage";
 import { createBrowserRouter } from "react-router-dom";
@@ -67,6 +68,20 @@ const routerArr = [
     element: (
       <Layout>
         <PostDetailPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+
+  {
+    path: "/post/:id/edit",
+    element: (
+      <Layout>
+        <PostEditPage />
       </Layout>
     ),
     errorElement: (
