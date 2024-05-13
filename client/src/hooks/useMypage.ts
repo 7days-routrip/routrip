@@ -16,7 +16,7 @@ export const useSchedule = () => {
   } = useQuery({
     queryKey: ["schedule"],
     queryFn: () => fetchMySchedule(),
-    enabled: false,
+    enabled: true,
   });
 
   return {

@@ -1,3 +1,4 @@
+import MainPostCard from "@/components/common/MainPostCard";
 import PostCard from "@/components/common/postCard";
 import { Post } from "@/models/post.model";
 import styled from "styled-components";
@@ -12,7 +13,7 @@ const dummyPost: Post = {
   country: "서울",
   commentsNum: "999",
   likesNum: "999",
-  postsImg: "",
+  postsImg: "https://picsum.photos/seed/picsum/200/300",
   createdAt: "2024.03.12",
 };
 
@@ -20,7 +21,7 @@ const MainPage = () => {
   // return <MainPageStyle>MainPageStyle</MainPageStyle>;
   return (
     <MainPageStyle>
-      <PostCard PostProps={dummyPost} view="list" />
+      <MainPostCard PostPops={dummyPost} />
     </MainPageStyle>
   );
 };
