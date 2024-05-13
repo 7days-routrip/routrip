@@ -19,14 +19,14 @@ const getJourneysList = async (userId: number) => {
 const getJourneyDetail = async (journeyId: number) => {
   const result = await JourneysRepository.getJourneyData(journeyId);
   if (!result.length) throw new Error("일정 정보를 찾을 수 없습니다.");
-
   let days = [];
   for (let i = 0; i <= result[result.length - 1].day; i++) {
     // day n일차
     let spots = [];
+    
     for (let j = 0; j < result.length; j++) {
       // 해당 day의 seq 데이터
-      if (result[j].day === i) {
+      if (result[j].day === i && result[j].seq !== null) {
         const [lat, lng] = result[j].location.split(", ");
         spots.push({
           id: result[j].placeId,
