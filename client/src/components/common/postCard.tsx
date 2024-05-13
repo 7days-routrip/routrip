@@ -45,11 +45,12 @@ const PostCard = ({ PostProps, view }: Props) => {
             </div>
             <div className="feedback-icon">
               <div className="comment">
-                <Likecon />
+                <CommentIcon />
+
                 <span>{PostProps.commentsNum}</span>
               </div>
               <div className="like">
-                <CommentIcon />
+                <Likecon />
                 <span>{PostProps.likesNum}</span>
               </div>
             </div>
