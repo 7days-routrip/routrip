@@ -13,7 +13,7 @@ const register = async (
   location: Location,
   openingHours: string[],
   img: string,
-): Promise<boolean> => {
+): Promise<void> => {
   const place: Places = new Places();
   place.id = id;
   place.name = name;
@@ -31,21 +31,21 @@ const register = async (
   const exists = await placeRepository.existsBy({ id: place.id });
 
   if (exists) {
-    return false;
+    throw new Error("이미 등록된 장소가 있습니다.\n해당 장소를 추가하시겠습니까?");
   }
+
   const savedPlace: Places = await placeRepository.save(place);
-  return true;
 };
 
 const checkDuplicate = async (id: string): Promise<boolean> => {
   return await placeRepository.existsBy({ id: id });
 };
 
-const getDetail = async (id: string): Promise<boolean | PlaceDetailDTO> => {
+const getDetail = async (id: string): Promise<PlaceDetailDTO> => {
   let foundPlace: Places | null = await placeRepository.findOneBy({ id: id });
 
   if (!foundPlace) {
-    return false;
+    throw new Error("장소 정보를 찾을 수 없습니다.");
   }
 
   const locationStrArr: string[] = foundPlace["location"].split(", ");
@@ -70,14 +70,14 @@ const getDetail = async (id: string): Promise<boolean | PlaceDetailDTO> => {
   return placeDetailDTO;
 };
 
-const search = async (keyword: string): Promise<boolean | SearchPlaceDTO[]> => {
+const search = async (keyword: string): Promise<SearchPlaceDTO[]> => {
   const places = await placeRepository
     .createQueryBuilder("places")
     .where("places.name LIKE :keyword", { keyword: `%${keyword}%` })
     .getMany();
 
   if (places.length === 0) {
-    return false;
+    throw new Error("등록된 장소가 없습니다.\n신규 장소를 등록해 주세요.");
   }
 
   let searchedPlaces: SearchPlaceDTO[] = [];

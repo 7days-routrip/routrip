@@ -3,7 +3,6 @@ import { Picks } from "./picks.model";
 
 @Entity()
 export class Places {
-  @OneToMany(() => Picks, (picks) => picks.place)
   @PrimaryColumn({ type: "varchar", length: 50 })
   id!: string;
 
