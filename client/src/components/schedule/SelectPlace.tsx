@@ -25,7 +25,7 @@ const SelectPlace = () => {
         requestHandler={requestHandler}
         setSearchKeyword={setSearchKeywordToServer}
       />
-      {searchPlaces && <PlaceList place={searchPlaces} buttonTitle={"추가"} />}
+      {searchPlaces && <PlaceList place={searchPlaces} buttonTitle={"추가"} type="searchApi" />}
     </SelectPlaceStyle>
   );
 };

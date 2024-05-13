@@ -45,7 +45,7 @@ const AddNewPlace = () => {
         requestHandler={requestHandler}
         setSearchKeyword={setSearchKeywordToGoogle}
       />
-      <PlaceList place={nearPlaces} buttonTitle={"등록"} />
+      <PlaceList place={nearPlaces} buttonTitle={"등록"} type="searchGoogle" />
     </AddNewPlaceStyle>
   );
 };
