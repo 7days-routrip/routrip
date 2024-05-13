@@ -16,7 +16,6 @@ import SchedulePage from "@/pages/SchedulePage";
 import WritePage from "@/pages/WritePage";
 import { createBrowserRouter } from "react-router-dom";
 
-
 const routerArr = [
   {
     path: "/",
