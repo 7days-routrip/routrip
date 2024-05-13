@@ -3,7 +3,7 @@ import icons from "@/icons/icons";
 
 import PostCard from "@/components/common/postCard";
 import { Post } from "@/models/post.model";
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ViewMode } from "@/components/common/postCard";
 import { Link } from "react-router-dom";
 
@@ -112,18 +112,44 @@ const PostPage = () => {
   const [selectedRegion, setSelectedRegion] = useState(0);
   const [countries, setCountries] = useState<string[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const loader = useRef(null);
 
   const clickListBtn = () => setView("list");
   const clickGridBtn = () => setView("grid");
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch("http://localhost:1234/api/posts?area=home&pages=1");
+      const response = await fetch(`http://localhost:1234/api/posts?area=home&pages=${page}`);
       const data = await response.json();
-      setPosts(data.posts);
+      setPosts((prev) => [...prev, ...data.posts]);
+      setHasMore(data.pagination.page * 2 < data.pagination.totalPosts);
     };
+
     fetchPosts();
-  }, []);
+  }, [page]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      { threshold: 1.0 },
+    );
+
+    if (loader.current) {
+      observer.observe(loader.current);
+    }
+
+    return () => {
+      if (loader.current) {
+        observer.unobserve(loader.current);
+      }
+    };
+  }, [loader, hasMore]);
 
   const handleRegionChange = (event: { target: { value: string } }) => {
     const regionId = parseInt(event.target.value);
@@ -180,6 +206,7 @@ const PostPage = () => {
         {sortedPosts.map((post) => (
           <PostCard key={post.id} PostProps={post} view={view} />
         ))}
+        <div ref={loader} />
       </div>
     </PostPageStyle>
   );
