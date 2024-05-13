@@ -3,9 +3,35 @@ import icons from "@/icons/icons";
 
 import PostCard from "@/components/common/postCard";
 import { Post } from "@/models/post.model";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ViewMode } from "@/components/common/postCard";
 import { Link } from "react-router-dom";
+
+const regions = [
+  { id: 1, name: "동아시아", countries: ["대한민국", "일본", "중국", "대만"] },
+  { id: 2, name: "동남아시아", countries: ["필리핀", "베트남", "태국", "인도네시아", "싱가포르"] },
+  {
+    id: 3,
+    name: "유럽",
+    countries: [
+      "영국",
+      "프랑스",
+      "이탈리아",
+      "독일",
+      "스위스",
+      "벨기에",
+      "스페인",
+      "그리스",
+      "스웨덴",
+      "체코/슬로바키아",
+      "폴란드",
+      "터키",
+    ],
+  },
+  { id: 4, name: "남아메리카", countries: ["브라질", "아르헨티나", "칠레", "페루", "콜롬비아"] },
+  { id: 5, name: "북아메리카", countries: ["미국", "캐나다", "멕시코"] },
+  { id: 6, name: "오세아니아", countries: ["호주", "뉴질랜드"] },
+];
 
 export const posts: Post[] = [
   {
@@ -17,7 +43,7 @@ export const posts: Post[] = [
     continental: "Asia",
     country: "Japan",
     commentsNum: "12",
-    likesNum: "21",
+    likesNum: "23",
     postsImg: "../../public/assets/images/logo-footer.png",
     createdAt: "2024-04-01",
   },
@@ -74,6 +100,7 @@ export const posts: Post[] = [
     createdAt: "2024-03-17",
   },
 ];
+
 interface PostPageStyleProps {
   view: string;
 }
@@ -82,9 +109,28 @@ const PostPage = () => {
   const { SearchIcon, GridIcon, ListIcon } = icons;
   const [view, setView] = useState<ViewMode>("grid");
   const [sortOrder, setSortOrder] = useState<string>("recent");
+  const [selectedRegion, setSelectedRegion] = useState(0);
+  const [countries, setCountries] = useState<string[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
 
   const clickListBtn = () => setView("list");
   const clickGridBtn = () => setView("grid");
+
+  useEffect(() => {
+    const fetchPosts = async () => {
+      const response = await fetch("http://localhost:1234/api/posts?area=home&pages=1");
+      const data = await response.json();
+      setPosts(data.posts);
+    };
+    fetchPosts();
+  }, []);
+
+  const handleRegionChange = (event: { target: { value: string } }) => {
+    const regionId = parseInt(event.target.value);
+    const region = regions.find((region) => region.id === regionId);
+    setCountries(region ? region.countries : []);
+    setSelectedRegion(regionId);
+  };
 
   const sortedPosts =
     sortOrder === "recent"
@@ -95,17 +141,35 @@ const PostPage = () => {
     <PostPageStyle view={view}>
       <div className="main-content">
         <div className="control-wrapper">
-          <div className="btn-wrapper">
-            <select onChange={(e) => setSortOrder(e.target.value)}>
-              <option value="recent">최신순</option>
-              <option value="likes">인기순</option>
-            </select>
+          <div className="select-wrapper">
+            <div className="continent-country">
+              <select className="continent" onChange={handleRegionChange}>
+                <option value="0">전체</option>
+                {regions.map((region) => (
+                  <option key={region.id} value={region.id}>
+                    {region.name}
+                  </option>
+                ))}
+              </select>
+              <select className="country">
+                <option value="0">전체</option>
+                {countries.map((country, index) => (
+                  <option key={index} value={country}>
+                    {country}
+                  </option>
+                ))}
+              </select>
+            </div>
             <div className="input-wrapper">
               <input type="search" placeholder="검색어를 입력하세요." />
               <SearchIcon />
             </div>
           </div>
           <div className="view-toggle">
+            <select onChange={(e) => setSortOrder(e.target.value)}>
+              <option value="recent">최신순</option>
+              <option value="likes">인기순</option>
+            </select>
             <GridIcon width="24px" height="24px" onClick={clickGridBtn} />
             <ListIcon width="24px" height="24px" onClick={clickListBtn} />
           </div>
@@ -114,9 +178,7 @@ const PostPage = () => {
 
       <div className="post">
         {sortedPosts.map((post) => (
-          <StyledLink key={post.id} to={`/post/${post.id}`}>
-            <PostCard key={post.id} PostProps={post} view={view} />
-          </StyledLink>
+          <PostCard key={post.id} PostProps={post} view={view} />
         ))}
       </div>
     </PostPageStyle>
@@ -125,7 +187,7 @@ const PostPage = () => {
 
 const PostPageStyle = styled.div<PostPageStyleProps>`
   .main-content {
-    display: flex;
+    display: grid;
     justify-content: center;
     align-items: center;
     width: ${(props) => (props.view === "list" ? "790px" : "1080px")};
@@ -135,21 +197,32 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
   }
 
   .control-wrapper {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    justify-content: center;
     align-items: center;
     width: 960px;
     gap: 20px;
   }
 
-  select {
-    padding: 8px;
+  .select-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: center;
   }
 
-  .btn-wrapper {
+  .continent-country {
     display: flex;
     gap: 10px;
     align-items: center;
+  }
+  .continent,
+  .country {
+    width: 120px;
+    padding: 8px 12px;
+  }
+
+  select {
+    padding: 8px;
   }
 
   .input-wrapper {
@@ -172,6 +245,8 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
   .view-toggle {
     display: flex;
     gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   .post {
@@ -192,7 +267,7 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
       width: 100%;
     }
 
-    .btn-wrapper,
+    .select-wrapper,
     .input-wrapper,
     .view-toggle {
       width: 100%;
