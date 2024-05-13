@@ -54,7 +54,6 @@ export const fetchMyPosts = async () => {
         Authorization: getToken(),
       },
     });
-    console.log(data, "갔다");
     return data;
   } catch (error) {
     // 에러 처리

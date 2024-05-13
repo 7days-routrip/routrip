@@ -11,17 +11,16 @@ interface Props {
   dayIdx: number;
   schedulePlaces: SelectedPlace[];
   isDragDrop?: boolean;
-  disabled?: boolean;
 }
 
-const DaySchedule = ({ dayIdx, schedulePlaces, isDragDrop = false, disabled = false }: Props) => {
+const DaySchedule = ({ dayIdx, schedulePlaces, isDragDrop = false }: Props) => {
   const { setMarkerType } = useShowMarkerTypeStore();
   const { googleMap, updateMapBounds } = useMapStore();
 
   const handleOnClickDay = useCallback(() => {
     setMarkerType("day", dayIdx);
     updateMapBounds(googleMap, schedulePlaces);
-  }, [dayIdx, schedulePlaces]);
+  }, [dayIdx, schedulePlaces, googleMap]);
 
   if (isDragDrop) {
     return (

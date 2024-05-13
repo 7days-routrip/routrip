@@ -10,7 +10,7 @@ interface AddPlaceStore {
   addPlaces: SelectedPlace[];
   addPlace: (place: Place) => void; // 장소 추가 함수
   removePlace: (uuid: string) => void; // 장소 제거 함수
-  setPlaces: (places: SelectedPlace[]) => void; // 전역 상태 업데이트 함수
+  setAddPlaces: (places: SelectedPlace[]) => void; // 전역 상태 업데이트 함수
 }
 
 export const useAddPlaceStore = create<AddPlaceStore>((set) => ({
@@ -25,7 +25,7 @@ export const useAddPlaceStore = create<AddPlaceStore>((set) => ({
       addPlaces: state.addPlaces.filter((place) => place.uuid !== uuid),
     }));
   },
-  setPlaces: (places: SelectedPlace[]) => {
+  setAddPlaces: (places: SelectedPlace[]) => {
     set({ addPlaces: places });
   },
 }));

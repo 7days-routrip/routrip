@@ -17,10 +17,10 @@ export class Journeys {
   route!: Routes;
 
   @Column("date")
-  startDate!: string;
+  startDate!: Date;
 
   @Column("date")
-  endDate!: string;
+  endDate!: Date;
 
   @Column({ length: 512, nullable: true })
   thumbnail!: string;

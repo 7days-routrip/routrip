@@ -42,6 +42,7 @@ export const useAuth = () => {
 
   const userLogin = async (data: LoginProps) => {
     try {
+      console.log(data)
       const loginRes = await authLogin(data);
       const newAccessToken = loginRes.headers["authorization"];
       const userName = loginRes.data.nickName;

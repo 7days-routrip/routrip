@@ -11,6 +11,7 @@ import RestPage from "@/pages/ResetPassword";
 import ScheduleDetailPage from "@/pages/ScheduleDetailPage";
 import ScheduleEditPage from "@/pages/ScheduleEditPage";
 import SchedulePage from "@/pages/SchedulePage";
+import WritePage from "@/pages/WritePage";
 import { createBrowserRouter } from "react-router-dom";
 
 const routerArr = [
@@ -71,6 +72,19 @@ const routerArr = [
     element: (
       <Layout>
         <PostPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+  {
+    path: "/write",
+    element: (
+      <Layout>
+        <WritePage />
       </Layout>
     ),
     errorElement: (

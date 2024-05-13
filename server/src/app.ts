@@ -14,8 +14,8 @@ import "reflect-metadata";
 
 const app = express();
 
-app.use(express.json());
-app.use(express.urlencoded({ extended: true }));
+app.use(express.json({limit : '10mb'}));
+app.use(express.urlencoded({ limit : '10mb', extended: false }));
 
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   console.error(err);

@@ -55,7 +55,7 @@ const ScheduleGoogleMap = () => {
   });
 
   const { googleMap, mapCenter, setCenter, setGoogleMap, updateMapBounds } = useMapStore();
-  const { addPlaces } = useAddPlaceStore(); // 실제로 사용할 전역 상태. 임시로 mockRealPlaceData를 사용
+  const { addPlaces } = useAddPlaceStore();
   const { markerType, dayIndex } = useShowMarkerTypeStore();
   const { dayPlaces } = useDayPlaceStore();
   const { searchPlaces } = useSearchPlacesStore();
@@ -63,13 +63,29 @@ const ScheduleGoogleMap = () => {
   const { bookmarkPlaces } = useBookmarkPlacesStore();
   const [clickMarker, setClickMarker] = useState<SelectedPlace | Place | null>(null);
 
+  const getPlaceArr = () => {
+    switch (markerType) {
+      case "add":
+        return addPlaces;
+      case "day":
+        return dayPlaces[dayIndex as number];
+      case "searchApi":
+        return searchPlaces;
+      case "searchGoogle":
+        return nearPlaces;
+      case "bookmarkList":
+        return bookmarkPlaces;
+      default:
+        return [];
+    }
+  };
+
   const handleChanged = useCallback(() => {
     if (googleMap && googleMap.getCenter()) {
       setCenter({
         lat: googleMap.getCenter()?.lat() || center.lat,
         lng: googleMap.getCenter()?.lng() || center.lng,
       });
-      // console.log(googleMap.getCenter()?.lat(), googleMap.getCenter()?.lng());
     }
   }, [googleMap, center]);
 
@@ -86,9 +102,9 @@ const ScheduleGoogleMap = () => {
 
     if (googleMap) {
       googleMap.panTo(place.location); // 1. 마커 위치로 지도 이동
+
       const currentZoom = googleMap.getZoom() || 6;
-      // console.log(currentZoom);
-      const targetZoom = Math.max(currentZoom, 15);
+      const targetZoom = Math.max(currentZoom, 12);
       googleMap.setZoom(targetZoom); // 2. 줌 비율 조정(확대)
     }
   };
@@ -119,26 +135,7 @@ const ScheduleGoogleMap = () => {
     // 지도에 표시할 마커가 전부 보이도록 지도 경계선을 계산
     if (!googleMap) return;
 
-    let placeArr;
-    switch (markerType) {
-      case "add":
-        placeArr = addPlaces;
-        break;
-      case "day":
-        placeArr = dayPlaces[dayIndex as number];
-        break;
-      case "searchApi":
-        placeArr = searchPlaces;
-        break;
-      case "searchGoogle":
-        placeArr = nearPlaces;
-        break;
-      case "bookmarkList":
-        placeArr = bookmarkPlaces;
-        break;
-    }
-
-    updateMapBounds(googleMap, placeArr);
+    updateMapBounds(googleMap, getPlaceArr());
   }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlaces, nearPlaces]);
 
   return isLoaded ? (

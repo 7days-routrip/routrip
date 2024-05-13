@@ -13,6 +13,7 @@ export const useScheduleDetails = (id: string | undefined) => {
   const { data: scheduleDetailData, isLoading: isScheduleDetailsLoading } = useQuery({
     queryKey: [queryKey.scheduleDetails, id],
     queryFn: () => (id ? getScheduleDetails(id) : Promise.resolve(null)),
+    retry: 0,
   });
 
   useEffect(() => {

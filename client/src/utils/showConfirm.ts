@@ -24,6 +24,7 @@ export const showConfirm = (title: string, confirmCallback: () => void, cancelCa
       cancelButtonText: "취소",
       confirmButtonText: "확인",
       reverseButtons: true, // 취소 확인 버튼 위치 반대로
+      allowOutsideClick: false,
     })
     .then((result) => {
       if (result.isConfirmed) {

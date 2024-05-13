@@ -7,7 +7,7 @@ export class DaySeq {
   @PrimaryGeneratedColumn()
   id!: string;
 
-  @ManyToOne((type) => RouteDays)
+  @ManyToOne((type) => RouteDays, { onDelete: "CASCADE" })
   routeDay!: RouteDays;
 
   @Column({ type: "integer" })
