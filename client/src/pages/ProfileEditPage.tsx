@@ -10,7 +10,7 @@ import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/hooks/useAuth";
 import { nicknameRegex } from "@/constants/regexPatterns";
-import { nicknameOptions } from "@/config/registerOptions";
+import { profileNicknameOptions } from "@/config/registerOptions";
 import { useQuery } from "@tanstack/react-query";
 import { useProfile } from "@/hooks/useMypage";
 
@@ -43,7 +43,8 @@ const ProfileEditPage = () => {
   const [nicknameUniqueCheck, setNicknameUniqueCheck] = useState(false);
   const [imgFile, setImgFile] = useState<File | null>();
   const [preview, setPreview] = useState<string>("");
-  const { userUpdate } = useAuth();
+  const [test, setTest] = useState<File | null>();
+  const { userUpdate, userProfileImage } = useAuth();
 
   const checkNickname = () => {
     const nickname = getValues().nickname;
@@ -75,18 +76,26 @@ const ProfileEditPage = () => {
 
   const onSubmit = (data: ProfileEditProps) => {
     if (preview === "" && data.nickname === "") return;
-    if (data.nickname && !nicknameUniqueCheck) {
-      setError("nickname", { message: "닉네임 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
-      return;
+
+    if (nicknameUniqueCheck) {
+      userUpdate(data.nickname);
+    } else if (test) {
+      console.log(userProfileImage(test));
     }
+    // if (data.nickname && !nicknameUniqueCheck) {
+    //   setError("nickname", { message: "닉네임 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
+    //   return;
+    // }
+
     // 프로필 변경이 있으며
-    // userProfileImage(getValues().image);
-    userUpdate({ nickname: data.nickname, profile: preview });
+    // console.log(getValues().image);
+
     clearErrors;
   };
 
   useEffect(() => {
     if (imgFile) {
+      setTest(imgFile);
       const reader = new FileReader();
       reader.onloadend = () => {
         const imgString = reader.result as string;
@@ -128,7 +137,7 @@ const ProfileEditPage = () => {
                   <div className="test">
                     <InputText
                       inputType="text"
-                      {...register("nickname", nicknameOptions)}
+                      {...register("nickname", profileNicknameOptions)}
                       $inputsize="small"
                       onChange={() => setNicknameUniqueCheck(false)}
                     />

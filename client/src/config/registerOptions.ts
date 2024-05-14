@@ -39,3 +39,18 @@ export const nicknameOptions = {
   },
   required: { value: true, message: "닉네임은 필수 입력 정보입니다." },
 };
+
+export const profileNicknameOptions = {
+  minLength: {
+    value: 2,
+    message: "닉네임은 최소 2 글자 이상입니다.",
+  },
+  maxLength: {
+    value: 8,
+    message: "닉네임은 최대 8글자 이하입니다.",
+  },
+  pattern: {
+    value: nicknameRegex,
+    message: "가능한 문자: 영문 대소문자, 글자 단위 한글, 숫자",
+  },
+};
