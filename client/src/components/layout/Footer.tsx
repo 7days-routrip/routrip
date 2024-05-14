@@ -35,6 +35,13 @@ const FooterStyle = styled.div<HeaderStyleProps>`
   flex-shrink: 0;
   max-width: ${({ $isFull }) => ($isFull ? "100%" : "1080px")};
 
+  @media ${({ theme }) => theme.mediaQuery.mobile} {
+    img {
+      width: 50px;
+      height: 37px;
+    }
+  }
+
   .icon-license-link {
     a {
       font-size: 0.5rem;
