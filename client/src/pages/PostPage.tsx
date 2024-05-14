@@ -4,7 +4,7 @@ import PostCard from "@/components/common/postCard";
 import { Post } from "@/models/post.model";
 import { useEffect, useRef, useState } from "react";
 import { ViewMode } from "@/components/common/postCard";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import { regions } from "@/data/region";
 import RegionCountrySelector from "@/components/common/RegionCountrySelector";
 
@@ -23,12 +23,16 @@ const PostPage = () => {
   const [hasMore, setHasMore] = useState(true);
   const loader = useRef(null);
 
+  const location = useLocation();
+  const params = new URLSearchParams(location.search);
+  const area = params.get("area") || "home";
+
   const clickListBtn = () => setView("list");
   const clickGridBtn = () => setView("grid");
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch(`http://localhost:1234/api/posts?area=home&pages=${page}`);
+      const response = await fetch(`http://localhost:1234/api/posts?area=${area}&pages=${page}`);
       const data = await response.json();
       setPosts((prev) => [...prev, ...data.posts]);
       setHasMore(data.pagination.page * 2 < data.pagination.totalPosts);
@@ -75,12 +79,14 @@ const PostPage = () => {
       <div className="main-content">
         <div className="control-wrapper">
           <div className="select-wrapper">
-            <RegionCountrySelector
-              regions={regions}
-              selectedRegion={selectedRegion}
-              countries={countries}
-              onRegionChange={handleRegionChange}
-            />
+            {area === "abroad" ? (
+              <RegionCountrySelector
+                regions={regions}
+                selectedRegion={selectedRegion}
+                countries={countries}
+                onRegionChange={handleRegionChange}
+              />
+            ) : null}
             <div className="input-wrapper">
               <input type="search" placeholder="검색어를 입력하세요." />
               <SearchIcon />
