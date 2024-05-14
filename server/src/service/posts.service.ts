@@ -107,12 +107,12 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
   } else {
     likedPost = false;
   }
+  console.log(postData);
   const likesNum = await getPostLikes(postId);
   const commentsNum = await getPostComments(postId);
   const startDate = await setDateFromat(postData.journey.startDate);
   const endDate = await setDateFromat(postData.journey.endDate);
-
-  const journey = await journeysRepository.getJourneyData((await postData.journey.route).id);
+  const journey = await journeysRepository.getJourneyData(postData.journey.route.id);
   let spots: iSpots[] | null;
   if (journey === null) {
     spots = null;
@@ -128,10 +128,12 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
       const daySpot: iSpotData[] = [];
       for (let i = 0; i < journey.length; i++) {
         if (day[j] === journey[i].day) {
-          const opening = journey[i].openingHours.split(",");
           const open = [];
-          for (let k = 0; k < opening.length; k++) {
-            open.push(opening[k].trim());
+          if (journey[i].openingHours !== null) {
+            const opening = journey[i].openingHours.split(",");
+            for (let k = 0; k < opening.length; k++) {
+              open.push(opening[k].trim());
+            }
           }
           const pushData = {
             placeId: journey[i].placeId,
