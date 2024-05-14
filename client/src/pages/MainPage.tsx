@@ -1,9 +1,11 @@
 import CategoryCard from "@/components/common/CategoryCard";
 import GuidePostCard from "@/components/common/GuidePostCard";
+import Loading from "@/components/common/Loading";
 import MainPostCard from "@/components/common/MainPostCard";
 import Banner from "@/components/main/Banner";
 import SlideSection from "@/components/main/SlideSection";
 import { categories } from "@/constants/categories";
+import { useMain } from "@/hooks/useMain";
 
 import { Post } from "@/models/post.model";
 import styled from "styled-components";
@@ -11,7 +13,7 @@ import styled from "styled-components";
 const dummyPost: Post = {
   id: 1,
   title: "서울 여행 가이드",
-  date: "2024.03.12-2024.03.18",
+  date: "2024-05-18T00:00:00.000Z",
   author: "김아무개",
   userProfile: "",
   continental: "대한민국",
@@ -23,6 +25,11 @@ const dummyPost: Post = {
 };
 
 const MainPage = () => {
+  const { bestPosts, homePosts, abroadPosts, isBestPostsLoading, isHomePostsLoading, isAbroadPostsLoading } = useMain();
+
+  // if (!bestPosts || !homePosts || !abroadPosts || isBestPostsLoading || isHomePostsLoading || isAbroadPostsLoading)
+  //   return <Loading />;
+
   return (
     <MainPageStyle>
       <Banner />
@@ -30,6 +37,9 @@ const MainPage = () => {
         {Array.from({ length: 10 }, () => (
           <MainPostCard PostPops={dummyPost} />
         ))}
+        {/* {bestPosts.map((post) => (
+          <MainPostCard PostPops={post} />
+        ))} */}
       </SlideSection>
 
       <div className="categories-container">
@@ -55,9 +65,7 @@ const MainPage = () => {
       </div>
 
       <SlideSection title="🚗국내 여행지">
-        {Array.from({ length: 10 }, () => (
-          <MainPostCard PostPops={dummyPost} />
-        ))}
+        {homePosts && homePosts.posts.map((post: Post) => <MainPostCard PostPops={post} />)}
       </SlideSection>
 
       <SlideSection title="✈️해외 여행지">

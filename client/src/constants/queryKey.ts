@@ -5,4 +5,7 @@ export const queryKey = {
   comment: "comments",
   bookmarkPlaces: "bookmarkPlaces",
   scheduleDetails: "scheduleDetails",
+  bestPosts: "mainBestPosts",
+  homePosts: "homePosts",
+  abroadPosts: "abroadPosts",
 };
