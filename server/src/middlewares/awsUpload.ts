@@ -9,7 +9,7 @@ aws.config.update({
   secretAccessKey: SECRET_ACCESS_KEY,
   region: S3_BUCKET_REGION,
 });
-const s3 = new aws.S3();
+export const s3 = new aws.S3();
 
 const profileUpload = multer({
   storage: multerS3({
