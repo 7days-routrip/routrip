@@ -77,7 +77,7 @@ const getDetail = async (id: string): Promise<PlaceDetailDTO> => {
   return placeDetailDTO;
 };
 
-const search = async (keyword: string): Promise<SearchPlaceDTO[]> => {
+const search = async (keyword: string, zoom: number, lat: number, lng: number): Promise<SearchPlaceDTO[]> => {
   const places = await placeRepository
     .createQueryBuilder("places")
     .where("places.name LIKE :keyword", { keyword: `%${keyword}%` })
@@ -105,8 +105,34 @@ const search = async (keyword: string): Promise<SearchPlaceDTO[]> => {
     searchedPlaces.push(searchedPlace);
   });
 
-  return searchedPlaces;
+  let filteredPlaces: SearchPlaceDTO[] = [];
+  let searchDistance: number;
+
+  if (zoom < 10) searchDistance = 50000;
+  else if (zoom < 15) searchDistance = 30000;
+  else searchDistance = 10000;
+
+  searchedPlaces.forEach((place, idx) => {
+    const distance = getDistance(place.location.lat, place.location.lng, lat, lng);
+    if (distance <= searchDistance) {
+      filteredPlaces.push(place);
+    }
+  });
+  return filteredPlaces;
 };
+
+function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
+  const PI = Math.PI;
+  const radius = 6371;
+  const dLat = (lat2 - lat1) * (PI / 180);
+  const dLon = (lng2 - lng1) * (PI / 180);
+  const temp1 =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(lat1 * (PI / 180)) * Math.cos(lat2 * (PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const temp2 = 2 * Math.atan2(Math.sqrt(temp1), Math.sqrt(1 - temp1));
+  const distance = radius * temp2;
+  return distance * 1000;
+}
 
 const placeImgUpload = async (imageUrl: string): Promise<string> => {
   let response;
