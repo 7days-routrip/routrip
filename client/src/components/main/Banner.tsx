@@ -50,12 +50,12 @@ const Banner = () => {
           </Link>
         </div>
         <div className="img-container">
-          <Link to="/posts?area=home">
+          <Link to="/post?area=home">
             <img className="banner-img" src={bannerKorea} alt="banner-korea" />
           </Link>
         </div>
         <div className="img-container">
-          <Link to="/posts?area=abroad">
+          <Link to="/post?area=abroad">
             <img className="banner-img" src={bannerAbroad} alt="banner-abroad" />
           </Link>
         </div>
