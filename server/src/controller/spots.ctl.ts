@@ -63,12 +63,18 @@ const getPlaceDetail = async (req: Request, res: Response, next: NextFunction) =
 };
 
 const searchPlace = async (req: Request, res: Response, next: NextFunction) => {
-  const keyword: string | undefined = req.query.keyword as string | undefined;
+  const keyword: string = req.query.keyword as string;
+  if (!keyword)
+    return res.status(StatusCodes.BAD_REQUEST).json({
+      message: "검색어를 입력해주세요.",
+    });
 
-  if (!keyword) return res.status(StatusCodes.BAD_REQUEST).end();
+  const zoom: number = req.query.zoom ? parseInt(req.query.zoom as string) : 6;
+  const lat: number = req.query.lat ? parseFloat(req.query.lat as string) : 38;
+  const lng: number = req.query.lng ? parseFloat(req.query.lng as string) : 128;
 
   try {
-    const searchedPlaces: boolean | SearchPlaceDTO[] = await SpotsService.search(keyword);
+    const searchedPlaces: SearchPlaceDTO[] = await SpotsService.search(keyword, zoom, lat, lng);
     return res.status(StatusCodes.OK).json(searchedPlaces);
   } catch (error: any) {
     if (error.message === "등록된 장소가 없습니다.\n신규 장소를 등록해 주세요.") {
