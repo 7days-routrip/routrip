@@ -1,18 +1,22 @@
 import React from "react";
-import { Region } from "@/data/region";
+import { Region, Country } from "@/data/region";
 
 interface RegionCountrySelectorProps {
   regions: Region[];
   selectedRegion: number;
-  countries: string[];
+  selectedCountry: number;
+  countries: Country[];
   onRegionChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  onCountryChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
 }
 
 const RegionCountrySelector: React.FC<RegionCountrySelectorProps> = ({
   regions,
   selectedRegion,
+  selectedCountry,
   countries,
   onRegionChange,
+  onCountryChange,
 }) => {
   return (
     <div className="continent-country">
@@ -24,11 +28,11 @@ const RegionCountrySelector: React.FC<RegionCountrySelectorProps> = ({
           </option>
         ))}
       </select>
-      <select className="country">
+      <select className="country" onChange={onCountryChange} value={selectedCountry}>
         <option value="0">전체</option>
-        {countries.map((country, index) => (
-          <option key={index} value={country}>
-            {country}
+        {countries.map((country) => (
+          <option key={country.id} value={country.id}>
+            {country.name}
           </option>
         ))}
       </select>
