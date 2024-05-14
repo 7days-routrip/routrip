@@ -61,6 +61,8 @@ export const MainPostCardStyle = styled.div`
     width: 100%;
     position: absolute;
     padding: 0 0.5rem 0.5rem;
+    border: 1px solid ${({ theme }) => theme.color.borderGray};
+    border-radius: ${({ theme }) => theme.borderRadius.default};
     background: linear-gradient(to right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
   }
 
@@ -87,13 +89,15 @@ export const MainPostCardStyle = styled.div`
   .icon {
     display: flex;
     gap: 0.3rem;
+    align-items: center;
 
     > :first-child {
       color: ${({ theme }) => theme.color.primary};
     }
 
     > :last-child {
-      color: ${({ theme }) => theme.color.white};
+      color: ${({ theme }) => theme.color.black};
+      font-weight: 600;
     }
   }
 
