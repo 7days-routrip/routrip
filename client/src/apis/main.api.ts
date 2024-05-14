@@ -1,10 +1,12 @@
-import { PostList } from "@/models/post.model";
+import { Post, PostList } from "@/models/post.model";
 import { httpClient } from "./https";
 
 // hot한 여행지 요청
+export type BestPosts = Pick<Post, "id" | "likesNum" | "date" | "title" | "postsImg" | "country">;
 export const getBestPosts = async () => {
   try {
-    const { data } = await httpClient.get("/posts/all/hot");
+    const { data } = await httpClient.get<BestPosts[]>("/posts/all/hot");
+    console.log(data);
     return data;
   } catch (err) {
     throw err;
@@ -26,7 +28,7 @@ export const getHomePosts = async () => {
 export const getAbroadPosts = async () => {
   try {
     const { data } = await httpClient.get<PostList>("/posts?area=abroad&pages=1");
-    console.log(data);
+    // console.log(data);
     return data;
   } catch (err) {
     throw err;

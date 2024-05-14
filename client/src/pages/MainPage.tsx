@@ -1,3 +1,4 @@
+import { BestPosts } from "@/apis/main.api";
 import CategoryCard from "@/components/common/CategoryCard";
 import GuidePostCard from "@/components/common/GuidePostCard";
 import Loading from "@/components/common/Loading";
@@ -6,16 +7,15 @@ import Banner from "@/components/main/Banner";
 import SlideSection from "@/components/main/SlideSection";
 import { categories } from "@/constants/categories";
 import { useMain } from "@/hooks/useMain";
-
 import { Post } from "@/models/post.model";
 import styled from "styled-components";
 
 const dummyPost: Post = {
   id: 1,
   title: "서울 여행 가이드",
-  date: "2024-05-18T00:00:00.000Z",
+  date: "2024.05.18-2024.05.22",
   author: "김아무개",
-  userProfile: "",
+  profileImg: "",
   continental: "대한민국",
   country: "서울",
   commentsNum: "999",
@@ -34,23 +34,21 @@ const MainPage = () => {
     <MainPageStyle>
       <Banner />
       <SlideSection title="🔥HOT한 여행지는 여기!">
-        {Array.from({ length: 10 }, () => (
-          <MainPostCard PostPops={dummyPost} />
-        ))}
-        {/* {bestPosts.map((post) => (
-          <MainPostCard PostPops={post} />
+        {/* {Array.from({ length: 10 }, (_, i) => (
+          <MainPostCard key={i} PostPops={dummyPost} />
         ))} */}
+        {bestPosts && bestPosts.map((post: BestPosts) => <MainPostCard key={post.id} PostPops={post} />)}
       </SlideSection>
 
       <div className="categories-container">
         <div className="category-group">
           {categories.slice(0, 4).map((item) => (
-            <CategoryCard id={item.id} name={item.name} />
+            <CategoryCard key={item.id} id={item.id} name={item.name} img={item.img} />
           ))}
         </div>
         <div className="category-group">
           {categories.slice(4).map((item) => (
-            <CategoryCard id={item.id} name={item.name} />
+            <CategoryCard key={item.id} id={item.id} name={item.name} img={item.img} />
           ))}
         </div>
       </div>
@@ -58,20 +56,21 @@ const MainPage = () => {
       <div className="guide-post-container">
         <h2>📌루트립의 추천 루트</h2>
         <div className="guide-posts">
-          {Array.from({ length: 4 }, () => (
-            <GuidePostCard PostPops={dummyPost} />
+          {Array.from({ length: 4 }, (_, i) => (
+            <GuidePostCard key={i} PostPops={dummyPost} />
           ))}
         </div>
       </div>
 
       <SlideSection title="🚗국내 여행지">
-        {homePosts && homePosts.posts.map((post: Post) => <MainPostCard PostPops={post} />)}
+        {homePosts && homePosts.posts.map((post: Post) => <MainPostCard key={post.id} PostPops={post} />)}
       </SlideSection>
 
       <SlideSection title="✈️해외 여행지">
-        {Array.from({ length: 10 }, () => (
-          <MainPostCard PostPops={dummyPost} />
+        {Array.from({ length: 10 }, (_, i) => (
+          <MainPostCard key={i} PostPops={dummyPost} />
         ))}
+        {/* {abroadPosts && abroadPosts.posts.map((post: Post) => <MainPostCard key={post.id} PostPops={post} />)} */}
       </SlideSection>
     </MainPageStyle>
   );
