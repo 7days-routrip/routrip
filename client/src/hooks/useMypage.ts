@@ -7,6 +7,7 @@ import {
   fetchProfile,
 } from "@/apis/mypage.api";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "react-router-dom";
 
 export const useSchedule = () => {
   const {
@@ -14,7 +15,7 @@ export const useSchedule = () => {
     isLoading: isScheduleLoding,
     refetch: scheduleRefetch,
   } = useQuery({
-    queryKey: ["schedule"],
+    queryKey: ["schedules", useLocation().search],
     queryFn: () => fetchMySchedule(),
     enabled: true,
   });
@@ -29,7 +30,7 @@ export const useSchedule = () => {
 
 export const useProfile = () => {
   const { data: profileData, isLoading: isProfileLoding } = useQuery({
-    queryKey: ["profile"],
+    queryKey: ["profile", useLocation().search],
     queryFn: () => fetchProfile(),
   });
 
@@ -45,7 +46,7 @@ export const usePost = () => {
     isLoading: isPostLoading,
     refetch: postsRefetch,
   } = useQuery({
-    queryKey: ["post"],
+    queryKey: ["posts", useLocation().search],
     queryFn: () => fetchMyPosts(),
     enabled: false,
   });
@@ -64,7 +65,7 @@ export const useComment = () => {
     isLoading: isCommentLoading,
     refetch: commentsRefetch,
   } = useQuery({
-    queryKey: ["comment"],
+    queryKey: ["comments", useLocation().search],
     queryFn: () => fetchMyComments(),
     enabled: false,
   });
@@ -82,7 +83,7 @@ export const useLikePost = () => {
     data: likePostData,
     isLoading: isLikePostLoading,
     refetch: likePostRefetch,
-  } = useQuery({ queryKey: ["likePost"], queryFn: () => fetchLikePost(), enabled: false });
+  } = useQuery({ queryKey: ["likePosts", useLocation().search], queryFn: () => fetchLikePost(), enabled: false });
 
   return {
     likePosts: likePostData,
@@ -98,7 +99,7 @@ export const useLikePlace = () => {
     isLoading: isLikePlaceLoding,
     refetch: likePlaceRefetch,
   } = useQuery({
-    queryKey: ["likePlace"],
+    queryKey: ["likePlaces", useLocation().search],
     queryFn: () => fetchLikePlace(),
     enabled: false,
   });

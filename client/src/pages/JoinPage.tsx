@@ -124,6 +124,7 @@ const JoinPage = () => {
               isDisabled={emailUniqueCheck ? true : false}
             />
             {errors.email && <small className="error-text">{errors.email.message}</small>}
+            {emailUniqueCheck && <small className="success-text">사용 가능한 이메일입니다!</small>}
           </fieldset>
           <fieldset className="input-section">
             <InputText
@@ -137,6 +138,7 @@ const JoinPage = () => {
               isDisabled={nicknameUniqueCheck ? true : false}
             />
             {errors.nickname && <small className="error-text">{errors.nickname.message}</small>}
+            {nicknameUniqueCheck && <small className="success-text">사용 가능한 닉네임입니다!</small>}
           </fieldset>
           <fieldset className="input-section">
             <InputText
@@ -251,6 +253,9 @@ export const JoinPageStyle = styled.div`
   }
   .error-text {
     color: ${({ theme }) => theme.color.red};
+  }
+  .success-text {
+    color: ${({ theme }) => theme.color.successGreen};
   }
 
   .hr-sect {

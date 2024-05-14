@@ -17,7 +17,7 @@ const PostCard = ({ PostProps, view }: Props) => {
   const Likecon = icons.LikeIcon;
   const CommentIcon = icons.CommentIcon;
   return (
-    <PostCardStyle $profile={PostProps.userProfile} $view={view}>
+    <PostCardStyle $profile={PostProps.profileImg} $view={view}>
       <Link to={`/post/${PostProps.id}`}>
         <CardImageStyle $image={PostProps.postsImg} $view={view} />
       </Link>
@@ -174,11 +174,12 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
   display: flex;
 
   .profile-img {
-    background-image: url(${({ $profile }) => ($profile ? `data:image/${$profile}` : DEFAULT_IMAGE)});
+    background-image: url(${({ $profile }) => ($profile ? `${$profile}` : DEFAULT_IMAGE)});
     background-size: 2rem 1rem;
     background-position: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    background-size: cover;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
     border: 1px solid ${({ theme }) => theme.color.borderGray};
   }
