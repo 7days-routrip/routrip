@@ -161,6 +161,19 @@ const postHotList = async (req: Request, res: Response) => {
     }
   }
 };
+const postRecommendList = async (req: Request, res: Response) => {
+  try {
+    const listResult = await PostsService.reqRecommendPosts();
+    if (!listResult.success) throw new Error(listResult.msg);
+    const { posts } = listResult;
+    res.status(StatusCodes.OK).json(posts);
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "empty list of posts")
+        return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_POSTS_LIST });
+    }
+  }
+};
 
 const postsController = {
   postsRequest,
@@ -170,6 +183,7 @@ const postsController = {
   postDelRequest,
   postUploadImg,
   postHotList,
+  postRecommendList,
 };
 
 export default postsController;

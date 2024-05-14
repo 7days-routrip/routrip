@@ -70,11 +70,31 @@ const reqHotPosts = async () => {
         id: post.id,
         date: (await setDateFromat(post.startDate)) + "-" + (await setDateFromat(post.endDate)),
         title: post.title,
+        postsImg: post.postsImg === null ? "" : post.postsImg,
         likesNum: post.likesNum,
+        country: post.country,
       };
     }),
   ).then((res) => {
     return res.sort((a, b) => b.likesNum - a.likesNum || b.id - a.id).slice(0, 12);
+  });
+  return { success: true, posts };
+};
+const reqRecommendPosts = async () => {
+  const postsResult = await PostsRepository.getPosts();
+  if (postsResult === null) return { success: false, msg: "empty list of posts" };
+  const posts = await Promise.all(
+    postsResult.map(async (post) => {
+      if (post.nickName === "routrip") {
+        return {
+          id: post.id,
+          title: post.title,
+          postsImg: post.postsImg === null ? "" : post.postsImg,
+        };
+      }
+    }),
+  ).then((res) => {
+    return res.slice(0, 4).filter((el) => el);
   });
   return { success: true, posts };
 };
@@ -207,5 +227,6 @@ const PostsService = {
   reqPostDelData,
   reqImageUpload,
   reqHotPosts,
+  reqRecommendPosts,
 };
 export default PostsService;
