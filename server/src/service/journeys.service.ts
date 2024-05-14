@@ -27,13 +27,14 @@ const getJourneyDetail = async (journeyId: number) => {
     for (let j = 0; j < result.length; j++) {
       // 해당 day의 seq 데이터
       if (result[j].day === i && result[j].seq !== null) {
+        const [lat, lng] = result[j].location.split(", ");
         spots.push({
           id: result[j].placeId,
           placeName: result[j].name,
           address: result[j].address,
           location: {
-            lat: result[j].lat,
-            lng: result[j].lng,
+            lat: lat,
+            lng: lng,
           },
           placeImg: result[j].img,
         });
