@@ -3,9 +3,15 @@ import { httpClient } from "./https";
 import { showAlert } from "@/utils/showAlert";
 
 // 백엔드 서버로 장소 검색 요청
-export const searchPlaceApi = async (keyword: string, setPlaces: (places: Place[]) => void) => {
+export interface SearchPlaceApiParams {
+  keyword: string;
+  zoom: number;
+  lat: number;
+  lng: number;
+}
+export const searchPlaceApi = async (params: SearchPlaceApiParams, setPlaces: (places: Place[]) => void) => {
   try {
-    const { data } = await httpClient.get<Place[]>("/spots", { params: { keyword } });
+    const { data } = await httpClient.get<Place[]>("/spots", { params });
     setPlaces(data);
     return data;
   } catch (err: any) {
