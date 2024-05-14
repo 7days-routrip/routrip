@@ -1,20 +1,20 @@
 import { useParams } from "react-router-dom";
 import styled from "styled-components";
-import { posts } from "./PostPage";
 import { theme } from "@/styles/theme";
 import icons from "@/icons/icons";
 import Dropdown from "@/components/common/Dropdown";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/common/Button";
 
-import { useState } from "react";
+import { useEffect, useState } from "react";
+import { Post } from "@/models/post.model";
 
 const PostDetailPage = () => {
   const { id } = useParams();
   const postId = id ? parseInt(id, 10) : undefined;
   const { LikeIcon, CommentIcon, DotIcon, PinIcon } = icons;
+  const [post, setPost] = useState<Post | null>(null);
   const [likeBtn, setLikeBtn] = useState("primary");
-  const post = posts.find((element) => element.id === postId);
 
   const StyledLikeIcon = styled(LikeIcon)`
     fill: ${({ theme }) => theme.color.primary};
@@ -24,11 +24,32 @@ const PostDetailPage = () => {
     fill: ${({ theme }) => theme.color.primary};
   `;
 
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        console.log(`ID: ${postId}`);
+        const response = await fetch(`http://localhost:1234/api/posts/${postId}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Fetch된 data:", data);
+        setPost(data);
+      } catch (error) {
+        console.error("Error fetching post:", error);
+      }
+    };
+
+    if (postId !== undefined) {
+      fetchPost();
+    }
+  }, [postId]);
+
   return post ? (
     <PostDetailPageStyle>
       <h1>{post.title}</h1>
       <div className="info-container">
-        <p color={theme.color.commentGray}>작성일 :{post.createdAt}</p>
+        <p color={theme.color.commentGray}>작성일 :{post.date}</p>
         <div className="btn-wrapper">
           <div>
             <StyledLikeIcon />
