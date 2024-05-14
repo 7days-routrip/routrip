@@ -24,7 +24,8 @@ const register = async (
     throw new Error("이미 등록된 장소가 있습니다.\n해당 장소를 추가하시겠습니까?");
   }
 
-  const placeS3Img = await placeImgUpload(placeImg);
+  let placeS3Img: string = "";
+  if (placeImg.length > 0) placeS3Img = await placeImgUpload(placeImg);
 
   const place: Places = new Places();
   place.id = id;
