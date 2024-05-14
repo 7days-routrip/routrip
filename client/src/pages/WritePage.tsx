@@ -22,17 +22,13 @@ class MyUploadAdapter {
     try {
       const file = await this.loader.file;
       const formData = new FormData();
-
-      const fileExtension = file.name.split(".").pop();
-      // const filename = `${Date.now()}-${v4()}.${fileExtension}`;
       formData.append("postImg", file, file.name);
 
-      const response = await fetch(`http://localhost:1234/api/posts/2/upload/img`, {
+      const response = await fetch(`http://localhost:1234/api/posts/1/upload/img`, {
         method: "POST",
         body: formData,
         headers: {
-          Authorization:
-            "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjExLCJuaWNrTmFtZSI6ImhvbmciLCJpYXQiOjE3MTU1ODUzMTEsImV4cCI6MTcxNTU4NzExMX0.o7t0WtPYE71fzMAgdDsQKdUGG6qnPlaFsQ8MqSrLV9M",
+          Authorization: "Bearer YOUR_ACCESS_TOKEN",
         },
       });
 
@@ -41,7 +37,13 @@ class MyUploadAdapter {
       }
 
       const data = await response.json();
-      return { default: data.imageUrl }; // 서버에서 반환받은 이미지 URL을 리턴
+
+      if (data.imageUrl) {
+        return { default: data.imageUrl };
+      } else {
+        console.warn("Image URL is null");
+        return { default: "default_image_url_placeholder" }; // 기본 이미지를 설정
+      }
     } catch (error) {
       console.error(error);
       return Promise.reject(error);
@@ -117,12 +119,6 @@ const WritePage = () => {
     fetch("http://localhost:1234/api/posts", {
       method: "POST",
       body: formData,
-      headers: {
-        getSetCookie:
-          "refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJuaWNrTmFtZSI6IuuRpeuRpeydtCIsImlhdCI6MTcxNTUxMDYzOCwiZXhwIjoxNzE2NzIwMjM4fQ.0u1no8PGrkZMXMQm6n_V2ZokU6XQyY5ry6cnXGESLIc; Path=/; HttpOnly",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJuaWNrTmFtZSI6IuuRpeuRpeydtCIsImlhdCI6MTcxNTUxMDYzOCwiZXhwIjoxNzE1NTEyNDM4fQ.rtuwN3BidCsA1Z4g8CyfXcK1oQXExbB1VnE_qB_qsPs",
-      },
     })
       .then((response) => response.json())
       .then((result) => console.log("저장 성공:", result))
@@ -148,7 +144,7 @@ const WritePage = () => {
     const region = regions.find((region) => region.id === regionId);
     setCountries(region ? region.countries : []);
     setSelectedRegion(regionId);
-    setSelectedCountry(0); // Reset country selection when region changes
+    setSelectedCountry(0);
   };
 
   const handleCountryChange = (event: { target: { value: string } }) => {

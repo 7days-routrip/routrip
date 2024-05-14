@@ -26,10 +26,23 @@ const PostDetailPage = () => {
 
   useEffect(() => {
     const fetchPost = async () => {
-      const response = await fetch(`http://localhost:1234/api/posts/${postId}`);
-      const data = await response.json();
-      setPost(data);
+      try {
+        console.log(`ID: ${postId}`);
+        const response = await fetch(`http://localhost:1234/api/posts/${postId}`);
+        if (!response.ok) {
+          throw new Error(`HTTP error! status: ${response.status}`);
+        }
+        const data = await response.json();
+        console.log("Fetch된 data:", data);
+        setPost(data);
+      } catch (error) {
+        console.error("Error fetching post:", error);
+      }
     };
+
+    if (postId !== undefined) {
+      fetchPost();
+    }
   }, [postId]);
 
   return post ? (

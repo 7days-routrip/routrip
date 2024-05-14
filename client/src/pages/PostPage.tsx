@@ -22,32 +22,47 @@ const PostPage = () => {
   const [posts, setPosts] = useState<Post[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
   const loader = useRef(null);
 
   const location = useLocation();
   const nav = useNavigate();
   const params = new URLSearchParams(location.search);
-  const area = params.get("area") || "home";
+  const area = params.get("area");
   const countryId = params.get("filter") || "";
 
   const clickListBtn = () => setView("list");
   const clickGridBtn = () => setView("grid");
 
-  useEffect(() => {
-    const fetchPosts = async () => {
+  const fetchPosts = async (reset = false) => {
+    setLoading(true);
+    try {
       const response = await fetch(`http://localhost:1234/api/posts?area=${area}&filter=${countryId}&pages=${page}`);
       const data = await response.json();
-      setPosts((prev) => [...prev, ...data.posts]);
+      if (reset) {
+        setPosts(data.posts);
+      } else {
+        setPosts((prev) => [...prev, ...data.posts]);
+      }
       setHasMore(data.pagination.page * 2 < data.pagination.totalPosts);
-    };
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+    setLoading(false);
+  };
 
-    fetchPosts();
-  }, [page, countryId]); // countryId를 의존성 배열에 추가
+  useEffect(() => {
+    fetchPosts(true);
+  }, [area, countryId]);
+
+  useEffect(() => {
+    if (page > 1) fetchPosts();
+  }, [page]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
-        if (entries[0].isIntersecting && hasMore) {
+        if (entries[0].isIntersecting && hasMore && !loading) {
           setPage((prevPage) => prevPage + 1);
         }
       },
@@ -63,14 +78,14 @@ const PostPage = () => {
         observer.unobserve(loader.current);
       }
     };
-  }, [loader, hasMore]);
+  }, [loader, hasMore, loading]);
 
   const handleRegionChange = (event: { target: { value: string } }) => {
     const regionId = parseInt(event.target.value);
     const region = regions.find((region) => region.id === regionId);
     setCountries(region ? region.countries : []);
     setSelectedRegion(regionId);
-    setSelectedCountry(0); // Reset country selection when region changes
+    setSelectedCountry(0);
     params.delete("filter");
     nav({ search: params.toString() });
   };
@@ -123,9 +138,11 @@ const PostPage = () => {
       </div>
 
       <div className="post">
-        {sortedPosts.map((post) => (
-          <PostCard key={post.id} PostProps={post} view={view} />
-        ))}
+        {posts.length === 0 ? (
+          <div>게시글이 없습니다</div>
+        ) : (
+          sortedPosts.map((post) => <PostCard key={post.id} PostProps={post} view={view} />)
+        )}
         <div ref={loader} />
       </div>
     </PostPageStyle>
