@@ -12,7 +12,7 @@ const MainPostCard = ({ PostPops }: Props) => {
   const { LikeIcon } = icons;
   return (
     <MainPostCardStyle>
-      <Link to={`/posts/${PostPops.id}`}>
+      <Link to={`/post/${PostPops.id}`}>
         <MainCardImageStyle $image={PostPops.postsImg} $view="grid" />
         <div className="info">
           <div className="date">

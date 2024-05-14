@@ -13,7 +13,7 @@ import styled from "styled-components";
 const dummyPost: Post = {
   id: 1,
   title: "서울 여행 가이드",
-  date: "2024-05-18T00:00:00.000Z",
+  date: "2024.05.18-2024.05.22",
   author: "김아무개",
   userProfile: "",
   continental: "대한민국",
@@ -34,10 +34,10 @@ const MainPage = () => {
     <MainPageStyle>
       <Banner />
       <SlideSection title="🔥HOT한 여행지는 여기!">
-        {Array.from({ length: 10 }, (_, i) => (
+        {/* {Array.from({ length: 10 }, (_, i) => (
           <MainPostCard key={i} PostPops={dummyPost} />
-        ))}
-        {/* {bestPosts && bestPosts.map((post: BestPosts) => <MainPostCard PostPops={post} />)} */}
+        ))} */}
+        {bestPosts && bestPosts.map((post: BestPosts) => <MainPostCard key={post.id} PostPops={post} />)}
       </SlideSection>
 
       <div className="categories-container">
@@ -70,6 +70,7 @@ const MainPage = () => {
         {Array.from({ length: 10 }, (_, i) => (
           <MainPostCard key={i} PostPops={dummyPost} />
         ))}
+        {/* {abroadPosts && abroadPosts.posts.map((post: Post) => <MainPostCard key={post.id} PostPops={post} />)} */}
       </SlideSection>
     </MainPageStyle>
   );
