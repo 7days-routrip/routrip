@@ -21,6 +21,7 @@ import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
 import { onDragDropEnd } from "@/utils/onDragDropEnd";
+import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
 
 const SchedulePage = () => {
   const [title, setTitle] = useState<string>("");
@@ -32,6 +33,7 @@ const SchedulePage = () => {
   const { addPlaces, setAddPlaces } = useAddPlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
   const { setNearPlaces } = useNearPlacesStore();
+  const { setSearchPlaces } = useSearchPlacesStore();
   const { setSearchKeywordToServer, setSearchKeywordToGoogle } = useSearchKeywordStore();
 
   const navigate = useNavigate();
@@ -42,6 +44,7 @@ const SchedulePage = () => {
     setMarkerType("searchApi");
     setNearPlaces([]);
     setDayPlaces([[]]);
+    setSearchPlaces([]);
     setSearchKeywordToServer("");
     setSearchKeywordToGoogle("");
   };
@@ -64,7 +67,7 @@ const SchedulePage = () => {
       showConfirm(
         "일정 등록이 완료되었습니다.\n등록된 일정 리스트를 확인하러 갈까요?",
         () => {
-          navigate("/mypage");
+          navigate(`/mypage?tab=schedules`);
           resetStore();
         },
         () => {

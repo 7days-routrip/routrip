@@ -4,6 +4,7 @@ import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useDayPlaceStore } from "@/stores/dayPlaces";
 import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
+import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
 import { showAlert } from "@/utils/showAlert";
 import { useMutation } from "@tanstack/react-query";
 import { useNavigate } from "react-router-dom";
@@ -13,6 +14,7 @@ export const useScheduleEdit = () => {
   const { setAddPlaces } = useAddPlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
   const { setNearPlaces } = useNearPlacesStore();
+  const { setSearchPlaces } = useSearchPlacesStore();
   const { setSearchKeywordToServer, setSearchKeywordToGoogle } = useSearchKeywordStore();
 
   const navigate = useNavigate();
@@ -29,6 +31,7 @@ export const useScheduleEdit = () => {
         setMarkerType("searchApi");
         setNearPlaces([]);
         setDayPlaces([[]]);
+        setSearchPlaces([]);
         setSearchKeywordToServer("");
         setSearchKeywordToGoogle("");
       });
