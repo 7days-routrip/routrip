@@ -66,7 +66,7 @@ const RestPage = () => {
         <form onSubmit={handleSubmit(onSubmit)}>
           <fieldset className="input-section">
             <InputText
-              placeholder={placeholderHander("가입할 이메일을")}
+              placeholder={placeholderHander("가입한 이메일을")}
               inputType="email"
               {...register("email", emailOptions)}
               isButton={true}
@@ -76,6 +76,7 @@ const RestPage = () => {
             />
 
             {errors.email && <small className="error-text">{errors.email.message}</small>}
+            {!notAuthenticated && <small className="successs-text">인증이 완료 되었습니다.</small>}
           </fieldset>
           <fieldset className="input-section">
             <InputText

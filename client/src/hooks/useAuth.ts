@@ -3,12 +3,13 @@ import {
   authLogin,
   authLogout,
   authReset,
+  fetchProfileImage,
   fetchProfileRestPassword,
   isEmailUnique,
   isNicknameUnique,
-  profileUpdate,
-  profileUpdateProp,
+  profileNicknameUpdate,
 } from "@/apis/auth.api";
+import { httpClient } from "@/apis/https";
 import { useAuthStore } from "@/stores/authStore";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
@@ -42,7 +43,7 @@ export const useAuth = () => {
 
   const userLogin = async (data: LoginProps) => {
     try {
-      console.log(data)
+      console.log(data);
       const loginRes = await authLogin(data);
       const newAccessToken = loginRes.headers["authorization"];
       const userName = loginRes.data.nickName;
@@ -111,9 +112,27 @@ export const useAuth = () => {
     } catch (error: any) {}
   };
 
-  const userUpdate = async (data: profileUpdateProp) => {
+  const userProfileImage = async (file: File) => {
     try {
-      const res = await profileUpdate(data);
+      if (!file) return;
+      const formData = new FormData();
+      formData.append("profile", file);
+      // console.log(formData.get("profile"), formData, "야야야");
+      const res = await httpClient.post("/users/upload/profile", formData, {
+        headers: {
+          "Content-Type": "multipart/form-data",
+        },
+      });
+      console.log(res, "response");
+      return res;
+    } catch (error) {
+      // 실패
+    }
+  };
+
+  const userUpdate = async (data: string) => {
+    try {
+      const res = await profileNicknameUpdate(data);
       return res;
     } catch (error) {
       //  실패
@@ -137,5 +156,6 @@ export const useAuth = () => {
     userEmailCheck,
     userUpdate,
     userNewPasswordReset,
+    userProfileImage,
   };
 };
