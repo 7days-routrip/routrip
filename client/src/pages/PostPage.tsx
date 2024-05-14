@@ -1,79 +1,13 @@
 import styled from "styled-components";
 import icons from "@/icons/icons";
-
 import PostCard from "@/components/common/postCard";
 import { Post } from "@/models/post.model";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { ViewMode } from "@/components/common/postCard";
-import { Link } from "react-router-dom";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Country, regions } from "@/data/region";
+import RegionCountrySelector from "@/components/common/RegionCountrySelector";
 
-export const posts: Post[] = [
-  {
-    id: 1,
-    title: "오션뷰를 보고 싶다면? 여기 !!",
-    date: "2024.03.14 ~ 2024.03.18",
-    author: "여행조아",
-    userProfile: "../../public/assets/images/logo-profile.png",
-    continental: "Asia",
-    country: "Japan",
-    commentsNum: "12",
-    likesNum: "21",
-    postsImg: "../../public/assets/images/logo-footer.png",
-    createdAt: "2024-04-01",
-  },
-  {
-    id: 2,
-    title: "제주에서의 3일",
-    date: "2024.03.12 ~ 2024.03.18",
-    author: "여행조아",
-    userProfile: "../../public/assets/images/logo-profile.png",
-    continental: "Asia",
-    country: "Japan",
-    commentsNum: "12",
-    likesNum: "79",
-    postsImg: "../../public/assets/images/logo-footer.png",
-    createdAt: "2024-04-11",
-  },
-  {
-    id: 3,
-    title: "가까운 해외, 일본!",
-    date: "2024.03.09 ~ 2024.03.19",
-    author: "여행조아",
-    userProfile: "../../public/assets/images/logo-profile.png",
-    continental: "Asia",
-    country: "Japan",
-    commentsNum: "12",
-    likesNum: "20",
-    postsImg: "../../public/assets/images/logo-footer.png",
-    createdAt: "2024-04-13",
-  },
-  {
-    id: 4,
-    title: "최고의 휴양지",
-    date: "2024.03.11 ~ 2024.03.20",
-    author: "여행조아",
-    userProfile: "../../public/assets/images/logo-profile.png",
-    continental: "Asia",
-    country: "Japan",
-    commentsNum: "12",
-    likesNum: "91",
-    postsImg: "../../public/assets/images/logo-footer.png",
-    createdAt: "2024-05-05",
-  },
-  {
-    id: 4,
-    title: "겨울에 떠나는 삿포로",
-    date: "2024.03.11 ~ 2024.03.15",
-    author: "여행조아",
-    userProfile: "../../public/assets/images/logo-profile.png",
-    continental: "Asia",
-    country: "Japan",
-    commentsNum: "12",
-    likesNum: "88",
-    postsImg: "../../public/assets/images/logo-footer.png",
-    createdAt: "2024-03-17",
-  },
-];
 interface PostPageStyleProps {
   view: string;
 }
@@ -82,9 +16,90 @@ const PostPage = () => {
   const { SearchIcon, GridIcon, ListIcon } = icons;
   const [view, setView] = useState<ViewMode>("grid");
   const [sortOrder, setSortOrder] = useState<string>("recent");
+  const [selectedRegion, setSelectedRegion] = useState(0);
+  const [selectedCountry, setSelectedCountry] = useState(0);
+  const [countries, setCountries] = useState<Country[]>([]);
+  const [posts, setPosts] = useState<Post[]>([]);
+  const [page, setPage] = useState(1);
+  const [hasMore, setHasMore] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const loader = useRef(null);
+
+  const location = useLocation();
+  const nav = useNavigate();
+  const params = new URLSearchParams(location.search);
+  const area = params.get("area");
+  const countryId = params.get("filter") || "";
 
   const clickListBtn = () => setView("list");
   const clickGridBtn = () => setView("grid");
+
+  const fetchPosts = async (reset = false) => {
+    setLoading(true);
+    try {
+      const response = await fetch(`http://localhost:1234/api/posts?area=${area}&filter=${countryId}&pages=${page}`);
+      const data = await response.json();
+      if (reset) {
+        setPosts(data.posts);
+      } else {
+        setPosts((prev) => [...prev, ...data.posts]);
+      }
+      setHasMore(data.pagination.page * 2 < data.pagination.totalPosts);
+    } catch (error) {
+      console.error("Error fetching posts:", error);
+    }
+    setLoading(false);
+  };
+
+  useEffect(() => {
+    fetchPosts(true);
+  }, [area, countryId]);
+
+  useEffect(() => {
+    if (page > 1) fetchPosts();
+  }, [page]);
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        if (entries[0].isIntersecting && hasMore && !loading) {
+          setPage((prevPage) => prevPage + 1);
+        }
+      },
+      { threshold: 1.0 },
+    );
+
+    if (loader.current) {
+      observer.observe(loader.current);
+    }
+
+    return () => {
+      if (loader.current) {
+        observer.unobserve(loader.current);
+      }
+    };
+  }, [loader, hasMore, loading]);
+
+  const handleRegionChange = (event: { target: { value: string } }) => {
+    const regionId = parseInt(event.target.value);
+    const region = regions.find((region) => region.id === regionId);
+    setCountries(region ? region.countries : []);
+    setSelectedRegion(regionId);
+    setSelectedCountry(0);
+    params.delete("filter");
+    nav({ search: params.toString() });
+  };
+
+  const handleCountryChange = (event: { target: { value: string } }) => {
+    const countryId = parseInt(event.target.value);
+    setSelectedCountry(countryId);
+    if (countryId === 0) {
+      params.delete("filter");
+    } else {
+      params.set("filter", countryId.toString());
+    }
+    nav({ search: params.toString() });
+  };
 
   const sortedPosts =
     sortOrder === "recent"
@@ -95,17 +110,27 @@ const PostPage = () => {
     <PostPageStyle view={view}>
       <div className="main-content">
         <div className="control-wrapper">
-          <div className="btn-wrapper">
-            <select onChange={(e) => setSortOrder(e.target.value)}>
-              <option value="recent">최신순</option>
-              <option value="likes">인기순</option>
-            </select>
+          <div className="select-wrapper">
+            {area === "abroad" ? (
+              <RegionCountrySelector
+                regions={regions}
+                selectedRegion={selectedRegion}
+                selectedCountry={selectedCountry}
+                countries={countries}
+                onRegionChange={handleRegionChange}
+                onCountryChange={handleCountryChange}
+              />
+            ) : null}
             <div className="input-wrapper">
               <input type="search" placeholder="검색어를 입력하세요." />
               <SearchIcon />
             </div>
           </div>
           <div className="view-toggle">
+            <select onChange={(e) => setSortOrder(e.target.value)}>
+              <option value="recent">최신순</option>
+              <option value="likes">인기순</option>
+            </select>
             <GridIcon width="24px" height="24px" onClick={clickGridBtn} />
             <ListIcon width="24px" height="24px" onClick={clickListBtn} />
           </div>
@@ -113,11 +138,12 @@ const PostPage = () => {
       </div>
 
       <div className="post">
-        {sortedPosts.map((post) => (
-          <StyledLink key={post.id} to={`/post/${post.id}`}>
-            <PostCard key={post.id} PostProps={post} view={view} />
-          </StyledLink>
-        ))}
+        {posts.length === 0 ? (
+          <div>게시글이 없습니다</div>
+        ) : (
+          sortedPosts.map((post) => <PostCard key={post.id} PostProps={post} view={view} />)
+        )}
+        <div ref={loader} />
       </div>
     </PostPageStyle>
   );
@@ -125,7 +151,7 @@ const PostPage = () => {
 
 const PostPageStyle = styled.div<PostPageStyleProps>`
   .main-content {
-    display: flex;
+    display: grid;
     justify-content: center;
     align-items: center;
     width: ${(props) => (props.view === "list" ? "790px" : "1080px")};
@@ -135,21 +161,32 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
   }
 
   .control-wrapper {
-    display: flex;
-    justify-content: space-between;
+    display: grid;
+    justify-content: center;
     align-items: center;
     width: 960px;
     gap: 20px;
   }
 
-  select {
-    padding: 8px;
+  .select-wrapper {
+    display: flex;
+    gap: 20px;
+    align-items: center;
   }
 
-  .btn-wrapper {
+  .continent-country {
     display: flex;
     gap: 10px;
     align-items: center;
+  }
+  .continent,
+  .country {
+    width: 120px;
+    padding: 8px 12px;
+  }
+
+  select {
+    padding: 8px;
   }
 
   .input-wrapper {
@@ -172,6 +209,8 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
   .view-toggle {
     display: flex;
     gap: 10px;
+    align-items: center;
+    justify-content: flex-end;
   }
 
   .post {
@@ -192,7 +231,7 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
       width: 100%;
     }
 
-    .btn-wrapper,
+    .select-wrapper,
     .input-wrapper,
     .view-toggle {
       width: 100%;
@@ -205,11 +244,6 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
       width: 100%;
     }
   }
-`;
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: inherit;
 `;
 
 export default PostPage;
