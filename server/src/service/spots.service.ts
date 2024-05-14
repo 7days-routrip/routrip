@@ -77,7 +77,7 @@ const getDetail = async (id: string): Promise<PlaceDetailDTO> => {
   return placeDetailDTO;
 };
 
-const search = async (keyword: string): Promise<SearchPlaceDTO[]> => {
+const search = async (keyword: string, zoom: number, lat: number, lng: number): Promise<SearchPlaceDTO[]> => {
   const places = await placeRepository
     .createQueryBuilder("places")
     .where("places.name LIKE :keyword", { keyword: `%${keyword}%` })
@@ -105,8 +105,36 @@ const search = async (keyword: string): Promise<SearchPlaceDTO[]> => {
     searchedPlaces.push(searchedPlace);
   });
 
-  return searchedPlaces;
+  let filteredPlaces: SearchPlaceDTO[] = [];
+  let searchDistance: number;
+
+  if (zoom < 10) searchDistance = 50000;
+  else if (zoom < 15) searchDistance = 30000;
+  else searchDistance = 10000;
+
+  searchedPlaces.forEach((place, idx) => {
+    const distance = getDistance(place.location.lat, place.location.lng, lat, lng);
+    if (distance <= searchDistance) {
+      filteredPlaces.push(place);
+    }
+  });
+  return filteredPlaces;
 };
+
+function getDistance(lat1: number, lon1: number, lat2: number, lon2: number) {
+  const R = 6371; // 지구 반지름 (단위: km)
+  const dLat = deg2rad(lat2 - lat1);
+  const dLon = deg2rad(lon2 - lon1);
+  const a =
+    Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+    Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
+  const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+  const distance = R * c; // 두 지점 간의 거리 (단위: km)
+  return distance * 1000;
+}
+function deg2rad(deg: number) {
+  return deg * (Math.PI / 180);
+}
 
 const placeImgUpload = async (imageUrl: string): Promise<string> => {
   let response;
