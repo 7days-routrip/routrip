@@ -4,8 +4,8 @@ import PostCard from "@/components/common/postCard";
 import { Post } from "@/models/post.model";
 import { useEffect, useRef, useState } from "react";
 import { ViewMode } from "@/components/common/postCard";
-import { Link, useLocation } from "react-router-dom";
-import { regions } from "@/data/region";
+import { Link, useLocation, useNavigate } from "react-router-dom";
+import { Country, regions } from "@/data/region";
 import RegionCountrySelector from "@/components/common/RegionCountrySelector";
 
 interface PostPageStyleProps {
@@ -17,29 +17,32 @@ const PostPage = () => {
   const [view, setView] = useState<ViewMode>("grid");
   const [sortOrder, setSortOrder] = useState<string>("recent");
   const [selectedRegion, setSelectedRegion] = useState(0);
-  const [countries, setCountries] = useState<string[]>([]);
+  const [selectedCountry, setSelectedCountry] = useState(0);
+  const [countries, setCountries] = useState<Country[]>([]);
   const [posts, setPosts] = useState<Post[]>([]);
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const loader = useRef(null);
 
   const location = useLocation();
+  const nav = useNavigate();
   const params = new URLSearchParams(location.search);
   const area = params.get("area") || "home";
+  const countryId = params.get("filter") || "";
 
   const clickListBtn = () => setView("list");
   const clickGridBtn = () => setView("grid");
 
   useEffect(() => {
     const fetchPosts = async () => {
-      const response = await fetch(`http://localhost:1234/api/posts?area=${area}&pages=${page}`);
+      const response = await fetch(`http://localhost:1234/api/posts?area=${area}&filter=${countryId}&pages=${page}`);
       const data = await response.json();
       setPosts((prev) => [...prev, ...data.posts]);
       setHasMore(data.pagination.page * 2 < data.pagination.totalPosts);
     };
 
     fetchPosts();
-  }, [page]);
+  }, [page, countryId]); // countryId를 의존성 배열에 추가
 
   useEffect(() => {
     const observer = new IntersectionObserver(
@@ -67,6 +70,20 @@ const PostPage = () => {
     const region = regions.find((region) => region.id === regionId);
     setCountries(region ? region.countries : []);
     setSelectedRegion(regionId);
+    setSelectedCountry(0); // Reset country selection when region changes
+    params.delete("filter");
+    nav({ search: params.toString() });
+  };
+
+  const handleCountryChange = (event: { target: { value: string } }) => {
+    const countryId = parseInt(event.target.value);
+    setSelectedCountry(countryId);
+    if (countryId === 0) {
+      params.delete("filter");
+    } else {
+      params.set("filter", countryId.toString());
+    }
+    nav({ search: params.toString() });
   };
 
   const sortedPosts =
@@ -83,8 +100,10 @@ const PostPage = () => {
               <RegionCountrySelector
                 regions={regions}
                 selectedRegion={selectedRegion}
+                selectedCountry={selectedCountry}
                 countries={countries}
                 onRegionChange={handleRegionChange}
+                onCountryChange={handleCountryChange}
               />
             ) : null}
             <div className="input-wrapper">
@@ -208,11 +227,6 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
       width: 100%;
     }
   }
-`;
-
-const StyledLink = styled(Link)`
-  text-decoration: none;
-  color: inherit;
 `;
 
 export default PostPage;
