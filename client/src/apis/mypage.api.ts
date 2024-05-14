@@ -4,7 +4,6 @@ import { Schedule } from "@/models/schedule.model";
 import { Post } from "@/models/post.model";
 import { PlaceDetails } from "@/models/place.model";
 import { Profile } from "@/models/profile.model";
-import { getToken } from "@/stores/authStore";
 
 // 내 프로필
 export const fetchProfile = async () => {
@@ -49,11 +48,8 @@ export const fetchMySchedule = async () => {
 // 내 게시글
 export const fetchMyPosts = async () => {
   try {
-    const { data } = await httpClient.get<Post[]>("/mypages/posts", {
-      headers: {
-        Authorization: getToken(),
-      },
-    });
+    const { data } = await httpClient.get("/mypages/posts?pages=1");
+    console.log(data);
     return data;
   } catch (error) {
     // 에러 처리
@@ -75,7 +71,6 @@ export const fetchMyComments = async () => {
 };
 
 // 여행글 좋아요
-
 export const fetchLikePost = async () => {
   try {
     const { data } = await httpClient.get<Post[]>("/likes/posts");

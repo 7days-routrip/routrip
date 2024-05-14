@@ -113,9 +113,9 @@ const Mypage = () => {
           {!isEmptySchedules && activeTab[0]
             ? schedules?.map((item, idx) => <ScheduleCard scheduleProps={item} key={idx} view="grid" />)
             : null}
-          {!isEmptyPosts && activeTab[1]
+          {/* {!isEmptyPosts && activeTab[1]
             ? posts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
-            : null}
+            : null} */}
           {!isEmptyComments && activeTab[2]
             ? comments?.map((item, idx) => <CommentCard CommentProps={item} key={idx} />)
             : null}
@@ -142,7 +142,8 @@ export const MypageStyle = styled.div`
   }
 
   .contents {
-    display: flex;
+    display: grid;
+
     flex-direction: column;
     justify-content: center;
     align-items: flex-start;

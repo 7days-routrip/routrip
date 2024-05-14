@@ -55,6 +55,20 @@ export const authReset = async (data: LoginProps) => {
   return response;
 };
 
+export interface profileImageProp {
+  image: File;
+}
+
+// 프로필 이미지 먼저 보내기
+export const fetchProfileImage = async (data: profileImageProp) => {
+  try {
+    const response = await httpClient.post("/users/upload/profile", data);
+    return response;
+  } catch (error: any) {
+    console.log(error);
+  }
+};
+
 // 프로필 수정 - 닉네임 or 이미지랑 같이?
 export interface profileUpdateProp {
   nickname?: string;

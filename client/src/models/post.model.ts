@@ -4,7 +4,7 @@ export interface Post {
   title: string;
   date: string;
   author: string;
-  userProfile: string;
+  profileImg: string;
   continental: string;
   country: string;
   commentsNum: string;

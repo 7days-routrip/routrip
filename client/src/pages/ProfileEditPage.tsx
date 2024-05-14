@@ -79,6 +79,8 @@ const ProfileEditPage = () => {
       setError("nickname", { message: "닉네임 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
       return;
     }
+    // 프로필 변경이 있으며
+    // userProfileImage(getValues().image);
     userUpdate({ nickname: data.nickname, profile: preview });
     clearErrors;
   };
@@ -121,26 +123,31 @@ const ProfileEditPage = () => {
 
             <div className="profile-form">
               <div className="profile-nickname">
+                <span className="nickname-label">닉네임</span>
                 <div className="nickname-input">
-                  <span>닉네임</span>
-                  <InputText
-                    inputType="text"
-                    {...register("nickname", nicknameOptions)}
-                    $inputsize="small"
-                    onChange={() => setNicknameUniqueCheck(false)}
-                  />
-                  {errors.nickname && <small className="error-text">{errors.nickname.message}</small>}
+                  <div className="test">
+                    <InputText
+                      inputType="text"
+                      {...register("nickname", nicknameOptions)}
+                      $inputsize="small"
+                      onChange={() => setNicknameUniqueCheck(false)}
+                    />
+                    <Button
+                      $size="medium"
+                      $radius="default"
+                      $scheme="primary"
+                      type="button"
+                      onClick={checkNickname}
+                      disabled={nicknameUniqueCheck ? true : false}
+                    >
+                      {nicknameUniqueCheck ? "인증 완료" : "중복 확인"}
+                    </Button>
+                  </div>
+                  <div className="">
+                    {errors.nickname && <small className="error-text">{errors.nickname.message}</small>}
+                    {nicknameUniqueCheck && <small className="success-text">사용 가능한 닉네임입니다!</small>}
+                  </div>
                 </div>
-                <Button
-                  $size="medium"
-                  $radius="default"
-                  $scheme="primary"
-                  type="button"
-                  onClick={checkNickname}
-                  disabled={nicknameUniqueCheck ? true : false}
-                >
-                  {nicknameUniqueCheck ? "인증 완료" : "중복 확인"}
-                </Button>
               </div>
               <div className="profile-password">
                 <span>비밀번호</span>
@@ -171,7 +178,7 @@ const ProfileEditPageStyle = styled(MypageStyle)`
   a {
     color: ${({ theme }) => theme.color.white};
   }
-
+  .nickname-label,
   span {
     font-weight: 600;
   }
@@ -192,7 +199,6 @@ const ProfileEditPageStyle = styled(MypageStyle)`
     .image-form {
       width: 100%;
       display: flex;
-      justify-content: center;
     }
     .image-btn {
       display: flex;
@@ -202,7 +208,7 @@ const ProfileEditPageStyle = styled(MypageStyle)`
 
     .profile-form {
       display: flex;
-      justify-content: flex-start;
+      /* justify-content: space-evenly; */
       width: 100%;
       align-items: center;
       flex-direction: column;
@@ -212,26 +218,45 @@ const ProfileEditPageStyle = styled(MypageStyle)`
     .error-text {
       color: ${({ theme }) => theme.color.red};
     }
+    .success-text {
+      color: ${({ theme }) => theme.color.successGreen};
+    }
+
+    .test {
+      display: flex;
+      width: 100%;
+      gap: 0.5rem;
+      > input {
+        flex: 1;
+        width: 100%;
+      }
+    }
 
     .nickname-input {
-      width: 61%;
+      display: flex;
+      width: 100%;
+      flex-direction: column;
     }
-    .profile-nickname,
+    .profile-nickname {
+      display: flex;
+      flex-direction: column;
+      width: 100%;
+    }
+
+    .profile-password button {
+      height: 40px;
+    }
+
     .profile-password,
     .profile-resign {
       width: 100%;
       display: flex;
       justify-content: space-between;
       align-items: center;
-      padding: 0 1rem;
     }
 
     .profile-nickname {
-      align-items: center;
-      gap: 1rem;
-      small {
-        color: ${({ theme }) => theme.color.red};
-      }
+      gap: 0.1rem;
     }
 
     .profile-nickname > button {
@@ -239,11 +264,11 @@ const ProfileEditPageStyle = styled(MypageStyle)`
     }
 
     .profile-resign {
-      margin-top: 2rem;
+      /* margin-top: 2rem; */
     }
 
     .profile-resign > :last-child {
-      margin-right: 2rem;
+      /* margin-right: 2rem; */
     }
 
     .profile-resign > span,
@@ -270,7 +295,6 @@ const ProfileEditPageStyle = styled(MypageStyle)`
       }
       .image-form {
         justify-content: space-between;
-        padding: 0 1rem;
       }
     }
   }
@@ -279,6 +303,7 @@ const ProfileEditPageStyle = styled(MypageStyle)`
 const ProfileEditImageStyle = styled(ProfileImageStyle)<ProfileImageStyleProps>`
   width: 200px;
   height: 200px;
+  background-size: cover;
   border: 1px solid ${({ theme }) => theme.color.borderGray};
 `;
 const AttachFileLabel = styled.label`
@@ -289,6 +314,7 @@ const AttachFileLabel = styled.label`
   border-radius: ${({ theme }) => theme.borderRadius.default};
   background-color: ${({ theme }) => theme.color.primary};
   color: ${({ theme }) => theme.color.white};
+  cursor: pointer;
 `;
 const AttachFileInput = styled.input`
   display: none;

@@ -3,6 +3,7 @@ import {
   authLogin,
   authLogout,
   authReset,
+  fetchProfileImage,
   fetchProfileRestPassword,
   isEmailUnique,
   isNicknameUnique,
@@ -42,7 +43,7 @@ export const useAuth = () => {
 
   const userLogin = async (data: LoginProps) => {
     try {
-      console.log(data)
+      console.log(data);
       const loginRes = await authLogin(data);
       const newAccessToken = loginRes.headers["authorization"];
       const userName = loginRes.data.nickName;
@@ -111,6 +112,15 @@ export const useAuth = () => {
     } catch (error: any) {}
   };
 
+  const userProfileImage = async (image: File) => {
+    try {
+      const res = await fetchProfileImage({ image });
+      return res;
+    } catch (error) {
+      // 실패
+    }
+  };
+
   const userUpdate = async (data: profileUpdateProp) => {
     try {
       const res = await profileUpdate(data);
@@ -137,5 +147,6 @@ export const useAuth = () => {
     userEmailCheck,
     userUpdate,
     userNewPasswordReset,
+    userProfileImage,
   };
 };
