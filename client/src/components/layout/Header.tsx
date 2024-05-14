@@ -33,10 +33,10 @@ const Header = ({ isFull = false }: Props) => {
             <StyledLink to="/schedule">내 여행</StyledLink>
           </li>
           <li>
-            <StyledLink to="/post">국내 여행지</StyledLink>
+            <StyledLink to="/post?area=home">국내 여행지</StyledLink>
           </li>
           <li>
-            <StyledLink to="/post">해외 여행지</StyledLink>
+            <StyledLink to="/post?area=abroad">해외 여행지</StyledLink>
           </li>
         </ul>
       </nav>
@@ -103,6 +103,10 @@ const HeaderStyle = styled.header<HeaderStyleProps>`
   }
 
   @media ${({ theme }) => theme.mediaQuery.mobile} {
+    img {
+      width: 80px;
+      height: 37px;
+    }
     .logo-link {
       position: absolute;
       left: 50%;

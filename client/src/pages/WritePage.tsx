@@ -6,6 +6,10 @@ import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import { Button } from "@/components/common/Button";
 import { theme } from "@/styles/theme";
+import { Country, regions } from "@/data/region";
+import RegionCountrySelector from "@/components/common/RegionCountrySelector";
+// import { v4 } from "uuid";
+// import WriteTopBtn from "@/components/common/WriteTopBtn";
 
 // Custom Upload Adapter
 class MyUploadAdapter {
@@ -17,17 +21,28 @@ class MyUploadAdapter {
   async upload() {
     try {
       const file = await this.loader.file;
-      if (file instanceof Blob) {
-        const reader = new FileReader();
-        return new Promise((resolve, reject) => {
-          reader.onload = () => {
-            resolve({ default: reader.result });
-          };
-          reader.onerror = reject;
-          reader.readAsDataURL(file);
-        });
+      const formData = new FormData();
+      formData.append("postImg", file, file.name);
+
+      const response = await fetch(`http://localhost:1234/api/posts/1/upload/img`, {
+        method: "POST",
+        body: formData,
+        headers: {
+          Authorization: "Bearer YOUR_ACCESS_TOKEN",
+        },
+      });
+
+      if (!response.ok) {
+        throw new Error("Failed to upload image.");
+      }
+
+      const data = await response.json();
+
+      if (data.imageUrl) {
+        return { default: data.imageUrl };
       } else {
-        throw new Error("The file is not a Blob object.");
+        console.warn("Image URL is null");
+        return { default: "default_image_url_placeholder" }; // 기본 이미지를 설정
       }
     } catch (error) {
       console.error(error);
@@ -53,6 +68,9 @@ const WritePage = () => {
   const [expense, setExpense] = useState("");
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
+  const [selectedRegion, setSelectedRegion] = useState(0);
+  const [selectedCountry, setSelectedCountry] = useState(0);
+  const [countries, setCountries] = useState<Country[]>([]);
 
   useEffect(() => {
     console.log("Start Date:", startDate, "End Date:", endDate);
@@ -63,6 +81,7 @@ const WritePage = () => {
     setStartDate(start);
     setEndDate(end);
   };
+
   const handleSave = () => {
     const formData = new FormData();
     formData.append("title", title || "기본 제목");
@@ -70,8 +89,8 @@ const WritePage = () => {
     formData.append("endDate", endDate.toISOString().split("T")[0]);
     formData.append("expense", expense || "0");
     formData.append("author", "작성자 이름");
-    formData.append("continent", "1");
-    formData.append("country", "1");
+    formData.append("continent", selectedRegion.toString());
+    formData.append("country", selectedCountry.toString());
     formData.append("journeyId", "3");
 
     const editorContent = new DOMParser().parseFromString(data, "text/html");
@@ -100,12 +119,6 @@ const WritePage = () => {
     fetch("http://localhost:1234/api/posts", {
       method: "POST",
       body: formData,
-      headers: {
-        getSetCookie:
-          "refresh_token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJuaWNrTmFtZSI6IuuRpeuRpeydtCIsImlhdCI6MTcxNTUxMDYzOCwiZXhwIjoxNzE2NzIwMjM4fQ.0u1no8PGrkZMXMQm6n_V2ZokU6XQyY5ry6cnXGESLIc; Path=/; HttpOnly",
-        Authorization:
-          "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ1c2VySWQiOjE1LCJuaWNrTmFtZSI6IuuRpeuRpeydtCIsImlhdCI6MTcxNTUxMDYzOCwiZXhwIjoxNzE1NTEyNDM4fQ.rtuwN3BidCsA1Z4g8CyfXcK1oQXExbB1VnE_qB_qsPs",
-      },
     })
       .then((response) => response.json())
       .then((result) => console.log("저장 성공:", result))
@@ -126,9 +139,29 @@ const WritePage = () => {
     return new Blob([u8arr], { type: mime });
   };
 
+  const handleRegionChange = (event: { target: { value: string } }) => {
+    const regionId = parseInt(event.target.value);
+    const region = regions.find((region) => region.id === regionId);
+    setCountries(region ? region.countries : []);
+    setSelectedRegion(regionId);
+    setSelectedCountry(0);
+  };
+
+  const handleCountryChange = (event: { target: { value: string } }) => {
+    setSelectedCountry(parseInt(event.target.value));
+  };
+
   return (
     <WritePageStyle>
       <div className="title-content">
+        <RegionCountrySelector
+          regions={regions}
+          selectedRegion={selectedRegion}
+          selectedCountry={selectedCountry}
+          countries={countries}
+          onRegionChange={handleRegionChange}
+          onCountryChange={handleCountryChange}
+        />
         <input
           type="text"
           className="title"
@@ -157,7 +190,7 @@ const WritePage = () => {
             onChange={(e) => setExpense(e.target.value)}
           />
         </label>
-        <p>내 일정 불러오기</p>
+        <p className="plan">내 일정 불러오기</p>
       </div>
       <CKEditor
         editor={ClassicEditor}
@@ -179,6 +212,7 @@ const WritePage = () => {
         <Button $size="large" $scheme="primary" $radius="default" onClick={handleSave}>
           저장
         </Button>
+        {/* <WriteTopBtn isWriting={true} /> */}
       </div>
     </WritePageStyle>
   );
@@ -198,6 +232,8 @@ const WritePageStyle = styled.div`
     border: none;
     border-bottom: 1px solid #e7e7e7;
     font-size: ${theme.fontSize.xlarge};
+    color: black;
+    font-family: inherit;
   }
   input {
     width: 200px;
@@ -207,6 +243,23 @@ const WritePageStyle = styled.div`
     display: flex;
     gap: 16px;
     justify-content: center;
+  }
+  .continent-country {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+  }
+  .continent,
+  .country {
+    width: 120px;
+    padding: 8px 12px;
+  }
+
+  select {
+    padding: 8px;
+  }
+  .plan {
+    color: ${({ theme }) => theme.color.primary};
   }
   .info-container {
     justify-content: space-between;
