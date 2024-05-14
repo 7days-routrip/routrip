@@ -52,7 +52,7 @@ export const getPlaceDetailApi = async (id: string) => {
 // 찜한 장소 목록 조회 요청
 export const getBookmarkPlaces = async () => {
   try {
-    const { data } = await httpClient.get<PlaceDetails[]>(`/places`);
+    const { data } = await httpClient.get<PlaceDetails[]>(`/likes/places`);
     return data;
   } catch (err: any) {
     throw err;
