@@ -12,3 +12,13 @@ export interface Post {
   postsImg: string;
   createdAt: string;
 }
+
+export interface Pagination {
+  page: number;
+  totalPosts: number;
+}
+
+export interface PostList {
+  posts: Post[];
+  pagenation: Pagination;
+}

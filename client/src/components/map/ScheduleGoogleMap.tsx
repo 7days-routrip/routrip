@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useState } from "react";
+import React, { useCallback, useEffect } from "react";
 import { GoogleMap, InfoWindowF, MarkerF, useJsApiLoader } from "@react-google-maps/api";
 import Loading from "@/components/common/Loading";
 import { useMapStore } from "@/stores/mapStore";
@@ -13,7 +13,7 @@ import { useDayPlaceStore } from "@/stores/dayPlaces";
 import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
 import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { Place } from "@/models/place.model";
-import { isExistedInPlaceType, isExistedInSelectedPlaceType } from "@/utils/checkIsExisted";
+import { isExistedInPlace } from "@/utils/checkIsExisted";
 import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";
 
 const apiKey = import.meta.env.VITE_GOOGLE_MAP_API_KEY || "";
@@ -55,13 +55,12 @@ const ScheduleGoogleMap = () => {
   });
 
   const { googleMap, mapCenter, setCenter, setGoogleMap, updateMapBounds } = useMapStore();
-  const { addPlaces } = useAddPlaceStore(); // 실제로 사용할 전역 상태. 임시로 mockRealPlaceData를 사용
-  const { markerType, dayIndex } = useShowMarkerTypeStore();
+  const { addPlaces } = useAddPlaceStore();
+  const { markerType, dayIndex, clickMarker, setClickMarker } = useShowMarkerTypeStore();
   const { dayPlaces } = useDayPlaceStore();
   const { searchPlaces } = useSearchPlacesStore();
   const { nearPlaces } = useNearPlacesStore();
   const { bookmarkPlaces } = useBookmarkPlacesStore();
-  const [clickMarker, setClickMarker] = useState<SelectedPlace | Place | null>(null);
 
   const getPlaceArr = () => {
     switch (markerType) {
@@ -86,7 +85,6 @@ const ScheduleGoogleMap = () => {
         lat: googleMap.getCenter()?.lat() || center.lat,
         lng: googleMap.getCenter()?.lng() || center.lng,
       });
-      // console.log(googleMap.getCenter()?.lat(), googleMap.getCenter()?.lng());
     }
   }, [googleMap, center]);
 
@@ -102,10 +100,10 @@ const ScheduleGoogleMap = () => {
     setClickMarker(place);
 
     if (googleMap) {
-      googleMap.panTo(place.location); // 1. 마커 위치로 지도 이동
+      // googleMap.panTo(place.location); // 1. 마커 위치로 지도 이동
 
       const currentZoom = googleMap.getZoom() || 6;
-      const targetZoom = Math.max(currentZoom, 14);
+      const targetZoom = Math.max(currentZoom, 12);
       googleMap.setZoom(targetZoom); // 2. 줌 비율 조정(확대)
     }
   };
@@ -113,25 +111,40 @@ const ScheduleGoogleMap = () => {
   const onClickMap = () => {
     if (clickMarker) {
       setClickMarker(null);
-      // updateMapBounds(googleMap, getPlaceArr());
     }
   };
 
   useEffect(() => {
     if (!clickMarker) return;
 
-    if (markerType === "add" && "uuid" in clickMarker) {
-      if (!isExistedInSelectedPlaceType(addPlaces, clickMarker.uuid)) setClickMarker(null);
-    } else if (markerType === "day" && "uuid" in clickMarker) {
-      if (!isExistedInSelectedPlaceType(dayPlaces[dayIndex as number], clickMarker.uuid)) setClickMarker(null);
-    } else if (markerType === "searchApi" && clickMarker) {
-      if (!isExistedInPlaceType(searchPlaces, clickMarker.id)) setClickMarker(null);
-    } else if (markerType === "searchGoogle" && clickMarker) {
-      if (!isExistedInPlaceType(nearPlaces, clickMarker.id)) setClickMarker(null);
-    } else if (markerType === "bookmarkList" && clickMarker) {
-      if (!isExistedInPlaceType(bookmarkPlaces, clickMarker.id)) setClickMarker(null);
+    let targetId;
+    switch (markerType) {
+      case "add":
+        targetId = "uuid" in clickMarker ? clickMarker.uuid : clickMarker.id;
+        if (!isExistedInPlace(addPlaces, targetId)) setClickMarker(null);
+        break;
+
+      case "day":
+        targetId = "uuid" in clickMarker ? clickMarker.uuid : clickMarker.id;
+        if (!isExistedInPlace(dayPlaces[dayIndex as number], targetId)) setClickMarker(null);
+        break;
+
+      case "searchApi":
+        if (!isExistedInPlace(searchPlaces, clickMarker.id)) setClickMarker(null);
+        break;
+
+      case "searchGoogle":
+        if (!isExistedInPlace(nearPlaces, clickMarker.id)) setClickMarker(null);
+        break;
+
+      case "bookmarkList":
+        if (!isExistedInPlace(bookmarkPlaces, clickMarker.id)) setClickMarker(null);
+        break;
+
+      default:
+        break;
     }
-  }, [addPlaces, dayPlaces, markerType, dayIndex]);
+  }, [addPlaces, dayPlaces, markerType, dayIndex, clickMarker]);
 
   useEffect(() => {
     // 지도에 표시할 마커가 전부 보이도록 지도 경계선을 계산

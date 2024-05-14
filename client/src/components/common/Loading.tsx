@@ -1,21 +1,28 @@
 import styled from "styled-components";
 import Icons from "@/icons/icons";
 
-const Loading = () => {
+interface Props {
+  isFull?: boolean;
+}
+
+const Loading = ({ isFull = false }: Props) => {
   return (
-    <LoadingStyle>
+    <LoadingStyle $isFull={isFull}>
       <Icons.LoadingIcon />
     </LoadingStyle>
   );
 };
 
-const LoadingStyle = styled.div`
+interface LoadingStyleProps {
+  $isFull: boolean;
+}
+const LoadingStyle = styled.div<LoadingStyleProps>`
   display: flex;
   align-items: center;
   justify-content: center;
   height: 100%;
   width: 100%;
-  max-width: 1080px;
+  max-width: ${({ $isFull }) => ($isFull ? "100%" : "1080px")};
   margin-top: -80px; // 헤더 높이 만큼
 
   @keyframes rotate {

@@ -6,7 +6,6 @@ import {
   fetchMySchedule,
   fetchProfile,
 } from "@/apis/mypage.api";
-import { queryKey } from "@/constants/queryKey";
 import { useQuery } from "@tanstack/react-query";
 
 export const useSchedule = () => {
@@ -16,8 +15,8 @@ export const useSchedule = () => {
     refetch: scheduleRefetch,
   } = useQuery({
     queryKey: ["schedule"],
-    queryFn: () => fetchMySchedule({ list: queryKey.schedule }),
-    enabled: false,
+    queryFn: () => fetchMySchedule(),
+    enabled: true,
   });
 
   return {
@@ -47,7 +46,7 @@ export const usePost = () => {
     refetch: postsRefetch,
   } = useQuery({
     queryKey: ["post"],
-    queryFn: () => fetchMyPosts({ list: queryKey.post }),
+    queryFn: () => fetchMyPosts(),
     enabled: false,
   });
 
@@ -66,7 +65,7 @@ export const useComment = () => {
     refetch: commentsRefetch,
   } = useQuery({
     queryKey: ["comment"],
-    queryFn: () => fetchMyComments({ list: queryKey.comment }),
+    queryFn: () => fetchMyComments(),
     enabled: false,
   });
 

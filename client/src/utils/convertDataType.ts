@@ -1,3 +1,4 @@
+import { DaysField } from "@/apis/schedule.api";
 import { DaysWithUuid, ScheduleDetails, ScheduleDetailsWithUuid } from "@/models/schedule.model";
 import { SelectedPlace } from "@/stores/addPlaceStore";
 import { v4 as uuidv4 } from "uuid";
@@ -40,4 +41,12 @@ export const convertDateToDay = (date: string): string => {
   const days = ["일", "월", "화", "수", "목", "금", "토"];
   const dayIndex = new Date(date).getDay();
   return days[dayIndex];
+};
+
+// SelectedPlace[][] -> DaysField
+export const convertSelectedPlaceToDaysField = (allDaysPlaces: SelectedPlace[][]): DaysField[] => {
+  return allDaysPlaces.map((preDayPlaces, dayIndex) => {
+    const spots = preDayPlaces.map((place) => place.id);
+    return { day: dayIndex, spots };
+  });
 };

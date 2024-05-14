@@ -3,6 +3,8 @@ import ErrorPage from "@/pages/ErrorPage";
 import JoinPage from "@/pages/JoinPage";
 import LoginPage from "@/pages/LoginPage";
 import MainPage from "@/pages/MainPage";
+import PostDetailPage from "@/pages/PostDetailPage";
+import PostEditPage from "@/pages/PostEditPage";
 import Mypage from "@/pages/Mypage";
 import PostPage from "@/pages/PostPage";
 import ProfileEditPage from "@/pages/ProfileEditPage";
@@ -72,6 +74,34 @@ const routerArr = [
     element: (
       <Layout>
         <PostPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+
+  {
+    path: "/post/:id",
+    element: (
+      <Layout>
+        <PostDetailPage />
+      </Layout>
+    ),
+    errorElement: (
+      <Layout>
+        <ErrorPage />
+      </Layout>
+    ),
+  },
+
+  {
+    path: "/post/:id/edit",
+    element: (
+      <Layout>
+        <PostEditPage />
       </Layout>
     ),
     errorElement: (

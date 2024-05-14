@@ -18,7 +18,7 @@ const PostCard = ({ PostProps, view }: Props) => {
   const CommentIcon = icons.CommentIcon;
   return (
     <PostCardStyle $profile={PostProps.userProfile} $view={view}>
-      <Link to={`/posts/${PostProps.id}`}>
+      <Link to={`/post/${PostProps.id}`}>
         <CardImageStyle $image={PostProps.postsImg} $view={view} />
       </Link>
 
@@ -45,11 +45,11 @@ const PostCard = ({ PostProps, view }: Props) => {
             </div>
             <div className="feedback-icon">
               <div className="comment">
-                <Likecon />
+                <CommentIcon />
                 <span>{PostProps.commentsNum}</span>
               </div>
               <div className="like">
-                <CommentIcon />
+                <Likecon />
                 <span>{PostProps.likesNum}</span>
               </div>
             </div>
@@ -71,7 +71,7 @@ export const CardImageStyle = styled.div<CardImageStyleProps>`
   height: ${({ $view }) => ($view === "grid" ? "170px" : "150px")};
   align-items: center;
   justify-content: center;
-  background-image: url(${({ $image }) => ($image ? `data:image/${$image}` : DEFAULT_IMAGE)});
+  background-image: url(${({ $image }) => ($image ? $image : DEFAULT_IMAGE)});
   background-position: center;
   background-size: cover;
   border: 0;

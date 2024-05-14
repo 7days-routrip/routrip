@@ -1,6 +1,10 @@
 import { Places } from "@/models/places.model";
 import { Location, PlaceDetailDTO, SearchPlaceDTO } from "@/types/spots.types";
 import { AppDataSource } from "@/config/ormSetting";
+import { s3 } from "@/middlewares/awsUpload";
+import axios from "axios";
+import { v4 } from "uuid";
+import { S3_BUCKET_NAME } from "@/settings";
 
 const placeRepository = AppDataSource.getRepository(Places);
 
@@ -12,15 +16,23 @@ const register = async (
   tel: string,
   location: Location,
   openingHours: string[],
-  img: string,
-): Promise<boolean> => {
+  placeImg: string,
+): Promise<void> => {
+  const exists = await placeRepository.existsBy({ id: id });
+
+  if (exists) {
+    throw new Error("이미 등록된 장소가 있습니다.\n해당 장소를 추가하시겠습니까?");
+  }
+
+  const placeS3Img = await placeImgUpload(placeImg);
+
   const place: Places = new Places();
   place.id = id;
   place.name = name;
   place.address = address;
   place.siteUrl = siteUrl;
   place.tel = tel;
-  place.img = img;
+  place.img = placeS3Img;
 
   const locationStr: string = location.lat + ", " + location.lng;
   place.location = locationStr;
@@ -28,24 +40,18 @@ const register = async (
   const openingHoursArr: string[] = openingHours;
   place.openingHours = openingHoursArr.join(", ");
 
-  const exists = await placeRepository.existsBy({ id: place.id });
-
-  if (exists) {
-    return false;
-  }
   const savedPlace: Places = await placeRepository.save(place);
-  return true;
 };
 
 const checkDuplicate = async (id: string): Promise<boolean> => {
   return await placeRepository.existsBy({ id: id });
 };
 
-const getDetail = async (id: string): Promise<boolean | PlaceDetailDTO> => {
+const getDetail = async (id: string): Promise<PlaceDetailDTO> => {
   let foundPlace: Places | null = await placeRepository.findOneBy({ id: id });
 
   if (!foundPlace) {
-    return false;
+    throw new Error("장소 정보를 찾을 수 없습니다.");
   }
 
   const locationStrArr: string[] = foundPlace["location"].split(", ");
@@ -70,14 +76,14 @@ const getDetail = async (id: string): Promise<boolean | PlaceDetailDTO> => {
   return placeDetailDTO;
 };
 
-const search = async (keyword: string): Promise<boolean | SearchPlaceDTO[]> => {
+const search = async (keyword: string): Promise<SearchPlaceDTO[]> => {
   const places = await placeRepository
     .createQueryBuilder("places")
     .where("places.name LIKE :keyword", { keyword: `%${keyword}%` })
     .getMany();
 
   if (places.length === 0) {
-    return false;
+    throw new Error("등록된 장소가 없습니다.\n신규 장소를 등록해 주세요.");
   }
 
   let searchedPlaces: SearchPlaceDTO[] = [];
@@ -100,6 +106,35 @@ const search = async (keyword: string): Promise<boolean | SearchPlaceDTO[]> => {
 
   return searchedPlaces;
 };
+
+const placeImgUpload = async (imageUrl: string): Promise<string> => {
+  let response;
+  try {
+    response = await axios.get(imageUrl, { responseType: "arraybuffer" });
+  } catch (error) {
+    throw new Error("이미지 요청에 실패했습니다.");
+  }
+
+  const imageBuffer = Buffer.from(response.data, "binary");
+  const imageName = `placeImg/${Date.now() + v4() + ".jpg"}`;
+
+  const params: AWS.S3.PutObjectRequest = {
+    Bucket: S3_BUCKET_NAME,
+    Key: imageName,
+    Body: imageBuffer,
+    ContentType: "image/jpeg",
+    ACL: "public-read",
+  };
+
+  let result;
+  try {
+    result = await s3.upload(params).promise();
+  } catch (error) {
+    throw new Error("이미지 저장에 실패했습니다.");
+  }
+  return result.Location;
+};
+
 export const SpotsService = {
   register,
   checkDuplicate,

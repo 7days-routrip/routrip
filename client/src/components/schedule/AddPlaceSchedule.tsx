@@ -11,7 +11,7 @@ const AddPlaceSchedule = ({ buttonTitle }: Props) => {
 
   return (
     <AddPlaceScheduleStyle>
-      <PlaceList place={selectedPlaces} buttonTitle={buttonTitle} isDragDrop={true} />
+      <PlaceList place={selectedPlaces} buttonTitle={buttonTitle} type="add" isDragDrop={true} />
     </AddPlaceScheduleStyle>
   );
 };

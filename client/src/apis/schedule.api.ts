@@ -1,12 +1,11 @@
 import { SelectedPlace } from "@/stores/addPlaceStore";
 import { httpClient } from "./https";
 import { showAlert } from "@/utils/showAlert";
-import { mockScheduleDetailData } from "@/utils/makeMockSelectedPlaces";
 import { ScheduleDetails } from "@/models/schedule.model";
-import { convertScheduleDetails } from "@/utils/convertDataType";
+import { convertSelectedPlaceToDaysField } from "@/utils/convertDataType";
 
 // 일정 등록 요청
-interface DaysField {
+export interface DaysField {
   day: number;
   spots: string[];
 }
@@ -18,27 +17,18 @@ interface AddNewScheduleBody {
   days: DaysField[];
 }
 
-export const addNewSchedule = async (
-  title: string,
-  startDate: Date,
-  endDate: Date,
-  allDaysPlaces: SelectedPlace[][],
-) => {
+export interface AddNewScheduleParameter {
+  title: string;
+  startDate: Date;
+  endDate: Date;
+  allDaysPlaces: SelectedPlace[][];
+}
+
+export const addNewSchedule = async ({ title, startDate, endDate, allDaysPlaces }: AddNewScheduleParameter) => {
   try {
-    const days = allDaysPlaces.map((preDayPlaces, dayIndex) => {
-      const spots = preDayPlaces.map((place) => place.id);
-      return { day: dayIndex, spots };
-    });
+    const days: DaysField[] = convertSelectedPlaceToDaysField(allDaysPlaces);
+    const bodyData: AddNewScheduleBody = { title, startDate, endDate, days };
 
-    const bodyData: AddNewScheduleBody = {
-      title,
-      startDate,
-      endDate,
-      days,
-    };
-
-    // console.log(bodyData);
-    // return bodyData;
     const { data } = await httpClient.post("/journeys", bodyData);
     return data;
   } catch (err: any) {
@@ -47,24 +37,39 @@ export const addNewSchedule = async (
   }
 };
 
+// 일정 상세 조회 요청
 export const getScheduleDetails = async (id: string) => {
   try {
     const { data } = await httpClient.get<ScheduleDetails>(`/journeys/${id}`);
-    const convertData = convertScheduleDetails(data);
-    return convertData;
-    // const mockScheduleData = convertScheduleDetails(mockScheduleDetailData);
-    // console.log(mockScheduleData);
-
-    // return mockScheduleData;
+    return data;
   } catch (err) {
     console.error("api ", err);
     throw err;
   }
 };
 
+// 일정 삭제 요청
 export const deleteSchedule = async (id: string) => {
   try {
-    await httpClient.delete(`/journeys/${id}`);
+    const { data } = await httpClient.delete(`/journeys/${id}`);
+    return data;
+  } catch (err) {
+    throw err;
+  }
+};
+
+// 일정 수정 요청
+export interface EditScheduleRequest extends AddNewScheduleParameter {
+  id: string;
+}
+
+export const editSchedule = async ({ id, title, startDate, endDate, allDaysPlaces }: EditScheduleRequest) => {
+  try {
+    const days: DaysField[] = convertSelectedPlaceToDaysField(allDaysPlaces);
+    const bodyData: AddNewScheduleBody = { title, startDate, endDate, days };
+
+    const { data } = await httpClient.put(`/journeys/${id}`, bodyData);
+    return data;
   } catch (err) {
     throw err;
   }

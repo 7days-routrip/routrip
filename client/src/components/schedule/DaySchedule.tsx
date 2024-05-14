@@ -38,6 +38,8 @@ const DaySchedule = ({ dayIdx, schedulePlaces, isDragDrop = false }: Props) => {
                       <PlaceItem
                         data={item}
                         buttonTitle={<Icons.TrashIcon />}
+                        type="day"
+                        typeIdx={dayIdx}
                         isActive={snapshot.isDragging ? true : false}
                       />
                     </div>
@@ -59,7 +61,14 @@ const DaySchedule = ({ dayIdx, schedulePlaces, isDragDrop = false }: Props) => {
       </div>
       <div className="day-places-container">
         {schedulePlaces.map((item) => (
-          <PlaceItem key={item.uuid} data={item} buttonTitle={<Icons.TrashIcon />} disabled={true} />
+          <PlaceItem
+            key={item.uuid}
+            data={item}
+            buttonTitle={<Icons.TrashIcon />}
+            type="day"
+            typeIdx={dayIdx}
+            disabled={true}
+          />
         ))}
       </div>
     </DayScheduleStyle>
