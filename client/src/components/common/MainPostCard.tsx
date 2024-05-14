@@ -1,11 +1,11 @@
 import styled from "styled-components";
 import { CardImageStyle } from "./postCard";
 import Title from "./Title";
-import { Post as IPost } from "@/models/post.model";
 import icons from "@/icons/icons";
 import { Link } from "react-router-dom";
+import { BestPosts } from "@/apis/main.api";
 interface Props {
-  PostPops: IPost;
+  PostPops: BestPosts;
 }
 
 const MainPostCard = ({ PostPops }: Props) => {
