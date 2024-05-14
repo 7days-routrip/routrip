@@ -7,13 +7,14 @@ import { MainPostCardStyle } from "./MainPostCard";
 interface Props {
   id: number;
   name: string;
+  img: string;
 }
 
-const CategoryCard = ({ id, name }: Props) => {
+const CategoryCard = ({ id, name, img }: Props) => {
   return (
     <CategoryCardStyle>
-      <Link to={`/posts?area=abroad&filter=${id}&page=1`}>
-        <CategoryImageStyle $image={""} $view="grid" />
+      <Link to={`/post?area=abroad&filter=${id}&page=1`}>
+        <CategoryImageStyle $image={img} $view="grid" />
         <div className="info">
           <div className="title">
             <Title size="medium">{name}</Title>
