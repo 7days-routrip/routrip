@@ -74,7 +74,7 @@ const reqHotPosts = async () => {
       };
     }),
   ).then((res) => {
-    return res.sort((a, b) => b.likesNum - a.likesNum || b.id - a.id).slice(0, 10);
+    return res.sort((a, b) => b.likesNum - a.likesNum || b.id - a.id).slice(0, 12);
   });
   return { success: true, posts };
 };
