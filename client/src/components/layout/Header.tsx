@@ -103,6 +103,10 @@ const HeaderStyle = styled.header<HeaderStyleProps>`
   }
 
   @media ${({ theme }) => theme.mediaQuery.mobile} {
+    img {
+      width: 80px;
+      height: 37px;
+    }
     .logo-link {
       position: absolute;
       left: 50%;
