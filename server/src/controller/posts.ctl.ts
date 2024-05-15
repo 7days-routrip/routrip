@@ -82,6 +82,7 @@ const postRequest = async (req: Request, res: Response) => {
     if (!postResult.success) throw new Error(postResult.msg);
     res.status(StatusCodes.OK).json(postResult.data);
   } catch (err) {
+    console.log(err);
     if (err instanceof Error) {
       if (err.message === "does not exist post")
         return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_POST });

@@ -8,7 +8,7 @@ import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 export const useScheduleDetails = (id: string | undefined) => {
-  const { setCenter } = useMapStore();
+  const { googleMap } = useMapStore();
   const { setDayPlaces } = useDayPlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
 
@@ -19,11 +19,13 @@ export const useScheduleDetails = (id: string | undefined) => {
   });
 
   useEffect(() => {
+    if (!googleMap) return;
+
     if (scheduleDetailData) {
       setDayPlaces(convertScheduleDetailsToDayPlaces(scheduleDetailData));
 
       if (scheduleDetailData.days[0].spots.length === 0) {
-        setCenter({ lat: 38, lng: 128 });
+        googleMap.setCenter({ lat: 38, lng: 128 });
         return;
       }
 

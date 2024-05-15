@@ -11,13 +11,13 @@ const SelectPlace = () => {
   const { searchKeywordToServer, setSearchKeywordToServer } = useSearchKeywordStore();
   const { searchPlaces, setSearchPlaces } = useSearchPlacesStore();
   const { setMarkerType } = useShowMarkerTypeStore();
-  const { mapCenter, googleMap } = useMapStore();
+  const { googleMap } = useMapStore();
 
   const requestHandler = async (searchKeyword: string) => {
     // 서버로 검색 요청
     const zoom = googleMap?.getZoom() || 6;
-    const lat = mapCenter.lat;
-    const lng = mapCenter.lng;
+    const lat = googleMap?.getCenter()?.lat() || 38;
+    const lng = googleMap?.getCenter()?.lng() || 128;
     const keyword = searchKeyword.trim();
 
     if (!keyword) return;
