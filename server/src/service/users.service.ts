@@ -35,11 +35,7 @@ const reqUserWithdraw = async (userId: number) => {
 };
 
 const reqUsersUpdate = async (data: iPatchData, userId: number) => {
-  const patch = {
-    nickName: data.nickname,
-    profileImg: data.profileImg,
-  };
-  const userUpdateResult = await userRepo.update(userId, patch);
+  const userUpdateResult = await userRepo.update(userId, data);
   if (!userUpdateResult.affected || userUpdateResult.affected < 1) return { success: false, msg: "failed to update" };
   return { success: true };
 };
