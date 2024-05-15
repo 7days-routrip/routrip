@@ -24,7 +24,7 @@ interface PlaceTabsProps {
 }
 
 const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
-  const { googleMap, updateMapBounds } = useMapStore();
+  const { updateMapBounds } = useMapStore();
   const { addPlaces } = useAddPlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
   const { nearPlaces } = useNearPlacesStore();
@@ -38,16 +38,16 @@ const PlaceTabs = ({ children, active = 0 }: PlaceTabsProps) => {
 
     if (title === "추가한 장소") {
       setMarkerType("add");
-      updateMapBounds(googleMap, addPlaces);
+      updateMapBounds(addPlaces);
     } else if (title === "장소 선택") {
       setMarkerType("searchApi");
-      updateMapBounds(googleMap, searchPlaces);
+      updateMapBounds(searchPlaces);
     } else if (title === "신규 장소 등록") {
       setMarkerType("searchGoogle");
-      updateMapBounds(googleMap, nearPlaces);
+      updateMapBounds(nearPlaces);
     } else if (title === "내가 찜한 장소") {
       setMarkerType("bookmarkList");
-      updateMapBounds(googleMap, bookmarkPlaces);
+      updateMapBounds(bookmarkPlaces);
     }
   };
 

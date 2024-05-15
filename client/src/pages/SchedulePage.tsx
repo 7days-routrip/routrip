@@ -95,6 +95,7 @@ const SchedulePage = () => {
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
+      resetStore();
     };
   }, []);
 

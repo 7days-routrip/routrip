@@ -1,4 +1,5 @@
 import { DaysField } from "@/apis/schedule.api";
+import { Place, PlaceDetails } from "@/models/place.model";
 import { DaysWithUuid, ScheduleDetails, ScheduleDetailsWithUuid } from "@/models/schedule.model";
 import { SelectedPlace } from "@/stores/addPlaceStore";
 import { v4 as uuidv4 } from "uuid";
@@ -21,6 +22,14 @@ export const convertScheduleDetails = (data: ScheduleDetails): ScheduleDetailsWi
     ...data,
     days: daysWithUuid,
   };
+};
+
+// PlaceDetails[] -> 각 요소의 location 필드를 number 타입으로
+export const convertBookmarkPlaces = (data: PlaceDetails[]): Place[] => {
+  return data.map((item) => ({
+    ...item,
+    location: { lat: Number(item.location.lat), lng: Number(item.location.lng) },
+  }));
 };
 
 // ScheduleDetails -> SelectedPlace[][]
