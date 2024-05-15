@@ -55,3 +55,60 @@ export const authenticateUser = async (req: Request, res: Response, next: NextFu
     });
   }
 };
+
+export const authenticateUserPlaceDetail = async (req: Request, res: Response, next: NextFunction) => {
+  const authHeader = req.headers["authorization"];
+  const token = authHeader && authHeader.split(" ")[1];
+  // 로그인 요청
+  if (token == null) {
+    req.user = { isLoggedIn: false };
+    next();
+    return;
+  } else {
+    //access 토큰 검증
+    jwt.verify(token, JWT_ACCESS_SECRET, (err: any, user: any) => {
+      if (err) {
+        const refreshToken = req.cookies["refresh_token"];
+        // 재로그인 요청
+        if (!refreshToken) {
+          req.user = { id: user.userId, nickName: user.nickName, isLoggedIn: false };
+          next();
+          return;
+        }
+
+        jwt.verify(refreshToken, JWT_REFRESH_SECRET, async (err: any, user: any) => {
+          // 재로그인 요청
+          if (err) {
+            req.user = { isLoggedIn: false };
+            next();
+            return;
+          }
+
+          const userRepository = AppDataSource.getRepository(Users);
+          const dbUser = await userRepository.findOne({
+            where: {
+              id: user.userId,
+            },
+          });
+
+          if (dbUser && dbUser.id === user.userId) {
+            // access-token 토큰 재발급
+            const accessToken = getNewAccessToken(user.userId, user.nickName);
+            res.setHeader("Authorization", "Bearer " + accessToken);
+            req.user = { id: user.userId, nickName: user.nickName, isLoggedIn: true };
+            next();
+            return;
+          } else {
+            req.user = { id: user.userId, nickName: user.nickName, isLoggedIn: false };
+            next();
+            return;
+          }
+        });
+      } else {
+        req.user = { id: user.userId, nickName: user.nickName, isLoggedIn: true };
+        next();
+        return;
+      }
+    });
+  }
+};
