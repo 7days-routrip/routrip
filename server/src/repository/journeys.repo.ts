@@ -22,7 +22,7 @@ const getJourneyData = async (journeyId: number) => {
   const result = await journeysRepository
     .createQueryBuilder("jn")
     .select([
-      "jn.id, jn.title, jn.startDate, jn.endDate, rd.day, ds.seq, place.id as placeId, place.name, place.address, place.openingHours, place.tel, place.location, place.img",
+      "jn.id, jn.title, jn.startDate, jn.endDate, rd.day, ds.seq, place.id as placeId, place.name, place.address, place.openingHours, place.tel, TRIM(SUBSTRING_INDEX(place.location,',', 1)) as lat, TRIM(SUBSTRING_INDEX(place.location,',', -1)) as lng, place.img",
     ])
     .leftJoin(Routes, "rt", "rt.id = jn.routeId")
     .leftJoin(RouteDays, "rd", "rd.routeId = rt.id")

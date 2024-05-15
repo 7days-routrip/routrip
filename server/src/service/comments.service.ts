@@ -1,12 +1,33 @@
 import { AppDataSource } from "@/config/ormSetting";
+import { NOT_FOUND_POST } from "@/constants/message";
 import { Comments } from "@/models/comments.model";
 import { Posts } from "@/models/posts.model";
+import { setDateFromat } from "@/utils/posts.utils";
 
 const commentRepo = AppDataSource.getRepository(Comments);
 const reqCommentsList = async (userId: number) => {
   const commentList = await commentRepo.find({ where: { user: { id: userId } } });
   if (!commentList || commentList.length < 1) return { success: false, msg: "does not exist comments" };
-  return { success: true, data: commentList };
+  const retrunCmt = await Promise.all(
+    commentList.map(async (cmt) => {
+      if (typeof cmt.post === "undefined") {
+        return {
+          postId: undefined,
+          content: cmt.content,
+          postTitle: NOT_FOUND_POST,
+          createDate:
+            cmt.createdAt === cmt.updatedAt ? await setDateFromat(cmt.createdAt) : await setDateFromat(cmt.updatedAt),
+        };
+      }
+      return {
+        postId: cmt.post.id,
+        content: cmt.content,
+        postTitle: cmt.post.title,
+        createDate: cmt.createdAt === cmt.updatedAt ? setDateFromat(cmt.createdAt) : setDateFromat(cmt.updatedAt),
+      };
+    }),
+  );
+  return { success: true, data: retrunCmt };
 };
 const reqPostCommentsList = async (postId: number) => {
   const commentList = await commentRepo.find({ where: { post: { id: postId } } });

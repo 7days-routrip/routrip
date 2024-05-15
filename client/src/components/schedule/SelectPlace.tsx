@@ -2,18 +2,30 @@ import styled from "styled-components";
 import SearchBox from "./SearchBox";
 import PlaceList from "./PlaceList";
 import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
-import { searchPlaceApi } from "@/apis/place.api";
+import { SearchPlaceApiParams, searchPlaceApi } from "@/apis/place.api";
 import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
+import { useMapStore } from "@/stores/mapStore";
 
 const SelectPlace = () => {
   const { searchKeywordToServer, setSearchKeywordToServer } = useSearchKeywordStore();
   const { searchPlaces, setSearchPlaces } = useSearchPlacesStore();
   const { setMarkerType } = useShowMarkerTypeStore();
+  const { mapCenter, googleMap } = useMapStore();
 
-  const requestHandler = async (keyword: string) => {
+  const requestHandler = async (searchKeyword: string) => {
     // 서버로 검색 요청
-    await searchPlaceApi(keyword, setSearchPlaces);
+    const zoom = googleMap?.getZoom() || 6;
+    const lat = mapCenter.lat;
+    const lng = mapCenter.lng;
+    const keyword = searchKeyword.trim();
+
+    if (!keyword) return;
+
+    const params: SearchPlaceApiParams = { keyword, zoom, lat, lng };
+    console.log(params);
+
+    await searchPlaceApi(params, setSearchPlaces);
     setMarkerType("searchApi");
   };
 
@@ -25,7 +37,7 @@ const SelectPlace = () => {
         requestHandler={requestHandler}
         setSearchKeyword={setSearchKeywordToServer}
       />
-      {searchPlaces && <PlaceList place={searchPlaces} buttonTitle={"추가"} />}
+      {searchPlaces && <PlaceList place={searchPlaces} buttonTitle={"추가"} type="searchApi" />}
     </SelectPlaceStyle>
   );
 };

@@ -1,23 +1,34 @@
 import styled from "styled-components";
 import logoImage from "/assets/images/logo-profile.png"; // 임시로 사용할 장소 이미지
-
 import { SelectedPlace, useAddPlaceStore } from "@/stores/addPlaceStore";
 import { Place } from "@/models/place.model";
-import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
+import { ClickType, useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useAddNewPlace } from "@/hooks/useAddNewPlace";
 import { useDayPlaceStore } from "@/stores/dayPlaces";
 
 interface Props {
   data: SelectedPlace | Place;
   buttonTitle: React.ReactNode;
+  type: ClickType;
+  typeIdx?: number;
   isActive?: boolean;
   disabled?: boolean;
 }
-const PlaceItem = ({ data, buttonTitle, isActive = false, disabled = false }: Props) => {
+
+const PlaceItem = ({ data, buttonTitle, type, typeIdx, isActive = false, disabled = false }: Props) => {
   const { addPlace, removePlace } = useAddPlaceStore();
-  const { setMarkerType } = useShowMarkerTypeStore();
+  const { setClickMarker, setMarkerType } = useShowMarkerTypeStore();
   const { removeDayPlace } = useDayPlaceStore();
   const { addNewPlaceMutate } = useAddNewPlace(data);
+
+  const handleOnClickPlaceItem = () => {
+    console.log(type, typeIdx);
+    if (type === "day") setMarkerType(type, typeIdx);
+    else setMarkerType(type);
+
+    console.log(data);
+    setClickMarker(data);
+  };
 
   const handleOnClick = async () => {
     if (buttonTitle === "추가") {
@@ -33,23 +44,23 @@ const PlaceItem = ({ data, buttonTitle, isActive = false, disabled = false }: Pr
         removeDayPlace(data.uuid); // 각 day에 있는 아이템 삭제 버튼을 눌렀다면, 이 함수에 의해 삭제됨
       }
     }
-    const title = typeof buttonTitle === "string" ? buttonTitle : "삭제";
-    console.log(title);
   };
 
   return (
-    <PlaceItemStyle $url={data.placeImg ? data.placeImg : logoImage} $isActive={isActive}>
-      {buttonTitle !== "등록" && <div className="place-img"></div>}
-      <div className="detail-container">
-        <div className="place-title">{data.placeName}</div>
-        <div className="place-address">{data.address}</div>
-      </div>
-      {!disabled && (
-        <button className="place-list-btn" onClick={handleOnClick}>
-          {buttonTitle}
-        </button>
-      )}
-    </PlaceItemStyle>
+    <div onClick={handleOnClickPlaceItem}>
+      <PlaceItemStyle $url={data.placeImg ? data.placeImg : logoImage} $isActive={isActive}>
+        {buttonTitle !== "등록" && <div className="place-img"></div>}
+        <div className="detail-container" onClick={handleOnClickPlaceItem}>
+          <div className="place-title">{data.placeName}</div>
+          <div className="place-address">{data.address}</div>
+        </div>
+        {!disabled && (
+          <button className="place-list-btn" onClick={handleOnClick}>
+            {buttonTitle}
+          </button>
+        )}
+      </PlaceItemStyle>
+    </div>
   );
 };
 

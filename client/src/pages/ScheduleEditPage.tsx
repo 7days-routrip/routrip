@@ -122,7 +122,7 @@ const ScheduleEditPage = () => {
     }
   }, [startDate, endDate, scheduleDetailData]);
 
-  if (!scheduleDetailData || isScheduleDetailsLoading) return <Loading />;
+  if (!scheduleDetailData || isScheduleDetailsLoading) return <Loading isFull={true} />;
 
   return (
     <DragDropContext onDragEnd={onDragEnd}>

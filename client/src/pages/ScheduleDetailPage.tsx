@@ -8,11 +8,13 @@ import { useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { Button } from "@/components/common/Button";
 import { useScheduleDelete } from "@/hooks/useScheduleDelete";
+import { useDayPlaceStore } from "@/stores/dayPlaces";
 
 const ScheduleDetailPage = () => {
   const navigate = useNavigate();
   const { id } = useParams();
   const { scheduleDetailData, isScheduleDetailsLoading } = useScheduleDetails(id);
+  const { dayPlaces } = useDayPlaceStore();
   const { deleteScheduleMutate } = useScheduleDelete(id);
 
   if (!scheduleDetailData || isScheduleDetailsLoading) return <Loading />;
@@ -53,8 +55,8 @@ const ScheduleDetailPage = () => {
           </div>
         </div>
         <div className="days">
-          {scheduleDetailData.days.map((data, i) => (
-            <DaySchedule key={i} dayIdx={data.day} schedulePlaces={data.spots} />
+          {dayPlaces.map((place, i) => (
+            <DaySchedule key={i} dayIdx={i} schedulePlaces={place} />
           ))}
         </div>
       </div>

@@ -125,8 +125,6 @@ const userInfoUpdateRequest = async (req: Request, res: Response) => {
   const patchData: iPatchData = req.body;
   try {
     if (req.user?.isLoggedIn) {
-      console.log(req.file);
-      console.log(req.body);
       const userId = req.user.id as number;
       const updateResult = await UsersService.reqUsersUpdate(patchData, userId);
       if (!updateResult.success) throw new Error(updateResult.msg);

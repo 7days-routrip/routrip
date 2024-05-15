@@ -1,24 +1,24 @@
 import React from "react";
 import styled from "styled-components";
 import icons from "@/icons/icons";
-import Button from "./Button";
+import { Button } from "./Button";
 
 const WriteTopBtnStyle = styled.div`
+  position: fixed;
+  bottom: 80px;
+  right: 32px;
+  margin: 20px;
   display: flex;
   gap: 20px;
   justify-content: center;
   align-items: center;
-  margin-top: -60px;
   z-index: 1;
   min-height: 50px;
-`;
 
-const WriteButton = styled(Button)`
-  padding: 0.5rem 0.6rem;
-`;
-
-const TopButton = styled(Button)`
-  padding: 0.5rem 0.6rem;
+  @media ${({ theme }) => theme.mediaQuery.mobile} {
+    bottom: 20px;
+    right: 20px;
+  }
 `;
 
 interface WriteTopBtnProps {
@@ -37,13 +37,25 @@ const WriteTopBtn: React.FC<WriteTopBtnProps> = ({ isWriting }) => {
   return (
     <WriteTopBtnStyle>
       {isWriting && (
-        <WriteButton size="medium" scheme="secondary" radius="write" onClick={() => (window.location.href = "/write")}>
+        <Button
+          $size="large"
+          $scheme="secondary"
+          $radius="write"
+          onClick={() => (window.location.href = "/write")}
+          style={{ padding: "0.5rem 0.6rem" }}
+        >
           글쓰기
-        </WriteButton>
+        </Button>
       )}
-      <TopButton size="small" scheme="primary" radius="write" onClick={handleScrollTop} style={{ borderRadius: "50%" }}>
+      <Button
+        $size="large"
+        $scheme="primary"
+        $radius="write"
+        onClick={handleScrollTop}
+        style={{ borderRadius: "50%", padding: "0.5rem 0.6rem" }}
+      >
         <TopIcon color="white" />
-      </TopButton>
+      </Button>
     </WriteTopBtnStyle>
   );
 };

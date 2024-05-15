@@ -27,7 +27,7 @@ const reqPostInsertData = async (data: iPostsInsertProps, userId: number) => {
   if (!insertData) return { success: false, msg: "failed upload" };
   return { success: true };
 };
-const reqPostsList = async (
+const reqAllPostsList = async (
   pages: number,
   area?: string,
   userId?: number,
@@ -36,31 +36,47 @@ const reqPostsList = async (
   type?: string,
 ) => {
   const postsResult = await PostsRepository.getAllPosts(pages, area, userId, sort, searchData, type);
-  console.log(postsResult);
-  if (!postsResult || typeof postsResult === null) return { success: false, msg: "empty list of posts" };
-  if (typeof postsResult !== "number") {
-    const responsePostsData = await Promise.all(
-      postsResult.map(async (post) => {
-        const startDate = await setDateFromat(post.startDate);
-        const endDate = await setDateFromat(post.endDate);
-        return {
-          id: post.id,
-          title: post.title,
-          date: startDate + "-" + endDate,
-          author: post.nickName,
-          userProfile: post.profileImg,
-          continent: post.continent,
-          country: post.country,
-          commentsNum: post.commentsNum,
-          likesNum: post.likesNum,
-          postsImg: post.postsImg,
-        };
-      }),
-    );
-    return { success: true, data: responsePostsData };
-  } else {
+  if (postsResult === null) return { success: false, msg: "empty list of posts" };
+  if (typeof postsResult == "number") {
     return { success: true, count: postsResult };
   }
+
+  const responsePostsData = await Promise.all(
+    postsResult.map(async (post) => {
+      const startDate = await setDateFromat(post.startDate);
+      const endDate = await setDateFromat(post.endDate);
+      return {
+        id: post.id,
+        title: post.title,
+        date: startDate + "-" + endDate,
+        author: post.nickName,
+        userProfile: post.profileImg,
+        continent: post.continent,
+        country: post.country,
+        commentsNum: post.commentsNum,
+        likesNum: post.likesNum,
+        postsImg: post.postsImg,
+      };
+    }),
+  );
+  return { success: true, data: responsePostsData };
+};
+const reqHotPosts = async () => {
+  const postsResult = await PostsRepository.getPosts();
+  if (postsResult === null) return { success: false, msg: "empty list of posts" };
+  const posts = await Promise.all(
+    postsResult.map(async (post) => {
+      return {
+        id: post.id,
+        date: (await setDateFromat(post.startDate)) + "-" + (await setDateFromat(post.endDate)),
+        title: post.title,
+        likesNum: post.likesNum,
+      };
+    }),
+  ).then((res) => {
+    return res.sort((a, b) => b.likesNum - a.likesNum || b.id - a.id).slice(0, 10);
+  });
+  return { success: true, posts };
 };
 const reqPostData = async (postId: number, userId: number | undefined) => {
   const postData = await postRepo.findOne({ where: { id: postId } });
@@ -157,6 +173,7 @@ const reqPostEditData = async (data: iPostsInsertProps, userId: number, postId: 
   if (!postUpdateResult.affected || postUpdateResult.affected < 1) return { success: false, msg: "failed edit " };
   return { success: true };
 };
+
 const reqPostDelData = async (postId: number) => {
   const postDelResult = await postRepo.delete(postId);
   if (postDelResult.affected === 0) return { success: false, msg: "failed delete" };
@@ -182,5 +199,13 @@ const getPostImg = (content: string) => {
 const reqImageUpload = async (url: string, postId: number) => {
   return await postRepo.update(postId, { postsImg: url });
 };
-const PostsService = { reqPostInsertData, reqPostsList, reqPostData, reqPostEditData, reqPostDelData, reqImageUpload };
+const PostsService = {
+  reqPostInsertData,
+  reqAllPostsList,
+  reqPostData,
+  reqPostEditData,
+  reqPostDelData,
+  reqImageUpload,
+  reqHotPosts,
+};
 export default PostsService;

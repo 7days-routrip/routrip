@@ -28,7 +28,7 @@ const LikePlaceCard = ({ PlaceProps }: Props) => {
 };
 
 const LikePlaceCardStyle = styled(CardStyle)`
-  width: 400px;
+  width: 500px;
   height: 130px;
   display: flex;
   justify-content: center;
@@ -80,7 +80,7 @@ const LikePlaceCardStyle = styled(CardStyle)`
   }
 
   @media (max-width: 768px) {
-    width: 300px;
+    width: 350px;
     height: 100px;
   }
 `;

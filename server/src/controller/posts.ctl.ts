@@ -52,8 +52,8 @@ const postAllList = async (req: Request, res: Response) => {
       filter: query?.filter as string,
       keyword: query?.keyword as string,
     };
-    const listResult = await PostsService.reqPostsList(pages, area, undefined, sort, searchData, "list");
-    const pageResult = await PostsService.reqPostsList(pages, area, undefined, sort, searchData);
+    const listResult = await PostsService.reqAllPostsList(pages, area, undefined, sort, searchData, "list");
+    const pageResult = await PostsService.reqAllPostsList(pages, area, undefined, sort, searchData);
     if (listResult.success === false || pageResult.success === false) throw new Error(listResult.msg);
     res.status(StatusCodes.OK).json({
       posts: listResult.data,
@@ -148,6 +148,28 @@ const postUploadImg = async (req: Request, res: Response) => {
   }
 };
 
-const postsController = { postsRequest, postAllList, postRequest, postEditRequest, postDelRequest, postUploadImg };
+const postHotList = async (req: Request, res: Response) => {
+  try {
+    const listResult = await PostsService.reqHotPosts();
+    if (!listResult.success) throw new Error(listResult.msg);
+    const { posts } = listResult;
+    res.status(StatusCodes.OK).json(posts);
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "empty list of posts")
+        return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_POSTS_LIST });
+    }
+  }
+};
+
+const postsController = {
+  postsRequest,
+  postAllList,
+  postRequest,
+  postEditRequest,
+  postDelRequest,
+  postUploadImg,
+  postHotList,
+};
 
 export default postsController;

@@ -1,18 +1,18 @@
 import styled from "styled-components";
 import { CardImageStyle } from "./postCard";
 import Title from "./Title";
-import { Post as IPost } from "@/models/post.model";
 import icons from "@/icons/icons";
 import { Link } from "react-router-dom";
+import { BestPosts } from "@/apis/main.api";
 interface Props {
-  PostPops: IPost;
+  PostPops: BestPosts;
 }
 
 const MainPostCard = ({ PostPops }: Props) => {
   const { LikeIcon } = icons;
   return (
     <MainPostCardStyle>
-      <Link to={`/posts/${PostPops.id}`}>
+      <Link to={`/post/${PostPops.id}`}>
         <MainCardImageStyle $image={PostPops.postsImg} $view="grid" />
         <div className="info">
           <div className="date">
@@ -36,6 +36,7 @@ const MainPostCard = ({ PostPops }: Props) => {
 
 export const MainPostCardStyle = styled.div`
   position: relative;
+  width: 100%;
 
   h1 {
     margin: 0;
@@ -60,6 +61,8 @@ export const MainPostCardStyle = styled.div`
     width: 100%;
     position: absolute;
     padding: 0 0.5rem 0.5rem;
+    border: 1px solid ${({ theme }) => theme.color.borderGray};
+    border-radius: ${({ theme }) => theme.borderRadius.default};
     background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
   }
 
@@ -68,6 +71,7 @@ export const MainPostCardStyle = styled.div`
     display: flex;
     justify-content: space-between;
     align-items: center;
+    flex-wrap: wrap;
   }
 
   .title {
@@ -85,23 +89,26 @@ export const MainPostCardStyle = styled.div`
   .icon {
     display: flex;
     gap: 0.3rem;
+    align-items: center;
 
     > :first-child {
       color: ${({ theme }) => theme.color.primary};
     }
 
     > :last-child {
-      color: ${({ theme }) => theme.color.white};
+      color: ${({ theme }) => theme.color.black};
+      font-weight: 600;
     }
   }
 
   @media (max-width: 768px) {
-    width: 170px;
-    height: 100px;
+    /* max-width: 170px; */
+    /* height: 100px; */
   }
 `;
 
 const MainCardImageStyle = styled(CardImageStyle)`
   border-radius: ${({ theme }) => theme.borderRadius.default};
+  width: 100%;
 `;
 export default MainPostCard;

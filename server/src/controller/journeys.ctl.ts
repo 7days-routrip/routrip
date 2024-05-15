@@ -45,7 +45,7 @@ const addJourney = async (req: Request, res: Response, next: NextFunction) => {
   const user = req.user;
 
   try {
-    JourneysService.register(title, startDate, endDate, days, user);
+    await JourneysService.register(title, startDate, endDate, days, user);
     return res.status(StatusCodes.OK).json({
       message: "일정 등록이 완료되었습니다.",
     });
@@ -66,7 +66,7 @@ const modifyJourney = async (req: Request, res: Response, next: NextFunction) =>
   const user = req.user;
 
   try {
-    JourneysService.modify(id, title, startDate, endDate, days, user);
+    await JourneysService.modify(id, title, startDate, endDate, days, user);
     return res.status(StatusCodes.OK).json({
       message: "일정 수정이 완료되었습니다.",
     });

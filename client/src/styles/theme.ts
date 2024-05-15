@@ -1,4 +1,13 @@
-export type Colorkey = "primary" | "black" | "white" | "orange" | "red" | "commentGray" | "borderGray" | "routeGray";
+export type Colorkey =
+  | "primary"
+  | "black"
+  | "white"
+  | "orange"
+  | "red"
+  | "commentGray"
+  | "borderGray"
+  | "routeGray"
+  | "successGreen";
 export type ButtonSize = "large" | "medium" | "small";
 export type FontSize = "xlarge" | "large" | "medium" | "small" | "xsmall";
 export type MediaQuery = "mobile" | "desktop";
@@ -57,6 +66,7 @@ export const theme: Theme = {
     commentGray: "#999999", // 댓글 쓴 포스팅 제목, 로그인 회원가입 글자
     borderGray: "#e7e7e7",
     routeGray: "#555555", // 대한민국 > 서울/경기•강원도•경상도
+    successGreen: "#2ecc71",
   },
 
   /* font-size */

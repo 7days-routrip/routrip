@@ -12,7 +12,7 @@ const BookmarkPlace = ({ buttonTitle }: Props) => {
   return (
     <BookmarkPlaceStyle>
       {bookmarkPlacesData && bookmarkPlacesData.length > 0 ? (
-        <PlaceList place={bookmarkPlacesData} buttonTitle={buttonTitle} />
+        <PlaceList place={bookmarkPlacesData} buttonTitle={buttonTitle} type="bookmarkList" />
       ) : (
         <div className="empty-bookmark-list">찜한 장소 목록이 비어있습니다.</div>
       )}
