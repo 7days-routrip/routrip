@@ -47,20 +47,20 @@ const PlaceItem = ({ data, buttonTitle, type, typeIdx, isActive = false, disable
   };
 
   return (
-    <div onClick={handleOnClickPlaceItem}>
-      <PlaceItemStyle $url={data.placeImg ? data.placeImg : logoImage} $isActive={isActive}>
-        {buttonTitle !== "등록" && <div className="place-img"></div>}
-        <div className="detail-container" onClick={handleOnClickPlaceItem}>
-          <div className="place-title">{data.placeName}</div>
-          <div className="place-address">{data.address}</div>
-        </div>
-        {!disabled && (
-          <button className="place-list-btn" onClick={handleOnClick}>
-            {buttonTitle}
-          </button>
-        )}
-      </PlaceItemStyle>
-    </div>
+    // <div onClick={handleOnClickPlaceItem}>
+    <PlaceItemStyle $url={data.placeImg ? data.placeImg : logoImage} $isActive={isActive}>
+      {buttonTitle !== "등록" && <div className="place-img" />}
+      <div className="detail-container" onClick={handleOnClickPlaceItem}>
+        <div className="place-title">{data.placeName}</div>
+        <div className="place-address">{data.address}</div>
+      </div>
+      {!disabled && (
+        <button className="place-list-btn" onClick={handleOnClick}>
+          {buttonTitle}
+        </button>
+      )}
+    </PlaceItemStyle>
+    // </div>
   );
 };
 
