@@ -2,6 +2,7 @@ import { AppDataSource } from "@/config/ormSetting";
 import { Comments } from "@/models/comments.model";
 import { Likes } from "@/models/likes.model";
 import { Picks } from "@/models/picks.model";
+import { setDateFromat } from "@/utils/posts.utils";
 
 const reqPicksList = async (userId: number) => {
   const pickRepo = AppDataSource.getRepository(Picks);
@@ -54,13 +55,13 @@ const reqLikesList = async (userId: number) => {
       const commnetNum = await getTotalComment(like.post.id);
       return {
         title: like.post.title,
-        date: like.post.startDate + "~" + like.post.endDate,
+        date: (await setDateFromat(like.post.startDate)) + "-" + (await setDateFromat(like.post.endDate)),
         author: like.user.nickName,
         profileImg: like.user.profileImg,
         continent: like.post.continent.name,
         county: like.post.country.name,
-        likeNum: likeNum,
-        commentNum: commnetNum,
+        likesNum: likeNum,
+        commentsNum: commnetNum,
       };
     }),
   );

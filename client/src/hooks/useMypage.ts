@@ -15,9 +15,9 @@ export const useSchedule = () => {
     isLoading: isScheduleLoding,
     refetch: scheduleRefetch,
   } = useQuery({
-    queryKey: ["schedules", useLocation().search],
+    queryKey: ["schedules"],
     queryFn: () => fetchMySchedule(),
-    enabled: true,
+    enabled: false,
   });
 
   return {
@@ -29,31 +29,36 @@ export const useSchedule = () => {
 };
 
 export const useProfile = () => {
-  const { data: profileData, isLoading: isProfileLoding } = useQuery({
-    queryKey: ["profile", useLocation().search],
+  const {
+    data: profileData,
+    isLoading: isProfileLoding,
+    refetch: profileRefetch,
+  } = useQuery({
+    queryKey: ["profile"],
     queryFn: () => fetchProfile(),
   });
 
   return {
     profileInfo: profileData,
     isProfileLoding,
+    profileRefetch,
   };
 };
 
 export const usePost = () => {
   const {
-    data: postData,
+    data: postList,
     isLoading: isPostLoading,
     refetch: postsRefetch,
   } = useQuery({
-    queryKey: ["posts", useLocation().search],
+    queryKey: ["posts"],
     queryFn: () => fetchMyPosts(),
     enabled: false,
   });
 
   return {
-    posts: postData,
-    isEmptyPosts: postData?.length === 0,
+    posts: postList?.posts,
+    isEmptyPosts: postList?.posts.length === 0,
     isPostLoading,
     postsRefetch,
   };
@@ -65,7 +70,7 @@ export const useComment = () => {
     isLoading: isCommentLoading,
     refetch: commentsRefetch,
   } = useQuery({
-    queryKey: ["comments", useLocation().search],
+    queryKey: ["comments"],
     queryFn: () => fetchMyComments(),
     enabled: false,
   });
@@ -83,7 +88,7 @@ export const useLikePost = () => {
     data: likePostData,
     isLoading: isLikePostLoading,
     refetch: likePostRefetch,
-  } = useQuery({ queryKey: ["likePosts", useLocation().search], queryFn: () => fetchLikePost(), enabled: false });
+  } = useQuery({ queryKey: ["likePosts"], queryFn: () => fetchLikePost(), enabled: false });
 
   return {
     likePosts: likePostData,
@@ -99,7 +104,7 @@ export const useLikePlace = () => {
     isLoading: isLikePlaceLoding,
     refetch: likePlaceRefetch,
   } = useQuery({
-    queryKey: ["likePlaces", useLocation().search],
+    queryKey: ["likePlaces"],
     queryFn: () => fetchLikePlace(),
     enabled: false,
   });

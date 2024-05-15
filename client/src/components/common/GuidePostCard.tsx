@@ -2,8 +2,9 @@ import styled from "styled-components";
 import { MainPostCardStyle } from "./MainPostCard";
 import { Post as IPost } from "@/models/post.model";
 import { Link } from "react-router-dom";
-import { CardImageStyle } from "./postCard";
+import { CardImageStyle, CardImageStyleProps } from "./postCard";
 import Title from "./Title";
+import { DEFAULT_IMAGE } from "./ProfileCard";
 interface Props {
   PostPops: IPost;
 }
@@ -22,9 +23,26 @@ const GuidePostCard = ({ PostPops }: Props) => {
   );
 };
 
-const GuidePostCardStyle = styled(MainPostCardStyle)`
+const GuidePostCardStyle = styled.div`
   flex: 1;
-  width: 100%;
+  max-width: 250px;
+  min-width: 130px;
+  position: relative;
+  .info {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: end;
+    text-align: left;
+    bottom: 0px;
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    padding: 0 0.5rem 0.5rem;
+    border: 1px solid ${({ theme }) => theme.color.borderGray};
+    border-radius: ${({ theme }) => theme.borderRadius.default};
+    background: linear-gradient(to right, rgba(0, 0, 0, 0.5), rgba(255, 255, 255, 0));
+  }
   /* min-width: 200px; */
 
   .title {
@@ -33,23 +51,26 @@ const GuidePostCardStyle = styled(MainPostCardStyle)`
   }
 
   @media (max-width: 768px) {
-    /* min-width: 100px; */
+    flex: 1;
     height: 140px;
-
+    max-width: 170px;
     .title > h1 {
       font-size: 10px;
     }
   }
 `;
 
-const GuideCardImageStyle = styled(CardImageStyle)`
-  width: 100%;
-  /* max-width: 250px; */
+const GuideCardImageStyle = styled.div<CardImageStyleProps>`
+  display: flex;
   height: 280px;
+  background-image: url(${({ $image }) => ($image ? $image : DEFAULT_IMAGE)});
   border-radius: ${({ theme }) => theme.borderRadius.default};
+  background-position: center;
+  background-size: cover;
+  border: 0;
 
   @media (max-width: 768px) {
-    /* width: 100px; */
+    flex: 1;
     height: 140px;
   }
 `;

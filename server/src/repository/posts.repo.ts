@@ -58,7 +58,7 @@ export const getAllPosts = async (
       await result.orderBy({ likesNum: "DESC", "posts.id": "DESC" });
     }
     if (type && type == "list") {
-      return await result.limit(8).offset(offset).getRawMany();
+      return await result.limit(12).offset(offset).getRawMany();
     } else {
       return await result.getCount();
     }

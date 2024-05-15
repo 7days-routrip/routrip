@@ -15,7 +15,7 @@ const dummyPost: Post = {
   title: "서울 여행 가이드",
   date: "2024.05.18-2024.05.22",
   author: "김아무개",
-  userProfile: "",
+  profileImg: "",
   continental: "대한민국",
   country: "서울",
   commentsNum: "999",

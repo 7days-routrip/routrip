@@ -1,7 +1,7 @@
 import { httpClient } from "./https";
 import { Comment } from "@/models/comment.model";
 import { Schedule } from "@/models/schedule.model";
-import { Post } from "@/models/post.model";
+import { Post, PostList } from "@/models/post.model";
 import { PlaceDetails } from "@/models/place.model";
 import { Profile } from "@/models/profile.model";
 
@@ -28,9 +28,6 @@ export const fetchProfile = async () => {
 };
 
 // 내 일정
-interface FetchMyPageParams {
-  list: string;
-}
 
 export const fetchMySchedule = async () => {
   try {
@@ -48,13 +45,15 @@ export const fetchMySchedule = async () => {
 // 내 게시글
 export const fetchMyPosts = async () => {
   try {
-    const { data } = await httpClient.get("/mypages/posts?pages=1");
-    console.log(data);
+    const { data } = await httpClient.get<PostList>("/mypages/posts?pages=1");
     return data;
   } catch (error) {
     // 에러 처리
     console.log(error);
-    return [];
+    return {
+      posts: [],
+      pagenation: {},
+    };
   }
 };
 

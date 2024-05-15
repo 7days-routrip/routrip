@@ -70,11 +70,31 @@ const reqHotPosts = async () => {
         id: post.id,
         date: (await setDateFromat(post.startDate)) + "-" + (await setDateFromat(post.endDate)),
         title: post.title,
+        postsImg: post.postsImg === null ? "" : post.postsImg,
         likesNum: post.likesNum,
+        country: post.country,
       };
     }),
   ).then((res) => {
-    return res.sort((a, b) => b.likesNum - a.likesNum || b.id - a.id).slice(0, 10);
+    return res.sort((a, b) => b.likesNum - a.likesNum || b.id - a.id).slice(0, 12);
+  });
+  return { success: true, posts };
+};
+const reqRecommendPosts = async () => {
+  const postsResult = await PostsRepository.getPosts();
+  if (postsResult === null) return { success: false, msg: "empty list of posts" };
+  const posts = await Promise.all(
+    postsResult.map(async (post) => {
+      if (post.nickName === "routrip") {
+        return {
+          id: post.id,
+          title: post.title,
+          postsImg: post.postsImg === null ? "" : post.postsImg,
+        };
+      }
+    }),
+  ).then((res) => {
+    return res.slice(0, 4).filter((el) => el);
   });
   return { success: true, posts };
 };
@@ -87,12 +107,12 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
   } else {
     likedPost = false;
   }
+  console.log(postData);
   const likesNum = await getPostLikes(postId);
   const commentsNum = await getPostComments(postId);
   const startDate = await setDateFromat(postData.journey.startDate);
   const endDate = await setDateFromat(postData.journey.endDate);
-
-  const journey = await journeysRepository.getJourneyData((await postData.journey.route).id);
+  const journey = await journeysRepository.getJourneyData(postData.journey.route.id);
   let spots: iSpots[] | null;
   if (journey === null) {
     spots = null;
@@ -108,10 +128,12 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
       const daySpot: iSpotData[] = [];
       for (let i = 0; i < journey.length; i++) {
         if (day[j] === journey[i].day) {
-          const opening = journey[i].openingHours.split(",");
           const open = [];
-          for (let k = 0; k < opening.length; k++) {
-            open.push(opening[k].trim());
+          if (journey[i].openingHours !== null) {
+            const opening = journey[i].openingHours.split(",");
+            for (let k = 0; k < opening.length; k++) {
+              open.push(opening[k].trim());
+            }
           }
           const pushData = {
             placeId: journey[i].placeId,
@@ -207,5 +229,6 @@ const PostsService = {
   reqPostDelData,
   reqImageUpload,
   reqHotPosts,
+  reqRecommendPosts,
 };
 export default PostsService;

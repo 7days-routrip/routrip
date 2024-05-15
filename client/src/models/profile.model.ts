@@ -4,6 +4,6 @@ export interface Profile {
   commentsNum: number;
   likePostsNum: number;
   likeSpotsNum: number;
-  profile: string;
+  profileImg?: string;
   nickName: string;
 }

@@ -63,7 +63,7 @@ export const MainPostCardStyle = styled.div`
     padding: 0 0.5rem 0.5rem;
     border: 1px solid ${({ theme }) => theme.color.borderGray};
     border-radius: ${({ theme }) => theme.borderRadius.default};
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
   }
 
   .items {
