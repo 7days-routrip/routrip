@@ -4,14 +4,14 @@ import ProfileCard, { ProfileImageStyle, ProfileImageStyleProps } from "@/compon
 import { Profile } from "@/models/profile.model";
 import Title from "@/components/common/Title";
 import InputText from "@/components/common/Input";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/common/Button";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/hooks/useAuth";
 import { nicknameRegex } from "@/constants/regexPatterns";
 import { profileNicknameOptions } from "@/config/registerOptions";
-import { useQuery } from "@tanstack/react-query";
+// import { useQuery } from "@tanstack/react-query";
 import { useProfile } from "@/hooks/useMypage";
 
 const dummyData: Profile = {
@@ -56,7 +56,7 @@ const ProfileEditPage = () => {
       );
       return;
     }
-    userNicknameCheck(nickname).then((res) => {
+    userNicknameCheck(nickname).then(() => {
       // res 가 성공 메시지면 이거
       setNicknameUniqueCheck((prev) => !prev);
       clearErrors("nickname");

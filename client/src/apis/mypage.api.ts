@@ -28,9 +28,9 @@ export const fetchProfile = async () => {
 };
 
 // 내 일정
-interface FetchMyPageParams {
-  list: string;
-}
+// interface FetchMyPageParams {
+//   list: string;
+// }
 
 export const fetchMySchedule = async () => {
   try {

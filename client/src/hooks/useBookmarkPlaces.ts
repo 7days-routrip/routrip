@@ -1,4 +1,4 @@
-import { mockRealPlaceDetailWithoutUuid } from "./../utils/makeMockSelectedPlaces";
+// import { mockRealPlaceDetailWithoutUuid } from "./../utils/makeMockSelectedPlaces";
 import { getBookmarkPlaces } from "@/apis/place.api";
 import { queryKey } from "@/constants/queryKey";
 import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";

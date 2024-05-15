@@ -14,7 +14,7 @@ const PostDetailPage = () => {
   const postId = id ? parseInt(id, 10) : undefined;
   const { LikeIcon, CommentIcon, DotIcon, PinIcon } = icons;
   const [post, setPost] = useState<Post | null>(null);
-  const [likeBtn, setLikeBtn] = useState("primary");
+  // const [likeBtn, setLikeBtn] = useState("primary");
 
   const StyledLikeIcon = styled(LikeIcon)`
     fill: ${({ theme }) => theme.color.primary};

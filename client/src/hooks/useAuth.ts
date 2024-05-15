@@ -3,7 +3,7 @@ import {
   authLogin,
   authLogout,
   authReset,
-  fetchProfileImage,
+  //fetchProfileImage,
   fetchProfileRestPassword,
   isEmailUnique,
   isNicknameUnique,

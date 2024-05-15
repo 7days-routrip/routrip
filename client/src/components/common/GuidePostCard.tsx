@@ -1,8 +1,8 @@
 import styled from "styled-components";
-import { MainPostCardStyle } from "./MainPostCard";
+// import { MainPostCardStyle } from "./MainPostCard";
 import { Post as IPost } from "@/models/post.model";
 import { Link } from "react-router-dom";
-import { CardImageStyle, CardImageStyleProps } from "./postCard";
+import { CardImageStyleProps } from "./postCard";
 import Title from "./Title";
 import { DEFAULT_IMAGE } from "./ProfileCard";
 interface Props {

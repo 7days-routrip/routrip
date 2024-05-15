@@ -1,7 +1,7 @@
 import { BestPosts } from "@/apis/main.api";
 import CategoryCard from "@/components/common/CategoryCard";
 import GuidePostCard from "@/components/common/GuidePostCard";
-import Loading from "@/components/common/Loading";
+// import Loading from "@/components/common/Loading";
 import MainPostCard from "@/components/common/MainPostCard";
 import Banner from "@/components/main/Banner";
 import SlideSection from "@/components/main/SlideSection";
@@ -25,7 +25,7 @@ const dummyPost: Post = {
 };
 
 const MainPage = () => {
-  const { bestPosts, homePosts, abroadPosts, isBestPostsLoading, isHomePostsLoading, isAbroadPostsLoading } = useMain();
+  const { bestPosts, homePosts } = useMain();
 
   // if (!bestPosts || !homePosts || !abroadPosts || isBestPostsLoading || isHomePostsLoading || isAbroadPostsLoading)
   //   return <Loading />;

@@ -2,7 +2,7 @@ import styled from "styled-components";
 import logo from "../../../public/assets/images/logo-header.png";
 import icons from "../../icons/icons";
 import { Link } from "react-router-dom";
-import { useState } from "react";
+// import { useState } from "react";
 import { theme } from "../../styles/theme";
 import { useAuthStore } from "@/stores/authStore";
 import { useAuth } from "@/hooks/useAuth";

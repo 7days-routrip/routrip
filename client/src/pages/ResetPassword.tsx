@@ -39,7 +39,7 @@ const RestPage = () => {
       setError("email", { message: "허용되지 않는 이메일 도메인입니다." }, { shouldFocus: true });
       return;
     }
-    userEmailCheck(email).then((res) => {
+    userEmailCheck(email).then(() => {
       // res 가 성공 메시지면 이거
       setNotAuthenticated((prev) => !prev);
       clearErrors("email");

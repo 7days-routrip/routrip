@@ -4,7 +4,7 @@ import { LoginProps, useAuth } from "@/hooks/useAuth";
 import icons from "@/icons/icons";
 import { useForm } from "react-hook-form";
 import InputText from "@/components/common/Input";
-import { emailOptions, passwordOptions } from "@/config/registerOptions";
+import { emailOptions } from "@/config/registerOptions";
 import { Button } from "@/components/common/Button";
 import { Link } from "react-router-dom";
 

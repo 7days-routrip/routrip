@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import { Colorkey, FontSize } from "@/styles/theme";
+import { FontSize } from "@/styles/theme";
 
 interface Props {
   children: React.ReactNode;

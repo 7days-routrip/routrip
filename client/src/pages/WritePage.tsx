@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -199,6 +199,7 @@ const WritePage = () => {
         }}
         data={data}
         onChange={(event, editor) => {
+          console.log(event);
           const newData = editor.getData();
           if (newData !== data) {
             setData(newData);

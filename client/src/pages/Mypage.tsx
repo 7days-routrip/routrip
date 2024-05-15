@@ -2,17 +2,17 @@ import { Profile } from "@/models/profile.model";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { getToken } from "@/stores/authStore";
-import { useNavigate } from "react-router-dom";
-import { Schedule } from "@/models/schedule.model";
+// import { useNavigate } from "react-router-dom";
+// import { Schedule } from "@/models/schedule.model";
 import ScheduleCard from "@/components/common/scheduleCard";
 import { useComment, useLikePlace, useLikePost, usePost, useProfile, useSchedule } from "@/hooks/useMypage";
 import { Button } from "@/components/common/Button";
 import PostCard from "@/components/common/postCard";
 import CommentCard from "@/components/common/Comment";
 import LikePlaceCard from "@/components/common/LikePlaceCard";
-import { Comment } from "@/models/comment.model";
+// import { Comment } from "@/models/comment.model";
 import ProfileCard from "@/components/common/ProfileCard";
-import { fetchMyPosts } from "@/apis/mypage.api";
+// import { fetchMyPosts } from "@/apis/mypage.api";
 
 const TABLIST = [
   { name: "일정 모음" },
@@ -22,7 +22,7 @@ const TABLIST = [
   { name: "찜한 장소" },
 ];
 
-interface Props {}
+// interface Props {}
 
 // 더미 데이터들
 const dummyData: Profile = {
@@ -35,25 +35,25 @@ const dummyData: Profile = {
   likeSpotsNum: 50,
 };
 
-const dummyScheduleData: Schedule = {
-  id: 1,
-  title: "post title",
-  startDate: "string",
-  endDate: "string",
-  thumbnail: "",
-};
+// const dummyScheduleData: Schedule = {
+//   id: 1,
+//   title: "post title",
+//   startDate: "string",
+//   endDate: "string",
+//   thumbnail: "",
+// };
 
-const dummyComment: Comment = {
-  content: "흥흥 너무 졸려요 댓글이여",
-  createDate: "2024.05.08",
-  postId: 1,
-  postTitle: "아 졸려 글 제목이여",
-};
+// const dummyComment: Comment = {
+//   content: "흥흥 너무 졸려요 댓글이여",
+//   createDate: "2024.05.08",
+//   postId: 1,
+//   postTitle: "아 졸려 글 제목이여",
+// };
 
 const Mypage = () => {
   const [activeTab, setActiveTab] = useState([true, false, false, false, false]);
   const { schedules, isEmptySchedules, scheduleRefetch } = useSchedule();
-  const { posts, isEmptyPosts, postsRefetch } = usePost();
+  const { postsRefetch } = usePost();
   const { comments, isEmptyComments, commentsRefetch } = useComment();
   const { likePosts, isEmptyLikePosts, likePostRefetch } = useLikePost();
   const { likePlaces, isEmptyLikePlace, likePlaceRefetch } = useLikePlace();
