@@ -9,7 +9,7 @@ export interface Place {
   placeName: string;
   address: string;
   location: Location;
-  placeImg?: string; // 구글 placePhoto api  -> buffer 형태로 전달받음 -> base64 인코딩해서 저장
+  placeImg?: string;
 }
 
 // 장소 찜 컴포넌트에서 사용할 타입
@@ -17,4 +17,5 @@ export interface PlaceDetails extends Place {
   tel: string;
   openingHours: string[];
   siteUrl: string;
+  isPicked: boolean; // 장소 찜 했는지 여부
 }
