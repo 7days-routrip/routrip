@@ -9,7 +9,6 @@ import journeysRepository from "@/repository/journeys.repo";
 
 const postRepo = AppDataSource.getRepository(Posts);
 const reqPostInsertData = async (data: iPostsInsertProps, userId: number) => {
-  const postImg = getPostImg(data.contents);
   const post = {
     title: data.title,
     startDate: data.startDate,
@@ -20,7 +19,7 @@ const reqPostInsertData = async (data: iPostsInsertProps, userId: number) => {
     continent: { id: data.continent },
     country: { id: data.country },
     content: data.contents,
-    postsImg: postImg,
+    postsImg: data.postsImg,
   };
 
   const insertData = await postRepo.save(post);
@@ -98,6 +97,7 @@ const reqRecommendPosts = async () => {
   });
   return { success: true, posts };
 };
+
 const reqPostData = async (postId: number, userId: number | undefined) => {
   const postData = await postRepo.findOne({ where: { id: postId } });
   if (!postData) return { success: false, msg: "does not exist post" };
@@ -107,7 +107,6 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
   } else {
     likedPost = false;
   }
-  console.log(postData);
   const likesNum = await getPostLikes(postId);
   const commentsNum = await getPostComments(postId);
   const startDate = await setDateFromat(postData.journey.startDate);
@@ -176,6 +175,7 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
       spots: spots,
     },
   };
+
   return { success: true, data: responsePost };
 };
 const reqPostEditData = async (data: iPostsInsertProps, userId: number, postId: number) => {
