@@ -28,9 +28,6 @@ export const fetchProfile = async () => {
 };
 
 // 내 일정
-interface FetchMyPageParams {
-  list: string;
-}
 
 export const fetchMySchedule = async () => {
   try {
@@ -49,7 +46,6 @@ export const fetchMySchedule = async () => {
 export const fetchMyPosts = async () => {
   try {
     const { data } = await httpClient.get<PostList>("/mypages/posts?pages=1");
-    console.log(data, "이거 맞음?");
     return data;
   } catch (error) {
     // 에러 처리
@@ -65,7 +61,6 @@ export const fetchMyPosts = async () => {
 export const fetchMyComments = async () => {
   try {
     const { data } = await httpClient.get<Comment[]>("/mypages/comments");
-    console.log(data, "이거 맞음?");
     return data;
   } catch (error) {
     // 에러 처리
@@ -78,7 +73,6 @@ export const fetchMyComments = async () => {
 export const fetchLikePost = async () => {
   try {
     const { data } = await httpClient.get<Post[]>("/likes/posts");
-    console.log(data, "이거 맞음?");
     return data;
   } catch (error) {
     // 에러 처리

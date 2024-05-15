@@ -1,8 +1,7 @@
 import { Profile } from "@/models/profile.model";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
-import { getToken } from "@/stores/authStore";
-import { useNavigate, useSearchParams } from "react-router-dom";
+import { useSearchParams } from "react-router-dom";
 import { Schedule } from "@/models/schedule.model";
 import ScheduleCard from "@/components/common/scheduleCard";
 import { useComment, useLikePlace, useLikePost, usePost, useProfile, useSchedule } from "@/hooks/useMypage";
@@ -12,7 +11,6 @@ import CommentCard from "@/components/common/Comment";
 import LikePlaceCard from "@/components/common/LikePlaceCard";
 import { Comment } from "@/models/comment.model";
 import ProfileCard from "@/components/common/ProfileCard";
-import { fetchMyPosts } from "@/apis/mypage.api";
 import { QUERYSTRING } from "@/constants/querystring";
 
 const TABLIST = [
@@ -23,8 +21,6 @@ const TABLIST = [
   { name: "찜한 장소", queryValue: "like-places" },
 ];
 
-interface Props {}
-
 // 더미 데이터들
 const dummyData: Profile = {
   nickName: "김하늘누리",
@@ -34,21 +30,6 @@ const dummyData: Profile = {
   commentsNum: 88,
   likePostsNum: 81,
   likeSpotsNum: 50,
-};
-
-const dummyScheduleData: Schedule = {
-  id: 1,
-  title: "post title",
-  startDate: "string",
-  endDate: "string",
-  thumbnail: "",
-};
-
-const dummyComment: Comment = {
-  content: "흥흥 너무 졸려요 댓글이여",
-  createDate: "2024.05.08",
-  postId: 1,
-  postTitle: "아 졸려 글 제목이여",
 };
 
 const Mypage = () => {
@@ -91,14 +72,14 @@ const Mypage = () => {
     }
   };
 
-  // useEffect(() => {
-  //   // 로그인 되어 있는가 찾기
-  //   const user = getToken();
-  //   if (user === null) {
-  //     // alert 창 을 띄어야 하나?
-  //     // navigate("/login");
-  //   }
-  // }, []);
+  useEffect(() => {
+    const params = Object.fromEntries(searchParams);
+    for (let i = 0; i < 5; i++) {
+      if (TABLIST[i].queryValue === params.tag) {
+        handleMypageTab(i, params.tag);
+      }
+    }
+  }, [location.search]);
 
   return (
     <MypageStyle $commentsView={activeTab[2]}>
