@@ -1,6 +1,8 @@
 import styled from "styled-components";
 import PlaceList from "./PlaceList";
 import { useBookmarkPlaces } from "@/hooks/useBookmarkPlaces";
+import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";
+import Loading from "../common/Loading";
 
 interface Props {
   buttonTitle: React.ReactNode;
@@ -8,11 +10,13 @@ interface Props {
 
 const BookmarkPlace = ({ buttonTitle }: Props) => {
   const { bookmarkPlacesData } = useBookmarkPlaces();
+  const { bookmarkPlaces } = useBookmarkPlacesStore();
+  if (!bookmarkPlacesData) return <Loading />;
 
   return (
     <BookmarkPlaceStyle>
-      {bookmarkPlacesData && bookmarkPlacesData.length > 0 ? (
-        <PlaceList place={bookmarkPlacesData} buttonTitle={buttonTitle} type="bookmarkList" />
+      {bookmarkPlacesData && bookmarkPlaces.length > 0 ? (
+        <PlaceList place={bookmarkPlaces} buttonTitle={buttonTitle} type="bookmarkList" />
       ) : (
         <div className="empty-bookmark-list">찜한 장소 목록이 비어있습니다.</div>
       )}
