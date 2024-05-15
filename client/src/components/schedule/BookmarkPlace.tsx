@@ -11,6 +11,7 @@ interface Props {
 const BookmarkPlace = ({ buttonTitle }: Props) => {
   const { bookmarkPlacesData } = useBookmarkPlaces();
   const { bookmarkPlaces } = useBookmarkPlacesStore();
+
   if (!bookmarkPlacesData) return <Loading />;
 
   return (

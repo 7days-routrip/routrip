@@ -24,8 +24,8 @@ const containerStyle = {
 };
 
 const center = {
-  lat: 20,
-  lng: 90,
+  lat: 38,
+  lng: 128,
 };
 
 const createMarkers = (
@@ -54,7 +54,7 @@ const ScheduleGoogleMap = () => {
     language: "ko",
   });
 
-  const { googleMap, mapCenter, setCenter, setGoogleMap, updateMapBounds } = useMapStore();
+  const { googleMap, setGoogleMap, updateMapBounds } = useMapStore();
   const { addPlaces } = useAddPlaceStore();
   const { markerType, dayIndex, clickMarker, setClickMarker } = useShowMarkerTypeStore();
   const { dayPlaces } = useDayPlaceStore();
@@ -81,7 +81,7 @@ const ScheduleGoogleMap = () => {
 
   const handleChanged = useCallback(() => {
     if (googleMap && googleMap.getCenter()) {
-      setCenter({
+      googleMap.setCenter({
         lat: googleMap.getCenter()?.lat() || center.lat,
         lng: googleMap.getCenter()?.lng() || center.lng,
       });
@@ -100,17 +100,14 @@ const ScheduleGoogleMap = () => {
     setClickMarker(place);
 
     if (googleMap) {
+      const currentZoom = googleMap.getZoom() || 6;
+      const targetZoom = Math.max(currentZoom, 12);
+      googleMap.setZoom(targetZoom); // 1. 줌 비율 조정(확대)
+
       const bounds = googleMap.getBounds();
       if (bounds && !bounds.contains(place.location)) {
-        googleMap.panTo(place.location); // 1. 마커 위치로 지도 이동
+        googleMap.panTo(place.location); // 2. 마커 위치로 지도 이동
       }
-
-      const currentZoom = googleMap.getZoom() || 6;
-
-      // const targetZoom = currentZoom < 6 ? 6 : Math.max(currentZoom, 12);
-      const targetZoom = Math.max(currentZoom, 12);
-      console.log(currentZoom, targetZoom);
-      googleMap.setZoom(targetZoom); // 2. 줌 비율 조정(확대)
     }
   };
 
@@ -150,19 +147,19 @@ const ScheduleGoogleMap = () => {
       default:
         break;
     }
-  }, [addPlaces, dayPlaces, markerType, dayIndex, clickMarker]);
+  }, [addPlaces, dayPlaces, nearPlaces, searchPlaces, bookmarkPlaces, markerType, dayIndex, clickMarker]);
 
   useEffect(() => {
     // 지도에 표시할 마커가 전부 보이도록 지도 경계선을 계산
     if (!googleMap) return;
 
-    updateMapBounds(googleMap, getPlaceArr());
+    updateMapBounds(getPlaceArr());
   }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlaces, nearPlaces, bookmarkPlaces]);
 
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={mapCenter}
+      center={center}
       zoom={6}
       onLoad={onLoad}
       onUnmount={onUnmount}
