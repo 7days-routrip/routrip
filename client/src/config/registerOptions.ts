@@ -11,15 +11,15 @@ export const emailOptions = {
 export const passwordOptions = {
   minLength: {
     value: 8,
-    message: "8~16자의 문자, 숫자, 특수문자 중 2개를 조합해 사용해 주세요.",
+    message: "8~16자여야 하며 숫자 또는 특수 문자가 포함해야 합니다.",
   },
   maxLength: {
     value: 16,
-    message: "8~16자의 문자, 숫자, 특수문자 중 2개를 조합해 사용해 주세요.",
+    message: "8~16자여야 하며 숫자 또는 특수 문자가 포함해야 합니다.",
   },
   pattern: {
     value: passwordRegex,
-    message: "8~16자의 문자, 숫자, 특수문자 중 2개를 조합해 사용해 주세요.",
+    message: "8~16자여야 하며 숫자 또는 특수 문자가 포함해야 합니다.",
   },
   required: { value: true, message: "비밀번호는 필수 입력 정보입니다." },
 };
