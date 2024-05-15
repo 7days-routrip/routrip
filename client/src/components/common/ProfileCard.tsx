@@ -1,7 +1,7 @@
 import { Profile } from "@/models/profile.model";
 import styled from "styled-components";
 
-export const DEFAULT_IMAGE = "assets/images/logo-profile2.png";
+export const DEFAULT_IMAGE = "assets/images/profile-default.png";
 
 interface Props {
   ProfileProps: Profile;
@@ -10,7 +10,7 @@ interface Props {
 const ProfileCard = ({ ProfileProps }: Props) => {
   return (
     <ProfileCardStyle>
-      <ProfileImageStyle $image={ProfileProps.profile} />
+      <ProfileImageStyle $image={ProfileProps.profileImg} />
       <div className="profile-info">
         <span className="user-nickname">{ProfileProps.nickName}</span>
         <section className="user-stats">
@@ -31,17 +31,17 @@ const ProfileCard = ({ ProfileProps }: Props) => {
 };
 
 export interface ProfileImageStyleProps {
-  $image: string;
+  $image?: string;
 }
 
 export const ProfileImageStyle = styled.div<ProfileImageStyleProps>`
   width: 6rem;
   height: 6rem;
 
-  background-image: url(${({ $image }) => ($image ? `data:image/${$image}` : DEFAULT_IMAGE)});
-  background-color: ${({ theme }) => theme.color.white};
-  background-size: 100%;
+  background-image: url(${({ $image }) => ($image ? $image : DEFAULT_IMAGE)});
   background-position: center;
+  background-size: cover;
+  background-color: ${({ theme }) => theme.color.white};
   border-radius: 50%;
   margin: 1rem;
 `;

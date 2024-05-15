@@ -17,7 +17,7 @@ const PostCard = ({ PostProps, view }: Props) => {
   const Likecon = icons.LikeIcon;
   const CommentIcon = icons.CommentIcon;
   return (
-    <PostCardStyle $profile={PostProps.userProfile} $view={view}>
+    <PostCardStyle $profile={PostProps.profileImg} $view={view}>
       <Link to={`/post/${PostProps.id}`}>
         <CardImageStyle $image={PostProps.postsImg} $view={view} />
       </Link>
@@ -36,8 +36,8 @@ const PostCard = ({ PostProps, view }: Props) => {
           </div>
         </div>
         <h3 className="card-title">{PostProps.title}</h3>
+        <p className="card-date">여행 기간: {PostProps.date}</p>
         <div className="author-info">
-          <p className="card-date">여행 기간: {PostProps.date}</p>
           <div className="feedback">
             <div className="writer">
               <div className="profile-img"></div>
@@ -91,7 +91,7 @@ export const CardContentStyle = styled.div`
   align-items: flex-start;
   padding: 1rem;
   overflow: hidden;
-  gap: 0.8rem;
+  gap: 0.2rem;
   .card-title {
     margin: 1px;
     font-size: ${({ theme }) => theme.fontSize.medium};
@@ -151,7 +151,7 @@ export const CardStyle = styled.div<CardStyleProps>`
   align-items: center;
   flex-direction: ${({ $view }) => ($view === "grid" ? "column" : "row")};
   width: ${({ $view }) => ($view === "grid" ? "320px" : "800px")};
-  height: ${({ $view }) => ($view === "grid" ? "360px" : "150px")};
+  height: ${({ $view }) => ($view === "grid" ? "auto" : "150px")};
   p {
     margin: 2px;
   }
@@ -174,11 +174,12 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
   display: flex;
 
   .profile-img {
-    background-image: url(${({ $profile }) => ($profile ? `data:image/${$profile}` : DEFAULT_IMAGE)});
+    background-image: url(${({ $profile }) => ($profile ? `${$profile}` : DEFAULT_IMAGE)});
     background-size: 2rem 1rem;
     background-position: center;
-    width: 2.5rem;
-    height: 2.5rem;
+    background-size: cover;
+    width: 2rem;
+    height: 2rem;
     border-radius: 50%;
     border: 1px solid ${({ theme }) => theme.color.borderGray};
   }
@@ -215,6 +216,12 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
 
   .card-date {
     color: ${({ theme }) => theme.color.commentGray};
+    margin-bottom: ${({ $view }) => ($view === "grid" ? "0.5rem" : "0")};
+  }
+
+  .scedul-date,
+  .card-date {
+    font-size: ${({ theme }) => theme.fontSize.xsmall};
   }
 
   .feedback-icon {

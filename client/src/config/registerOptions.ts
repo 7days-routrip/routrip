@@ -11,15 +11,15 @@ export const emailOptions = {
 export const passwordOptions = {
   minLength: {
     value: 8,
-    message: "8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.",
+    message: "8~16자여야 하며 숫자 또는 특수 문자가 포함해야 합니다.",
   },
   maxLength: {
     value: 16,
-    message: "8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.",
+    message: "8~16자여야 하며 숫자 또는 특수 문자가 포함해야 합니다.",
   },
   pattern: {
     value: passwordRegex,
-    message: "8~16자의 영문 대/소문자, 숫자, 특수문자를 사용해 주세요.",
+    message: "8~16자여야 하며 숫자 또는 특수 문자가 포함해야 합니다.",
   },
   required: { value: true, message: "비밀번호는 필수 입력 정보입니다." },
 };
@@ -38,4 +38,19 @@ export const nicknameOptions = {
     message: "가능한 문자: 영문 대소문자, 글자 단위 한글, 숫자",
   },
   required: { value: true, message: "닉네임은 필수 입력 정보입니다." },
+};
+
+export const profileNicknameOptions = {
+  minLength: {
+    value: 2,
+    message: "닉네임은 최소 2 글자 이상입니다.",
+  },
+  maxLength: {
+    value: 8,
+    message: "닉네임은 최대 8글자 이하입니다.",
+  },
+  pattern: {
+    value: nicknameRegex,
+    message: "가능한 문자: 영문 대소문자, 글자 단위 한글, 숫자",
+  },
 };
