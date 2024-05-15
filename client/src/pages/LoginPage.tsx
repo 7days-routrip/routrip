@@ -70,7 +70,7 @@ const LoginPage = () => {
                 <Link to="/reset">비밀번호 찾기</Link>
               </div>
             </div>
-            <div className="social-login">
+            {/* <div className="social-login">
               <div className="hr-sect">
                 <div className="hr-line"></div>
                 <span>간편 로그인</span>
@@ -80,7 +80,7 @@ const LoginPage = () => {
                 <div className="iconImge"></div>
                 <div className="iconImge"></div>
               </div>
-            </div>
+            </div> */}
           </div>
         </form>
       </JoinPageStyle>
