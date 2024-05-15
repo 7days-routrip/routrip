@@ -60,7 +60,7 @@ export const MainPostCardStyle = styled.div`
     width: 100%;
     position: absolute;
     padding: 0 0.5rem 0.5rem;
-    background: linear-gradient(to right, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
+    background: linear-gradient(to bottom, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0));
   }
 
   .items {
