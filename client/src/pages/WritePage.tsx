@@ -289,9 +289,11 @@ const WritePage = () => {
               ))
             )}
           </ul>
-          <Button $size="small" $scheme="secondary" $radius="default" onClick={toggleSidebar}>
-            닫기
-          </Button>
+          <div className="close-button">
+            <Button $size="small" $scheme="secondary" $radius="default" onClick={toggleSidebar}>
+              닫기
+            </Button>
+          </div>
         </Sidebar>
       )}
     </WritePageStyle>
@@ -358,6 +360,9 @@ const WritePageStyle = styled.div`
   }
   .daily-schedule {
     color: ${({ theme }) => theme.color.routeGray};
+  }
+  .close-button {
+    text-align: center;
   }
 `;
 
