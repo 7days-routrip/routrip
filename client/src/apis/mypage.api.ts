@@ -1,7 +1,7 @@
 import { httpClient } from "./https";
 import { Comment } from "@/models/comment.model";
 import { Schedule } from "@/models/schedule.model";
-import { Post } from "@/models/post.model";
+import { Post, PostList } from "@/models/post.model";
 import { PlaceDetails } from "@/models/place.model";
 import { Profile } from "@/models/profile.model";
 
@@ -48,13 +48,16 @@ export const fetchMySchedule = async () => {
 // 내 게시글
 export const fetchMyPosts = async () => {
   try {
-    const { data } = await httpClient.get("/mypages/posts?pages=1");
-    console.log(data);
+    const { data } = await httpClient.get<PostList>("/mypages/posts?pages=1");
+    console.log(data, "이거 맞음?");
     return data;
   } catch (error) {
     // 에러 처리
     console.log(error);
-    return [];
+    return {
+      posts: [],
+      pagenation: {},
+    };
   }
 };
 
@@ -62,6 +65,7 @@ export const fetchMyPosts = async () => {
 export const fetchMyComments = async () => {
   try {
     const { data } = await httpClient.get<Comment[]>("/mypages/comments");
+    console.log(data, "이거 맞음?");
     return data;
   } catch (error) {
     // 에러 처리
@@ -74,6 +78,7 @@ export const fetchMyComments = async () => {
 export const fetchLikePost = async () => {
   try {
     const { data } = await httpClient.get<Post[]>("/likes/posts");
+    console.log(data, "이거 맞음?");
     return data;
   } catch (error) {
     // 에러 처리

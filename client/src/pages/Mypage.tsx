@@ -2,7 +2,7 @@ import { Profile } from "@/models/profile.model";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { getToken } from "@/stores/authStore";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useSearchParams } from "react-router-dom";
 import { Schedule } from "@/models/schedule.model";
 import ScheduleCard from "@/components/common/scheduleCard";
 import { useComment, useLikePlace, useLikePost, usePost, useProfile, useSchedule } from "@/hooks/useMypage";
@@ -13,13 +13,14 @@ import LikePlaceCard from "@/components/common/LikePlaceCard";
 import { Comment } from "@/models/comment.model";
 import ProfileCard from "@/components/common/ProfileCard";
 import { fetchMyPosts } from "@/apis/mypage.api";
+import { QUERYSTRING } from "@/constants/querystring";
 
 const TABLIST = [
-  { name: "일정 모음" },
-  { name: "내 여행글" },
-  { name: "내 댓글" },
-  { name: "좋아요 한 글" },
-  { name: "찜한 장소" },
+  { name: "일정 모음", queryValue: "schedules" },
+  { name: "내 여행글", queryValue: "posts" },
+  { name: "내 댓글", queryValue: "comments" },
+  { name: "좋아요 한 글", queryValue: "like-posts" },
+  { name: "찜한 장소", queryValue: "like-places" },
 ];
 
 interface Props {}
@@ -27,7 +28,7 @@ interface Props {}
 // 더미 데이터들
 const dummyData: Profile = {
   nickName: "김하늘누리",
-  profile: "",
+  profileImg: "",
   journeysNum: 5,
   postsNum: 5,
   commentsNum: 88,
@@ -57,12 +58,20 @@ const Mypage = () => {
   const { comments, isEmptyComments, commentsRefetch } = useComment();
   const { likePosts, isEmptyLikePosts, likePostRefetch } = useLikePost();
   const { likePlaces, isEmptyLikePlace, likePlaceRefetch } = useLikePlace();
-  const { profileInfo } = useProfile();
+  const { profileInfo, isProfileLoding } = useProfile();
+  const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleMypageTab = (idx: number) => {
+  const handleMypageTab = (idx: number, tag: string) => {
+    const newSearchParams = new URLSearchParams(searchParams);
     const newActiveTab = new Array(5).fill(false);
     newActiveTab[idx] = true;
     setActiveTab(newActiveTab);
+    if (tag === null) {
+      newSearchParams.delete(QUERYSTRING.TAG);
+    } else {
+      newSearchParams.set(QUERYSTRING.TAG, tag);
+    }
+    setSearchParams(newSearchParams);
     switch (idx) {
       case 0:
         scheduleRefetch();
@@ -82,19 +91,18 @@ const Mypage = () => {
     }
   };
 
-  useEffect(() => {
-    // 로그인 되어 있는가 찾기
-    const user = getToken();
-    if (user === null) {
-      // alert 창 을 띄어야 하나?
-      // navigate("/login");
-    }
-    scheduleRefetch();
-  }, []);
+  // useEffect(() => {
+  //   // 로그인 되어 있는가 찾기
+  //   const user = getToken();
+  //   if (user === null) {
+  //     // alert 창 을 띄어야 하나?
+  //     // navigate("/login");
+  //   }
+  // }, []);
 
   return (
-    <MypageStyle>
-      <ProfileCard ProfileProps={profileInfo ? profileInfo : dummyData} />
+    <MypageStyle $commentsView={activeTab[2]}>
+      <ProfileCard ProfileProps={!isProfileLoding && profileInfo ? profileInfo : dummyData} />
       <div className="main">
         <MypageTabStyle>
           {TABLIST.map((item, idx) => (
@@ -102,7 +110,7 @@ const Mypage = () => {
               $radius="default"
               $scheme={activeTab[idx] ? "primary" : "normal"}
               $size="large"
-              onClick={() => handleMypageTab(idx)}
+              onClick={() => handleMypageTab(idx, item.queryValue)}
               key={idx}
             >
               {item.name}
@@ -113,9 +121,9 @@ const Mypage = () => {
           {!isEmptySchedules && activeTab[0]
             ? schedules?.map((item, idx) => <ScheduleCard scheduleProps={item} key={idx} view="grid" />)
             : null}
-          {/* {!isEmptyPosts && activeTab[1]
+          {!isEmptyPosts && activeTab[1]
             ? posts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
-            : null} */}
+            : null}
           {!isEmptyComments && activeTab[2]
             ? comments?.map((item, idx) => <CommentCard CommentProps={item} key={idx} />)
             : null}
@@ -131,7 +139,11 @@ const Mypage = () => {
   );
 };
 
-export const MypageStyle = styled.div`
+interface MypageStyleProps {
+  $commentsView: boolean;
+}
+
+export const MypageStyle = styled.div<MypageStyleProps>`
   display: flex;
   flex-direction: column;
   justify-content: space-around;
@@ -142,11 +154,12 @@ export const MypageStyle = styled.div`
   }
 
   .contents {
-    display: grid;
-
+    display: ${({ $commentsView }) => ($commentsView ? "flex" : "grid")};
+    grid-template-columns: repeat(3, 1fr);
+    gap: 0.5rem;
     flex-direction: column;
-    justify-content: center;
-    align-items: flex-start;
+    justify-content: flex-start;
+    align-items: center;
   }
 `;
 
