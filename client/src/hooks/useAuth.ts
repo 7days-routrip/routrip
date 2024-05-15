@@ -43,7 +43,6 @@ export const useAuth = () => {
 
   const userLogin = async (data: LoginProps) => {
     try {
-      console.log(data);
       const loginRes = await authLogin(data);
       const newAccessToken = loginRes.headers["authorization"];
       const userName = loginRes.data.nickName;
@@ -122,7 +121,7 @@ export const useAuth = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      console.log(res, "response");
+      // console.log(res, "response");
       return res;
     } catch (error) {
       // 실패
