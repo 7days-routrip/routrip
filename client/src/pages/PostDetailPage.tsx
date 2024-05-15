@@ -28,7 +28,7 @@ const PostDetailPage = () => {
     const fetchPost = async () => {
       try {
         console.log(`ID: ${postId}`);
-        const response = await httpClient.get(`/api/posts/${postId}`);
+        const response = await httpClient.get(`/posts/${postId}`);
         console.log("Fetch된 data:", response.data);
         setPost(response.data);
       } catch (error) {
