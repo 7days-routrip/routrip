@@ -5,7 +5,7 @@ import icons from "@/icons/icons";
 import Dropdown from "@/components/common/Dropdown";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/common/Button";
-
+import { httpClient } from "@/apis/https";
 import { useEffect, useState } from "react";
 import { Post } from "@/models/post.model";
 
@@ -28,13 +28,9 @@ const PostDetailPage = () => {
     const fetchPost = async () => {
       try {
         console.log(`ID: ${postId}`);
-        const response = await fetch(`http://localhost:1234/api/posts/${postId}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Fetch된 data:", data);
-        setPost(data);
+        const response = await httpClient.get(`/api/posts/${postId}`);
+        console.log("Fetch된 data:", response.data);
+        setPost(response.data);
       } catch (error) {
         console.error("Error fetching post:", error);
       }

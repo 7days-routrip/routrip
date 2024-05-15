@@ -1,4 +1,4 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -8,10 +8,11 @@ import { Button } from "@/components/common/Button";
 import { theme } from "@/styles/theme";
 import { Country, regions } from "@/data/region";
 import RegionCountrySelector from "@/components/common/RegionCountrySelector";
-// import { v4 } from "uuid";
-// import WriteTopBtn from "@/components/common/WriteTopBtn";
+import ScheduleCard from "@/components/common/scheduleCard";
+import { useSchedule } from "@/hooks/useMypage";
+import { useScheduleDetails } from "@/hooks/useScheduleDetails";
+import icons from "@/icons/icons";
 
-// Custom Upload Adapter
 class MyUploadAdapter {
   loader: any;
   constructor(loader: any) {
@@ -42,7 +43,7 @@ class MyUploadAdapter {
         return { default: data.imageUrl };
       } else {
         console.warn("Image URL is null");
-        return { default: "default_image_url_placeholder" }; // 기본 이미지를 설정
+        return { default: "default_image_url_placeholder" };
       }
     } catch (error) {
       console.error(error);
@@ -54,6 +55,7 @@ class MyUploadAdapter {
     console.log("File upload aborted.");
   }
 }
+
 function MyCustomUploadAdapterPlugin(editor: {
   plugins: { get: (arg0: string) => { (): any; new (): any; createUploadAdapter: (loader: any) => MyUploadAdapter } };
 }) {
@@ -71,10 +73,41 @@ const WritePage = () => {
   const [selectedRegion, setSelectedRegion] = useState(0);
   const [selectedCountry, setSelectedCountry] = useState(0);
   const [countries, setCountries] = useState<Country[]>([]);
+  const [showSidebar, setShowSidebar] = useState(false); // 사이드바 상태
+  const [selectedScheduleId, setSelectedScheduleId] = useState<string | undefined>(undefined);
 
+  const sidebarRef = useRef<HTMLDivElement>(null); // 사이드바 참조 생성
+
+  const { schedules, isEmptySchedules, scheduleRefetch } = useSchedule(); // 일정 데이터 가져오기
+  const { scheduleDetailData, isScheduleDetailsLoading } = useScheduleDetails(selectedScheduleId); // 일정 세부 데이터 가져오기
+  const { PinIcon } = icons;
   useEffect(() => {
     console.log("Start Date:", startDate, "End Date:", endDate);
   }, [startDate, endDate]);
+
+  useEffect(() => {
+    if (showSidebar) {
+      scheduleRefetch();
+    }
+  }, [showSidebar]);
+
+  useEffect(() => {
+    const handleClickOutside = (event: MouseEvent) => {
+      if (sidebarRef.current && !sidebarRef.current.contains(event.target as Node)) {
+        setShowSidebar(false);
+      }
+    };
+
+    if (showSidebar) {
+      document.addEventListener("mousedown", handleClickOutside);
+    } else {
+      document.removeEventListener("mousedown", handleClickOutside);
+    }
+
+    return () => {
+      document.removeEventListener("mousedown", handleClickOutside);
+    };
+  }, [showSidebar]);
 
   const handleDateChange = (dates: [Date, Date]) => {
     const [start, end] = dates;
@@ -151,6 +184,14 @@ const WritePage = () => {
     setSelectedCountry(parseInt(event.target.value));
   };
 
+  const toggleSidebar = () => {
+    setShowSidebar(!showSidebar);
+  };
+
+  const handleScheduleClick = (scheduleId: number) => {
+    setSelectedScheduleId(scheduleId.toString());
+  };
+
   return (
     <WritePageStyle>
       <div className="title-content">
@@ -190,8 +231,29 @@ const WritePage = () => {
             onChange={(e) => setExpense(e.target.value)}
           />
         </label>
-        <p className="plan">내 일정 불러오기</p>
+        <p className="plan" onClick={toggleSidebar}>
+          내 일정 불러오기
+        </p>
       </div>
+      {selectedScheduleId && !isScheduleDetailsLoading && scheduleDetailData && (
+        <div className="daily-schedule">
+          {scheduleDetailData.days.map((day, dayIndex) => (
+            <div key={dayIndex}>
+              <PinIcon />
+
+              <span>Day {dayIndex + 1} - </span>
+              <span>
+                {day.spots.map((spot, spotIndex) => (
+                  <span key={spotIndex}>
+                    {spotIndex > 0 && "•"}
+                    {spot.placeName}
+                  </span>
+                ))}
+              </span>
+            </div>
+          ))}
+        </div>
+      )}
       <CKEditor
         editor={ClassicEditor}
         config={{
@@ -212,8 +274,28 @@ const WritePage = () => {
         <Button $size="large" $scheme="primary" $radius="default" onClick={handleSave}>
           저장
         </Button>
-        {/* <WriteTopBtn isWriting={true} /> */}
       </div>
+      {showSidebar && (
+        <Sidebar ref={sidebarRef}>
+          <h3>내 일정</h3>
+          <ul>
+            {isEmptySchedules ? (
+              <li>일정이 없습니다.</li>
+            ) : (
+              schedules?.map((schedule, index) => (
+                <li key={index} onClick={() => handleScheduleClick(schedule.id)}>
+                  <ScheduleCard scheduleProps={schedule} view="list" />
+                </li>
+              ))
+            )}
+          </ul>
+          <div className="close-button">
+            <Button $size="small" $scheme="secondary" $radius="default" onClick={toggleSidebar}>
+              닫기
+            </Button>
+          </div>
+        </Sidebar>
+      )}
     </WritePageStyle>
   );
 };
@@ -258,8 +340,12 @@ const WritePageStyle = styled.div`
   select {
     padding: 8px;
   }
+  .day-plan {
+    margin-top: -20px;
+  }
   .plan {
     color: ${({ theme }) => theme.color.primary};
+    cursor: pointer;
   }
   .info-container {
     justify-content: space-between;
@@ -270,6 +356,43 @@ const WritePageStyle = styled.div`
   }
 
   .button-container {
+    margin-top: 20px;
+  }
+  .daily-schedule {
+    color: ${({ theme }) => theme.color.routeGray};
+  }
+  .close-button {
+    text-align: center;
+  }
+`;
+
+const Sidebar = styled.div`
+  position: fixed;
+  right: 0;
+  top: 0;
+  width: 330px;
+  height: 100%;
+  background-color: white;
+  box-shadow: -2px 0 5px rgba(0, 0, 0, 0.1);
+  padding: 20px;
+  z-index: 1000;
+  overflow-y: auto;
+
+  h3 {
+    margin-bottom: 20px;
+  }
+
+  ul {
+    list-style: none;
+    padding: 0;
+  }
+
+  li {
+    margin-bottom: 10px;
+    cursor: pointer;
+  }
+
+  button {
     margin-top: 20px;
   }
 `;
