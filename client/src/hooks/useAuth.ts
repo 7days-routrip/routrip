@@ -117,7 +117,6 @@ export const useAuth = () => {
       if (!file) return;
       const formData = new FormData();
       formData.append("profile", file);
-      // console.log(formData.get("profile"), formData, "야야야");
       const res = await httpClient.post("/users/upload/profile", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
