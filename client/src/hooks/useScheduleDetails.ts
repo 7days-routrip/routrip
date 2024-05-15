@@ -3,12 +3,12 @@ import { queryKey } from "@/constants/queryKey";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useDayPlaceStore } from "@/stores/dayPlaces";
 import { useMapStore } from "@/stores/mapStore";
-import { convertScheduleDetailsToDayPlaces } from "@/utils/convertDataType";
+import { convertScheduleDetailsWithUuidToDayPlaces } from "@/utils/convertDataType";
 import { useQuery } from "@tanstack/react-query";
 import { useEffect } from "react";
 
 export const useScheduleDetails = (id: string | undefined) => {
-  const { googleMap } = useMapStore();
+  const { googleMap, setCenter } = useMapStore();
   const { setDayPlaces } = useDayPlaceStore();
   const { setMarkerType } = useShowMarkerTypeStore();
 
@@ -19,13 +19,12 @@ export const useScheduleDetails = (id: string | undefined) => {
   });
 
   useEffect(() => {
-    if (!googleMap) return;
-
     if (scheduleDetailData) {
-      setDayPlaces(convertScheduleDetailsToDayPlaces(scheduleDetailData));
+      setDayPlaces(convertScheduleDetailsWithUuidToDayPlaces(scheduleDetailData));
 
       if (scheduleDetailData.days[0].spots.length === 0) {
-        googleMap.setCenter({ lat: 38, lng: 128 });
+        googleMap?.setZoom(6);
+        setCenter({ lat: 38, lng: 128 });
         return;
       }
 

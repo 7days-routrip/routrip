@@ -2,7 +2,7 @@ import { SelectedPlace } from "@/stores/addPlaceStore";
 import { httpClient } from "./https";
 import { showAlert } from "@/utils/showAlert";
 import { ScheduleDetails } from "@/models/schedule.model";
-import { convertSelectedPlaceToDaysField } from "@/utils/convertDataType";
+import { convertScheduleDetails, convertSelectedPlaceToDaysField } from "@/utils/convertDataType";
 
 // 일정 등록 요청
 export interface DaysField {
@@ -41,7 +41,8 @@ export const addNewSchedule = async ({ title, startDate, endDate, allDaysPlaces 
 export const getScheduleDetails = async (id: string) => {
   try {
     const { data } = await httpClient.get<ScheduleDetails>(`/journeys/${id}`);
-    return data;
+    const convertData = convertScheduleDetails(data);
+    return convertData;
   } catch (err) {
     console.error("api ", err);
     throw err;
