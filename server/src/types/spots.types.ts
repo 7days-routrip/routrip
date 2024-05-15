@@ -7,6 +7,7 @@ interface PlaceDetailDTO {
   tel: string;
   openingHours: string[];
   placeImg: string;
+  isPicked: boolean;
 }
 
 interface Location {

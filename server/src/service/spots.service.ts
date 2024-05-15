@@ -5,8 +5,10 @@ import { s3 } from "@/middlewares/awsUpload";
 import axios from "axios";
 import { v4 } from "uuid";
 import { S3_BUCKET_NAME } from "@/settings";
+import { Picks } from "@/models/picks.model";
 
 const placeRepository = AppDataSource.getRepository(Places);
+const picksRepository = AppDataSource.getRepository(Picks);
 
 const register = async (
   id: string,
@@ -48,7 +50,10 @@ const checkDuplicate = async (id: string): Promise<boolean> => {
   return await placeRepository.findOneBy({ id: id }) !== null;
 };
 
-const getDetail = async (id: string): Promise<PlaceDetailDTO> => {
+const getDetail = async (
+  id: string,
+  user: { id?: number; nickName?: string; isLoggedIn: boolean },
+): Promise<PlaceDetailDTO> => {
   let foundPlace: Places | null = await placeRepository.findOneBy({ id: id });
 
   if (!foundPlace) {
@@ -63,6 +68,16 @@ const getDetail = async (id: string): Promise<PlaceDetailDTO> => {
 
   const openingHoursArr: string[] = foundPlace.openingHours.split(", ");
 
+  let isPicked: boolean;
+
+  if (!user) {
+    throw new Error("유저 정보가 존재하지 않습니다");
+  } else if (user.isLoggedIn) {
+    isPicked = await picksRepository.existsBy({ user: { id: user.id }, place: { id: id } });
+  } else {
+    isPicked = false;
+  }
+
   let placeDetailDTO: PlaceDetailDTO = {
     id: foundPlace.id,
     placeName: foundPlace.name,
@@ -72,6 +87,7 @@ const getDetail = async (id: string): Promise<PlaceDetailDTO> => {
     tel: foundPlace.tel,
     openingHours: openingHoursArr,
     placeImg: foundPlace.img,
+    isPicked: isPicked,
   };
 
   return placeDetailDTO;
