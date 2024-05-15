@@ -100,10 +100,16 @@ const ScheduleGoogleMap = () => {
     setClickMarker(place);
 
     if (googleMap) {
-      // googleMap.panTo(place.location); // 1. 마커 위치로 지도 이동
+      const bounds = googleMap.getBounds();
+      if (bounds && !bounds.contains(place.location)) {
+        googleMap.panTo(place.location); // 1. 마커 위치로 지도 이동
+      }
 
       const currentZoom = googleMap.getZoom() || 6;
+
+      // const targetZoom = currentZoom < 6 ? 6 : Math.max(currentZoom, 12);
       const targetZoom = Math.max(currentZoom, 12);
+      console.log(currentZoom, targetZoom);
       googleMap.setZoom(targetZoom); // 2. 줌 비율 조정(확대)
     }
   };
@@ -151,7 +157,7 @@ const ScheduleGoogleMap = () => {
     if (!googleMap) return;
 
     updateMapBounds(googleMap, getPlaceArr());
-  }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlaces, nearPlaces]);
+  }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlaces, nearPlaces, bookmarkPlaces]);
 
   return isLoaded ? (
     <GoogleMap
