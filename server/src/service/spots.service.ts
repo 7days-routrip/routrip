@@ -47,7 +47,7 @@ const register = async (
 };
 
 const checkDuplicate = async (id: string): Promise<boolean> => {
-  return await placeRepository.findOneBy({ id: id }) !== null;
+  return (await placeRepository.findOneBy({ id: id })) !== null;
 };
 
 const getDetail = async (
@@ -60,10 +60,10 @@ const getDetail = async (
     throw new Error("장소 정보를 찾을 수 없습니다.");
   }
 
-  const locationStrArr: string[] = foundPlace.location.split(", ");
-  const location: Location = {
-    lat: parseFloat(locationStrArr[0]),
-    lng: parseFloat(locationStrArr[1]),
+  const [lat, lng] = foundPlace.location;
+  const location = {
+    lat: parseFloat(lat),
+    lng: parseFloat(lng),
   };
 
   const openingHoursArr: string[] = foundPlace.openingHours.split(", ");
@@ -106,10 +106,10 @@ const search = async (keyword: string, zoom: number, lat: number, lng: number): 
   let searchedPlaces: SearchPlaceDTO[] = [];
 
   places.forEach((place) => {
-    const locationStrArr: string[] = place.location.split(", ");
-    const location: Location = {
-      lat: parseFloat(locationStrArr[0]),
-      lng: parseFloat(locationStrArr[1]),
+    const [lat, lng] = place.location;
+    const location = {
+      lat: parseFloat(lat),
+      lng: parseFloat(lng),
     };
     const searchedPlace: SearchPlaceDTO = {
       id: place.id,
