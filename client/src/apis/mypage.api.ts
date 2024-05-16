@@ -21,7 +21,7 @@ export const fetchProfile = async () => {
       commentsNum: 0,
       likePostsNum: 0,
       likeSpotsNum: 0,
-      profile: "",
+      profileImg: "",
       nickName: "",
     };
   }
