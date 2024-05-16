@@ -118,6 +118,7 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
   } else {
     likedPost = false;
   }
+  console.log(postData);
   const likesNum = await getPostLikes(postId);
   const commentsNum = await getPostComments(postId);
   const startDate = await setDateFromat(postData.journey.startDate);
