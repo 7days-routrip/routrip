@@ -61,6 +61,9 @@ export const getBookmarkPlaces = async () => {
     const { data } = await httpClient.get<PlaceDetails[]>(`/likes/places`);
     return data;
   } catch (err: any) {
+    if (err.response.status === 404) {
+      return [];
+    }
     throw err;
   }
 };
