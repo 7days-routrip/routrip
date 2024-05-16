@@ -16,8 +16,14 @@ const dummyPost: Post = {
   date: "2024.05.18-2024.05.22",
   author: "김아무개",
   profileImg: "",
-  continental: "대한민국",
-  country: "서울",
+  continent: {
+    id: 1,
+    name: "대한민국",
+  },
+  country: {
+    id: 1,
+    name: "서울",
+  },
   commentsNum: "999",
   likesNum: "999",
   postsImg: "https://picsum.photos/seed/picsum/200/300",

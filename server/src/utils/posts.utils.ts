@@ -1,9 +1,11 @@
-export const getOffset = async (pages: number) => {
-  return typeof pages === "undefined" ? 0 : pages * 8 - 8;
+import { Not } from "typeorm";
+
+export const getOffset = async (pages: number, limit: number) => {
+  return typeof pages === "undefined" ? 0 : pages * limit - limit;
 };
 
 export const setAreaType = async (area: string) => {
-  return area === "home" ? `1` : `Not(1)`;
+  return area === "home" ? 1 : Not(1);
 };
 
 export const setDateFromat = async (date: Date | string) => {

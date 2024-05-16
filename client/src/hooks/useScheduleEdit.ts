@@ -1,5 +1,6 @@
 import { EditScheduleRequest, editSchedule } from "@/apis/schedule.api";
 import { useAddPlaceStore } from "@/stores/addPlaceStore";
+import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useDayPlaceStore } from "@/stores/dayPlaces";
 import { useNearPlacesStore } from "@/stores/nearPlacesStore";
@@ -15,6 +16,7 @@ export const useScheduleEdit = () => {
   const { setMarkerType } = useShowMarkerTypeStore();
   const { setNearPlaces } = useNearPlacesStore();
   const { setSearchPlaces } = useSearchPlacesStore();
+  const { setBookmarkPlaces } = useBookmarkPlacesStore();
   const { setSearchKeywordToServer, setSearchKeywordToGoogle } = useSearchKeywordStore();
 
   const navigate = useNavigate();
@@ -32,6 +34,7 @@ export const useScheduleEdit = () => {
         setNearPlaces([]);
         setDayPlaces([[]]);
         setSearchPlaces([]);
+        setBookmarkPlaces([]);
         setSearchKeywordToServer("");
         setSearchKeywordToGoogle("");
       });

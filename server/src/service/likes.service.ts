@@ -13,7 +13,7 @@ const reqPicksList = async (userId: number) => {
   const returnData = picksResult?.map((place) => {
     const locationSplit = place.place.location.split(",");
     return {
-      id: place.id,
+      id: place.place.id,
       placeName: place.place.name,
       address: place.place.address,
       tel: place.place.tel,

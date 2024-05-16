@@ -21,7 +21,7 @@ export const fetchProfile = async () => {
       commentsNum: 0,
       likePostsNum: 0,
       likeSpotsNum: 0,
-      profile: "",
+      profileImg: "",
       nickName: "",
     };
   }
@@ -82,7 +82,6 @@ export const fetchLikePost = async () => {
 };
 
 // 찜한 장소
-
 export const fetchLikePlace = async () => {
   try {
     const { data } = await httpClient.get<PlaceDetails[]>("/likes/places");

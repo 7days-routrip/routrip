@@ -3,11 +3,12 @@ import React, { useRef, useState } from "react";
 import styled from "styled-components";
 
 interface Props {
+  title: string;
   children: React.ReactNode;
   toggleIcon: React.ReactNode;
 }
 
-const Dropdown = ({ children, toggleIcon }: Props) => {
+const Dropdown = ({ children, toggleIcon, title }: Props) => {
   const [open, setOpen] = useState(false);
   const dropdouwnRef = useRef<HTMLDivElement>(null);
 
@@ -20,6 +21,7 @@ const Dropdown = ({ children, toggleIcon }: Props) => {
       <div>
         <button className="toggle" onClick={() => setOpen((prev) => !prev)}>
           {toggleIcon}
+          <span>{title}</span>
         </button>
       </div>
       {open && (
@@ -49,10 +51,18 @@ const DropdownStyle = styled.div`
     svg,
     path,
     circle {
-      width: 2.4rem;
+      /* width: 2.4rem; */
+      width: 1.2rem;
       height: 2.4rem;
       fill: ${({ theme }) => theme.color.primary};
       color: ${({ theme }) => theme.color.primary};
+    }
+    gap: 0.3rem;
+    span {
+      display: inline-block;
+      width: 80px;
+      font-weight: bold;
+      font-size: 1rem;
     }
   }
 
@@ -64,6 +74,14 @@ const DropdownStyle = styled.div`
     border-radius: ${({ theme }) => theme.borderRadius.default};
     border: 1px solid ${({ theme }) => theme.color.primary};
     z-index: 100;
+
+    // 추가
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    white-space: nowrap;
+    right: 1rem;
+    padding: 0 0.5rem 0.5rem;
   }
 
   .rhombus::before {

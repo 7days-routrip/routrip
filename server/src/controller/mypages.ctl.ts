@@ -29,10 +29,10 @@ const postUserAllList = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
       const userId = req.user.id as number;
-      const sort = req.query?.sort as string;
+      console.log(userId);
       const pages = parseInt(req.query?.pages as string);
-      const listResult = await PostsService.reqAllPostsList(pages, undefined, userId, sort, undefined, "list");
-      const pageResult = await PostsService.reqAllPostsList(pages, undefined, userId, sort, undefined);
+      const listResult = await PostsService.reqAllPostsList(pages, undefined, userId, undefined, "list");
+      const pageResult = await PostsService.reqAllPostsList(pages, undefined, userId, undefined);
       if (listResult.success === false || pageResult.success === false) throw new Error(listResult.msg);
       res.status(StatusCodes.OK).json({
         posts: listResult.data,

@@ -1,18 +1,17 @@
 import styled from "styled-components";
-import { MypageStyle } from "./Mypage";
-import ProfileCard, { ProfileImageStyle, ProfileImageStyleProps } from "@/components/common/ProfileCard";
+import ProfileCard, { DEFAULT_IMAGE } from "@/components/common/ProfileCard";
 import { Profile } from "@/models/profile.model";
 import Title from "@/components/common/Title";
 import InputText from "@/components/common/Input";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/common/Button";
 import { Link } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/hooks/useAuth";
 import { nicknameRegex } from "@/constants/regexPatterns";
 import { profileNicknameOptions } from "@/config/registerOptions";
-import { useQuery } from "@tanstack/react-query";
 import { useProfile } from "@/hooks/useMypage";
+import { showAlert } from "@/utils/showAlert";
 
 const dummyData: Profile = {
   nickName: "김하늘누리",
@@ -31,7 +30,7 @@ interface ProfileEditProps {
 
 const ProfileEditPage = () => {
   const { userNicknameCheck } = useAuth();
-  const { profileInfo } = useProfile();
+  const { profileInfo, profileRefetch } = useProfile();
   const {
     register,
     handleSubmit,
@@ -43,7 +42,7 @@ const ProfileEditPage = () => {
   const [nicknameUniqueCheck, setNicknameUniqueCheck] = useState(false);
   const [imgFile, setImgFile] = useState<File | null>();
   const [preview, setPreview] = useState<string>("");
-  const [test, setTest] = useState<File | null>();
+  const [formImage, setFormImage] = useState<File | null>();
   const { userUpdate, userProfileImage } = useAuth();
 
   const checkNickname = () => {
@@ -65,46 +64,47 @@ const ProfileEditPage = () => {
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
     const file = event.target.files?.[0];
-    if (file) {
-      if (file && file.type.substring(0, 5) === "image") {
-        setImgFile(file);
-      } else {
-        setImgFile(null);
-      }
+    if (file && file.type.substring(0, 5) === "image") {
+      setImgFile(file);
+    } else {
+      setImgFile(null);
     }
   };
 
   const onSubmit = (data: ProfileEditProps) => {
-    if (preview === "" && data.nickname === "") return;
-
+    if (formImage === null && data.nickname === "") return;
+    if (data.nickname && !nicknameUniqueCheck) {
+      setError("nickname", { message: "닉네임 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
+      return;
+    }
     if (nicknameUniqueCheck) {
       userUpdate(data.nickname);
-    } else if (test) {
-      console.log(userProfileImage(test));
+    }
+    if (formImage) {
+      userProfileImage(formImage);
     }
     clearErrors;
-    // if (data.nickname && !nicknameUniqueCheck) {
-    //   setError("nickname", { message: "닉네임 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
-    //   return;
-    // }
-
-    // 프로필 변경이 있으며
-    // console.log(getValues().image);
+    showAlert("수정이 완료되었습니다.", "logo");
+    profileRefetch();
   };
 
   useEffect(() => {
     if (imgFile) {
-      setTest(imgFile);
+      setFormImage(imgFile);
       const reader = new FileReader();
       reader.onloadend = () => {
         const imgString = reader.result as string;
-        setPreview(imgString.substring(11));
+        setPreview(imgString);
       };
       reader.readAsDataURL(imgFile);
     } else {
       setPreview("");
     }
   }, [imgFile]);
+
+  useEffect(() => {
+    if (profileInfo?.profileImg) setPreview(profileInfo?.profileImg);
+  }, [profileInfo]);
   return (
     <ProfileEditPageStyle>
       <ProfileCard ProfileProps={profileInfo ? profileInfo : dummyData} />
@@ -115,7 +115,7 @@ const ProfileEditPage = () => {
             <div className="image-form">
               <div className="profile-image">
                 <Title size="medium">프로필 사진</Title>
-                <ProfileEditImageStyle $image={preview} />
+                <img className="profile-preveiw" src={preview ? preview : DEFAULT_IMAGE} alt="Uploaded File" />
               </div>
               <div className="image-btn">
                 <AttachFileLabel htmlFor="profile-image">사진 변경</AttachFileLabel>
@@ -232,7 +232,6 @@ const ProfileEditPageStyle = styled.div`
 
     .profile-form {
       display: flex;
-      /* justify-content: space-evenly; */
       width: 100%;
       align-items: center;
       flex-direction: column;
@@ -254,6 +253,14 @@ const ProfileEditPageStyle = styled.div`
         flex: 1;
         width: 100%;
       }
+    }
+
+    .profile-preveiw {
+      width: 200px;
+      height: 200px;
+      background-size: cover;
+      border-radius: 50%;
+      border: 1px solid ${({ theme }) => theme.color.borderGray};
     }
 
     .nickname-input {
@@ -287,14 +294,6 @@ const ProfileEditPageStyle = styled.div`
       margin-top: 1rem;
     }
 
-    .profile-resign {
-      /* margin-top: 2rem; */
-    }
-
-    .profile-resign > :last-child {
-      /* margin-right: 2rem; */
-    }
-
     .profile-resign > span,
     .profile-resign > a {
       color: ${({ theme }) => theme.color.commentGray};
@@ -324,12 +323,6 @@ const ProfileEditPageStyle = styled.div`
   }
 `;
 
-const ProfileEditImageStyle = styled(ProfileImageStyle)<ProfileImageStyleProps>`
-  width: 200px;
-  height: 200px;
-  background-size: cover;
-  border: 1px solid ${({ theme }) => theme.color.borderGray};
-`;
 const AttachFileLabel = styled.label`
   width: 80px;
   height: 40px;
