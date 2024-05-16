@@ -69,8 +69,6 @@ export const CardImageStyle = styled.div<CardImageStyleProps>`
   display: flex;
   width: ${({ $view }) => ($view === "grid" ? "320px" : "280px")};
   height: ${({ $view }) => ($view === "grid" ? "170px" : "150px")};
-  align-items: center;
-  justify-content: center;
   background-image: url(${({ $image }) => ($image ? $image : DEFAULT_IMAGE)});
   background-position: center;
   background-size: cover;

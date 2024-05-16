@@ -40,7 +40,7 @@
 }
 
 .htmlContainer {
-  font-size: 1.5rem;
+  font-size: 1rem;
   overflow-y: hidden !important;
 }
 
@@ -52,7 +52,6 @@
 .errorImage {
   width: 55px;
   height: 120px;
-  margin-bottom: -1.8rem;
 }
 
 @media screen and (min-width: 1081px) {

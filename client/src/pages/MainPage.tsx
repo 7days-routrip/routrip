@@ -28,6 +28,7 @@ const dummyPost: Post = {
   likesNum: "999",
   postsImg: "https://picsum.photos/seed/picsum/200/300",
   createdAt: "2024.03.12",
+  contents: "",
 };
 
 const MainPage = () => {

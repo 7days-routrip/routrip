@@ -139,8 +139,7 @@ export const MypageStyle = styled.div<MypageStyleProps>`
     grid-template-columns: ${({ $likePlaceView }) => ($likePlaceView ? "repeat(2, 1fr)" : "repeat(3, 1fr)")};
     gap: 0.5rem;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+    place-items: center;
   }
 
   @media (max-width: 768px) {
@@ -152,9 +151,9 @@ export const MypageStyle = styled.div<MypageStyleProps>`
 
 const MypageTapStyle = styled.div`
   display: flex;
-  justify-content: center;
   margin-bottom: 1rem;
   width: 100%;
+  justify-content: center;
   align-items: center;
   white-space: nowrap;
   border-bottom: 1px solid ${({ theme }) => theme.color.borderGray};
@@ -166,16 +165,9 @@ const MypageTapStyle = styled.div`
   @media (max-width: 768px) {
     display: grid;
     grid-template-columns: repeat(3, 1fr);
-    flex: 0;
-    width: auto;
-    justify-content: center;
-    align-items: center;
-    flex-wrap: wrap;
-    flex-basis: 0;
 
     > button {
-      flex: 0;
-      width: 120px;
+      width: 100%;
       font-weight: 600;
       padding: 0.6rem;
     }

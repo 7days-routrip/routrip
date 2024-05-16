@@ -16,7 +16,7 @@ export interface Post {
   likesNum: string;
   postsImg: string;
   createdAt: string;
-  conetents: string;
+  contents: string;
 }
 
 export interface Pagination {

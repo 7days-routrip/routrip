@@ -67,3 +67,31 @@ export const getBookmarkPlaces = async () => {
     throw err;
   }
 };
+
+// 장소 찜하기 요청
+export const requestBookmark = async (id: string) => {
+  try {
+    await httpClient.post(`/likes/places/${id}`);
+  } catch (err: any) {
+    if (err.response.status === 409) {
+      return;
+    }
+
+    console.error(err);
+    throw err;
+  }
+};
+
+// 장소 찜하기 취소 요청
+export const deleteBookmark = async (id: string) => {
+  try {
+    await httpClient.delete(`/likes/places/${id}`);
+  } catch (err: any) {
+    if (err.response.status === 409) {
+      return;
+    }
+
+    console.error(err);
+    throw err;
+  }
+};

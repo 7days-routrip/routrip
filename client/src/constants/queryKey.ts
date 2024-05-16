@@ -8,4 +8,5 @@ export const queryKey = {
   bestPosts: "mainBestPosts",
   homePosts: "homePosts",
   abroadPosts: "abroadPosts",
+  placeDetails: "placeDetails",
 };
