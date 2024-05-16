@@ -15,11 +15,11 @@ interface Props {
 
 const DaySchedule = ({ dayIdx, schedulePlaces, isDragDrop = false }: Props) => {
   const { setMarkerType } = useShowMarkerTypeStore();
-  const { updateMapBounds } = useMapStore();
+  const { googleMap, updateMapBounds } = useMapStore();
 
   const handleOnClickDay = useCallback(() => {
     setMarkerType("day", dayIdx);
-    updateMapBounds(schedulePlaces);
+    updateMapBounds(googleMap, schedulePlaces);
   }, [dayIdx, schedulePlaces]);
 
   if (isDragDrop) {

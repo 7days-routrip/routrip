@@ -45,9 +45,10 @@ export const useAuth = () => {
     try {
       const loginRes = await authLogin(data);
       const newAccessToken = loginRes.headers["authorization"];
+      const token = newAccessToken.split(" ")[1];
       const userName = loginRes.data.nickName;
       const userId = loginRes.data.userId;
-      storeLogin(newAccessToken, userName, userId);
+      storeLogin(token, userName, userId);
       navigate("/");
     } catch (error: any) {
       const errorResponse = error.response;

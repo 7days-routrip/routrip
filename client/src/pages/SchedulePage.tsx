@@ -22,6 +22,7 @@ import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
 import { onDragDropEnd } from "@/utils/onDragDropEnd";
 import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
+import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";
 
 const SchedulePage = () => {
   const [title, setTitle] = useState<string>("");
@@ -34,17 +35,18 @@ const SchedulePage = () => {
   const { setMarkerType } = useShowMarkerTypeStore();
   const { setNearPlaces } = useNearPlacesStore();
   const { setSearchPlaces } = useSearchPlacesStore();
+  const { setBookmarkPlaces } = useBookmarkPlacesStore();
   const { setSearchKeywordToServer, setSearchKeywordToGoogle } = useSearchKeywordStore();
 
   const navigate = useNavigate();
 
   const resetStore = () => {
-    // 북마크한 상태 제외한 나머지 일정 관련 전역 스토어 모두 초기화
     setAddPlaces([]);
     setMarkerType("searchApi");
     setNearPlaces([]);
     setDayPlaces([[]]);
     setSearchPlaces([]);
+    setBookmarkPlaces([]);
     setSearchKeywordToServer("");
     setSearchKeywordToGoogle("");
   };
@@ -67,7 +69,7 @@ const SchedulePage = () => {
       showConfirm(
         "일정 등록이 완료되었습니다.\n등록된 일정 리스트를 확인하러 갈까요?",
         () => {
-          navigate(`/mypage?tab=schedules`);
+          navigate(`/mypage?tag=schedules`);
           resetStore();
         },
         () => {
@@ -92,6 +94,7 @@ const SchedulePage = () => {
       e.preventDefault();
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
+    resetStore();
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);

@@ -37,12 +37,10 @@
   color: #333333;
   font-size: 1.5rem;
   font-weight: bold;
-  font-family: "Nanum Pen Script";
 }
 
 .htmlContainer {
   font-size: 1.5rem;
-  font-family: "Nanum Pen Script";
   overflow-y: hidden !important;
 }
 
