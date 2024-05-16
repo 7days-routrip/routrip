@@ -9,11 +9,10 @@ import { Button } from "@/components/common/Button";
 import PostCard from "@/components/common/postCard";
 import CommentCard from "@/components/common/Comment";
 import LikePlaceCard from "@/components/common/LikePlaceCard";
-import { Comment } from "@/models/comment.model";
 import ProfileCard from "@/components/common/ProfileCard";
 import { QUERYSTRING } from "@/constants/querystring";
 
-const TAPLIST = [
+const TAGLIST = [
   { name: "일정 모음", queryValue: "schedules" },
   { name: "내 여행글", queryValue: "posts" },
   { name: "내 댓글", queryValue: "comments" },
@@ -33,7 +32,7 @@ const dummyData: Profile = {
 };
 
 const Mypage = () => {
-  const [activeTap, setActiveTap] = useState([true, false, false, false, false]);
+  const [activeTag, setActiveTag] = useState([true, false, false, false, false]);
   const { schedules, isEmptySchedules, scheduleRefetch } = useSchedule();
   const { posts, isEmptyPosts, postsRefetch } = usePost();
   const { comments, isEmptyComments, commentsRefetch } = useComment();
@@ -42,11 +41,11 @@ const Mypage = () => {
   const { profileInfo, isProfileLoding } = useProfile();
   const [searchParams, setSearchParams] = useSearchParams();
 
-  const handleMypageTap = (idx: number, tag: string) => {
+  const handleMypageTag = (idx: number, tag: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
-    const newActiveTap = new Array(5).fill(false);
-    newActiveTap[idx] = true;
-    setActiveTap(newActiveTap);
+    const newActiveTag = new Array(5).fill(false);
+    newActiveTag[idx] = true;
+    setActiveTag(newActiveTag);
     if (tag === null) {
       newSearchParams.delete(QUERYSTRING.TAG);
     } else {
@@ -75,23 +74,23 @@ const Mypage = () => {
   useEffect(() => {
     const params = Object.fromEntries(searchParams);
     for (let i = 0; i < 5; i++) {
-      if (TAPLIST[i].queryValue === params.tag) {
-        handleMypageTap(i, params.tag);
+      if (TAGLIST[i].queryValue === params.tag) {
+        handleMypageTag(i, params.tag);
       }
     }
   }, [location.search]);
 
   return (
-    <MypageStyle $commentsView={activeTap[2]} $likePlaceView={activeTap[4]}>
+    <MypageStyle $commentsView={activeTag[2]} $likePlaceView={activeTag[4]}>
       <ProfileCard ProfileProps={!isProfileLoding && profileInfo ? profileInfo : dummyData} />
       <div className="main">
         <MypageTapStyle>
-          {TAPLIST.map((item, idx) => (
+          {TAGLIST.map((item, idx) => (
             <Button
               $radius="default"
-              $scheme={activeTap[idx] ? "primary" : "normal"}
+              $scheme={activeTag[idx] ? "primary" : "normal"}
               $size="large"
-              onClick={() => handleMypageTap(idx, item.queryValue)}
+              onClick={() => handleMypageTag(idx, item.queryValue)}
               key={idx}
             >
               {item.name}
@@ -99,19 +98,19 @@ const Mypage = () => {
           ))}
         </MypageTapStyle>
         <div className="contents">
-          {!isEmptySchedules && activeTap[0]
+          {!isEmptySchedules && activeTag[0]
             ? schedules?.map((item, idx) => <ScheduleCard scheduleProps={item} key={idx} view="grid" />)
             : null}
-          {!isEmptyPosts && activeTap[1]
+          {!isEmptyPosts && activeTag[1]
             ? posts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
             : null}
-          {!isEmptyComments && activeTap[2]
+          {!isEmptyComments && activeTag[2]
             ? comments?.map((item, idx) => <CommentCard CommentProps={item} key={idx} />)
             : null}
-          {!isEmptyLikePosts && activeTap[3]
+          {!isEmptyLikePosts && activeTag[3]
             ? likePosts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
             : null}
-          {!isEmptyLikePlace && activeTap[4]
+          {!isEmptyLikePlace && activeTag[4]
             ? likePlaces?.map((item, idx) => <LikePlaceCard PlaceProps={item} key={idx} />)
             : null}
         </div>

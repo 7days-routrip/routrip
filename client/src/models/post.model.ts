@@ -5,11 +5,11 @@ export interface Post {
   author: string;
   profileImg: string;
   continent: {
-    id: number;
+    id: string;
     name: string;
   };
   country: {
-    id: number;
+    id: string;
     name: string;
   };
   commentsNum: string;
