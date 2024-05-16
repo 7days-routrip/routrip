@@ -16,7 +16,7 @@ import { useProfile } from "@/hooks/useMypage";
 
 const dummyData: Profile = {
   nickName: "김하늘누리",
-  profile: "",
+  profileImg: "",
   journeysNum: 5,
   postsNum: 5,
   commentsNum: 88,
@@ -82,6 +82,7 @@ const ProfileEditPage = () => {
     } else if (test) {
       console.log(userProfileImage(test));
     }
+    clearErrors;
     // if (data.nickname && !nicknameUniqueCheck) {
     //   setError("nickname", { message: "닉네임 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
     //   return;
@@ -89,8 +90,6 @@ const ProfileEditPage = () => {
 
     // 프로필 변경이 있으며
     // console.log(getValues().image);
-
-    clearErrors;
   };
 
   useEffect(() => {
@@ -116,7 +115,7 @@ const ProfileEditPage = () => {
             <div className="image-form">
               <div className="profile-image">
                 <Title size="medium">프로필 사진</Title>
-                <ProfileEditImageStyle $image={profileInfo?.profile ? profileInfo?.profile : preview} />
+                <ProfileEditImageStyle $image={preview} />
               </div>
               <div className="image-btn">
                 <AttachFileLabel htmlFor="profile-image">사진 변경</AttachFileLabel>
@@ -181,8 +180,24 @@ const ProfileEditPage = () => {
   );
 };
 
-const ProfileEditPageStyle = styled(MypageStyle)`
+const ProfileEditPageStyle = styled.div`
   width: 100%;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-around;
+  align-items: center;
+
+  .main {
+    width: 100%;
+  }
+
+  .contents {
+    display: flex;
+    gap: 0.5rem;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+  }
 
   a {
     color: ${({ theme }) => theme.color.white};

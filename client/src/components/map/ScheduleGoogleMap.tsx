@@ -33,6 +33,8 @@ const createMarkers = (
   onClickMarker: (place: SelectedPlace | Place) => void,
   iconUrl: string,
 ) => {
+  if (!places || places.length === 0) return;
+
   return places.map((place, i) => (
     <div key={i}>
       <MarkerF
@@ -54,7 +56,7 @@ const ScheduleGoogleMap = () => {
     language: "ko",
   });
 
-  const { googleMap, setGoogleMap, updateMapBounds } = useMapStore();
+  const { googleMap, mapCenter, setCenter, setGoogleMap, updateMapBounds } = useMapStore();
   const { addPlaces } = useAddPlaceStore();
   const { markerType, dayIndex, clickMarker, setClickMarker } = useShowMarkerTypeStore();
   const { dayPlaces } = useDayPlaceStore();
@@ -80,8 +82,8 @@ const ScheduleGoogleMap = () => {
   };
 
   const handleChanged = useCallback(() => {
-    if (googleMap && googleMap.getCenter()) {
-      googleMap.setCenter({
+    if (googleMap) {
+      setCenter({
         lat: googleMap.getCenter()?.lat() || center.lat,
         lng: googleMap.getCenter()?.lng() || center.lng,
       });
@@ -107,6 +109,8 @@ const ScheduleGoogleMap = () => {
       const bounds = googleMap.getBounds();
       if (bounds && !bounds.contains(place.location)) {
         googleMap.panTo(place.location); // 2. 마커 위치로 지도 이동
+        const newCenter = { lat: place.location.lat, lng: place.location.lng };
+        setCenter(newCenter);
       }
     }
   };
@@ -153,13 +157,13 @@ const ScheduleGoogleMap = () => {
     // 지도에 표시할 마커가 전부 보이도록 지도 경계선을 계산
     if (!googleMap) return;
 
-    updateMapBounds(getPlaceArr());
+    updateMapBounds(googleMap, getPlaceArr());
   }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlaces, nearPlaces, bookmarkPlaces]);
 
   return isLoaded ? (
     <GoogleMap
       mapContainerStyle={containerStyle}
-      center={center}
+      center={mapCenter}
       zoom={6}
       onLoad={onLoad}
       onUnmount={onUnmount}

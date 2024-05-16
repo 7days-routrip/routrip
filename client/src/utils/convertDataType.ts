@@ -24,6 +24,12 @@ export const convertScheduleDetails = (data: ScheduleDetails): ScheduleDetailsWi
   };
 };
 
+// ScheduleDetailsWithUuid -> SelectedPlace[][]
+export const convertScheduleDetailsWithUuidToDayPlaces = (data: ScheduleDetailsWithUuid): SelectedPlace[][] => {
+  const dayPlacesData: SelectedPlace[][] = data.days.map((item) => item.spots);
+  return dayPlacesData;
+};
+
 // PlaceDetails[] -> 각 요소의 location 필드를 number 타입으로
 export const convertBookmarkPlaces = (data: PlaceDetails[]): Place[] => {
   return data.map((item) => ({

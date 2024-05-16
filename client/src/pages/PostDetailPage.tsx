@@ -27,17 +27,22 @@ const PostDetailPage = () => {
     fill: ${({ theme }) => theme.color.primary};
   `;
 
-  useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        console.log(`ID: ${postId}`);
-        const response = await httpClient.get(`/posts/${postId}`);
-        console.log(response.data);
-        setPost(response.data);
-      } catch (error) {
-        console.error("Error fetching post:", error);
-      }
-    };
+useEffect(() => {
+  const fetchPost = async () => {
+    try {
+      console.log(`ID: ${postId}`);
+      const response = await httpClient.get(`/posts/${postId}`);
+      console.log("Fetched data:", response.data);
+      setPost(response.data);
+    } catch (error) {
+      console.error("Error fetching post:", error);
+    }
+  };
+
+  if (postId !== undefined) {
+    fetchPost();
+  }
+}, [postId]);
 
     if (postId !== undefined) {
       fetchPost();
