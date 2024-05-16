@@ -23,6 +23,7 @@ import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
 import { onDragDropEnd } from "@/utils/onDragDropEnd";
 import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
 import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";
+import { useMapStore } from "@/stores/mapStore";
 
 const SchedulePage = () => {
   const [title, setTitle] = useState<string>("");
@@ -37,10 +38,12 @@ const SchedulePage = () => {
   const { setSearchPlaces } = useSearchPlacesStore();
   const { setBookmarkPlaces } = useBookmarkPlacesStore();
   const { setSearchKeywordToServer, setSearchKeywordToGoogle } = useSearchKeywordStore();
+  const { mapCenter, setCenter } = useMapStore();
 
   const navigate = useNavigate();
 
   const resetStore = () => {
+    setCenter({ lat: 38, lng: 128 });
     setAddPlaces([]);
     setMarkerType("searchApi");
     setNearPlaces([]);
@@ -90,11 +93,13 @@ const SchedulePage = () => {
 
   useEffect(() => {
     // 새로고침 누를 시, confirm창 보이도록
+    resetStore();
+    console.log(mapCenter);
+
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();
     };
     window.addEventListener("beforeunload", handleBeforeUnload);
-    resetStore();
 
     return () => {
       window.removeEventListener("beforeunload", handleBeforeUnload);
@@ -142,12 +147,24 @@ const SchedulePage = () => {
         <div className="trip-schedule-container">
           <div className="place-select-form">
             <div className="input-data">
-              <input
-                className="input-title"
-                type="text"
-                placeholder="여행 일정 제목을 입력해주세요."
-                onChange={(e) => handleInputChange(e)}
-              />
+              <div className="title-schedule-btn">
+                <input
+                  className="input-title"
+                  type="text"
+                  placeholder="여행 일정 제목을 입력해주세요."
+                  onChange={(e) => handleInputChange(e)}
+                />
+                <Button
+                  className="schedule-btn"
+                  $size="medium"
+                  $scheme="primary"
+                  $radius="default"
+                  onClick={handleSchedule}
+                >
+                  일정 등록
+                </Button>
+              </div>
+
               <div className="input-container">
                 <fieldset className="input-data-container">
                   <legend>여행 시작일</legend>
@@ -181,15 +198,6 @@ const SchedulePage = () => {
             </PlaceTabs>
           </div>
           <div className="day-schedule">
-            <Button
-              className="schedule-btn"
-              $size="medium"
-              $scheme="primary"
-              $radius="default"
-              onClick={handleSchedule}
-            >
-              일정 등록
-            </Button>
             <div className="days">
               {duration > 0 &&
                 dayPlaces.map((data, i) => <DaySchedule key={i} dayIdx={i} schedulePlaces={data} isDragDrop={true} />)}
@@ -259,10 +267,24 @@ export const SchedulePageStyle = styled.div`
       width: 100%;
       gap: 0.5rem;
 
+      .title-schedule-btn {
+        display: flex;
+        gap: 0.5rem;
+
+        button {
+          padding: 0.5rem 0.8rem;
+        }
+      }
+
+      input::placeholder {
+        font-size: ${({ theme }) => theme.fontSize.xsmall};
+      }
+
       .input-title,
       .input-date {
         flex: 1;
         width: 100%;
+
         border-radius: ${({ theme }) => theme.borderRadius.default};
         border: 1px solid ${({ theme }) => theme.color.borderGray};
         font-size: ${({ theme }) => theme.fontSize.small};
