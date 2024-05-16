@@ -32,9 +32,9 @@ const reqPicksList = async (userId: number) => {
       placeImg: place.place.img ? place.place.img : "",
     };
   });
-
   return { success: true, data: returnData };
 };
+
 const reqPicksInsertData = async (userId: number, placeId: string) => {
   const pickRepo = AppDataSource.getRepository(Picks);
   const pick = {
@@ -68,8 +68,14 @@ const reqLikesList = async (userId: number) => {
         createAt: like.post.createdAt === like.post.updatedAt ? like.post.createdAt : like.post.updatedAt,
         author: like.user.nickName,
         profileImg: like.user.profileImg,
-        continent: like.post.continent.name,
-        county: like.post.country.name,
+        continent: {
+          id: like.post.continent.id,
+          name: like.post.continent.name,
+        },
+        country: {
+          id: like.post.country.id,
+          name: like.post.country.name,
+        },
         likesNum: likeNum,
         commentsNum: commnetNum,
       };
