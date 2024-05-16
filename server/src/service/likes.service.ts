@@ -11,17 +11,25 @@ const reqPicksList = async (userId: number) => {
   });
   if (!picksResult || picksResult.length === 0) return { success: false, msg: "does not exist Like Place" };
   const returnData = picksResult?.map((place) => {
-    const locationSplit = place.place.location.split(",");
+    const [lat, lng] = place.place.location;
+    const open = [];
+    const openSplit = place.place.openingHours.split(",");
+    for (let i = 0; i < openSplit.length; i++) {
+      open.push(openSplit[i].trim());
+    }
+
     return {
       id: place.place.id,
       placeName: place.place.name,
       address: place.place.address,
       tel: place.place.tel,
       location: {
-        lat: locationSplit[0].trim(),
-        lng: locationSplit[1].trim(),
+        lat: lat,
+        lng: lng,
       },
-      placeImg: place.place.img,
+      openingHours: open,
+      siteUrl: place.place.siteUrl ? place.place.siteUrl : "",
+      placeImg: place.place.img ? place.place.img : "",
     };
   });
 
@@ -54,8 +62,10 @@ const reqLikesList = async (userId: number) => {
       const likeNum = await getTotalLike(like.post.id);
       const commnetNum = await getTotalComment(like.post.id);
       return {
+        id: like.post.id,
         title: like.post.title,
         date: (await setDateFromat(like.post.startDate)) + "-" + (await setDateFromat(like.post.endDate)),
+        createAt: like.post.createdAt === like.post.updatedAt ? like.post.createdAt : like.post.updatedAt,
         author: like.user.nickName,
         profileImg: like.user.profileImg,
         continent: like.post.continent.name,

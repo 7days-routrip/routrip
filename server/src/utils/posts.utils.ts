@@ -9,9 +9,7 @@ export const setAreaType = async (area: string) => {
 };
 
 export const setDateFromat = async (date: Date | string) => {
-  const newDate = new Date(date);
-  const years = newDate.getFullYear();
-  const month = newDate.getMonth() - 1;
-  const days = newDate.getDate();
-  return `${years}.${month}.${days}`;
+  if (typeof date === "string") return date.replaceAll("-", ".");
+  const newDate = new Date(date).toISOString();
+  return newDate.split("T")[0].replaceAll("-", ".");
 };

@@ -53,16 +53,16 @@ const postAllList = async (req: Request, res: Response) => {
       keyword: query?.keyword as string,
     };
     const listResult = await PostsService.reqAllPostsList(pages, area, undefined, searchData, "list");
-    const pageResult = await PostsService.reqAllPostsList(pages, area, undefined, searchData);
-    if (listResult.success === false || pageResult.success === false) throw new Error(listResult.msg);
+    if (listResult.success === false) throw new Error(listResult.msg);
     res.status(StatusCodes.OK).json({
       posts: listResult.data,
       pagination: {
         page: pages,
-        totalPosts: pageResult.count,
+        totalPosts: listResult.count,
       },
     });
   } catch (err) {
+    console.log(err);
     if (err instanceof Error) {
       if (err.message === "login required")
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
