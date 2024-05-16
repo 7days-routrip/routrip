@@ -28,6 +28,7 @@ const LikePlaceCard = ({ PlaceProps }: Props) => {
 };
 
 const LikePlaceCardStyle = styled(CardStyle)`
+  cursor: pointer;
   max-width: 500px;
   height: 130px;
   display: flex;

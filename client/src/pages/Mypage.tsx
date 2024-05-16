@@ -139,8 +139,7 @@ export const MypageStyle = styled.div<MypageStyleProps>`
     grid-template-columns: ${({ $likePlaceView }) => ($likePlaceView ? "repeat(2, 1fr)" : "repeat(3, 1fr)")};
     gap: 0.5rem;
     flex-direction: column;
-    justify-content: flex-start;
-    align-items: center;
+    place-items: center;
   }
 
   @media (max-width: 768px) {
