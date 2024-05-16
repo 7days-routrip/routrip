@@ -133,13 +133,24 @@ const ScheduleEditPage = () => {
         <div className="trip-schedule-container">
           <div className="place-select-form">
             <div className="input-data">
-              <input
-                className="input-title"
-                type="text"
-                placeholder="여행 일정 제목을 입력해주세요."
-                value={title}
-                onChange={(e) => handleInputChange(e)}
-              />
+              <div className="title-schedule-btn">
+                <input
+                  className="input-title"
+                  type="text"
+                  placeholder="여행 일정 제목을 입력해주세요."
+                  value={title}
+                  onChange={(e) => handleInputChange(e)}
+                />
+                <Button
+                  className="schedule-btn"
+                  $size="medium"
+                  $scheme="primary"
+                  $radius="default"
+                  onClick={handleSchedule}
+                >
+                  수정 완료
+                </Button>
+              </div>
               <div className="input-container">
                 <fieldset className="input-data-container">
                   <legend>여행 시작일</legend>
@@ -191,15 +202,6 @@ const ScheduleEditPage = () => {
             </PlaceTabs>
           </div>
           <div className="day-schedule">
-            <Button
-              className="schedule-btn"
-              $size="medium"
-              $scheme="primary"
-              $radius="default"
-              onClick={handleSchedule}
-            >
-              수정 완료
-            </Button>
             <div className="days">
               {duration > 0 &&
                 dayPlaces.map((data, i) => <DaySchedule key={i} dayIdx={i} schedulePlaces={data} isDragDrop={true} />)}
