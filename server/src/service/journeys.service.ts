@@ -8,16 +8,16 @@ import { Users } from "@/models/users.model";
 import { Day } from "@/types/journeys.types";
 import { Request, Response } from "express";
 
+const journeysRepo = AppDataSource.getRepository(Journeys);
+const routeDaysRepo = AppDataSource.getRepository(RouteDays);
+const daySeqRepo = AppDataSource.getRepository(DaySeq);
+
 const getJourneysList = async (userId: number) => {
   const results = await journeysRepo.find({ where: { user: { id: userId } } });
   if (!results.length) throw new Error("등록하신 일정이 없습니다.");
 
   return results.sort((a, b) => b.id - a.id);
 };
-
-const journeysRepo = AppDataSource.getRepository(Journeys);
-const routeDaysRepo = AppDataSource.getRepository(RouteDays);
-const daySeqRepo = AppDataSource.getRepository(DaySeq);
 
 const getJourneyDetail = async (journeyId: number) => {
   const journey = await journeysRepo.findOneBy({ id: journeyId });

@@ -118,11 +118,12 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
   } else {
     likedPost = false;
   }
-  console.log(postData);
   const likesNum = await getPostLikes(postId);
   const commentsNum = await getPostComments(postId);
-  const startDate = await setDateFromat(postData.journey.startDate);
-  const endDate = await setDateFromat(postData.journey.endDate);
+  const startDate = await setDateFromat(postData.startDate);
+  const endDate = await setDateFromat(postData.endDate);
+  const createAt = await setDateFromat(postData.createdAt);
+  const updatedAt = await setDateFromat(postData.updatedAt);
   const days = await routeDaysRepo.find({ where: { route: { id: postData.journey.route.id } } });
   const responsePostsData = await Promise.all(
     days.map(async (day) => {
@@ -144,7 +145,7 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
                 name: spot.place.name,
                 tel: spot.place.tel,
                 address: spot.place.address,
-                openingHours: open,
+                openingHours: open[0] === "" ? [] : open,
               };
             }),
       };
@@ -157,6 +158,7 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
     conetents: postData.content,
     totalExpense: postData.expense,
     date: startDate + "-" + endDate,
+    createAt: createAt === updatedAt ? createAt : updatedAt,
     continent: {
       id: postData.continent.id,
       name: postData.continent.name,
@@ -229,6 +231,7 @@ const postsListReturnData = async (post: Posts) => {
     id: post.id,
     title: post.title,
     date: startDate + "-" + endDate,
+    createAt: post.createdAt === post.updatedAt ? post.createdAt : post.updatedAt,
     author: post.user.nickName,
     profileImg: post.user.profileImg === null ? "" : post.user.profileImg,
     continent: {
