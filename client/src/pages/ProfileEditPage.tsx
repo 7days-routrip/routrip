@@ -11,6 +11,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { nicknameRegex } from "@/constants/regexPatterns";
 import { profileNicknameOptions } from "@/config/registerOptions";
 import { useProfile } from "@/hooks/useMypage";
+import { showAlert } from "@/utils/showAlert";
 
 const dummyData: Profile = {
   nickName: "김하늘누리",
@@ -29,7 +30,7 @@ interface ProfileEditProps {
 
 const ProfileEditPage = () => {
   const { userNicknameCheck } = useAuth();
-  const { profileInfo } = useProfile();
+  const { profileInfo, profileRefetch } = useProfile();
   const {
     register,
     handleSubmit,
@@ -83,6 +84,8 @@ const ProfileEditPage = () => {
       userProfileImage(formImage);
     }
     clearErrors;
+    showAlert("수정이 완료되었습니다.", "logo");
+    profileRefetch();
   };
 
   useEffect(() => {

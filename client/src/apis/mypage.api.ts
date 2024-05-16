@@ -82,7 +82,6 @@ export const fetchLikePost = async () => {
 };
 
 // 찜한 장소
-
 export const fetchLikePlace = async () => {
   try {
     const { data } = await httpClient.get<PlaceDetails[]>("/likes/places");
