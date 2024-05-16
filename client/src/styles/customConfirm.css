@@ -35,12 +35,12 @@
 
 .title {
   color: #333333;
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   font-weight: bold;
 }
 
 .htmlContainer {
-  font-size: 1.5rem;
+  font-size: 1.15rem;
   overflow-y: hidden !important;
 }
 
@@ -51,7 +51,7 @@
 
 .errorImage {
   width: 55px;
-  height: 120px;
+  height: 100px;
   margin-bottom: -1.8rem;
 }
 
@@ -70,7 +70,7 @@
   }
 
   .errorImage {
-    width: 70px;
-    height: 140px;
+    width: 60px;
+    height: 110px;
   }
 }

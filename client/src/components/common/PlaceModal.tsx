@@ -71,8 +71,7 @@ const PlaceModal = ({ placeId, onClosed }: Props) => {
               $radius="default"
               onClick={handleBookmark}
             >
-              <Icons.BookmarkIcon />
-              찜하기
+              <Icons.CheckIcon /> <span>찜하기</span>
             </Button>
           </div>
           <div className="place-image">
