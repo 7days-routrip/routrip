@@ -5,12 +5,12 @@ export interface Post {
   date: string;
   author: string;
   profileImg: string;
-  continental: {
-    id: string;
+  continent: {
+    id: number;
     name: string;
   };
   country: {
-    id: string;
+    id: number;
     name: string;
   };
   commentsNum: string;
