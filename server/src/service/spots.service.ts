@@ -134,6 +134,9 @@ const search = async (keyword: string, zoom: number, lat: number, lng: number): 
       filteredPlaces.push(place);
     }
   });
+  if (filteredPlaces.length === 0) {
+    throw new Error("등록된 장소가 없습니다.\n신규 장소를 등록해 주세요.");
+  }
   return filteredPlaces;
 };
 

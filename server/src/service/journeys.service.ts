@@ -92,7 +92,7 @@ const register = async (title: string, startDate: Date, endDate: Date, days: Day
           throw new Error("장소를 찾을 수 없습니다."); // 없는 장소를 추가할 경우 로직구현해야함
         }
 
-        if (dayCnt == 0 || seqCnt == 0) thumbnail = foundPlace.img;
+        if (dayCnt === 0 && seqCnt === 0) thumbnail = foundPlace.img;
         //save daySeq
         let daySeq = new DaySeq();
         daySeq.routeDay = savedRouteDay;
@@ -136,7 +136,7 @@ const modify = async (id: number, title: string, startDate: Date, endDate: Date,
     const deletedJourneyResult = await transactionalEntityManager.getRepository(Journeys).delete(id);
     const deletedRouteResult = await transactionalEntityManager.getRepository(Routes).delete(foundRouteId);
 
-    if (deletedJourneyResult.affected == 0 || deletedRouteResult.affected == 0)
+    if (deletedJourneyResult.affected === 0 || deletedRouteResult.affected === 0)
       throw new Error("일정이 정상적으로 삭제되지 않았습니다.");
 
     //일정 다시 추가 부분
@@ -166,7 +166,7 @@ const modify = async (id: number, title: string, startDate: Date, endDate: Date,
           throw new Error("장소를 찾을 수 없습니다."); // 없는 장소를 추가할 경우 로직구현해야함
         }
 
-        if (dayCnt == 0 || seqCnt == 0) thumbnail = foundPlace.img;
+        if (dayCnt === 0 && seqCnt === 0) thumbnail = foundPlace.img;
         //save daySeq
         let daySeq = new DaySeq();
         daySeq.routeDay = savedRouteDay;
@@ -210,7 +210,7 @@ const remove = async (id: number) => {
     const deletedJourneyResult = await transactionalEntityManager.getRepository(Journeys).delete(id);
     const deletedRouteResult = await transactionalEntityManager.getRepository(Routes).delete(foundRouteId);
 
-    if (deletedJourneyResult.affected == 0 || deletedRouteResult.affected == 0)
+    if (deletedJourneyResult.affected === 0 || deletedRouteResult.affected === 0)
       throw new Error("일정이 정상적으로 삭제되지 않았습니다.");
   });
 };
