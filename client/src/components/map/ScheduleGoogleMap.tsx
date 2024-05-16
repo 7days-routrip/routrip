@@ -33,6 +33,8 @@ const createMarkers = (
   onClickMarker: (place: SelectedPlace | Place) => void,
   iconUrl: string,
 ) => {
+  if (!places || places.length === 0) return;
+
   return places.map((place, i) => (
     <div key={i}>
       <MarkerF
