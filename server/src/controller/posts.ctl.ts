@@ -52,8 +52,8 @@ const postAllList = async (req: Request, res: Response) => {
       filter: query?.filter as string,
       keyword: query?.keyword as string,
     };
-    const listResult = await PostsService.reqAllPostsList(pages, area, undefined, sort, searchData, "list");
-    const pageResult = await PostsService.reqAllPostsList(pages, area, undefined, sort, searchData);
+    const listResult = await PostsService.reqAllPostsList(pages, area, undefined, searchData, "list");
+    const pageResult = await PostsService.reqAllPostsList(pages, area, undefined, searchData);
     if (listResult.success === false || pageResult.success === false) throw new Error(listResult.msg);
     res.status(StatusCodes.OK).json({
       posts: listResult.data,
@@ -152,8 +152,8 @@ const postHotList = async (req: Request, res: Response) => {
   try {
     const listResult = await PostsService.reqHotPosts();
     if (!listResult.success) throw new Error(listResult.msg);
-    const { posts } = listResult;
-    res.status(StatusCodes.OK).json(posts);
+    const { hot10Data } = listResult;
+    res.status(StatusCodes.OK).json(hot10Data);
   } catch (err) {
     if (err instanceof Error) {
       if (err.message === "empty list of posts")
