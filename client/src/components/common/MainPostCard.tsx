@@ -3,9 +3,10 @@ import { CardImageStyle } from "./postCard";
 import Title from "./Title";
 import icons from "@/icons/icons";
 import { Link } from "react-router-dom";
+import { Post } from "@/models/post.model";
 import { BestPosts } from "@/apis/main.api";
 interface Props {
-  PostPops: BestPosts;
+  PostPops: Post | BestPosts;
 }
 
 const MainPostCard = ({ PostPops }: Props) => {
@@ -20,7 +21,7 @@ const MainPostCard = ({ PostPops }: Props) => {
           </div>
           <div className="items">
             <div className="title">
-              <div className="category">[{PostPops.country}]</div>
+              <div className="category">[{PostPops.country.name}]</div>
               <Title size="small">{PostPops.title}</Title>
             </div>
             <div className="icon">
