@@ -17,5 +17,5 @@ export interface PlaceDetails extends Place {
   tel: string;
   openingHours: string[];
   siteUrl: string;
-  isPicked: boolean; // 장소 찜 했는지 여부
+  isPicked?: boolean; // 장소 찜 했는지 여부
 }
