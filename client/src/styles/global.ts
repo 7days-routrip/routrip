@@ -4,7 +4,7 @@ import "sanitize.css"; // global css로 sanitize.css를 적용
 // 프로젝트에 적용할 global style
 export const GlobalStyle = createGlobalStyle`
   * {
-    font-family: "Noto Sans", "Roboto", sans-serif;
+    font-family: "Noto Sans", "Roboto", sans-serif, "Nanum Pen Script";
   }
 
   html {
