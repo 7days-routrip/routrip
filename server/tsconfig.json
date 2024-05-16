@@ -11,7 +11,7 @@
     "module": "CommonJS",
     "moduleResolution": "node",
     "isolatedModules": true,
-    "outDir": "./build",
+    "outDir": "./dist",
     "baseUrl": "./",
     "emitDecoratorMetadata": true,
     "experimentalDecorators": true,
@@ -19,6 +19,9 @@
     "paths": {
       "@/*": ["src/*"]
     }
+  },
+  "ts-node": {
+    "require": ["tsconfig-paths/register"]
   },
   "include": ["src", "__mocks__"],
   "exclude": ["src/**/*.test.ts", "src/**/__mocks__/*.ts"] // 건너 뛰어야 하는 파일
