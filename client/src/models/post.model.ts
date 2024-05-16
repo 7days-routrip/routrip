@@ -5,8 +5,14 @@ export interface Post {
   date: string;
   author: string;
   profileImg: string;
-  continental: string;
-  country: string;
+  continental: {
+    id: string;
+    name: string;
+  };
+  country: {
+    id: string;
+    name: string;
+  };
   commentsNum: string;
   likesNum: string;
   postsImg: string;
