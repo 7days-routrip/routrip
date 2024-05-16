@@ -2,10 +2,10 @@ import styled from "styled-components";
 import logo from "../../../public/assets/images/logo-header.png";
 import icons from "../../icons/icons";
 import { Link } from "react-router-dom";
-import { useState } from "react";
 import { theme } from "../../styles/theme";
 import { useAuthStore } from "@/stores/authStore";
 import { useAuth } from "@/hooks/useAuth";
+import Dropdown from "../common/Dropdown";
 
 interface Props {
   isFull?: boolean;
@@ -47,10 +47,28 @@ const Header = ({ isFull = false }: Props) => {
               <LogoutIcon color={theme.color.primary} />
               <span>로그아웃</span>
             </IconText>
-            <IconText to="/mypage" color="primary">
-              <MyPageIcon color={theme.color.primary} />
-              <span>마이페이지</span>
-            </IconText>
+            <div className="mypage">
+              <Dropdown toggleIcon={<MyPageIcon color={theme.color.primary} />} title="마이페이지">
+                <IconText to={"/me"}>
+                  <small>내 정보 수정</small>
+                </IconText>
+                <IconText to={"/mypage?tag=schedules"}>
+                  <small>일정 모음</small>
+                </IconText>
+                <IconText to={"/mypage?tag=posts"}>
+                  <small>내 여행글</small>
+                </IconText>
+                <IconText to={"/mypage?tag=comments"}>
+                  <small>내 댓글</small>
+                </IconText>
+                <IconText to={"/mypage?tag=like-posts"}>
+                  <small>좋아요 한 글</small>
+                </IconText>
+                <IconText to={"/mypage?tag=like-places"}>
+                  <small>찜한 장소</small>
+                </IconText>
+              </Dropdown>
+            </div>
           </>
         ) : (
           <>

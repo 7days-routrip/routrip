@@ -27,7 +27,7 @@ const PostCard = ({ PostProps, view }: Props) => {
           <div className="route">
             <PinIcon />
             <span>
-              {PostProps.continental.name} • {PostProps.country.name}
+              {PostProps.continent.name} • {PostProps.country.name}
             </span>
           </div>
           <div className="scedul-date">
