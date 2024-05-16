@@ -2,6 +2,8 @@ import styled from "styled-components";
 import { CardStyle } from "./postCard";
 import icons from "@/icons/icons";
 import { PlaceDetails } from "@/models/place.model";
+import PlaceModal from "./PlaceModal";
+import { useState } from "react";
 
 interface Props {
   PlaceProps: PlaceDetails;
@@ -9,21 +11,26 @@ interface Props {
 
 const LikePlaceCard = ({ PlaceProps }: Props) => {
   const MarkIcon = icons.BookmarkIcon;
+  const [isModalOpen, setIsModalOpen] = useState(false);
+
   return (
-    <LikePlaceCardStyle $view={"grid"}>
-      <div className="card-header">
-        <h3 className="card-title">{PlaceProps.placeName}</h3>
-        <MarkIcon />
-      </div>
-      <div className="card-address">
-        <span>주소</span>
-        <span>{PlaceProps.address}</span>
-      </div>
-      <div className="card-tel">
-        <span>연락처</span>
-        <span>{PlaceProps.tel}</span>
-      </div>
-    </LikePlaceCardStyle>
+    <>
+      <LikePlaceCardStyle $view={"grid"} onClick={() => setIsModalOpen(true)}>
+        <div className="card-header">
+          <h3 className="card-title">{PlaceProps.placeName}</h3>
+          <MarkIcon />
+        </div>
+        <div className="card-address">
+          <span>주소</span>
+          <span>{PlaceProps.address}</span>
+        </div>
+        <div className="card-tel">
+          <span>연락처</span>
+          <span>{PlaceProps.tel}</span>
+        </div>
+      </LikePlaceCardStyle>
+      {isModalOpen && <PlaceModal placeId={PlaceProps.id} onClosed={() => setIsModalOpen(false)} />}
+    </>
   );
 };
 
