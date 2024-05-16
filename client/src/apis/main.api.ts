@@ -1,8 +1,16 @@
-import { Post, PostList } from "@/models/post.model";
+import { PostList } from "@/models/post.model";
 import { httpClient } from "./https";
 
 // hot한 여행지 요청
-export type BestPosts = Pick<Post, "id" | "likesNum" | "date" | "title" | "postsImg" | "country">;
+export interface BestPosts {
+  id: string;
+  likesNum: string;
+  date: string;
+  title: string;
+  postsImg: string;
+  country: string;
+}
+
 export const getBestPosts = async () => {
   try {
     const { data } = await httpClient.get<BestPosts[]>("/posts/all/hot");
