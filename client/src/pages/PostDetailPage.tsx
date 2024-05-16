@@ -32,7 +32,7 @@ const PostDetailPage = () => {
       try {
         console.log(`ID: ${postId}`);
         const response = await httpClient.get(`/posts/${postId}`);
-        console.log("Fetched data:", response.data);
+        console.log(response.data);
         setPost(response.data);
       } catch (error) {
         console.error("Error fetching post:", error);
@@ -87,12 +87,12 @@ const PostDetailPage = () => {
             {post.commentsNum}
           </div>
           {post.author}
-          <Dropdown toggleIcon={<DotIcon />}>
+          {/* <Dropdown toggleIcon={<DotIcon />}>
             <ul>
               <Link to="/">수정</Link>
               <li onClick={confirmDelete}>삭제</li>
             </ul>
-          </Dropdown>
+          </Dropdown> */}
         </div>
       </div>
       <div className="trip-container">
@@ -109,7 +109,7 @@ const PostDetailPage = () => {
         <PinIcon /> DAY 2 - 장소1 • 장소2
       </div>
       <div className="plan">🗒️ 전체 일정 담아가기</div>
-      <div className="content-container" dangerouslySetInnerHTML={{ __html: post.contents }} />
+      <div className="content-container" dangerouslySetInnerHTML={{ __html: post.conetents }} />
       <div className="btn-wrapper">
         <Button $size="medium" $scheme="primary" $radius="default">
           <LikeIcon /> {post.likesNum}
