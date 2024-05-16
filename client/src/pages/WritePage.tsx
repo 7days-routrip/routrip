@@ -165,7 +165,7 @@ const WritePage = () => {
       author: "작성자 이름",
       continent: selectedRegion.toString(),
       country: selectedCountry.toString(),
-      journeyId: "3",
+      journeyId: selectedScheduleId || undefined,
       contents: cleanedContent,
       postsImg: firstImageUrl,
     };
