@@ -30,6 +30,7 @@ const getJourneyDetail = async (req: Request, res: Response) => {
 
     res.status(200).json(journey);
   } catch (error: any) {
+    console.log(error);
     res.status(StatusCodes.NOT_FOUND).json({
       message: error.message,
     });

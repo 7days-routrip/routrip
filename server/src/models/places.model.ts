@@ -15,7 +15,10 @@ export class Places {
   @Column({ length: 255, nullable: true })
   tel!: string;
 
-  @Column({ length: 255 })
+  @Column({
+    length: 255,
+    transformer: { from: (value) => value.split(","), to: (value) => value.split(",") },
+  })
   location!: string;
 
   @Column({ length: 255, nullable: true })
