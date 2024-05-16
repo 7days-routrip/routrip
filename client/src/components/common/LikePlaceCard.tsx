@@ -52,6 +52,10 @@ const LikePlaceCardStyle = styled(CardStyle)`
     justify-content: space-between;
   }
 
+  .card-title {
+    width: 80%;
+  }
+
   .card-header > :nth-child(2) {
     color: ${({ theme }) => theme.color.primary};
     width: 2rem;
@@ -71,6 +75,7 @@ const LikePlaceCardStyle = styled(CardStyle)`
     width: 4rem;
   }
 
+  .card-title,
   .card-address:nth-child(2),
   .card-tel > :nth-child(2) {
     display: block;
