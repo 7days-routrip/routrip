@@ -27,6 +27,7 @@ const CommentCard = ({ CommentProps }: Props) => {
 
 const CommentStyle = styled.div`
   width: 100%;
+  min-width: 370px;
   padding: 0 1.5rem 0.6rem;
   border-bottom: 1px solid ${({ theme }) => theme.color.borderGray};
   a {
