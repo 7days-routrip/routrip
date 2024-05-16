@@ -155,7 +155,7 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
     id: postData.id,
     title: postData.title,
     author: postData.user.nickName,
-    conetents: postData.content,
+    contents: postData.content,
     totalExpense: postData.expense,
     date: startDate + "-" + endDate,
     createAt: createAt === updatedAt ? createAt : updatedAt,

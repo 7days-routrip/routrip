@@ -10,7 +10,7 @@ router.use(express.json());
 
 router.get("/all/hot", PostsController.postHotList);
 router.get("/routrip/recommend", PostsController.postRecommendList);
-router.post("/:id/upload/img", authenticateUser, awsUpload.postsUpload.single("posts"), PostsController.postUploadImg);
+router.post("/upload/img", authenticateUser, awsUpload.postsUpload.single("posts"), PostsController.postUploadImg);
 router.route("/").post(authenticateUser, PostsController.postsRequest).get(PostsController.postAllList);
 router
   .route("/:id")
