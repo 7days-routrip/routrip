@@ -7,6 +7,7 @@ export interface iPostsInsertProps {
   totalExpense: number;
   journeyId: number;
   contents: string;
+  postsImg: string;
 }
 export interface iSearchDataProps {
   filter: string;

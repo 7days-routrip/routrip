@@ -5,16 +5,19 @@ import icons from "@/icons/icons";
 import Dropdown from "@/components/common/Dropdown";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/common/Button";
-
+import { httpClient } from "@/apis/https";
 import { useEffect, useState } from "react";
 import { Post } from "@/models/post.model";
+import { showAlert } from "@/utils/showAlert";
+import { showConfirm } from "@/utils/showConfirm";
+import { useNavigate } from "react-router-dom";
 
 const PostDetailPage = () => {
   const { id } = useParams();
   const postId = id ? parseInt(id, 10) : undefined;
   const { LikeIcon, CommentIcon, DotIcon, PinIcon } = icons;
   const [post, setPost] = useState<Post | null>(null);
-  const [likeBtn, setLikeBtn] = useState("primary");
+  const nav = useNavigate();
 
   const StyledLikeIcon = styled(LikeIcon)`
     fill: ${({ theme }) => theme.color.primary};
@@ -28,13 +31,9 @@ const PostDetailPage = () => {
     const fetchPost = async () => {
       try {
         console.log(`ID: ${postId}`);
-        const response = await fetch(`http://localhost:1234/api/posts/${postId}`);
-        if (!response.ok) {
-          throw new Error(`HTTP error! status: ${response.status}`);
-        }
-        const data = await response.json();
-        console.log("Fetch된 data:", data);
-        setPost(data);
+        const response = await httpClient.get(`/posts/${postId}`);
+        console.log(response.data);
+        setPost(response.data);
       } catch (error) {
         console.error("Error fetching post:", error);
       }
@@ -45,8 +44,36 @@ const PostDetailPage = () => {
     }
   }, [postId]);
 
-  return post ? (
+  const handleDelete = async () => {
+    try {
+      await httpClient.delete(`/posts/${postId}`);
+      showAlert("게시물이 삭제되었습니다.", "error", () => {
+        if (post?.country.id === 1) {
+          nav("/post?area=home");
+        } else {
+          nav("/post?area=abroad");
+        }
+      });
+    } catch (error) {
+      console.error("Error deleting post:", error);
+      alert("게시물 삭제에 실패했습니다.");
+    }
+  };
+
+  const confirmDelete = () => {
+    showConfirm("정말 삭제하시겠습니까?", handleDelete);
+  };
+
+  if (!post) {
+    return null;
+  }
+
+  return (
     <PostDetailPageStyle>
+      <PinIcon />
+      <span>
+        {post.continent.name} ﹥ {post.country.name}
+      </span>
       <h1>{post.title}</h1>
       <div className="info-container">
         <p color={theme.color.commentGray}>작성일 :{post.date}</p>
@@ -60,12 +87,12 @@ const PostDetailPage = () => {
             {post.commentsNum}
           </div>
           {post.author}
-          <Dropdown toggleIcon={<DotIcon />}>
+          {/* <Dropdown toggleIcon={<DotIcon />}>
             <ul>
               <Link to="/">수정</Link>
-              <li>삭제</li>
+              <li onClick={confirmDelete}>삭제</li>
             </ul>
-          </Dropdown>
+          </Dropdown> */}
         </div>
       </div>
       <div className="trip-container">
@@ -78,13 +105,11 @@ const PostDetailPage = () => {
       </div>
       <div className="place-container">
         <PinIcon /> DAY 1 - 장소1 • 장소2
-        <br></br>
+        <br />
         <PinIcon /> DAY 2 - 장소1 • 장소2
       </div>
       <div className="plan">🗒️ 전체 일정 담아가기</div>
-      <div className="content-container">
-        <p>여행 1일차 즐거웠습니다!</p>
-      </div>
+      <div className="content-container" dangerouslySetInnerHTML={{ __html: post.conetents }} />
       <div className="btn-wrapper">
         <Button $size="medium" $scheme="primary" $radius="default">
           <LikeIcon /> {post.likesNum}
@@ -95,7 +120,7 @@ const PostDetailPage = () => {
       </div>
       <div className="comment-container">댓글</div>
     </PostDetailPageStyle>
-  ) : null;
+  );
 };
 
 const PostDetailPageStyle = styled.div`
@@ -127,6 +152,16 @@ const PostDetailPageStyle = styled.div`
   .content-container,
   .comment-container {
     border-bottom: 1px solid #e7e7e7;
+  }
+  .content-container img {
+    max-width: 100%;
+    max-height: 100%;
+    height: auto;
+    display: block;
+    margin: 20px auto;
+    object-fit: contain;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* 그림자 추가 */
   }
 `;
 

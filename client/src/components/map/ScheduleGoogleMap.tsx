@@ -24,8 +24,8 @@ const containerStyle = {
 };
 
 const center = {
-  lat: 20,
-  lng: 90,
+  lat: 38,
+  lng: 128,
 };
 
 const createMarkers = (
@@ -33,6 +33,8 @@ const createMarkers = (
   onClickMarker: (place: SelectedPlace | Place) => void,
   iconUrl: string,
 ) => {
+  if (!places || places.length === 0) return;
+
   return places.map((place, i) => (
     <div key={i}>
       <MarkerF
@@ -80,7 +82,7 @@ const ScheduleGoogleMap = () => {
   };
 
   const handleChanged = useCallback(() => {
-    if (googleMap && googleMap.getCenter()) {
+    if (googleMap) {
       setCenter({
         lat: googleMap.getCenter()?.lat() || center.lat,
         lng: googleMap.getCenter()?.lng() || center.lng,
@@ -100,11 +102,16 @@ const ScheduleGoogleMap = () => {
     setClickMarker(place);
 
     if (googleMap) {
-      // googleMap.panTo(place.location); // 1. 마커 위치로 지도 이동
-
       const currentZoom = googleMap.getZoom() || 6;
       const targetZoom = Math.max(currentZoom, 12);
-      googleMap.setZoom(targetZoom); // 2. 줌 비율 조정(확대)
+      googleMap.setZoom(targetZoom); // 1. 줌 비율 조정(확대)
+
+      const bounds = googleMap.getBounds();
+      if (bounds && !bounds.contains(place.location)) {
+        googleMap.panTo(place.location); // 2. 마커 위치로 지도 이동
+        const newCenter = { lat: place.location.lat, lng: place.location.lng };
+        setCenter(newCenter);
+      }
     }
   };
 
@@ -144,14 +151,14 @@ const ScheduleGoogleMap = () => {
       default:
         break;
     }
-  }, [addPlaces, dayPlaces, markerType, dayIndex, clickMarker]);
+  }, [addPlaces, dayPlaces, nearPlaces, searchPlaces, bookmarkPlaces, markerType, dayIndex, clickMarker]);
 
   useEffect(() => {
     // 지도에 표시할 마커가 전부 보이도록 지도 경계선을 계산
     if (!googleMap) return;
 
     updateMapBounds(googleMap, getPlaceArr());
-  }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlaces, nearPlaces]);
+  }, [addPlaces, dayPlaces, markerType, dayIndex, googleMap, searchPlaces, nearPlaces, bookmarkPlaces]);
 
   return isLoaded ? (
     <GoogleMap

@@ -5,8 +5,10 @@ import { s3 } from "@/middlewares/awsUpload";
 import axios from "axios";
 import { v4 } from "uuid";
 import { S3_BUCKET_NAME } from "@/settings";
+import { Picks } from "@/models/picks.model";
 
 const placeRepository = AppDataSource.getRepository(Places);
+const picksRepository = AppDataSource.getRepository(Picks);
 
 const register = async (
   id: string,
@@ -18,7 +20,7 @@ const register = async (
   openingHours: string[],
   placeImg: string,
 ): Promise<void> => {
-  const exists = await placeRepository.existsBy({ id: id });
+  const exists = await placeRepository.findOneBy({ id: id });
 
   if (exists) {
     throw new Error("이미 등록된 장소가 있습니다.\n해당 장소를 추가하시겠습니까?");
@@ -41,27 +43,40 @@ const register = async (
   const openingHoursArr: string[] = openingHours;
   place.openingHours = openingHoursArr.join(", ");
 
-  const savedPlace: Places = await placeRepository.save(place);
+  await placeRepository.save(place);
 };
 
 const checkDuplicate = async (id: string): Promise<boolean> => {
-  return await placeRepository.existsBy({ id: id });
+  return await placeRepository.findOneBy({ id: id }) !== null;
 };
 
-const getDetail = async (id: string): Promise<PlaceDetailDTO> => {
+const getDetail = async (
+  id: string,
+  user: { id?: number; nickName?: string; isLoggedIn: boolean },
+): Promise<PlaceDetailDTO> => {
   let foundPlace: Places | null = await placeRepository.findOneBy({ id: id });
 
   if (!foundPlace) {
     throw new Error("장소 정보를 찾을 수 없습니다.");
   }
 
-  const locationStrArr: string[] = foundPlace["location"].split(", ");
+  const locationStrArr: string[] = foundPlace.location.split(", ");
   const location: Location = {
     lat: parseFloat(locationStrArr[0]),
     lng: parseFloat(locationStrArr[1]),
   };
 
-  const openingHoursArr: string[] = foundPlace["openingHours"].split(", ");
+  const openingHoursArr: string[] = foundPlace.openingHours.split(", ");
+
+  let isPicked: boolean;
+
+  if (!user) {
+    throw new Error("유저 정보가 존재하지 않습니다");
+  } else if (user.isLoggedIn) {
+    isPicked = await picksRepository.existsBy({ user: { id: user.id }, place: { id: id } });
+  } else {
+    isPicked = false;
+  }
 
   let placeDetailDTO: PlaceDetailDTO = {
     id: foundPlace.id,
@@ -72,6 +87,7 @@ const getDetail = async (id: string): Promise<PlaceDetailDTO> => {
     tel: foundPlace.tel,
     openingHours: openingHoursArr,
     placeImg: foundPlace.img,
+    isPicked: isPicked,
   };
 
   return placeDetailDTO;
@@ -89,8 +105,8 @@ const search = async (keyword: string, zoom: number, lat: number, lng: number): 
 
   let searchedPlaces: SearchPlaceDTO[] = [];
 
-  places.forEach((place, idx) => {
-    const locationStrArr: string[] = place["location"].split(", ");
+  places.forEach((place) => {
+    const locationStrArr: string[] = place.location.split(", ");
     const location: Location = {
       lat: parseFloat(locationStrArr[0]),
       lng: parseFloat(locationStrArr[1]),
@@ -112,7 +128,7 @@ const search = async (keyword: string, zoom: number, lat: number, lng: number): 
   else if (zoom < 15) searchDistance = 30000;
   else searchDistance = 10000;
 
-  searchedPlaces.forEach((place, idx) => {
+  searchedPlaces.forEach((place) => {
     const distance = getDistance(place.location.lat, place.location.lng, lat, lng);
     if (distance <= searchDistance) {
       filteredPlaces.push(place);
@@ -121,9 +137,9 @@ const search = async (keyword: string, zoom: number, lat: number, lng: number): 
   return filteredPlaces;
 };
 
-function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
+function getDistance(lat1: number, lng1: number, lat2: number, lng2: number): number {
   const PI = Math.PI;
-  const radius = 6371;
+  const radius = 6371; // 지구 반지름 (단위: km)
   const dLat = (lat2 - lat1) * (PI / 180);
   const dLon = (lng2 - lng1) * (PI / 180);
   const temp1 =
@@ -131,7 +147,7 @@ function getDistance(lat1: number, lng1: number, lat2: number, lng2: number) {
     Math.cos(lat1 * (PI / 180)) * Math.cos(lat2 * (PI / 180)) * Math.sin(dLon / 2) * Math.sin(dLon / 2);
   const temp2 = 2 * Math.atan2(Math.sqrt(temp1), Math.sqrt(1 - temp1));
   const distance = radius * temp2;
-  return distance * 1000;
+  return distance * 1000; // 거리 (단위: m)
 }
 
 const placeImgUpload = async (imageUrl: string): Promise<string> => {

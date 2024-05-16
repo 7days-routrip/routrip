@@ -1,4 +1,4 @@
-import { NOT_FOUND_COMMENTS, UNAUTHORIZED_NOT_LOGIN } from "@/constants/message";
+import { NOT_FOUND_COMMENTS, NOT_FOUND_POSTS, UNAUTHORIZED_NOT_LOGIN } from "@/constants/message";
 import CommentsSevice from "@/service/comments.service";
 import MypagesService from "@/service/mypages.service";
 import PostsService from "@/service/posts.service";
@@ -29,25 +29,26 @@ const postUserAllList = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
       const userId = req.user.id as number;
-      const sort = req.query?.sort as string;
       const pages = parseInt(req.query?.pages as string);
-      const listResult = await PostsService.reqAllPostsList(pages, undefined, userId, sort, undefined, "list");
-      const pageResult = await PostsService.reqAllPostsList(pages, undefined, userId, sort, undefined);
-      if (listResult.success === false || pageResult.success === false) throw new Error(listResult.msg);
+      const listResult = await PostsService.reqAllPostsList(pages, undefined, userId, undefined, "list");
+      if (listResult.success === false) throw new Error(listResult.msg);
       res.status(StatusCodes.OK).json({
         posts: listResult.data,
         pagination: {
           page: pages,
-          totalPosts: pageResult.count,
+          totalPosts: listResult.count,
         },
       });
     } else {
       throw new Error("login required");
     }
   } catch (err) {
+    console.log(err);
     if (err instanceof Error) {
       if (err.message === "login required")
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+      if (err.message === "empty list of posts")
+        return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_POSTS });
     }
   }
 };

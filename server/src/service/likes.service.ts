@@ -2,6 +2,7 @@ import { AppDataSource } from "@/config/ormSetting";
 import { Comments } from "@/models/comments.model";
 import { Likes } from "@/models/likes.model";
 import { Picks } from "@/models/picks.model";
+import { setDateFromat } from "@/utils/posts.utils";
 
 const reqPicksList = async (userId: number) => {
   const pickRepo = AppDataSource.getRepository(Picks);
@@ -10,22 +11,30 @@ const reqPicksList = async (userId: number) => {
   });
   if (!picksResult || picksResult.length === 0) return { success: false, msg: "does not exist Like Place" };
   const returnData = picksResult?.map((place) => {
-    const locationSplit = place.place.location.split(",");
+    const [lat, lng] = place.place.location;
+    const open = [];
+    const openSplit = place.place.openingHours.split(",");
+    for (let i = 0; i < openSplit.length; i++) {
+      open.push(openSplit[i].trim());
+    }
+
     return {
-      id: place.id,
+      id: place.place.id,
       placeName: place.place.name,
       address: place.place.address,
       tel: place.place.tel,
       location: {
-        lat: locationSplit[0].trim(),
-        lng: locationSplit[1].trim(),
+        lat: lat,
+        lng: lng,
       },
-      placeImg: place.place.img,
+      openingHours: open,
+      siteUrl: place.place.siteUrl ? place.place.siteUrl : "",
+      placeImg: place.place.img ? place.place.img : "",
     };
   });
-
   return { success: true, data: returnData };
 };
+
 const reqPicksInsertData = async (userId: number, placeId: string) => {
   const pickRepo = AppDataSource.getRepository(Picks);
   const pick = {
@@ -53,14 +62,22 @@ const reqLikesList = async (userId: number) => {
       const likeNum = await getTotalLike(like.post.id);
       const commnetNum = await getTotalComment(like.post.id);
       return {
+        id: like.post.id,
         title: like.post.title,
-        date: like.post.startDate + "~" + like.post.endDate,
+        date: (await setDateFromat(like.post.startDate)) + "-" + (await setDateFromat(like.post.endDate)),
+        createAt: like.post.createdAt === like.post.updatedAt ? like.post.createdAt : like.post.updatedAt,
         author: like.user.nickName,
         profileImg: like.user.profileImg,
-        continent: like.post.continent.name,
-        county: like.post.country.name,
-        likeNum: likeNum,
-        commentNum: commnetNum,
+        continent: {
+          id: like.post.continent.id,
+          name: like.post.continent.name,
+        },
+        country: {
+          id: like.post.country.id,
+          name: like.post.country.name,
+        },
+        likesNum: likeNum,
+        commentsNum: commnetNum,
       };
     }),
   );

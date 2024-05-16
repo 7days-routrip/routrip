@@ -45,9 +45,10 @@ const checkDuplicatePlaces = async (req: Request, res: Response, next: NextFunct
 
 const getPlaceDetail = async (req: Request, res: Response, next: NextFunction) => {
   const placeId: string = req.params.id;
+  const user: any = req.user;
 
   try {
-    const foundPlace: PlaceDetailDTO = await SpotsService.getDetail(placeId);
+    const foundPlace: PlaceDetailDTO = await SpotsService.getDetail(placeId, user);
     return res.status(StatusCodes.OK).json(foundPlace);
   } catch (error: any) {
     if (error.message === "장소 정보를 찾을 수 없습니다.") {

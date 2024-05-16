@@ -20,7 +20,7 @@ const DaySchedule = ({ dayIdx, schedulePlaces, isDragDrop = false }: Props) => {
   const handleOnClickDay = useCallback(() => {
     setMarkerType("day", dayIdx);
     updateMapBounds(googleMap, schedulePlaces);
-  }, [dayIdx, schedulePlaces, googleMap]);
+  }, [dayIdx, schedulePlaces]);
 
   if (isDragDrop) {
     return (

@@ -141,7 +141,7 @@ const PostPage = () => {
         {posts.length === 0 ? (
           <div>게시글이 없습니다</div>
         ) : (
-          sortedPosts.map((post) => <PostCard key={post.id} PostProps={post} view={view} />)
+          sortedPosts.map((post, index) => <PostCard key={post.id || index} PostProps={post} view={view} />)
         )}
         <div ref={loader} />
       </div>

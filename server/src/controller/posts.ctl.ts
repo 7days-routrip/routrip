@@ -52,17 +52,17 @@ const postAllList = async (req: Request, res: Response) => {
       filter: query?.filter as string,
       keyword: query?.keyword as string,
     };
-    const listResult = await PostsService.reqAllPostsList(pages, area, undefined, sort, searchData, "list");
-    const pageResult = await PostsService.reqAllPostsList(pages, area, undefined, sort, searchData);
-    if (listResult.success === false || pageResult.success === false) throw new Error(listResult.msg);
+    const listResult = await PostsService.reqAllPostsList(pages, area, undefined, searchData, "list");
+    if (listResult.success === false) throw new Error(listResult.msg);
     res.status(StatusCodes.OK).json({
       posts: listResult.data,
       pagination: {
         page: pages,
-        totalPosts: pageResult.count,
+        totalPosts: listResult.count,
       },
     });
   } catch (err) {
+    console.log(err);
     if (err instanceof Error) {
       if (err.message === "login required")
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
@@ -82,6 +82,7 @@ const postRequest = async (req: Request, res: Response) => {
     if (!postResult.success) throw new Error(postResult.msg);
     res.status(StatusCodes.OK).json(postResult.data);
   } catch (err) {
+    console.log(err);
     if (err instanceof Error) {
       if (err.message === "does not exist post")
         return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_POST });
@@ -152,6 +153,19 @@ const postHotList = async (req: Request, res: Response) => {
   try {
     const listResult = await PostsService.reqHotPosts();
     if (!listResult.success) throw new Error(listResult.msg);
+    const { hot10Data } = listResult;
+    res.status(StatusCodes.OK).json(hot10Data);
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "empty list of posts")
+        return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_POSTS_LIST });
+    }
+  }
+};
+const postRecommendList = async (req: Request, res: Response) => {
+  try {
+    const listResult = await PostsService.reqRecommendPosts();
+    if (!listResult.success) throw new Error(listResult.msg);
     const { posts } = listResult;
     res.status(StatusCodes.OK).json(posts);
   } catch (err) {
@@ -170,6 +184,7 @@ const postsController = {
   postDelRequest,
   postUploadImg,
   postHotList,
+  postRecommendList,
 };
 
 export default postsController;

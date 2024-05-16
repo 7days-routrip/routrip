@@ -11,18 +11,21 @@ import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 
 const AddNewPlace = () => {
   const { nearPlaces, setNearPlaces } = useNearPlacesStore();
-  const { mapCenter, googleMap } = useMapStore();
+  const { googleMap } = useMapStore();
   const { setMarkerType } = useShowMarkerTypeStore();
   const { searchKeywordToGoogle, setSearchKeywordToGoogle } = useSearchKeywordStore();
 
   const requestHandler = async (keyword: string) => {
+    if (!googleMap) return;
+
     // 구글 api 장소 검색 요청
     const currentZoom = googleMap?.getZoom() || 6;
     const radius = calculateSearchRadius(currentZoom);
-    // console.log(currentZoom, radius, mapCenter);
+
+    const center = googleMap.getCenter();
     const params: SearchNearByPlacesParams = {
       keyword,
-      location: { lat: mapCenter.lat, lng: mapCenter.lng },
+      location: { lat: center?.lat() || 38, lng: center?.lng() || 128 },
       radius,
     };
 

@@ -13,7 +13,7 @@ export class Journeys {
   @ManyToOne((type) => Users)
   user!: Users;
 
-  @ManyToOne((type) => Routes)
+  @ManyToOne((type) => Routes, { eager: true })
   route!: Routes;
 
   @Column("date")
