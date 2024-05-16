@@ -12,7 +12,34 @@ import ScheduleCard from "@/components/common/scheduleCard";
 import { useSchedule } from "@/hooks/useMypage";
 import { useScheduleDetails } from "@/hooks/useScheduleDetails";
 import icons from "@/icons/icons";
+import { showAlert } from "@/utils/showAlert";
+import { httpClient } from "@/apis/https";
 
+// 이미지 업로드 함수
+const uploadImage = async (file: File) => {
+  try {
+    if (!file) return null;
+    const formData = new FormData();
+    formData.append("posts", file);
+
+    const response = await httpClient.post("/posts/1/upload/img", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error(`Failed to upload image. Status code: ${response.status}`);
+    }
+
+    return response.data.url;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// CKEditor 업로드 어댑터
 class MyUploadAdapter {
   loader: any;
   constructor(loader: any) {
@@ -22,29 +49,8 @@ class MyUploadAdapter {
   async upload() {
     try {
       const file = await this.loader.file;
-      const formData = new FormData();
-      formData.append("postImg", file, file.name);
-
-      const response = await fetch(`http://localhost:1234/api/posts/1/upload/img`, {
-        method: "POST",
-        body: formData,
-        headers: {
-          Authorization: "Bearer YOUR_ACCESS_TOKEN",
-        },
-      });
-
-      if (!response.ok) {
-        throw new Error("Failed to upload image.");
-      }
-
-      const data = await response.json();
-
-      if (data.imageUrl) {
-        return { default: data.imageUrl };
-      } else {
-        console.warn("Image URL is null");
-        return { default: "default_image_url_placeholder" };
-      }
+      const imageUrl = await uploadImage(file);
+      return { default: imageUrl };
     } catch (error) {
       console.error(error);
       return Promise.reject(error);
@@ -56,8 +62,9 @@ class MyUploadAdapter {
   }
 }
 
+// CKEditor 플러그인
 function MyCustomUploadAdapterPlugin(editor: {
-  plugins: { get: (arg0: string) => { (): any; new (): any; createUploadAdapter: (loader: any) => MyUploadAdapter } };
+  plugins: { get: (arg0: string) => { createUploadAdapter: (loader: any) => MyUploadAdapter } };
 }) {
   editor.plugins.get("FileRepository").createUploadAdapter = (loader: any) => {
     return new MyUploadAdapter(loader);
@@ -67,7 +74,7 @@ function MyCustomUploadAdapterPlugin(editor: {
 const WritePage = () => {
   const [data, setData] = useState("");
   const [title, setTitle] = useState("");
-  const [expense, setExpense] = useState("");
+  const [expense, setExpense] = useState(0);
   const [startDate, setStartDate] = useState(new Date());
   const [endDate, setEndDate] = useState(new Date());
   const [selectedRegion, setSelectedRegion] = useState(0);
@@ -81,9 +88,6 @@ const WritePage = () => {
   const { schedules, isEmptySchedules, scheduleRefetch } = useSchedule(); // 일정 데이터 가져오기
   const { scheduleDetailData, isScheduleDetailsLoading } = useScheduleDetails(selectedScheduleId); // 일정 세부 데이터 가져오기
   const { PinIcon } = icons;
-  useEffect(() => {
-    console.log("Start Date:", startDate, "End Date:", endDate);
-  }, [startDate, endDate]);
 
   useEffect(() => {
     if (showSidebar) {
@@ -115,57 +119,81 @@ const WritePage = () => {
     setEndDate(end);
   };
 
-  const handleSave = () => {
-    const formData = new FormData();
-    formData.append("title", title || "기본 제목");
-    formData.append("startDate", startDate.toISOString().split("T")[0]);
-    formData.append("endDate", endDate.toISOString().split("T")[0]);
-    formData.append("expense", expense || "0");
-    formData.append("author", "작성자 이름");
-    formData.append("continent", selectedRegion.toString());
-    formData.append("country", selectedCountry.toString());
-    formData.append("journeyId", "3");
-
+  const handleSave = async () => {
     const editorContent = new DOMParser().parseFromString(data, "text/html");
     const images = editorContent.querySelectorAll("img");
-    let imageIndex = 0;
+    let firstImageUrl = "";
+    const imageUrls = [];
 
-    images.forEach((img) => {
+    // 이미지 업로드 처리
+    for (let i = 0; i < images.length; i++) {
+      const img = images[i];
       if (img.src.startsWith("data:")) {
         const blob = dataURLtoBlob(img.src);
         if (blob) {
-          formData.append(`image_${imageIndex++}`, blob, `image_${imageIndex}.png`);
+          const file = new File([blob], `image_${i}.png`, { type: blob.type });
+          const imageUrl = await uploadImage(file);
+          if (imageUrl) {
+            img.src = imageUrl; // src를 업로드된 이미지 URL로 대체
+            imageUrls.push(imageUrl);
+            if (!firstImageUrl) {
+              firstImageUrl = imageUrl;
+            }
+          }
         } else {
           console.error("Failed to convert data URL to Blob.");
         }
+      } else {
+        imageUrls.push(img.src);
+        if (!firstImageUrl) {
+          firstImageUrl = img.src; // 첫 번째 이미지를 썸네일로 사용
+        }
       }
-    });
+    }
 
-    formData.forEach((value, key) => {
-      console.log(`${key}:`, value);
-    });
-    console.log(formData);
+    // 이미지 URL 업데이트 후 콘텐츠를 새로 가져옴
+    const updatedContent = new XMLSerializer().serializeToString(editorContent);
 
-    const textBlob = new Blob([data], { type: "text/html" });
-    formData.append("contents", textBlob);
+    // XML 네임스페이스 제거
+    const cleanedContent = updatedContent.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
 
-    fetch("http://localhost:1234/api/posts", {
-      method: "POST",
-      body: formData,
-    })
-      .then((response) => response.json())
-      .then((result) => console.log("저장 성공:", result))
-      .catch((error) => console.error("저장 실패:", error));
+    const payload = {
+      title: title || "기본 제목",
+      startDate: startDate.toISOString().split("T")[0],
+      endDate: endDate.toISOString().split("T")[0],
+      expense: expense || 0,
+      author: "작성자 이름",
+      continent: selectedRegion.toString(),
+      country: selectedCountry.toString(),
+      journeyId: "3",
+      contents: cleanedContent,
+      postsImg: firstImageUrl,
+    };
+
+    console.log("Payload to be sent to the server:", JSON.stringify(payload, null, 2));
+
+    try {
+      const response = await httpClient.post("/posts", payload, {
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      if (response.status !== 200) {
+        throw new Error(`Failed to save post. Status code: ${response.status}`);
+      }
+      console.log("저장 성공:", response.data);
+    } catch (error) {
+      console.error("저장 실패:", error);
+    }
   };
 
   const dataURLtoBlob = (dataurl: string) => {
-    const parts = dataurl.split(","),
-      match = parts[0].match(/:(.*?);/);
-
+    const parts = dataurl.split(",");
+    const match = parts[0].match(/:(.*?);/);
     const mime = match ? match[1] : "application/octet-stream";
-    const bstr = atob(parts[1]),
-      n = bstr.length,
-      u8arr = new Uint8Array(n);
+    const bstr = atob(parts[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
     for (let i = 0; i < n; i++) {
       u8arr[i] = bstr.charCodeAt(i);
     }
@@ -226,9 +254,9 @@ const WritePage = () => {
         <label>
           총 여행 경비
           <input
-            type="text"
+            type="number"
             placeholder="금액을 입력해주세요.(숫자만 입력)"
-            onChange={(e) => setExpense(e.target.value)}
+            onChange={(e) => setExpense(parseInt(e.target.value))}
           />
         </label>
         <p className="plan" onClick={toggleSidebar}>
