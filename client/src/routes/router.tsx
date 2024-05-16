@@ -9,205 +9,131 @@ import Mypage from "@/pages/Mypage";
 import PostPage from "@/pages/PostPage";
 import ProfileEditPage from "@/pages/ProfileEditPage";
 import ProfileResetPassword from "@/pages/ProfileResetPassword";
-import RestPage from "@/pages/ResetPassword";
+import ResetPage from "@/pages/ResetPassword";
 import ScheduleDetailPage from "@/pages/ScheduleDetailPage";
 import ScheduleEditPage from "@/pages/ScheduleEditPage";
 import SchedulePage from "@/pages/SchedulePage";
 import WritePage from "@/pages/WritePage";
-import { createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter } from "react-router-dom";
+
+interface Props {
+  children: React.ReactNode;
+}
+
+const PrivateRoute = ({ children }: Props) => {
+  const token = localStorage.getItem("token");
+
+  return token ? <>{children}</> : <Navigate to="/login" replace />;
+};
+
+const ErrorLayoutWrapper = () => (
+  <Layout>
+    <ErrorPage />
+  </Layout>
+);
 
 const routerArr = [
   {
     path: "/",
-    element: (
-      <Layout>
-        <MainPage />
-      </Layout>
-    ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    element: <Layout children={<MainPage />} />,
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/join",
-    element: (
-      <Layout>
-        <JoinPage />
-      </Layout>
-    ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    element: <Layout children={<JoinPage />} />,
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/login",
-    element: (
-      <Layout>
-        <LoginPage />
-      </Layout>
-    ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    element: <Layout children={<LoginPage />} />,
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/reset",
-    element: (
-      <Layout>
-        <RestPage />
-      </Layout>
-    ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    element: <Layout children={<ResetPage />} />,
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/post",
-    element: (
-      <Layout>
-        <PostPage />
-      </Layout>
-    ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    element: <Layout children={<PostPage />} />,
+    errorElement: <ErrorLayoutWrapper />,
   },
-
   {
     path: "/post/:id",
-    element: (
-      <Layout>
-        <PostDetailPage />
-      </Layout>
-    ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    element: <Layout children={<PostDetailPage />} />,
+    errorElement: <ErrorLayoutWrapper />,
   },
-
   {
     path: "/post/:id/edit",
-    element: (
-      <Layout>
-        <PostEditPage />
-      </Layout>
-    ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    element: <Layout children={<PostEditPage />} />,
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/write",
     element: (
-      <Layout>
-        <WritePage />
-      </Layout>
+      <PrivateRoute>
+        <Layout children={<WritePage />} />
+      </PrivateRoute>
     ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/schedule",
     element: (
-      <Layout isFull={true}>
-        <SchedulePage />
-      </Layout>
+      <PrivateRoute>
+        <Layout isFull={true} children={<SchedulePage />} />
+      </PrivateRoute>
     ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/schedule/:id",
     element: (
-      <Layout>
-        <ScheduleDetailPage />
-      </Layout>
+      <PrivateRoute>
+        <Layout children={<ScheduleDetailPage />} />
+      </PrivateRoute>
     ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/schedule/:id/edit",
     element: (
-      <Layout isFull={true}>
-        <ScheduleEditPage />
-      </Layout>
+      <PrivateRoute>
+        <Layout isFull={true} children={<ScheduleEditPage />} />
+      </PrivateRoute>
     ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/mypage",
     element: (
-      <Layout>
-        <Mypage />
-      </Layout>
+      <PrivateRoute>
+        <Layout children={<Mypage />} />
+      </PrivateRoute>
     ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/me",
     element: (
-      <Layout>
-        <ProfileEditPage />
-      </Layout>
+      <PrivateRoute>
+        <Layout children={<ProfileEditPage />} />
+      </PrivateRoute>
     ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/me/reset",
     element: (
-      <Layout>
-        <ProfileResetPassword />
-      </Layout>
+      <PrivateRoute>
+        <Layout children={<ProfileResetPassword />} />
+      </PrivateRoute>
     ),
-    errorElement: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    errorElement: <ErrorLayoutWrapper />,
   },
   {
     path: "/error",
-    element: (
-      <Layout>
-        <ErrorPage />
-      </Layout>
-    ),
+    element: <ErrorLayoutWrapper />,
   },
 ];
 

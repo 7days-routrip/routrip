@@ -13,6 +13,6 @@ export class DaySeq {
   @Column({ type: "integer" })
   seq!: number;
 
-  @ManyToOne(() => Places)
+  @ManyToOne(() => Places, { eager: true })
   place!: Places;
 }

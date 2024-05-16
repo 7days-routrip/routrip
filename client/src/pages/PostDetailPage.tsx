@@ -27,22 +27,17 @@ const PostDetailPage = () => {
     fill: ${({ theme }) => theme.color.primary};
   `;
 
-useEffect(() => {
-  const fetchPost = async () => {
-    try {
-      console.log(`ID: ${postId}`);
-      const response = await httpClient.get(`/posts/${postId}`);
-      console.log("Fetched data:", response.data);
-      setPost(response.data);
-    } catch (error) {
-      console.error("Error fetching post:", error);
-    }
-  };
-
-  if (postId !== undefined) {
-    fetchPost();
-  }
-}, [postId]);
+  useEffect(() => {
+    const fetchPost = async () => {
+      try {
+        console.log(`ID: ${postId}`);
+        const response = await httpClient.get(`/posts/${postId}`);
+        console.log("Fetched data:", response.data);
+        setPost(response.data);
+      } catch (error) {
+        console.error("Error fetching post:", error);
+      }
+    };
 
     if (postId !== undefined) {
       fetchPost();
@@ -114,7 +109,7 @@ useEffect(() => {
         <PinIcon /> DAY 2 - 장소1 • 장소2
       </div>
       <div className="plan">🗒️ 전체 일정 담아가기</div>
-      <div className="content-container" dangerouslySetInnerHTML={{ __html: post.conetents }} />
+      <div className="content-container" dangerouslySetInnerHTML={{ __html: post.contents }} />
       <div className="btn-wrapper">
         <Button $size="medium" $scheme="primary" $radius="default">
           <LikeIcon /> {post.likesNum}

@@ -5,55 +5,64 @@ import { Places } from "@/models/places.model";
 import { RouteDays } from "@/models/routeDays.model";
 import { Routes } from "@/models/routes.model";
 import { Users } from "@/models/users.model";
-import JourneysRepository from "@/repository/journeys.repo";
 import { Day } from "@/types/journeys.types";
 import { Request, Response } from "express";
 
 const getJourneysList = async (userId: number) => {
-  const results = await JourneysRepository.getJourneysList(userId);
+  const results = await journeysRepo.find({ where: { user: { id: userId } } });
   if (!results.length) throw new Error("등록하신 일정이 없습니다.");
 
-  return results;
+  return results.sort((a, b) => b.id - a.id);
 };
 
+const journeysRepo = AppDataSource.getRepository(Journeys);
+const routeDaysRepo = AppDataSource.getRepository(RouteDays);
+const daySeqRepo = AppDataSource.getRepository(DaySeq);
+
 const getJourneyDetail = async (journeyId: number) => {
-  const result = await JourneysRepository.getJourneyData(journeyId);
-  if (!result.length) throw new Error("일정 정보를 찾을 수 없습니다.");
-  let days = [];
-  for (let i = 0; i <= result[result.length - 1].day; i++) {
-    // day n일차
-    let spots = [];
-    
-    for (let j = 0; j < result.length; j++) {
-      // 해당 day의 seq 데이터
-      if (result[j].day === i && result[j].seq !== null) {
-        spots.push({
-          id: result[j].placeId,
-          placeName: result[j].name,
-          address: result[j].address,
-          location: {
-            lat: result[j].lat,
-            lng: result[j].lng,
-          },
-          placeImg: result[j].img,
-        });
-      }
-    }
-    days.push({
-      day: i,
-      spots: spots,
-    });
+  const journey = await journeysRepo.findOneBy({ id: journeyId });
+  if (journey === null) throw new Error("일정 정보를 찾을 수 없습니다.");
+  if (!journey?.route) {
+    return {
+      id: journey?.id,
+      title: journey?.title,
+      startDate: new Date(journey?.startDate),
+      endDate: new Date(journey?.endDate),
+      days: [],
+    };
   }
 
-  const journey = {
-    id: result[0].id,
-    title: result[0].title,
-    startDate: result[0].startDate,
-    endDate: result[0].endDate,
-    days: days,
+  const days = await routeDaysRepo.find({ where: { route: { id: journey?.route.id } } });
+  const responseData = await Promise.all(
+    days.map(async (day) => {
+      const spots = await daySeqRepo.find({ where: { routeDay: { id: day.id } } });
+      return {
+        day: day.day,
+        spots: !spots
+          ? []
+          : spots.map((spot) => {
+              const [lat, lng] = spot.place.location;
+              return {
+                id: spot.place.id,
+                placeName: spot.place.name,
+                address: spot.place.address,
+                location: {
+                  lat: lat,
+                  lng: lng,
+                },
+                placeImg: spot.place.img ? spot.place.img : "",
+              };
+            }),
+      };
+    }),
+  );
+  return {
+    id: journey?.id,
+    title: journey?.title,
+    startDate: new Date(journey?.startDate),
+    endDate: new Date(journey?.endDate),
+    days: responseData,
   };
-
-  return journey;
 };
 
 const register = async (title: string, startDate: Date, endDate: Date, days: Day[], user: any) => {
