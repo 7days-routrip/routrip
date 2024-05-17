@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import icons from "@/icons/icons";
-import PostCard from "@/components/common/postCard";
+import PostCard, { AreaType } from "@/components/common/postCard";
 import { Post } from "@/models/post.model";
 import { useEffect, useRef, useState } from "react";
 import { ViewMode } from "@/components/common/postCard";
@@ -9,7 +9,8 @@ import { Country, regions } from "@/data/region";
 import RegionCountrySelector from "@/components/common/RegionCountrySelector";
 
 interface PostPageStyleProps {
-  view: string;
+  view: ViewMode;
+  area: AreaType;
 }
 
 const PostPage = () => {
@@ -107,7 +108,7 @@ const PostPage = () => {
       : [...posts].sort((a, b) => parseInt(b.likesNum, 10) - parseInt(a.likesNum, 10));
 
   return (
-    <PostPageStyle view={view}>
+    <PostPageStyle view={view} area={area}>
       <div className="main-content">
         <div className="control-wrapper">
           <div className="select-wrapper">
@@ -139,11 +140,11 @@ const PostPage = () => {
 
       <div className="post">
         {posts.length === 0 ? (
-          <div>게시글이 없습니다</div>
+          <div className="none-posts">게시글이 없습니다</div>
         ) : (
           sortedPosts.map((post, index) => <PostCard key={post.id || index} PostProps={post} view={view} />)
         )}
-        <div ref={loader} />
+        {posts.length === 0 ? "" : <div ref={loader} />}
       </div>
     </PostPageStyle>
   );
@@ -151,20 +152,21 @@ const PostPage = () => {
 
 const PostPageStyle = styled.div<PostPageStyleProps>`
   .main-content {
-    display: grid;
+    /* display: grid; */
     justify-content: center;
     align-items: center;
-    width: ${(props) => (props.view === "list" ? "790px" : "1080px")};
+    max-width: ${(props) => (props.view === "list" ? "790px" : "1080px")};
     border-bottom: 1px solid #e7e7e7;
-    padding: 0px 0px 20px 0px;
-    margin: 10px auto 20px auto;
+    padding: 20px 0px;
+    /* margin: 10px auto 20px auto; */
+    margin: 0 auto;
   }
 
   .control-wrapper {
-    display: grid;
-    justify-content: center;
+    display: flex;
+    justify-content: space-between;
     align-items: center;
-    width: 960px;
+    width: ${(props) => (props.view === "list" ? "790px" : "1080px")};
     gap: 20px;
   }
 
@@ -192,10 +194,14 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
   .input-wrapper {
     display: flex;
     align-items: center;
-    border: 1px solid black;
+    border: 1px solid ${({ theme }) => theme.color.commentGray};
     width: 360px;
     padding: 8px;
     border-radius: ${({ theme }) => theme.borderRadius.default};
+
+    svg {
+      color: ${({ theme }) => theme.color.commentGray};
+    }
   }
 
   input {
@@ -211,14 +217,34 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
     gap: 10px;
     align-items: center;
     justify-content: flex-end;
+
+    select {
+      border: 1px solid ${({ theme }) => theme.color.commentGray};
+      border-radius: ${({ theme }) => theme.borderRadius.default};
+      padding: 8px;
+    }
   }
 
   .post {
-    display: flex;
-    flex-wrap: wrap;
+    display: grid;
+    grid-template-columns: ${(props) =>
+      props.view === "grid" ? "repeat(auto-fill, minmax(32%, auto))" : "repeat(auto-fill, minmax(100%, auto))"};
+    max-width: ${(props) => (props.view === "grid" ? "unset" : "790px")};
     gap: 14px;
-    justify-content: center;
-    width: 1080px;
+    margin: 0 auto;
+    padding: 20px 0;
+
+    .none-posts {
+      width: 100%;
+      margin: 0 auto;
+      text-align: center;
+    }
+  }
+  @media screen and (max-width: 1080px) {
+    .control-wrapper {
+      width: 90%;
+      margin: 0 auto;
+    }
   }
 
   @media (max-width: 768px) {
@@ -230,11 +256,22 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
       flex-direction: column;
       width: 100%;
     }
+    .select-wrapper {
+      width: 100%;
+      justify-content: center;
+      flex-flow: ${(props) => (props.area === "abroad" ? "row wrap" : "row")};
 
-    .select-wrapper,
+      .continent-country {
+        width: 90%;
+      }
+      .continent-country > * {
+        width: 50%;
+      }
+    }
+
     .input-wrapper,
     .view-toggle {
-      width: 100%;
+      width: 90%;
     }
     .view-toggle {
       justify-content: flex-end;
@@ -242,6 +279,8 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
 
     .post {
       width: 100%;
+      grid-template-columns: ${(props) =>
+        props.view === "grid" ? "repeat(auto-fill, minmax(45%, auto))" : "repeat(auto-fill, minmax(100%, auto))"};
     }
   }
 `;

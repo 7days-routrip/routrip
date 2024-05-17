@@ -16,6 +16,7 @@ import { StatusCodes } from "http-status-codes";
 
 const postsRequest = async (req: Request, res: Response) => {
   const inputData = req.body;
+  console.log(inputData);
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
@@ -37,8 +38,6 @@ const postsRequest = async (req: Request, res: Response) => {
       if (err.message === "failed upload")
         return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_UPLOAD_POST });
     }
-  } finally {
-    await queryRunner.release();
   }
 };
 const postAllList = async (req: Request, res: Response) => {
@@ -131,9 +130,7 @@ const postDelRequest = async (req: Request, res: Response) => {
 const postUploadImg = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
-      const postId = parseInt(req.params.id);
       const file = req.file as Express.MulterS3.File;
-      await PostsService.reqImageUpload(file.location, postId);
       res.status(StatusCodes.OK).json({
         url: file.location,
       });

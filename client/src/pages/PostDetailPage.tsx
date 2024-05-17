@@ -223,9 +223,13 @@ const PostDetailPageStyle = styled.div`
   .comment-container {
     border-bottom: 1px solid #e7e7e7;
   }
+  .content-container .image {
+    width: unset;
+    height: unset;
+  }
   .content-container img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     height: auto;
     display: block;
     margin: 20px auto;

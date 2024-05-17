@@ -138,7 +138,8 @@ export const MypageStyle = styled.div<MypageStyleProps>`
 
   .contents {
     display: ${({ $commentsView }) => ($commentsView ? "flex" : "grid")};
-    grid-template-columns: ${({ $likePlaceView }) => ($likePlaceView ? "repeat(2, 1fr)" : "repeat(3, 1fr)")};
+    grid-template-columns: ${({ $likePlaceView }) =>
+      $likePlaceView ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(32%, auto))"};
     gap: 0.5rem;
     flex-direction: column;
     place-items: center;

@@ -80,7 +80,11 @@ export const MainPostCardStyle = styled.div`
     width: 80%;
     align-items: center;
     gap: 0.3rem;
+    h1 {
+      line-height: 1.5;
+    }
   }
+
   .category {
     font-size: 1rem;
     font-weight: 600;
@@ -111,5 +115,10 @@ export const MainPostCardStyle = styled.div`
 const MainCardImageStyle = styled(CardImageStyle)`
   border-radius: ${({ theme }) => theme.borderRadius.default};
   width: 100%;
+  background-size: cover;
+
+  &::after {
+    background: none;
+  }
 `;
 export default MainPostCard;
