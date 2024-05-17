@@ -1,7 +1,7 @@
 import { httpClient } from "./https";
 import { Comment } from "@/models/comment.model";
 import { Schedule } from "@/models/schedule.model";
-import { Pagination, Post, PostList } from "@/models/post.model";
+import { Pagination, PostList } from "@/models/post.model";
 import { PlaceDetails } from "@/models/place.model";
 import { Profile } from "@/models/profile.model";
 
