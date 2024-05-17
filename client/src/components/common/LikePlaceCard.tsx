@@ -7,11 +7,17 @@ import { useState } from "react";
 
 interface Props {
   PlaceProps: PlaceDetails;
+  likePlaceRefetch: () => void;
 }
 
-const LikePlaceCard = ({ PlaceProps }: Props) => {
+const LikePlaceCard = ({ PlaceProps, likePlaceRefetch }: Props) => {
   const MarkIcon = icons.BookmarkIcon;
   const [isModalOpen, setIsModalOpen] = useState(false);
+
+  const hondleOnClosed = () => {
+    setIsModalOpen(false);
+    likePlaceRefetch();
+  };
 
   return (
     <>
@@ -29,7 +35,7 @@ const LikePlaceCard = ({ PlaceProps }: Props) => {
           <span>{PlaceProps.tel}</span>
         </div>
       </LikePlaceCardStyle>
-      {isModalOpen && <PlaceModal placeId={PlaceProps.id} onClosed={() => setIsModalOpen(false)} />}
+      {isModalOpen && <PlaceModal placeId={PlaceProps.id} onClosed={hondleOnClosed} />}
     </>
   );
 };
