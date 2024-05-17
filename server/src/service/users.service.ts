@@ -1,4 +1,11 @@
 import { AppDataSource } from "@/config/ormSetting";
+import {
+  ALREADY_NICKNAME,
+  BAD_REQUEST_LOGIN,
+  EXIST_USER,
+  FAILED_HASH_PASSWORD,
+  NOT_EXIST_USER,
+} from "@/constants/message";
 import { Users } from "@/models/users.model";
 import UserRepository from "@/repository/users.repo";
 import { SALT_ROUND } from "@/settings";
@@ -18,13 +25,15 @@ const login = async (email: string, password: string) => {
     return { user, accessToken, refreshToken };
   }
 
-  throw new Error("아이디 또는 비밀번호가 일치하지 않습니다.");
+  throw new Error(BAD_REQUEST_LOGIN);
 };
 
 const join = async (email: string, password: string, nickName: string) => {
   const hashedPassword = await bcrypt.hash(password, SALT_ROUND);
 
-  await UserRepository.create(email, hashedPassword, nickName);
+  if (!hashedPassword) throw new Error(FAILED_HASH_PASSWORD);
+
+  return await UserRepository.create(email, hashedPassword, nickName);
 };
 
 const reqUserWithdraw = async (userId: number) => {
@@ -61,13 +70,13 @@ const reqImageUpload = async (path: string, userId: number) => {
 const checkEmail = async (email: string) => {
   const user = await UserRepository.findByEmail(email);
 
-  if (user) return { success: true, msg: "사용자가 존재합니다." };
-  return { success: false, msg: "존재하지 않는 사용자 입니다." };
+  if (user) return { success: true, msg: EXIST_USER };
+  return { success: false, msg: NOT_EXIST_USER };
 };
 
 const checkNickname = async (nickname: string) => {
   const user = await UserRepository.findByNickname(nickname);
-  if (user) throw new Error("이미 존재하는 닉네임입니다.");
+  if (user) throw new Error(ALREADY_NICKNAME);
 };
 
 const hashPassword = async (password: string) => {

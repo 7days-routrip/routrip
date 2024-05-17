@@ -1,25 +1,39 @@
 import { Comment } from "@/models/comment.model";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+
 interface Props {
-  CommentProps: Comment;
+  commentProps: Comment;
+  onDelete: () => void;
+  onEdit: (updatedComment: string) => void;
 }
 
-const CommentCard = ({ CommentProps }: Props) => {
+const CommentCard = ({ commentProps, onDelete, onEdit }: Props) => {
+  const handleEdit = () => {
+    const updatedComment = prompt("댓글을 수정하세요", commentProps.content);
+    if (updatedComment) {
+      onEdit(updatedComment);
+    }
+  };
+
   return (
     <CommentStyle>
-      <Link to={`/posts/${CommentProps.postId}`}>
+      <Link to={`/posts/${commentProps.postId}`}>
         <div className="comment-body">
           <div className="comment-text">
-            <span>{CommentProps.content}</span>
+            <span>{commentProps.content}</span>
           </div>
           <div className="post-title">
-            <span>{CommentProps.postTitle}</span>
+            <span>{commentProps.postTitle}</span>
           </div>
         </div>
       </Link>
       <div className="comment-date">
-        <span>작성일: {CommentProps.createDate}</span>
+        <span>작성일: {commentProps.createDate}</span>
+        <div>
+          <button onClick={handleEdit}>수정</button>
+          <button onClick={onDelete}>삭제</button>
+        </div>
       </div>
     </CommentStyle>
   );
@@ -38,7 +52,7 @@ const CommentStyle = styled.div`
   justify-content: space-between;
   align-items: flex-start;
 
-  .omment-body {
+  .comment-body {
     width: 500px;
     display: flex;
     flex-direction: column;

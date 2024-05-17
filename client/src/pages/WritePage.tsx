@@ -22,7 +22,7 @@ const uploadImage = async (file: File) => {
     const formData = new FormData();
     formData.append("posts", file);
 
-    const response = await httpClient.post("/posts/1/upload/img", formData, {
+    const response = await httpClient.post("/posts/upload/img", formData, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
