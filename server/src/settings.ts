@@ -15,3 +15,4 @@ export const ACCESS_KEY = process.env.ACCESS_KEY as string;
 export const SECRET_ACCESS_KEY = process.env.SECRET_ACCESS_KEY as string;
 export const S3_BUCKET_REGION = process.env.S3_BUCKET_REGION as string;
 export const S3_BUCKET_NAME = process.env.S3_BUCKET_NAME as string;
+export const LIMIT = 12;

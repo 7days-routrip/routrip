@@ -2,10 +2,12 @@ import { AppDataSource } from "@/config/ormSetting";
 import { BAD_REQUEST_COMMENT, NOT_FOUND_POST } from "@/constants/message";
 import { Comments } from "@/models/comments.model";
 import { Posts } from "@/models/posts.model";
-import { setDateFromat } from "@/utils/posts.utils";
+import { LIMIT } from "@/settings";
+import { getOffset, setDateFromat } from "@/utils/posts.utils";
 
 const commentRepo = AppDataSource.getRepository(Comments);
-const reqCommentsList = async (userId: number) => {
+const reqCommentsList = async (userId: number, pages: string) => {
+  const offset = await getOffset(parseInt(pages), LIMIT);
   const commentList = await commentRepo.find({ where: { user: { id: userId } } });
   if (!commentList || commentList.length < 1) return { success: false, msg: "does not exist comments" };
   const retrunCmt = await Promise.all(
@@ -15,19 +17,29 @@ const reqCommentsList = async (userId: number) => {
           postId: undefined,
           content: cmt.content,
           postTitle: NOT_FOUND_POST,
-          createDate:
-            cmt.createdAt === cmt.updatedAt ? await setDateFromat(cmt.createdAt) : await setDateFromat(cmt.updatedAt),
+          createDate: await setDateFromat(cmt.createdAt),
         };
       }
       return {
         postId: cmt.post.id,
         content: cmt.content,
         postTitle: cmt.post.title,
-        createDate: cmt.createdAt === cmt.updatedAt ? setDateFromat(cmt.createdAt) : setDateFromat(cmt.updatedAt),
+        createDate: await setDateFromat(cmt.createdAt),
       };
     }),
-  );
-  return { success: true, data: retrunCmt };
+  ).then((res) => {
+    return res
+      .sort((a, b) => {
+        const bDate = new Date(b.createDate).getTime();
+        const aDate = new Date(a.createDate).getTime();
+        console.log(bDate);
+        console.log(aDate);
+        return bDate - aDate;
+      })
+      .filter((post) => post !== undefined);
+  });
+
+  return { success: true, data: retrunCmt.slice(offset, offset + LIMIT), count: retrunCmt.length };
 };
 const reqPostCommentsList = async (postId: number) => {
   const commentList = await commentRepo.find({ where: { post: { id: postId } } });

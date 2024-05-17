@@ -45,7 +45,7 @@ const PostPage = () => {
       } else {
         setPosts((prev) => [...prev, ...data.posts]);
       }
-      setHasMore(data.pagination.page * 2 < data.pagination.totalPosts);
+      setHasMore(data.pagination.page * 2 < data.pagination.totalItems);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }

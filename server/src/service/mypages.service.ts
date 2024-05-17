@@ -5,6 +5,8 @@ import { Likes } from "@/models/likes.model";
 import { Picks } from "@/models/picks.model";
 import { Posts } from "@/models/posts.model";
 import { Users } from "@/models/users.model";
+import { LIMIT } from "@/settings";
+import { getOffset, setDateFromat } from "@/utils/posts.utils";
 
 const jnRepo = AppDataSource.getRepository(Journeys);
 const postRepo = AppDataSource.getRepository(Posts);
@@ -31,5 +33,25 @@ const getAllUserData = async (userId: number) => {
     likeSpotsNum: pickCount,
   };
 };
-const MypagesService = { getAllUserData };
+const getJourneysList = async (userId: number, pages: number) => {
+  const offset = await getOffset(pages, LIMIT);
+  const journeyData = await jnRepo.find({ where: { user: { id: userId } } });
+  if (journeyData.length === 0) return { success: false, msg: "empth list of journeys" };
+  const responseJourneyData = await Promise.all(
+    journeyData.map(async (jn) => {
+      const startDate = await setDateFromat(jn.startDate);
+      const endDate = await setDateFromat(jn.endDate);
+      return {
+        id: jn.id,
+        title: jn.title,
+        startDate: startDate,
+        endDate: endDate,
+        thumbnail: jn.thumbnail,
+      };
+    }),
+  );
+
+  return { success: true, data: responseJourneyData.splice(offset, offset + LIMIT), count: responseJourneyData.length };
+};
+const MypagesService = { getAllUserData, getJourneysList };
 export default MypagesService;
