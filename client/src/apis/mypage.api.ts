@@ -1,7 +1,7 @@
 import { httpClient } from "./https";
 import { Comment } from "@/models/comment.model";
 import { Schedule } from "@/models/schedule.model";
-import { Post, PostList } from "@/models/post.model";
+import { Pagination, Post, PostList } from "@/models/post.model";
 import { PlaceDetails } from "@/models/place.model";
 import { Profile } from "@/models/profile.model";
 
@@ -28,67 +28,102 @@ export const fetchProfile = async () => {
 };
 
 // 내 일정
+interface fetchScheduleResponse {
+  schedules: Schedule[];
+  pagination: Pagination;
+}
 
-export const fetchMySchedule = async () => {
+export const fetchMySchedule = async (page: number) => {
   try {
-    const { data } = await httpClient.get<Schedule[]>("/mypages/journeys");
+    const { data } = await httpClient.get<fetchScheduleResponse>(`/mypages/journeys?pages=${page}`);
     return data;
-  } catch (error: any) {
-    // 에러 처리
-    if (error.response.status === 404) {
-      return [];
-    } else {
-    }
+  } catch (error) {
+    return {
+      schedules: [],
+      pagination: {
+        totalPosts: 0,
+        page: 1,
+      },
+    };
   }
 };
 
 // 내 게시글
-export const fetchMyPosts = async () => {
+export const fetchMyPosts = async (page: number) => {
   try {
-    const { data } = await httpClient.get<PostList>("/mypages/posts?pages=1");
+    const { data } = await httpClient.get<PostList>(`/mypages/posts?pages=${page}`);
     return data;
   } catch (error) {
     // 에러 처리
     console.log(error);
     return {
       posts: [],
-      pagenation: {},
+      pagination: {
+        totalPosts: 0,
+        page: 1,
+      },
     };
   }
 };
 
 // 내 댓글
-export const fetchMyComments = async () => {
+interface fetchCommentResponse {
+  comments: Comment[];
+  pagination: Pagination;
+}
+export const fetchMyComments = async (page: number) => {
   try {
-    const { data } = await httpClient.get<Comment[]>("/mypages/comments");
+    const { data } = await httpClient.get<fetchCommentResponse>(`/mypages/comments?pages=${page}`);
     return data;
   } catch (error) {
     // 에러 처리
     console.log(error);
-    return [];
+    return {
+      comments: [],
+      pagination: {
+        totalPosts: 0,
+        page: 1,
+      },
+    };
   }
 };
 
 // 여행글 좋아요
-export const fetchLikePost = async () => {
+export const fetchLikePost = async (page: number) => {
   try {
-    const { data } = await httpClient.get<Post[]>("/likes/posts");
+    const { data } = await httpClient.get<PostList>(`/likes/posts?pages=${page}`);
     return data;
   } catch (error) {
     // 에러 처리
     console.log(error);
-    return [];
+    return {
+      posts: [],
+      pagination: {
+        totalPosts: 0,
+        page: 1,
+      },
+    };
   }
 };
 
 // 찜한 장소
-export const fetchLikePlace = async () => {
+interface fetchPlaceResponse {
+  places: PlaceDetails[];
+  pagination: Pagination;
+}
+export const fetchLikePlace = async (page: number) => {
   try {
-    const { data } = await httpClient.get<PlaceDetails[]>("/likes/places");
+    const { data } = await httpClient.get<fetchPlaceResponse>(`/likes/places?pages=${page}`);
     return data;
   } catch (error) {
     // 에러 처리
     console.log(error);
-    return [];
+    return {
+      places: [],
+      pagination: {
+        totalPosts: 0,
+        page: 1,
+      },
+    };
   }
 };

@@ -2,7 +2,6 @@ import { Profile } from "@/models/profile.model";
 import styled from "styled-components";
 import { useEffect, useState } from "react";
 import { useSearchParams } from "react-router-dom";
-import { Schedule } from "@/models/schedule.model";
 import ScheduleCard from "@/components/common/scheduleCard";
 import { useComment, useLikePlace, useLikePost, usePost, useProfile, useSchedule } from "@/hooks/useMypage";
 import { Button } from "@/components/common/Button";
@@ -11,6 +10,7 @@ import CommentCard from "@/components/common/Comment";
 import LikePlaceCard from "@/components/common/LikePlaceCard";
 import ProfileCard from "@/components/common/ProfileCard";
 import { QUERYSTRING } from "@/constants/querystring";
+import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
 
 const TAGLIST = [
   { name: "일정 모음", queryValue: "schedules" },
@@ -32,19 +32,49 @@ const dummyData: Profile = {
 };
 
 const Mypage = () => {
+  // const [scrollPosition, setScrollPosition] = useState<number>(0);
   const [activeTag, setActiveTag] = useState([true, false, false, false, false]);
-  const { schedules, isEmptySchedules, scheduleRefetch } = useSchedule();
-  const { posts, isEmptyPosts, postsRefetch } = usePost();
-  const { comments, isEmptyComments, commentsRefetch } = useComment();
-  const { likePosts, isEmptyLikePosts, likePostRefetch } = useLikePost();
-  const { likePlaces, isEmptyLikePlace, likePlaceRefetch } = useLikePlace();
+  const [activeIndex, setActiveIndex] = useState(0);
+  const { schedules, isEmptySchedules, scheduleRefetch, nextSchedules, hasNextSchedules } = useSchedule();
+  const { posts, isEmptyPosts, postsRefetch, nextPosts, hasNextPosts } = usePost();
+  const { comments, isEmptyComment, commentsRefetch, nextComments, hasNextComments } = useComment();
+  const { likePosts, isEmptyLikePosts, likePostRefetch, nextLikePosts, hasNextLikePost } = useLikePost();
+  const { likePlaces, isEmptyLikePlace, likePlaceRefetch, nextLikePlaces, hasNextPlaces } = useLikePlace();
   const { profileInfo, isProfileLoding } = useProfile();
   const [searchParams, setSearchParams] = useSearchParams();
+
+  const moreRef = useIntersectionObserver(([entry]) => {
+    if (entry.isIntersecting) {
+      switch (activeIndex) {
+        case 0:
+          if (!hasNextSchedules) break;
+          nextSchedules();
+          break;
+        case 1:
+          if (!hasNextPosts) break;
+          nextPosts();
+          break;
+        case 2:
+          if (!hasNextComments) break;
+          nextComments();
+          break;
+        case 3:
+          if (!hasNextLikePost) break;
+          nextLikePosts();
+          break;
+        case 4:
+          if (!hasNextPlaces) break;
+          nextLikePlaces();
+          break;
+      }
+    }
+  });
 
   const handleMypageTag = (idx: number, tag: string) => {
     const newSearchParams = new URLSearchParams(searchParams);
     const newActiveTag = new Array(5).fill(false);
     newActiveTag[idx] = true;
+    setActiveIndex(idx);
     setActiveTag(newActiveTag);
     if (tag === null) {
       newSearchParams.delete(QUERYSTRING.TAG);
@@ -104,8 +134,8 @@ const Mypage = () => {
           {!isEmptyPosts && activeTag[1]
             ? posts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
             : null}
-          {!isEmptyComments && activeTag[2]
-            ? comments?.map((item, idx) => <CommentCard CommentProps={item} key={idx} />)
+          {!isEmptyComment && activeTag[2]
+            ? comments?.map((item, idx) => <CommentCard commentProps={item} key={idx} />)
             : null}
           {!isEmptyLikePosts && activeTag[3]
             ? likePosts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
@@ -115,6 +145,7 @@ const Mypage = () => {
             : null}
         </div>
       </div>
+      <div ref={moreRef}></div>
     </MypageStyle>
   );
 };
