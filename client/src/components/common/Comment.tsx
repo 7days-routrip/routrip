@@ -1,24 +1,22 @@
 import { Comment } from "@/models/comment.model";
+import { showAlert } from "@/utils/showAlert";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
 
 interface Props {
   commentProps: Comment;
-  onDelete: () => void;
-  onEdit: (updatedComment: string) => void;
 }
 
-const CommentCard = ({ commentProps, onDelete, onEdit }: Props) => {
-  const handleEdit = () => {
-    const updatedComment = prompt("댓글을 수정하세요", commentProps.content);
-    if (updatedComment) {
-      onEdit(updatedComment);
-    }
-  };
-
+const CommentCard = ({ commentProps }: Props) => {
   return (
     <CommentStyle>
-      <Link to={`/posts/${commentProps.postId}`}>
+      <Link
+        to={commentProps.postId === 0 ? `` : `/post/${commentProps.postId}`}
+        onClick={() => {
+          commentProps.postId === 0 && showAlert("삭제된 게시판입니다.", "logo");
+        }}
+      >
+
         <div className="comment-body">
           <div className="comment-text">
             <span>{commentProps.content}</span>
@@ -29,11 +27,7 @@ const CommentCard = ({ commentProps, onDelete, onEdit }: Props) => {
         </div>
       </Link>
       <div className="comment-date">
-        <span>작성일: {commentProps.createDate}</span>
-        <div>
-          <button onClick={handleEdit}>수정</button>
-          <button onClick={onDelete}>삭제</button>
-        </div>
+        <span>작성일: {commentProps.createdAt}</span>
       </div>
     </CommentStyle>
   );
