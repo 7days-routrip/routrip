@@ -4,7 +4,7 @@ import PostCard, { AreaType } from "@/components/common/postCard";
 import { Post } from "@/models/post.model";
 import { useEffect, useRef, useState } from "react";
 import { ViewMode } from "@/components/common/postCard";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Country, regions } from "@/data/region";
 import RegionCountrySelector from "@/components/common/RegionCountrySelector";
 
@@ -24,13 +24,16 @@ const PostPage = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
-  const loader = useRef(null);
+  const loader = useRef<HTMLDivElement | null>(null);
+  const itemsPerPage = 12;
 
   const location = useLocation();
   const nav = useNavigate();
   const params = new URLSearchParams(location.search);
-  const area = params.get("area");
+  const areaParam = params.get("area");
   const countryId = params.get("filter") || "";
+
+  const area: AreaType = areaParam === "home" || areaParam === "abroad" ? areaParam : "home";
 
   const clickListBtn = () => setView("list");
   const clickGridBtn = () => setView("grid");
@@ -38,14 +41,16 @@ const PostPage = () => {
   const fetchPosts = async (reset = false) => {
     setLoading(true);
     try {
-      const response = await fetch(`http://localhost:1234/api/posts?area=${area}&filter=${countryId}&pages=${page}`);
+      const response = await fetch(
+        `http://localhost:1234/api/posts?area=${area}&filter=${countryId}&pages=${page}&limit=${itemsPerPage}`,
+      );
       const data = await response.json();
       if (reset) {
         setPosts(data.posts);
       } else {
         setPosts((prev) => [...prev, ...data.posts]);
       }
-      setHasMore(data.pagination.page * 2 < data.pagination.totalPosts);
+      setHasMore(data.pagination.page * itemsPerPage < data.pagination.totalPosts);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -144,7 +149,7 @@ const PostPage = () => {
         ) : (
           sortedPosts.map((post, index) => <PostCard key={post.id || index} PostProps={post} view={view} />)
         )}
-        {posts.length === 0 ? "" : <div ref={loader} />}
+        {posts.length > 0 && <div ref={loader} />}
       </div>
     </PostPageStyle>
   );
@@ -152,13 +157,11 @@ const PostPage = () => {
 
 const PostPageStyle = styled.div<PostPageStyleProps>`
   .main-content {
-    /* display: grid; */
     justify-content: center;
     align-items: center;
     max-width: ${(props) => (props.view === "list" ? "790px" : "1080px")};
     border-bottom: 1px solid #e7e7e7;
     padding: 20px 0px;
-    /* margin: 10px auto 20px auto; */
     margin: 0 auto;
   }
 
