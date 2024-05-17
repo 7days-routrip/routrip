@@ -18,7 +18,7 @@ const reqPostInsertData = async (data: iPostsInsertProps, userId: number) => {
     title: data.title,
     startDate: data.startDate,
     endDate: data.endDate,
-    expense: data.totalExpense,
+    expense: data.expense,
     user: { id: userId },
     journey: { id: data.journeyId },
     continent: { id: data.continent },
@@ -122,35 +122,42 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
   const commentsNum = await getPostComments(postId);
   const startDate = await setDateFromat(postData.startDate);
   const endDate = await setDateFromat(postData.endDate);
-  const createAt = await setDateFromat(postData.createdAt);
-  const updatedAt = await setDateFromat(postData.updatedAt);
-  const days = await routeDaysRepo.find({ where: { route: { id: postData.journey.route.id } } });
-  const responsePostsData = await Promise.all(
-    days.map(async (day) => {
-      const spots = await daySeqRepo.find({ where: { routeDay: { id: day.id } } });
-      return {
-        day: day.day,
-        spot: !spots
-          ? []
-          : spots.map((spot) => {
-              const open = [];
-              if (spot.place.openingHours !== null) {
-                const opening = spot.place.openingHours.split(",");
-                for (let k = 0; k < opening.length; k++) {
-                  open.push(opening[k].trim());
+  const createdAt = await setDateFromat(postData.createdAt);
+  let jouneyData = {};
+  if (postData.journey === null) {
+  } else {
+    const days = await routeDaysRepo.find({ where: { route: { id: postData.journey.route.id } } });
+    const responsePostsData = await Promise.all(
+      days.map(async (day) => {
+        const spots = await daySeqRepo.find({ where: { routeDay: { id: day.id } } });
+        return {
+          day: day.day,
+          spot: !spots
+            ? []
+            : spots.map((spot) => {
+                const open = [];
+                if (spot.place.openingHours !== null) {
+                  const opening = spot.place.openingHours.split(",");
+                  for (let k = 0; k < opening.length; k++) {
+                    open.push(opening[k].trim());
+                  }
                 }
-              }
-              return {
-                placeId: spot.place.id,
-                name: spot.place.name,
-                tel: spot.place.tel,
-                address: spot.place.address,
-                openingHours: open[0] === "" ? [] : open,
-              };
-            }),
-      };
-    }),
-  );
+                return {
+                  placeId: spot.place.id,
+                  name: spot.place.name,
+                  tel: spot.place.tel,
+                  address: spot.place.address,
+                  openingHours: open[0] === "" ? [] : open,
+                };
+              }),
+        };
+      }),
+    );
+    jouneyData = {
+      id: postData.journey.id,
+      spots: responsePostsData,
+    };
+  }
   const responsePost = {
     id: postData.id,
     title: postData.title,
@@ -158,7 +165,7 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
     contents: postData.content,
     totalExpense: postData.expense,
     date: startDate + "-" + endDate,
-    createAt: createAt === updatedAt ? createAt : updatedAt,
+    createdAt: createdAt,
     continent: {
       id: postData.continent.id,
       name: postData.continent.name,
@@ -170,10 +177,7 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
     likesNum: likesNum,
     liked: userId ? likedPost : false,
     commentsNum: commentsNum,
-    journeys: {
-      id: postData.journey.id,
-      spots: responsePostsData,
-    },
+    journeys: jouneyData,
   };
 
   return { success: true, data: responsePost };
@@ -184,7 +188,7 @@ const reqPostEditData = async (data: iPostsInsertProps, userId: number, postId: 
     title: data.title,
     startDate: data.startDate,
     endDate: data.endDate,
-    expense: data.totalExpense,
+    expense: data.expense,
     user: { id: userId },
     journey: { id: data.journeyId },
     continent: { id: data.continent },
@@ -218,20 +222,17 @@ const getPostImg = (content: string) => {
   return undefined;
 };
 
-const reqImageUpload = async (url: string, postId: number) => {
-  return await postRepo.update(postId, { postsImg: url });
-};
-
 const postsListReturnData = async (post: Posts) => {
   const likesNum = await getPostLikes(post.id);
   const commentsNum = await getPostComments(post.id);
   const startDate = await setDateFromat(post.startDate);
   const endDate = await setDateFromat(post.endDate);
+  const createdAt = await setDateFromat(post.createdAt);
   return {
     id: post.id,
     title: post.title,
     date: startDate + "-" + endDate,
-    createAt: post.createdAt === post.updatedAt ? post.createdAt : post.updatedAt,
+    createdAt: createdAt,
     author: post.user.nickName,
     profileImg: post.user.profileImg === null ? "" : post.user.profileImg,
     continent: {
@@ -269,7 +270,7 @@ const PostsService = {
   reqPostData,
   reqPostEditData,
   reqPostDelData,
-  reqImageUpload,
+  // reqImageUpload,
   reqHotPosts,
   reqRecommendPosts,
 };

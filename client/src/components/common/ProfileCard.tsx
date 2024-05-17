@@ -1,7 +1,7 @@
 import { Profile } from "@/models/profile.model";
 import styled from "styled-components";
 
-export const DEFAULT_IMAGE = "assets/images/profile-default.png";
+export const DEFAULT_IMAGE = "https://7days-bucket.s3.ap-northeast-2.amazonaws.com/profile-default.png";
 
 interface Props {
   ProfileProps: Profile;

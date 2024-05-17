@@ -109,7 +109,7 @@ const PostDetailPage = () => {
         <PinIcon /> DAY 2 - 장소1 • 장소2
       </div>
       <div className="plan">🗒️ 전체 일정 담아가기</div>
-      <div className="content-container" dangerouslySetInnerHTML={{ __html: post.conetents }} />
+      <div className="content-container" dangerouslySetInnerHTML={{ __html: post.contents }} />
       <div className="btn-wrapper">
         <Button $size="medium" $scheme="primary" $radius="default">
           <LikeIcon /> {post.likesNum}
@@ -153,9 +153,13 @@ const PostDetailPageStyle = styled.div`
   .comment-container {
     border-bottom: 1px solid #e7e7e7;
   }
+  .content-container .image {
+    width: unset;
+    height: unset;
+  }
   .content-container img {
-    max-width: 100%;
-    max-height: 100%;
+    width: 100%;
+    height: 100%;
     height: auto;
     display: block;
     margin: 20px auto;

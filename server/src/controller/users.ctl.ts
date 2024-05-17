@@ -41,6 +41,7 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
     res.setHeader("Authorization", `Bearer ${results.accessToken}`);
     res.cookie("refresh_token", results.refreshToken, {
       httpOnly: true,
+      expires: new Date(Date.now() + 1000 * 60 * 60 * 24 * 14),
     });
     res.status(StatusCodes.OK).json({
       message: "로그인이 완료되었습니다.",

@@ -170,10 +170,16 @@ const PlaceModalStyle = styled.div`
     align-items: center;
     justify-content: center;
     padding: 0.5rem 0;
-
+    overflow: hidden;
+    position: relative;
+    height: 200px;
+    margin: 1rem 0;
     img {
-      max-width: 70%;
-      height: 200px;
+      width: 100%;
+      position: absolute;
+      left: 50%;
+      top: 50%;
+      transform: translate(-50%, -50%);
     }
   }
 
@@ -218,6 +224,7 @@ const PlaceModalStyle = styled.div`
     overflow-wrap: break-word; /* 단어를 자동으로 줄바꿈 */
     word-break: break-all; /* 단어 중간에 줄바꿈을 허용 */
     white-space: normal; /* 공백 처리를 기본값으로 */
+    flex: 1;
   }
 
   .opening-hours-content {

@@ -32,7 +32,18 @@ const reqCommentsList = async (userId: number) => {
 const reqPostCommentsList = async (postId: number) => {
   const commentList = await commentRepo.find({ where: { post: { id: postId } } });
   if (!commentList || commentList.length < 1) return { success: false, msg: "does not exist comments" };
-  return { success: true, data: commentList };
+  const commentData = await Promise.all(
+    commentList.map(async (comment) => {
+      return {
+        id: comment.id,
+        content: comment.content,
+        nickName: comment.user.nickName,
+        profileImg: comment.user.profileImg ? comment.user.profileImg : "",
+        createdAt: await setDateFromat(comment.createdAt),
+      };
+    }),
+  );
+  return { success: true, data: commentData };
 };
 
 const addComment = async (userId: number, postId: number, content: string) => {

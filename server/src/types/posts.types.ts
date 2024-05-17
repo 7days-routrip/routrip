@@ -4,7 +4,7 @@ export interface iPostsInsertProps {
   endDate: string;
   continent: number;
   country: number;
-  totalExpense: number;
+  expense: number;
   journeyId: number;
   contents: string;
   postsImg: string;

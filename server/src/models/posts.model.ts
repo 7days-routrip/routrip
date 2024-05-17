@@ -16,7 +16,7 @@ export class Posts {
   @Column("text")
   content!: string;
 
-  @Column("blob", { nullable: true })
+  @Column("varchar", { length: 512, nullable: true })
   postsImg!: string | undefined;
 
   @ManyToOne((type) => Users, { eager: true })

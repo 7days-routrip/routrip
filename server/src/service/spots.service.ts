@@ -36,9 +36,7 @@ const register = async (
   place.siteUrl = siteUrl;
   place.tel = tel;
   place.img = placeS3Img;
-
-  const locationStr: string = location.lat + ", " + location.lng;
-  place.location = locationStr;
+  place.location = `${location.lat}, ${location.lng}`;
 
   const openingHoursArr: string[] = openingHours;
   place.openingHours = openingHoursArr.join(", ");

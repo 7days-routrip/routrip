@@ -57,6 +57,10 @@ const CategoryImageStyle = styled(CardImageStyle)`
   height: 80px;
   border-radius: 50%;
 
+  &::after {
+    background: none;
+  }
+
   @media (max-width: 768px) {
     width: 60px;
     height: 60px;
