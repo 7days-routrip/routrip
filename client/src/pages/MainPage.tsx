@@ -1,4 +1,3 @@
-import { BestPosts } from "@/apis/main.api";
 import CategoryCard from "@/components/common/CategoryCard";
 import GuidePostCard from "@/components/common/GuidePostCard";
 import Loading from "@/components/common/Loading";
