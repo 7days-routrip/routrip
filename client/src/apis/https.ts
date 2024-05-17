@@ -55,10 +55,12 @@ const createClient = (config?: AxiosRequestConfig) => {
         showAlert("이 페이지에 대한 접근 권한이 없습니다.", "error", () => (window.location.href = "/"));
         return;
       } else if (err.response.status === 400) {
-        showAlert("잘못된 요청입니다.\n입력한 정보를 확인하고 다시 시도해주세요.", "error");
+        showAlert(err.response.data.message, "error");
+        console.error(err);
         return;
       } else if (err.response.status >= 500) {
         showAlert("서버에 문제가 발생했습니다.\n잠시 후에 다시 시도해주세요.", "error");
+        console.error(err);
         return;
       }
       return Promise.reject(err);

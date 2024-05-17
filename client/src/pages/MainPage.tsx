@@ -1,4 +1,3 @@
-import { BestPosts } from "@/apis/main.api";
 import CategoryCard from "@/components/common/CategoryCard";
 import GuidePostCard from "@/components/common/GuidePostCard";
 import Loading from "@/components/common/Loading";
@@ -34,17 +33,16 @@ const dummyPost: Post = {
 const MainPage = () => {
   const { bestPosts, homePosts, abroadPosts, isBestPostsLoading, isHomePostsLoading, isAbroadPostsLoading } = useMain();
 
-  // if (!bestPosts || !homePosts || !abroadPosts || isBestPostsLoading || isHomePostsLoading || isAbroadPostsLoading)
-  //   return <Loading />;
+  if (!bestPosts || !homePosts || !abroadPosts || isBestPostsLoading || isHomePostsLoading || isAbroadPostsLoading)
+    return <Loading />;
 
   return (
     <MainPageStyle>
       <Banner />
       <SlideSection title="🔥HOT한 여행지는 여기!">
-        {/* {Array.from({ length: 10 }, (_, i) => (
-          <MainPostCard key={i} PostPops={dummyPost} />
-        ))} */}
-        {bestPosts && bestPosts.map((post) => <MainPostCard key={post.id} PostPops={post} />)}
+        {bestPosts.map((post) => (
+          <MainPostCard key={post.id} PostPops={post} />
+        ))}
       </SlideSection>
 
       <div className="categories-container">
@@ -70,14 +68,15 @@ const MainPage = () => {
       </div>
 
       <SlideSection title="🚗국내 여행지">
-        {homePosts && homePosts.posts.map((post: Post) => <MainPostCard key={post.id} PostPops={post} />)}
+        {homePosts.posts.map((post: Post) => (
+          <MainPostCard key={post.id} PostPops={post} />
+        ))}
       </SlideSection>
 
       <SlideSection title="✈️해외 여행지">
-        {Array.from({ length: 10 }, (_, i) => (
-          <MainPostCard key={i} PostPops={dummyPost} />
+        {abroadPosts.posts.map((post: Post) => (
+          <MainPostCard key={post.id} PostPops={post} />
         ))}
-        {/* {abroadPosts && abroadPosts.posts.map((post: Post) => <MainPostCard key={post.id} PostPops={post} />)} */}
       </SlideSection>
     </MainPageStyle>
   );

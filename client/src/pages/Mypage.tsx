@@ -111,7 +111,9 @@ const Mypage = () => {
             ? likePosts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
             : null}
           {!isEmptyLikePlace && activeTag[4]
-            ? likePlaces?.map((item, idx) => <LikePlaceCard PlaceProps={item} key={idx} />)
+            ? likePlaces?.map((item, idx) => (
+                <LikePlaceCard PlaceProps={item} likePlaceRefetch={likePlaceRefetch} key={idx} />
+              ))
             : null}
         </div>
       </div>

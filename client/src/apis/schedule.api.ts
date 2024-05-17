@@ -43,7 +43,12 @@ export const getScheduleDetails = async (id: string) => {
     const { data } = await httpClient.get<ScheduleDetails>(`/journeys/${id}`);
     const convertData = convertScheduleDetails(data);
     return convertData;
-  } catch (err) {
+  } catch (err: any) {
+    if (err.response.statuse === 404) {
+      showAlert("존재하지 않는 일정입니다.", "error", () => (window.location.href = "/mypage?tag=schedules"));
+      return;
+    }
+
     console.error("api ", err);
     throw err;
   }
