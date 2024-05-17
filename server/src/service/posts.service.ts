@@ -257,7 +257,10 @@ const postsHot10ReturnData = async (post: Posts) => {
     title: post.title,
     postsImg: post.postsImg === null ? "" : post.postsImg,
     likesNum: likesNum,
-    country: post.country.name,
+    country: {
+      id: post.country.id,
+      name: post.country.name,
+    },
   };
 };
 const PostsService = {

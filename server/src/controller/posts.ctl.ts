@@ -62,7 +62,6 @@ const postAllList = async (req: Request, res: Response) => {
       },
     });
   } catch (err) {
-    console.log(err);
     if (err instanceof Error) {
       if (err.message === "login required")
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });

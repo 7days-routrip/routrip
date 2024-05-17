@@ -44,7 +44,7 @@ const MainPage = () => {
         {/* {Array.from({ length: 10 }, (_, i) => (
           <MainPostCard key={i} PostPops={dummyPost} />
         ))} */}
-        {bestPosts && bestPosts.map((post: BestPosts) => <MainPostCard key={post.id} PostPops={post} />)}
+        {bestPosts && bestPosts.map((post) => <MainPostCard key={post.id} PostPops={post} />)}
       </SlideSection>
 
       <div className="categories-container">

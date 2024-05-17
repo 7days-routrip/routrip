@@ -2,6 +2,7 @@ import { Comment } from "@/models/comment.model";
 import { showAlert } from "@/utils/showAlert";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
+
 interface Props {
   commentProps: Comment;
 }
@@ -15,6 +16,7 @@ const CommentCard = ({ commentProps }: Props) => {
           commentProps.postId === 0 && showAlert("삭제된 게시판입니다.", "logo");
         }}
       >
+
         <div className="comment-body">
           <div className="comment-text">
             <span>{commentProps.content}</span>
@@ -44,7 +46,7 @@ const CommentStyle = styled.div`
   justify-content: space-between;
   align-items: flex-start;
 
-  .omment-body {
+  .comment-body {
     width: 500px;
     display: flex;
     flex-direction: column;

@@ -96,7 +96,7 @@ export const theme: Theme = {
 
   /* button-scheme */
   buttonScheme: {
-    primary: { color: "#ffffff", backgroundColor: "#7aafff", border: "0" },
+    primary: { color: "#ffffff", backgroundColor: "#7aafff", border: "1px solid #7aafff" },
     secondary: { color: "#7aafff", backgroundColor: "#ffffff", border: "1px solid #7aafff" },
     normal: { color: "#333333", backgroundColor: "#ffffff", border: "1px solid #e7e7e7" },
   },

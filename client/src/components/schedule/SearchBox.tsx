@@ -42,6 +42,10 @@ const SearchBoxStyle = styled.div`
   display: flex;
   align-items: center;
 
+  input::placeholder {
+    font-size: ${({ theme }) => theme.fontSize.xsmall};
+  }
+
   .search-input {
     flex: 1;
     padding: 6px 10px;

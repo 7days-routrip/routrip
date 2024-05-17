@@ -1,11 +1,21 @@
 import {
+  ALREADY_EMAIL,
+  ALREADY_NICKNAME,
+  BAD_REQUEST_LOGIN,
   BAD_REQUEST_ORIGIN_PASSWORD,
   BAD_REQUEST_RESET_PASSWORD,
   BAD_REQUEST_WITHDRAW,
   DATA_UPDATE_FAILED,
   DATA_UPDATE_SUCCESSED,
+  EXIST_USER,
+  INTERNAL_SERVER_ERROR,
+  NOT_EXIST_USER,
   NOT_FOUND_USER,
+  OK_EMAIL,
+  OK_JOIN,
+  OK_LOGIN,
   OK_LOGOUT,
+  OK_NINCKNAME,
   OK_RESET_PASSWORD,
   OK_RESET_REQUEST,
   OK_WITHDRAW,
@@ -21,15 +31,15 @@ const join = async (req: Request, res: Response, next: NextFunction) => {
 
   try {
     await UsersService.join(email, password, nickname);
+
+    res.status(StatusCodes.CREATED).json({
+      message: OK_JOIN,
+    });
   } catch (error) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "잘못된 요청입니다.",
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: INTERNAL_SERVER_ERROR,
     });
   }
-
-  res.status(StatusCodes.CREATED).json({
-    message: "회원가입이 완료되었습니다.\n로그인을 진행해주세요.",
-  });
 };
 
 const login = async (req: Request, res: Response, next: NextFunction) => {
@@ -43,16 +53,23 @@ const login = async (req: Request, res: Response, next: NextFunction) => {
       httpOnly: true,
     });
     res.status(StatusCodes.OK).json({
-      message: "로그인이 완료되었습니다.",
+      message: OK_LOGIN,
       userId: results.user.id,
       nickName: results.user.nickName,
     });
-  } catch (error) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "아이디 또는 비밀번호가 일치하지 않습니다.",
+  } catch (error: any) {
+    if (error.message === BAD_REQUEST_LOGIN) {
+      return res.status(StatusCodes.BAD_REQUEST).json({
+        message: BAD_REQUEST_LOGIN,
+      });
+    }
+
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: INTERNAL_SERVER_ERROR,
     });
   }
 };
+
 const logout = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
@@ -97,11 +114,17 @@ const checkEmail = async (req: Request, res: Response, next: NextFunction) => {
     const checkResult = await UsersService.checkEmail(email);
     if (checkResult.success) throw new Error(checkResult.msg);
     res.status(StatusCodes.OK).json({
-      message: "사용 가능한 이메일입니다.",
+      message: OK_EMAIL,
     });
-  } catch (error) {
-    return res.status(StatusCodes.CONFLICT).json({
-      message: "이미 존재하는 이메일입니다.",
+  } catch (error: any) {
+    if (error.message === EXIST_USER) {
+      return res.status(StatusCodes.CONFLICT).json({
+        message: ALREADY_EMAIL,
+      });
+    }
+
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: INTERNAL_SERVER_ERROR,
     });
   }
 };
@@ -112,11 +135,17 @@ const checkNickname = async (req: Request, res: Response, next: NextFunction) =>
   try {
     await UsersService.checkNickname(nickname);
     res.status(StatusCodes.OK).json({
-      message: "사용 가능한 닉네임입니다.",
+      message: OK_NINCKNAME,
     });
-  } catch (error) {
-    return res.status(StatusCodes.CONFLICT).json({
-      message: "이미 존재하는 닉네임입니다.",
+  } catch (error: any) {
+    if (error.message === ALREADY_NICKNAME) {
+      return res.status(StatusCodes.CONFLICT).json({
+        message: ALREADY_NICKNAME,
+      });
+    }
+
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: INTERNAL_SERVER_ERROR,
     });
   }
 };
@@ -150,7 +179,7 @@ const resetRequest = async (req: Request, res: Response) => {
     res.status(StatusCodes.OK).json({ message: OK_RESET_REQUEST });
   } catch (err) {
     if (err instanceof Error) {
-      if (err.message === "존재하지 않는 사용자 입니다.")
+      if (err.message === NOT_EXIST_USER)
         return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_USER });
     }
   }
