@@ -73,8 +73,8 @@ const reqAllPostsList = async (
 
   return {
     success: true,
-    data: responsePostsData.slice(offset, offset + LIMIT),
     count: responsePostsData.length,
+    data: responsePostsData.slice(offset, offset + LIMIT),
   };
 };
 const reqHotPosts = async () => {

@@ -2,9 +2,11 @@ import { AppDataSource } from "@/config/ormSetting";
 import { Comments } from "@/models/comments.model";
 import { Likes } from "@/models/likes.model";
 import { Picks } from "@/models/picks.model";
-import { setDateFromat } from "@/utils/posts.utils";
+import { LIMIT } from "@/settings";
+import { getOffset, setDateFromat } from "@/utils/posts.utils";
 
-const reqPicksList = async (userId: number) => {
+const reqPicksList = async (userId: number, pages: number) => {
+  const offset = await getOffset(pages, LIMIT);
   const pickRepo = AppDataSource.getRepository(Picks);
   const picksResult = await pickRepo.find({
     where: { user: { id: userId } },
@@ -32,7 +34,7 @@ const reqPicksList = async (userId: number) => {
       placeImg: place.place.img ? place.place.img : "",
     };
   });
-  return { success: true, data: returnData };
+  return { success: true, count: returnData.length, data: returnData.splice(offset, offset + LIMIT) };
 };
 
 const reqPicksInsertData = async (userId: number, placeId: string) => {
@@ -54,7 +56,8 @@ const reqPicksDeleteData = async (userId: number, placeId: string) => {
   return { success: true };
 };
 
-const reqLikesList = async (userId: number) => {
+const reqLikesList = async (userId: number, pages: number) => {
+  const offset = await getOffset(pages, LIMIT);
   const likeRepo = AppDataSource.getRepository(Likes);
   const likesResult = await likeRepo.find({ where: { user: { id: userId } } });
   const returnData = await Promise.all(
@@ -67,7 +70,7 @@ const reqLikesList = async (userId: number) => {
         date: (await setDateFromat(like.post.startDate)) + "-" + (await setDateFromat(like.post.endDate)),
         createdAt: await setDateFromat(like.post.createdAt),
         author: like.user.nickName,
-        profileImg: like.user.profileImg,
+        profileImg: like.user.profileImg ? like.user.profileImg : "",
         continent: {
           id: like.post.continent.id,
           name: like.post.continent.name,
@@ -81,10 +84,12 @@ const reqLikesList = async (userId: number) => {
         postsImg: like.post.postsImg ? like.post.postsImg : "",
       };
     }),
-  );
+  ).then((res) => {
+    return res.filter((el) => el);
+  });
 
   if (likesResult.length === 0) return { success: false, msg: "find not list" };
-  return { success: true, data: returnData };
+  return { success: true, count: returnData.length, data: returnData.splice(offset, offset + LIMIT) };
 };
 
 const reqLikesInsertData = async (userId: number, postId: number) => {

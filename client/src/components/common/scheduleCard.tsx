@@ -28,8 +28,8 @@ const ScheduleCard = ({ scheduleProps, view }: Props) => {
 
 const SchedulerImageStyle = styled(CardImageStyle)<CardImageStyleProps>`
   background-image: url(${({ $image }) => ($image ? $image : DEFAULT_IMAGE)});
-  width: ${({ $view }) => ($view === "grid" ? "300px" : "100px")};
-  height: ${({ $view }) => ($view === "grid" ? "150px" : "100px")};
+  /* width: ${({ $view }) => ($view === "grid" ? "300px" : "100px")};
+  height: ${({ $view }) => ($view === "grid" ? "150px" : "100px")}; */
   @media (max-width: 768px) {
     width: ${({ $view }) => ($view === "grid" ? "160px" : "100px")};
     height: ${({ $view }) => ($view === "grid" ? "100px" : "100px")};
@@ -37,8 +37,10 @@ const SchedulerImageStyle = styled(CardImageStyle)<CardImageStyleProps>`
 `;
 
 const ScheduleCardStyle = styled(CardStyle)`
-  width: ${({ $view }) => ($view === "grid" ? "300px" : "auto")};
-  height: ${({ $view }) => ($view === "grid" ? "250px" : "auto")};
+  /* width: ${({ $view }) => ($view === "grid" ? "300px" : "auto")};
+  height: ${({ $view }) => ($view === "grid" ? "250px" : "auto")}; */
+  width: 100%;
+  overflow: hidden;
   display: flex;
   flex-direction: ${({ $view }) => ($view === "grid" ? "column" : "row")};
   @media (max-width: 768px) {

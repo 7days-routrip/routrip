@@ -9,13 +9,13 @@ import { StatusCodes } from "http-status-codes";
 const commentUserAllList = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
-      const pages = req.query.pages as string;
+      const pages = parseInt(req.query.pages as string);
       const userId = req.user.id as number;
       const listResult = await CommentsSevice.reqCommentsList(userId, pages);
       if (!listResult.success) throw new Error(listResult.msg);
       res.status(StatusCodes.OK).json({
-        posts: listResult.data,
-        pagenation: {
+        comments: listResult.data,
+        pagination: {
           page: pages,
           totalItems: listResult.count,
         },
@@ -50,7 +50,6 @@ const postUserAllList = async (req: Request, res: Response) => {
       throw new Error("login required");
     }
   } catch (err) {
-    console.log(err);
     if (err instanceof Error) {
       if (err.message === "login required")
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
@@ -86,8 +85,8 @@ const getJourneysList = async (req: Request, res: Response) => {
     // const journeys = await JourneysService.getJourneysList(user.id as number, pages);
 
     res.status(StatusCodes.OK).json({
-      journeys: listResult.data,
-      pagenation: {
+      schedules: listResult.data,
+      pagination: {
         page: pages,
         totalItems: listResult.count,
       },

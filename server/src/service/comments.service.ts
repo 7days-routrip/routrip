@@ -6,8 +6,8 @@ import { LIMIT } from "@/settings";
 import { getOffset, setDateFromat } from "@/utils/posts.utils";
 
 const commentRepo = AppDataSource.getRepository(Comments);
-const reqCommentsList = async (userId: number, pages: string) => {
-  const offset = await getOffset(parseInt(pages), LIMIT);
+const reqCommentsList = async (userId: number, pages: number) => {
+  const offset = await getOffset(pages, LIMIT);
   const commentList = await commentRepo.find({ where: { user: { id: userId } } });
   if (!commentList || commentList.length < 1) return { success: false, msg: "does not exist comments" };
   const retrunCmt = await Promise.all(

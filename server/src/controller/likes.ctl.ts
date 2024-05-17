@@ -19,15 +19,21 @@ import { StatusCodes } from "http-status-codes";
 const likesPostAllData = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
+      const pages = parseInt(req.query.pages as string);
       const userId = req.user.id as number;
-      const listResult = await LikesService.reqLikesList(userId);
+      const listResult = await LikesService.reqLikesList(userId, pages);
       if (!listResult?.success) throw new Error(listResult?.msg);
-      res.status(StatusCodes.OK).json(listResult.data);
+      res.status(StatusCodes.OK).json({
+        posts: listResult.data,
+        pagination: {
+          page: pages,
+          totalItems: listResult.count,
+        },
+      });
     } else {
       throw new Error("login required");
     }
   } catch (err) {
-    console.log(err);
     if (err instanceof Error) {
       if (err.message === "login required")
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
@@ -92,10 +98,17 @@ const postUnlikeRequest = async (req: Request, res: Response) => {
 const likesPlaceAllData = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
+      const pages = parseInt(req.query.pages as string);
       const userId = req.user.id as number;
-      const listResult = await LikesService.reqPicksList(userId);
+      const listResult = await LikesService.reqPicksList(userId, pages);
       if (!listResult.success) throw new Error(listResult.msg);
-      res.status(StatusCodes.OK).json(listResult.data);
+      res.status(StatusCodes.OK).json({
+        places: listResult.data,
+        pagination: {
+          page: pages,
+          totalItems: listResult.count,
+        },
+      });
     } else {
       throw new Error("login required");
     }
