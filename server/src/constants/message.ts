@@ -1,4 +1,14 @@
 // 사용자
+export const OK_JOIN = "회원가입이 완료되었습니다.\n로그인을 진행해주세요.";
+export const OK_LOGIN = "로그인이 완료되었습니다.";
+export const BAD_REQUEST_LOGIN = "아이디 또는 비밀번호가 일치하지 않습니다.";
+export const FAILED_HASH_PASSWORD = "비밀번호 암호화에 실패했습니다.";
+export const OK_NINCKNAME = "사용 가능한 닉네임입니다.";
+export const ALREADY_NICKNAME = "이미 존재하는 닉네임입니다.";
+export const OK_EMAIL = "사용 가능한 이메일입니다.";
+export const ALREADY_EMAIL = "이미 존재하는 이메일입니다.";
+export const EXIST_USER = "사용자가 존재합니다.";
+export const NOT_EXIST_USER = "존재하지 않는 사용자 입니다.";
 export const UNAUTHORIZED_NOT_LOGIN = "로그인 후 이용이 가능합니다.";
 export const DATA_UPDATE_FAILED = "개인 정보를 수정하는데 실패했습니다.";
 export const DATA_UPDATE_SUCCESSED = "개인 정보를 수정했습니다.";
@@ -11,6 +21,7 @@ export const BAD_REQUEST_ORIGIN_PASSWORD = "현재비밀번호가 일치하지 �
 export const OK_LOGOUT = "로그아웃 되었습니다.";
 export const OK_WITHDRAW = "탈퇴 처리되었습니다.";
 export const BAD_REQUEST_WITHDRAW = "탈퇴를 실패했습니다.";
+export const BAD_REQUEST_USER = "잘못된 요청입니다.";
 //공용
 export const NOT_FOUND_DATA = "존재하지 않는 페이지 입니다.";
 //카테고리
@@ -41,3 +52,6 @@ export const NOT_FOUND_COMMENTS = "댓글이 존재하지 않습니다.";
 export const OK_UPLOAD_COMMENT = "댓글 등록이 완료되었습니다.";
 export const OK_UPDATE_COMMENT = "댓글 수정이 완료되었습니다.";
 export const OK_DELETE_COMMENT = "댓글 삭제가 완료되었습니다.";
+export const BAD_REQUEST_COMMENT = "잘못된 요청입니다.";
+// 500 에러 메세지 전역 처리
+export const INTERNAL_SERVER_ERROR = "서버 내부 오류입니다.";
