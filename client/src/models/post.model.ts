@@ -3,6 +3,7 @@ export interface Post {
   title: string;
   date: string;
   author: string;
+  totalExpense: string;
   profileImg: string;
   continent: {
     id: number;
@@ -26,5 +27,5 @@ export interface Pagination {
 
 export interface PostList {
   posts: Post[];
-  pagination: Pagination;
+  pagenation: Pagination;
 }
