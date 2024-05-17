@@ -6,12 +6,12 @@ WORKDIR /usr/src/app
 COPY package*.json /usr/src/app/
 
 RUN npm install
-RUN npm install -g typescript
+RUN npm install -g typescript http-server
 
 COPY ./ /usr/src/app
 
 RUN npm run build
 
-EXPOSE 1234
+EXPOSE 5173
 
-CMD ["npm", "run", "dev"] 
+CMD ["npx", "http-server", "./dist", "-p", "5173"] 

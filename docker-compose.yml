@@ -1,37 +1,15 @@
 version: '3.3'
 services:
-  # frontend:
-  #   build:
-  #     context: ./client
-  #     dockerfile: Dockerfile
-  #   ports:
-  #     - "5173:5173"
+  frontend:
+    image: 6uamy/taecho-fe:latest
+    ports:
+      - "5173:5173"
   backend:
-    platform: linux/amd64
-    build:
-      context: server
+    image: 6uamy/taecho-be:latest
+    build: 
+      context: ./server
       dockerfile: Dockerfile
-      target: production
-    env_file:
-      - ./server/.env.production
     ports:
       - "1234:1234"
-    volumes:
-      - ./server:/usr/src/app
-
-# version: '3.3'
-
-# services:
-#   api:
-#     container_name: routrip-be
-#     image: 6uamy/routrip-be:latest
-#     build:
-#       context: server
-#       dockerfile: Dockerfile
-#       target: production
-#     env_file:
-#       - ./server/.env.production
-#     ports:
-#       - "1234:1234"
-#     volumes:
-#       - ./server:/usr/src/app
+    stdin_open: true
+    tty: true

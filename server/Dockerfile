@@ -1,35 +1,17 @@
-# Development
-FROM node:18-alpine As development
+FROM node:18-alpine
 
+RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
-COPY package*.json ./
+COPY package*.json /usr/src/app/
+
 RUN npm install
-COPY  . .
+RUN npm install -g typescript
 
-# Production Build
-FROM node:18-alpine As build
-
-WORKDIR /usr/src/app
-
-COPY  package*.json ./
-COPY  --from=development /usr/src/app/node_modules ./node_modules
-COPY  . .
+COPY ./ /usr/src/app
 
 RUN npm run build
 
-ENV NODE_ENV production
-
-RUN npm install --only=production && npm cache clean --force
-
-# Production
-FROM node:18-alpine As production
-
-WORKDIR /usr/src/app
-
-COPY --from=build /usr/src/app/node_modules ./node_modules
-COPY --from=build /usr/src/app/dist ./dist
-
 EXPOSE 1234
 
-CMD [ "npm", "run", "product" ]
+CMD ["npm", "run", "product"] 
