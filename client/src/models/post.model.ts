@@ -15,7 +15,7 @@ export interface Post {
   commentsNum: string;
   likesNum: string;
   postsImg: string;
-  createAt: string;
+  createdAt: string;
   contents: string;
 }
 
