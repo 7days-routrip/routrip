@@ -27,5 +27,5 @@ export interface Pagination {
 
 export interface PostList {
   posts: Post[];
-  pagenation: Pagination;
+  pagination: Pagination;
 }
