@@ -1,4 +1,12 @@
-import { NOT_FOUND_COMMENTS, OK_DELETE_COMMENT, OK_UPDATE_COMMENT, OK_UPLOAD_COMMENT, UNAUTHORIZED_NOT_LOGIN } from "@/constants/message";
+import {
+  BAD_REQUEST_COMMENT,
+  INTERNAL_SERVER_ERROR,
+  NOT_FOUND_COMMENTS,
+  OK_DELETE_COMMENT,
+  OK_UPDATE_COMMENT,
+  OK_UPLOAD_COMMENT,
+  UNAUTHORIZED_NOT_LOGIN,
+} from "@/constants/message";
 import CommentsService from "@/service/comments.service";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
@@ -29,16 +37,21 @@ const addComment = async (req: Request, res: Response) => {
     });
   } catch (err: any) {
     if (err.message === UNAUTHORIZED_NOT_LOGIN) {
-      return res.status(StatusCodes.UNAUTHORIZED).json({ message: err.message });
+      return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
     }
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: err.message });
+
+    if (err.message === BAD_REQUEST_COMMENT) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_COMMENT });
+    }
+
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: INTERNAL_SERVER_ERROR });
   }
 };
 
 const updateComment = async (req: Request, res: Response) => {
   const user = req.user;
   const commentId = parseInt(req.params.id);
-  console.log(commentId)
+  console.log(commentId);
   const { postId, content } = req.body;
   try {
     if (!user?.isLoggedIn) throw new Error(UNAUTHORIZED_NOT_LOGIN);
@@ -51,7 +64,12 @@ const updateComment = async (req: Request, res: Response) => {
     if (err.message === UNAUTHORIZED_NOT_LOGIN) {
       return res.status(StatusCodes.UNAUTHORIZED).json({ message: err.message });
     }
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: err.message });
+
+    if (err.message === BAD_REQUEST_COMMENT) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_COMMENT });
+    }
+
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: INTERNAL_SERVER_ERROR });
   }
 };
 
@@ -69,7 +87,12 @@ const deleteComment = async (req: Request, res: Response) => {
     if (err.message === UNAUTHORIZED_NOT_LOGIN) {
       return res.status(StatusCodes.UNAUTHORIZED).json({ message: err.message });
     }
-    return res.status(StatusCodes.BAD_REQUEST).json({ message: err.message });
+
+    if (err.message === BAD_REQUEST_COMMENT) {
+      return res.status(StatusCodes.BAD_REQUEST).json({ message: BAD_REQUEST_COMMENT });
+    }
+
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({ message: INTERNAL_SERVER_ERROR });
   }
 };
 
