@@ -3,6 +3,7 @@ export interface Post {
   title: string;
   date: string;
   author: string;
+  totalExpense: string;
   profileImg: string;
   continent: {
     id: number;

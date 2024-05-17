@@ -11,15 +11,15 @@ import { Post } from "@/models/post.model";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
 import { useNavigate } from "react-router-dom";
-import { Comment } from "@/models/comment.model";
-import CommentCard from "@/components/common/Comment";
+import { PostComment } from "@/models/comment.model";
+import PostCommentCard from "@/components/common/PostComment";
 
 const PostDetailPage = () => {
   const { id } = useParams();
   const postId = id ? parseInt(id, 10) : undefined;
   const { LikeIcon, CommentIcon, DotIcon, PinIcon } = icons;
   const [post, setPost] = useState<Post | null>(null);
-  const [comments, setComments] = useState<Comment[]>([]);
+  const [comments, setComments] = useState<PostComment[]>([]);
   const [newComment, setNewComment] = useState("");
   const nav = useNavigate();
 
@@ -119,7 +119,7 @@ const PostDetailPage = () => {
       </span>
       <h1>{post.title}</h1>
       <div className="info-container">
-        <p color={theme.color.commentGray}>작성일 :{post.createAt}</p>
+        <p color={theme.color.commentGray}>작성일 :{post.createdAt}</p>
         <div className="btn-wrapper">
           <div>
             <StyledLikeIcon />
@@ -176,11 +176,11 @@ const PostDetailPage = () => {
           </div>
         </form>
         {comments.map((comment) => (
-          <CommentCard
+          <PostCommentCard
             key={comment.id}
             commentProps={comment}
             onDelete={() => handleCommentDelete(comment.id)}
-            onEdit={(updatedComment) => handleCommentEdit(comment.id, updatedComment)}
+            onEdit={(updatedComment: string) => handleCommentEdit(comment.id, updatedComment)}
           />
         ))}
       </div>
