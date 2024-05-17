@@ -1,4 +1,11 @@
 import { AppDataSource } from "@/config/ormSetting";
+import {
+  INTERNAL_SERVER_ERROR_DELETE_JOURNEY,
+  INTERNAL_SERVER_ERROR_UPLOAD_JOURNEY,
+  NOT_FOUND_JOURNEY,
+  NOT_FOUND_JOURNEY_LIST,
+  NOT_FOUND_PLACE,
+} from "@/constants/message";
 import { DaySeq } from "@/models/daySeq.model";
 import { Journeys } from "@/models/journeys.model";
 import { Places } from "@/models/places.model";
@@ -14,14 +21,14 @@ const daySeqRepo = AppDataSource.getRepository(DaySeq);
 
 const getJourneysList = async (userId: number) => {
   const results = await journeysRepo.find({ where: { user: { id: userId } } });
-  if (!results.length) throw new Error("등록하신 일정이 없습니다.");
+  if (!results.length) throw new Error(NOT_FOUND_JOURNEY_LIST);
 
   return results.sort((a, b) => b.id - a.id);
 };
 
 const getJourneyDetail = async (journeyId: number) => {
   const journey = await journeysRepo.findOneBy({ id: journeyId });
-  if (journey === null) throw new Error("일정 정보를 찾을 수 없습니다.");
+  if (journey === null) throw new Error(NOT_FOUND_JOURNEY);
   if (!journey?.route) {
     return {
       id: journey?.id,
@@ -70,7 +77,7 @@ const register = async (title: string, startDate: Date, endDate: Date, days: Day
     let thumbnail = "";
     const routes = new Routes();
     const savedRoute = await transactionalEntityManager.getRepository(Routes).save(routes);
-    if (!savedRoute) throw new Error("경로 저장에 실패했습니다.");
+    if (!savedRoute) throw new Error(INTERNAL_SERVER_ERROR_UPLOAD_JOURNEY);
 
     let dayCnt = 0;
     for (const value1 of days) {
@@ -81,7 +88,7 @@ const register = async (title: string, startDate: Date, endDate: Date, days: Day
       routeDays.route = savedRoute;
 
       const savedRouteDay = await transactionalEntityManager.getRepository(RouteDays).save(routeDays);
-      if (!savedRouteDay) throw new Error("경로 저장에 실패했습니다.");
+      if (!savedRouteDay) throw new Error(INTERNAL_SERVER_ERROR_UPLOAD_JOURNEY);
 
       let seqCnt = 0;
       for (const value2 of value1.spots) {
@@ -89,7 +96,7 @@ const register = async (title: string, startDate: Date, endDate: Date, days: Day
 
         const foundPlace = await transactionalEntityManager.getRepository(Places).findOneBy({ id: placeId });
         if (!foundPlace) {
-          throw new Error("장소를 찾을 수 없습니다."); // 없는 장소를 추가할 경우 로직구현해야함
+          throw new Error(NOT_FOUND_PLACE);
         }
 
         if (dayCnt === 0 && seqCnt === 0) thumbnail = foundPlace.img;
@@ -100,7 +107,7 @@ const register = async (title: string, startDate: Date, endDate: Date, days: Day
         daySeq.seq = seqCnt;
 
         let savedDaySeq = await transactionalEntityManager.getRepository(DaySeq).save(daySeq);
-        if (!savedDaySeq) throw new Error("경로 저장에 실패했습니다.");
+        if (!savedDaySeq) throw new Error(INTERNAL_SERVER_ERROR_UPLOAD_JOURNEY);
 
         seqCnt++;
       }
@@ -129,7 +136,7 @@ const modify = async (id: number, title: string, startDate: Date, endDate: Date,
         id: id,
       },
     });
-    if (!foundJourney) throw new Error("일정 정보를 찾을 수 없습니다.");
+    if (!foundJourney) throw new Error(NOT_FOUND_JOURNEY);
 
     const foundJourneyId = foundJourney.id;
     const foundRouteId = foundJourney.route.id;
@@ -137,14 +144,14 @@ const modify = async (id: number, title: string, startDate: Date, endDate: Date,
     const deletedRouteResult = await transactionalEntityManager.getRepository(Routes).delete(foundRouteId);
 
     if (deletedJourneyResult.affected === 0 || deletedRouteResult.affected === 0)
-      throw new Error("일정이 정상적으로 삭제되지 않았습니다.");
+      throw new Error(INTERNAL_SERVER_ERROR_DELETE_JOURNEY);
 
     //일정 다시 추가 부분
     let thumbnail = "";
     const routes = new Routes();
     routes.id = foundRouteId;
     const savedRoute = await transactionalEntityManager.getRepository(Routes).save(routes);
-    if (!savedRoute) throw new Error("경로 저장에 실패했습니다.");
+    if (!savedRoute) throw new Error(INTERNAL_SERVER_ERROR_UPLOAD_JOURNEY);
 
     let dayCnt = 0;
     for (const value1 of days) {
@@ -155,7 +162,7 @@ const modify = async (id: number, title: string, startDate: Date, endDate: Date,
       routeDays.route = savedRoute;
 
       const savedRouteDay = await transactionalEntityManager.getRepository(RouteDays).save(routeDays);
-      if (!savedRouteDay) throw new Error("경로 저장에 실패했습니다.");
+      if (!savedRouteDay) throw new Error(INTERNAL_SERVER_ERROR_UPLOAD_JOURNEY);
 
       let seqCnt = 0;
       for (const value2 of value1.spots) {
@@ -163,7 +170,7 @@ const modify = async (id: number, title: string, startDate: Date, endDate: Date,
 
         const foundPlace = await transactionalEntityManager.getRepository(Places).findOneBy({ id: placeId });
         if (!foundPlace) {
-          throw new Error("장소를 찾을 수 없습니다."); // 없는 장소를 추가할 경우 로직구현해야함
+          throw new Error(NOT_FOUND_PLACE); // 없는 장소를 추가할 경우 로직구현해야함
         }
 
         if (dayCnt === 0 && seqCnt === 0) thumbnail = foundPlace.img;
@@ -174,7 +181,7 @@ const modify = async (id: number, title: string, startDate: Date, endDate: Date,
         daySeq.seq = seqCnt;
 
         let savedDaySeq = await transactionalEntityManager.getRepository(DaySeq).save(daySeq);
-        if (!savedDaySeq) throw new Error("경로 저장에 실패했습니다.");
+        if (!savedDaySeq) throw new Error(INTERNAL_SERVER_ERROR_UPLOAD_JOURNEY);
 
         seqCnt++;
       }
@@ -204,14 +211,14 @@ const remove = async (id: number) => {
       },
     });
     if (!foundJourney) {
-      throw new Error("일정 정보를 찾을 수 없습니다.");
+      throw new Error(NOT_FOUND_JOURNEY);
     }
     const foundRouteId = foundJourney.route.id;
     const deletedJourneyResult = await transactionalEntityManager.getRepository(Journeys).delete(id);
     const deletedRouteResult = await transactionalEntityManager.getRepository(Routes).delete(foundRouteId);
 
     if (deletedJourneyResult.affected === 0 || deletedRouteResult.affected === 0)
-      throw new Error("일정이 정상적으로 삭제되지 않았습니다.");
+      throw new Error(INTERNAL_SERVER_ERROR_DELETE_JOURNEY);
   });
 };
 const JourneysService = {

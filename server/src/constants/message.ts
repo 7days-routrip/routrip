@@ -53,5 +53,26 @@ export const OK_UPLOAD_COMMENT = "댓글 등록이 완료되었습니다.";
 export const OK_UPDATE_COMMENT = "댓글 수정이 완료되었습니다.";
 export const OK_DELETE_COMMENT = "댓글 삭제가 완료되었습니다.";
 export const BAD_REQUEST_COMMENT = "잘못된 요청입니다.";
+
+//장소
+export const OK_UPLOAD_PLACE = "장소 등록이 완료 되었습니다.";
+export const CONFLICT_PLACE_ADD = "이미 등록된 장소가 있습니다.\n해당 장소를 추가하시겠습니까?";
+export const CONFLICT_PLACE = "이미 등록된 장소입니다.";
+export const NOT_FOUND_PLACE = "장소 정보를 찾을 수 없습니다.";
+export const BAD_REQUEST_SEARCH_PLACE = "검색어를 입력해주세요.";
+export const NOT_FOUND_PLACE_ADD = "등록된 장소가 없습니다.\n신규 장소를 등록해 주세요.";
+export const INTERNAL_SERVER_ERROR_REQUEST_IMAGE = "이미지 요청에 실패했습니다.";
+export const INTERNAL_SERVER_ERROR_SAVE_IMAGE = "이미지 저장에 실패했습니다.";
+
+//일정
+export const NOT_FOUND_USER_LOGIN_REQUIRED = "사용자 정보가 없습니다.\n로그인이 필요한 서비스입니다.";
+export const OK_UPLOAD_JOURNEY = "일정 등록이 완료되었습니다.";
+export const OK_UPDATE_JOURNEY = "일정 수정이 완료되었습니다.";
+export const OK_DELETE_JOURNEY = "일정이 삭제 되었습니다.";
+export const NOT_FOUND_JOURNEY_LIST = "등록하신 일정이 없습니다.";
+export const NOT_FOUND_JOURNEY = "일정 정보를 찾을 수 없습니다.";
+export const INTERNAL_SERVER_ERROR_UPLOAD_JOURNEY = "경로 저장에 실패했습니다.";
+export const INTERNAL_SERVER_ERROR_DELETE_JOURNEY = "일정이 정상적으로 삭제되지 않았습니다.";
+
 // 500 에러 메세지 전역 처리
 export const INTERNAL_SERVER_ERROR = "서버 내부 오류입니다.";
