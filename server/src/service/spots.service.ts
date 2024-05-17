@@ -6,6 +6,14 @@ import axios from "axios";
 import { v4 } from "uuid";
 import { S3_BUCKET_NAME } from "@/settings";
 import { Picks } from "@/models/picks.model";
+import {
+  CONFLICT_PLACE_ADD,
+  INTERNAL_SERVER_ERROR_REQUEST_IMAGE,
+  INTERNAL_SERVER_ERROR_SAVE_IMAGE,
+  NOT_FOUND_PLACE,
+  NOT_FOUND_PLACE_ADD,
+  NOT_FOUND_USER,
+} from "@/constants/message";
 
 const placeRepository = AppDataSource.getRepository(Places);
 const picksRepository = AppDataSource.getRepository(Picks);
@@ -23,7 +31,7 @@ const register = async (
   const exists = await placeRepository.findOneBy({ id: id });
 
   if (exists) {
-    throw new Error("이미 등록된 장소가 있습니다.\n해당 장소를 추가하시겠습니까?");
+    throw new Error(CONFLICT_PLACE_ADD);
   }
 
   let placeS3Img: string = "";
@@ -55,7 +63,7 @@ const getDetail = async (
   let foundPlace: Places | null = await placeRepository.findOneBy({ id: id });
 
   if (!foundPlace) {
-    throw new Error("장소 정보를 찾을 수 없습니다.");
+    throw new Error(NOT_FOUND_PLACE);
   }
 
   const [lat, lng] = foundPlace.location;
@@ -69,7 +77,7 @@ const getDetail = async (
   let isPicked: boolean;
 
   if (!user) {
-    throw new Error("유저 정보가 존재하지 않습니다");
+    throw new Error(NOT_FOUND_USER);
   } else if (user.isLoggedIn) {
     isPicked = await picksRepository.existsBy({ user: { id: user.id }, place: { id: id } });
   } else {
@@ -98,7 +106,7 @@ const search = async (keyword: string, zoom: number, lat: number, lng: number): 
     .getMany();
 
   if (places.length === 0) {
-    throw new Error("등록된 장소가 없습니다.\n신규 장소를 등록해 주세요.");
+    throw new Error(NOT_FOUND_PLACE_ADD);
   }
 
   let searchedPlaces: SearchPlaceDTO[] = [];
@@ -132,6 +140,9 @@ const search = async (keyword: string, zoom: number, lat: number, lng: number): 
       filteredPlaces.push(place);
     }
   });
+  if (filteredPlaces.length === 0) {
+    throw new Error(NOT_FOUND_PLACE_ADD);
+  }
   return filteredPlaces;
 };
 
@@ -153,7 +164,7 @@ const placeImgUpload = async (imageUrl: string): Promise<string> => {
   try {
     response = await axios.get(imageUrl, { responseType: "arraybuffer" });
   } catch (error) {
-    throw new Error("이미지 요청에 실패했습니다.");
+    throw new Error(INTERNAL_SERVER_ERROR_REQUEST_IMAGE);
   }
 
   const imageBuffer = Buffer.from(response.data, "binary");
@@ -171,7 +182,7 @@ const placeImgUpload = async (imageUrl: string): Promise<string> => {
   try {
     result = await s3.upload(params).promise();
   } catch (error) {
-    throw new Error("이미지 저장에 실패했습니다.");
+    throw new Error(INTERNAL_SERVER_ERROR_SAVE_IMAGE);
   }
   return result.Location;
 };

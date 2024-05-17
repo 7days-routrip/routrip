@@ -2,7 +2,18 @@ import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 import { SpotsService } from "@/service/spots.service";
 import { PlaceDetailDTO, SearchPlaceDTO } from "@/types/spots.types";
-import { Location } from "aws-sdk";
+import {
+  OK_UPLOAD_PLACE,
+  CONFLICT_PLACE_ADD,
+  CONFLICT_PLACE,
+  INTERNAL_SERVER_ERROR,
+  NOT_FOUND_PLACE,
+  BAD_REQUEST_SEARCH_PLACE,
+  NOT_FOUND_PLACE_ADD,
+  INTERNAL_SERVER_ERROR_REQUEST_IMAGE,
+  INTERNAL_SERVER_ERROR_SAVE_IMAGE,
+  NOT_FOUND_USER,
+} from "@/constants/message";
 
 const addToPlace = async (req: Request, res: Response, next: NextFunction) => {
   const { id, placeName, address, siteUrl, tel, location, openingHours, placeImg } = req.body;
@@ -10,16 +21,24 @@ const addToPlace = async (req: Request, res: Response, next: NextFunction) => {
   try {
     await SpotsService.register(id, placeName, address, siteUrl, tel, location, openingHours, placeImg);
     return res.status(StatusCodes.OK).json({
-      message: "장소 등록이 완료 되었습니다.",
+      message: OK_UPLOAD_PLACE,
     });
   } catch (error: any) {
-    if (error.message === "이미 등록된 장소가 있습니다.\n해당 장소를 추가하시겠습니까?") {
+    if (error.message === CONFLICT_PLACE_ADD) {
       return res.status(StatusCodes.CONFLICT).json({
         message: error.message,
       });
+    } else if (error.message === INTERNAL_SERVER_ERROR_REQUEST_IMAGE) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: INTERNAL_SERVER_ERROR_REQUEST_IMAGE,
+      });
+    } else if (error.message === INTERNAL_SERVER_ERROR_SAVE_IMAGE) {
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: INTERNAL_SERVER_ERROR_SAVE_IMAGE,
+      });
     } else {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        message: error.message,
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: INTERNAL_SERVER_ERROR,
       });
     }
   }
@@ -32,14 +51,14 @@ const checkDuplicatePlaces = async (req: Request, res: Response, next: NextFunct
     const exists: boolean = await SpotsService.checkDuplicate(placeId);
     if (exists) {
       return res.status(StatusCodes.CONFLICT).json({
-        message: "이미 등록된 장소입니다.",
+        message: CONFLICT_PLACE,
       });
     } else {
       return res.status(StatusCodes.OK).end();
     }
   } catch (error: any) {
-    return res.status(StatusCodes.BAD_REQUEST).json({
-      message: error.message,
+    return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+      message: INTERNAL_SERVER_ERROR,
     });
   }
 };
@@ -52,13 +71,17 @@ const getPlaceDetail = async (req: Request, res: Response, next: NextFunction) =
     const foundPlace: PlaceDetailDTO = await SpotsService.getDetail(placeId, user);
     return res.status(StatusCodes.OK).json(foundPlace);
   } catch (error: any) {
-    if (error.message === "장소 정보를 찾을 수 없습니다.") {
+    if (error.message === NOT_FOUND_PLACE) {
+      return res.status(StatusCodes.NOT_FOUND).json({
+        message: error.message,
+      });
+    } else if (error.message === NOT_FOUND_USER) {
       return res.status(StatusCodes.NOT_FOUND).json({
         message: error.message,
       });
     } else {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        message: error.message,
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: INTERNAL_SERVER_ERROR,
       });
     }
   }
@@ -68,7 +91,7 @@ const searchPlace = async (req: Request, res: Response, next: NextFunction) => {
   const keyword: string = req.query.keyword as string;
   if (!keyword)
     return res.status(StatusCodes.BAD_REQUEST).json({
-      message: "검색어를 입력해주세요.",
+      message: BAD_REQUEST_SEARCH_PLACE,
     });
 
   const zoom: number = req.query.zoom ? parseInt(req.query.zoom as string) : 6;
@@ -79,13 +102,13 @@ const searchPlace = async (req: Request, res: Response, next: NextFunction) => {
     const searchedPlaces: SearchPlaceDTO[] = await SpotsService.search(keyword, zoom, lat, lng);
     return res.status(StatusCodes.OK).json(searchedPlaces);
   } catch (error: any) {
-    if (error.message === "등록된 장소가 없습니다.\n신규 장소를 등록해 주세요.") {
+    if (error.message === NOT_FOUND_PLACE_ADD) {
       return res.status(StatusCodes.NOT_FOUND).json({
         message: error.message,
       });
     } else {
-      return res.status(StatusCodes.BAD_REQUEST).json({
-        message: error.message,
+      return res.status(StatusCodes.INTERNAL_SERVER_ERROR).json({
+        message: INTERNAL_SERVER_ERROR,
       });
     }
   }

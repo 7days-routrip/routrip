@@ -1,5 +1,5 @@
 import { AppDataSource } from "@/config/ormSetting";
-import { NOT_FOUND_POST } from "@/constants/message";
+import { BAD_REQUEST_COMMENT, NOT_FOUND_POST } from "@/constants/message";
 import { Comments } from "@/models/comments.model";
 import { Posts } from "@/models/posts.model";
 import { setDateFromat } from "@/utils/posts.utils";
@@ -50,7 +50,7 @@ const addComment = async (userId: number, postId: number, content: string) => {
   const postRepo = AppDataSource.getRepository(Posts);
   const post = await postRepo.findOne({ where: { id: postId } });
 
-  if (!post) throw new Error("잘못된 요청입니다.");
+  if (!post) throw new Error(BAD_REQUEST_COMMENT);
   const comment = {
     content,
     user: { id: userId },
@@ -64,7 +64,7 @@ const addComment = async (userId: number, postId: number, content: string) => {
 const updateComment = async (userId: number, postId: number, content: string, commentId: number) => {
   const comment = await commentRepo.findOne({ where: { id: commentId, post: { id: postId }, user: { id: userId } } });
   console.log(comment);
-  if (!comment) throw new Error("잘못된 요청입니다.");
+  if (!comment) throw new Error(BAD_REQUEST_COMMENT);
   comment.content = content;
   const result = await commentRepo.save(comment);
   return result;
@@ -72,7 +72,7 @@ const updateComment = async (userId: number, postId: number, content: string, co
 
 const deleteComment = async (userId: number, commentId: number) => {
   const comment = await commentRepo.findOne({ where: { id: commentId, user: { id: userId } } });
-  if (!comment) throw new Error("잘못된 요청입니다.");
+  if (!comment) throw new Error(BAD_REQUEST_COMMENT);
   const result = await commentRepo.remove(comment);
   return result;
 };

@@ -28,7 +28,6 @@ export const useScheduleEdit = () => {
       showAlert("일정 수정이 완료되었습니다.", "logo", () => {
         navigate(`/schedule/${variables.id}`);
 
-        // 북마크한 상태 제외한 나머지 일정 관련 전역 스토어 모두 초기화
         setAddPlaces([]);
         setMarkerType("searchApi");
         setNearPlaces([]);
