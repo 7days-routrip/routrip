@@ -16,7 +16,7 @@ export interface iSearchDataProps {
 
 export interface iPagination {
   pages?: number;
-  totalPosts?: number;
+  totalItems?: number;
 }
 
 export interface iSpots {

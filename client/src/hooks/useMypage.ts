@@ -108,7 +108,7 @@ export const useComment = () => {
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
       const isLastPage = Math.ceil(lastPage.pagination.totalItems / LIMIT) === lastPage.pagination.page;
-
+      
       return isLastPage ? null : lastPage.pagination.page + 1;
     },
     enabled: false,

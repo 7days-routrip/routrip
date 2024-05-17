@@ -9,10 +9,17 @@ import { StatusCodes } from "http-status-codes";
 const commentUserAllList = async (req: Request, res: Response) => {
   try {
     if (req.user?.isLoggedIn) {
+      const pages = parseInt(req.query.pages as string);
       const userId = req.user.id as number;
-      const listResult = await CommentsSevice.reqCommentsList(userId);
+      const listResult = await CommentsSevice.reqCommentsList(userId, pages);
       if (!listResult.success) throw new Error(listResult.msg);
-      res.status(StatusCodes.OK).json(listResult.data);
+      res.status(StatusCodes.OK).json({
+        comments: listResult.data,
+        pagination: {
+          page: pages,
+          totalItems: listResult.count,
+        },
+      });
     } else {
       throw new Error("login required");
     }
@@ -36,14 +43,13 @@ const postUserAllList = async (req: Request, res: Response) => {
         posts: listResult.data,
         pagination: {
           page: pages,
-          totalPosts: listResult.count,
+          totalItems: listResult.count,
         },
       });
     } else {
       throw new Error("login required");
     }
   } catch (err) {
-    console.log(err);
     if (err instanceof Error) {
       if (err.message === "login required")
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
@@ -72,10 +78,19 @@ const getJourneysList = async (req: Request, res: Response) => {
   const user = req.user;
 
   try {
+    const pages = parseInt(req.query.pages as string);
     if (!user?.isLoggedIn) throw new Error("사용자 정보가 없습니다.\n로그인이 필요한 서비스입니다.");
-    const journeys = await JourneysService.getJourneysList(user.id as number);
+    const userId = req.user?.id as number;
+    const listResult = await MypagesService.getJourneysList(userId, pages);
+    // const journeys = await JourneysService.getJourneysList(user.id as number, pages);
 
-    res.status(200).json(journeys);
+    res.status(StatusCodes.OK).json({
+      schedules: listResult.data,
+      pagination: {
+        page: pages,
+        totalItems: listResult.count,
+      },
+    });
   } catch (error: any) {
     res.status(StatusCodes.NOT_FOUND).json({
       message: error.message,

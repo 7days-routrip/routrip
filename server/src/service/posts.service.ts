@@ -9,6 +9,7 @@ import { Journeys } from "@/models/journeys.model";
 import { Routes } from "@/models/routes.model";
 import { RouteDays } from "@/models/routeDays.model";
 import { DaySeq } from "@/models/daySeq.model";
+import { LIMIT } from "@/settings";
 
 const postRepo = AppDataSource.getRepository(Posts);
 const routeDaysRepo = AppDataSource.getRepository(RouteDays);
@@ -38,8 +39,7 @@ const reqAllPostsList = async (
   searchData?: iSearchDataProps | undefined,
   type?: string | undefined,
 ) => {
-  const limit = 12;
-  const offset = await getOffset(pages, limit);
+  const offset = await getOffset(pages, LIMIT);
   const areaType = await setAreaType(area as string);
   let postsData = [];
   if (area !== undefined) {
@@ -73,8 +73,8 @@ const reqAllPostsList = async (
 
   return {
     success: true,
-    data: responsePostsData.slice(offset, offset + limit),
     count: responsePostsData.length,
+    data: responsePostsData.slice(offset, offset + LIMIT),
   };
 };
 const reqHotPosts = async () => {

@@ -57,7 +57,7 @@ const postAllList = async (req: Request, res: Response) => {
       posts: listResult.data,
       pagination: {
         page: pages,
-        totalPosts: listResult.count,
+        totalItems: listResult.count,
       },
     });
   } catch (err) {
