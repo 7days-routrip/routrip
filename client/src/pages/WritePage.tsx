@@ -11,8 +11,10 @@ import RegionCountrySelector from "@/components/common/RegionCountrySelector";
 import ScheduleCard from "@/components/common/scheduleCard";
 import { useSchedule } from "@/hooks/useMypage";
 import { useScheduleDetails } from "@/hooks/useScheduleDetails";
+import { useNavigate } from "react-router-dom";
 import icons from "@/icons/icons";
 import { showAlert } from "@/utils/showAlert";
+import { showConfirm } from "@/utils/showConfirm";
 import { httpClient } from "@/apis/https";
 
 // 이미지 업로드 함수
@@ -88,6 +90,7 @@ const WritePage = () => {
   const { schedules, isEmptySchedules, scheduleRefetch } = useSchedule(); // 일정 데이터 가져오기
   const { scheduleDetailData, isScheduleDetailsLoading } = useScheduleDetails(selectedScheduleId); // 일정 세부 데이터 가져오기
   const { PinIcon } = icons;
+  const nav = useNavigate();
 
   useEffect(() => {
     if (showSidebar) {
@@ -120,6 +123,11 @@ const WritePage = () => {
   };
 
   const handleSave = async () => {
+    if (!title.trim()) {
+      showAlert("제목을 입력해 주세요", "error");
+      return;
+    }
+
     const editorContent = new DOMParser().parseFromString(data, "text/html");
     const images = editorContent.querySelectorAll("img");
     let firstImageUrl = "";
@@ -182,9 +190,23 @@ const WritePage = () => {
         throw new Error(`Failed to save post. Status code: ${response.status}`);
       }
       console.log("저장 성공:", response.data);
+      showAlert("게시글 작성이 완료되었습니다.", "logo", () => {
+        if (selectedCountry === 1) {
+          nav("/post?area=home");
+        } else {
+          nav("/post?area=abroad");
+        }
+      });
     } catch (error) {
+      showAlert("저장에 실패하였습니다.", "error");
       console.error("저장 실패:", error);
     }
+  };
+
+  const handleCancel = () => {
+    showConfirm("게시글 작성을 취소하시겠습니까?", () => {
+      nav("/");
+    });
   };
 
   const dataURLtoBlob = (dataurl: string) => {
@@ -296,7 +318,7 @@ const WritePage = () => {
         }}
       />
       <div className="button-container">
-        <Button $size="large" $scheme="secondary" $radius="default">
+        <Button $size="large" $scheme="secondary" $radius="default" onClick={handleCancel}>
           취소
         </Button>
         <Button $size="large" $scheme="primary" $radius="default" onClick={handleSave}>
