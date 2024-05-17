@@ -41,7 +41,7 @@ export const fetchMySchedule = async (page: number) => {
     return {
       schedules: [],
       pagination: {
-        totalPosts: 0,
+        totalItems: 0,
         page: 1,
       },
     };
@@ -59,7 +59,7 @@ export const fetchMyPosts = async (page: number) => {
     return {
       posts: [],
       pagination: {
-        totalPosts: 0,
+        totalItems: 0,
         page: 1,
       },
     };
@@ -81,7 +81,7 @@ export const fetchMyComments = async (page: number) => {
     return {
       comments: [],
       pagination: {
-        totalPosts: 0,
+        totalItems: 0,
         page: 1,
       },
     };
@@ -99,7 +99,7 @@ export const fetchLikePost = async (page: number) => {
     return {
       posts: [],
       pagination: {
-        totalPosts: 0,
+        totalItems: 0,
         page: 1,
       },
     };
@@ -121,7 +121,7 @@ export const fetchLikePlace = async (page: number) => {
     return {
       places: [],
       pagination: {
-        totalPosts: 0,
+        totalItems: 0,
         page: 1,
       },
     };

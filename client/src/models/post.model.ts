@@ -22,7 +22,7 @@ export interface Post {
 
 export interface Pagination {
   page: number;
-  totalPosts: number;
+  totalItems: number;
 }
 
 export interface PostList {
