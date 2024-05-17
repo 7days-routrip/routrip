@@ -38,7 +38,7 @@ export const useSchedule = () => {
     queryFn: ({ pageParam }) => fetchMySchedule(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const isLastPage = Math.ceil(lastPage.pagination.totalPosts / LIMIT) === lastPage.pagination.page;
+      const isLastPage = Math.ceil(lastPage.pagination.totalItems / LIMIT) === lastPage.pagination.page;
 
       return isLastPage ? null : lastPage.pagination.page + 1;
     },
@@ -73,7 +73,7 @@ export const usePost = () => {
     queryFn: ({ pageParam }) => fetchMyPosts(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const isLastPage = Math.ceil(lastPage.pagination.totalPosts / LIMIT) === lastPage.pagination.page;
+      const isLastPage = Math.ceil(lastPage.pagination.totalItems / LIMIT) === lastPage.pagination.page;
 
       return isLastPage ? null : lastPage.pagination.page + 1;
     },
@@ -107,7 +107,7 @@ export const useComment = () => {
     queryFn: ({ pageParam }) => fetchMyComments(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const isLastPage = Math.ceil(lastPage.pagination.totalPosts / LIMIT) === lastPage.pagination.page;
+      const isLastPage = Math.ceil(lastPage.pagination.totalItems / LIMIT) === lastPage.pagination.page;
 
       return isLastPage ? null : lastPage.pagination.page + 1;
     },
@@ -141,7 +141,7 @@ export const useLikePost = () => {
     queryFn: ({ pageParam }) => fetchLikePost(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const isLastPage = Math.ceil(lastPage.pagination.totalPosts / LIMIT) === lastPage.pagination.page;
+      const isLastPage = Math.ceil(lastPage.pagination.totalItems / LIMIT) === lastPage.pagination.page;
 
       return isLastPage ? null : lastPage.pagination.page + 1;
     },
@@ -175,7 +175,7 @@ export const useLikePlace = () => {
     queryFn: ({ pageParam }) => fetchLikePlace(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const isLastPage = Math.ceil(lastPage.pagination.totalPosts / LIMIT) === lastPage.pagination.page;
+      const isLastPage = Math.ceil(lastPage.pagination.totalItems / LIMIT) === lastPage.pagination.page;
 
       return isLastPage ? null : lastPage.pagination.page + 1;
     },
