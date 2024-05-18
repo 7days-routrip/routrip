@@ -31,6 +31,8 @@ jobs:
         echo "DB_HOST=$DB_HOST" > ./server/.env
         echo "DB_PORT=$DB_PORT" > ./server/.env
         echo "DB_LIMIT=$DB_LIMIT" > ./server/.env
+        echo "CORS_ORIGIN=$CORS_ORIGIN" > ./server/.env
+        echo "JWT_ACCESS_SECRET=$JWT_ACCESS_SECRET" > ./server/.env
       env:
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -38,6 +40,8 @@ jobs:
         DB_HOST: ${{ secrets.DB_HOST }}
         DB_PORT: ${{ secrets.DB_PORT }}
         DB_LIMIT: ${{ secrets.DB_LIMIT }}
+        CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+        JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
