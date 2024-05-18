@@ -32,7 +32,7 @@ on:
 
 env:
   AWS_REGION: ap-northeast-2                   # set this to your preferred AWS region, e.g. us-west-1
-  ECR_REPOSITORY: 180993267331.dkr.ecr.ap-northeast-2.amazonaws.com/7days-be # set this to your Amazon ECR repository name
+  ECR_REPOSITORY: 7days-be # set this to your Amazon ECR repository name
   CONTAINER_NAME: 7days-be           # set this to the name of the container in the
                                                # containerDefinitions section of your task definition
 
