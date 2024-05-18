@@ -4,7 +4,7 @@ import { useEffect, useState, useRef } from "react";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
 import { httpClient } from "@/apis/https";
-import { Post } from "@/models/post.model";
+import { DetailPost } from "@/models/post.model";
 import { Button } from "@/components/common/Button";
 import { showAlert } from "@/utils/showAlert";
 import icons from "@/icons/icons";
@@ -15,22 +15,81 @@ import { useScheduleDetails } from "@/hooks/useScheduleDetails";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
 
+// 이미지 업로드 함수
+const uploadImage = async (file: File) => {
+  try {
+    if (!file) return null;
+    const formData = new FormData();
+    formData.append("posts", file);
+
+    const response = await httpClient.post("/posts/upload/img", formData, {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    });
+
+    if (response.status !== 200) {
+      throw new Error(`Failed to upload image. Status code: ${response.status}`);
+    }
+
+    return response.data.url;
+  } catch (error) {
+    console.error(error);
+    throw error;
+  }
+};
+
+// CKEditor 업로드 어댑터
+class MyUploadAdapter {
+  loader: any;
+  constructor(loader: any) {
+    this.loader = loader;
+  }
+
+  async upload() {
+    try {
+      const file = await this.loader.file;
+      const imageUrl = await uploadImage(file);
+      return { default: imageUrl };
+    } catch (error) {
+      console.error(error);
+      return Promise.reject(error);
+    }
+  }
+
+  abort() {
+    console.log("File upload aborted.");
+  }
+}
+
+// CKEditor 플러그인
+function MyCustomUploadAdapterPlugin(editor: {
+  plugins: { get: (arg0: string) => { createUploadAdapter: (loader: any) => MyUploadAdapter } };
+}) {
+  editor.plugins.get("FileRepository").createUploadAdapter = (loader: any) => {
+    return new MyUploadAdapter(loader);
+  };
+}
+
 const PostEditPage = () => {
   const { id } = useParams();
   const postId = id ? parseInt(id, 10) : undefined;
-  const [post, setPost] = useState<Post | null>(null);
+  const [post, setPost] = useState<DetailPost | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
-  const [totalExpense, setTotalExpense] = useState(0);
+  const [totalExpense, setTotalExpense] = useState<number | string>("");
   const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedScheduleId, setSelectedScheduleId] = useState<string | undefined>(undefined);
   const sidebarRef = useRef<HTMLDivElement>(null);
   const { schedules, isEmptySchedules, scheduleRefetch } = useSchedule();
-  const { scheduleDetailData, isScheduleDetailsLoading } = useScheduleDetails(selectedScheduleId);
+  const { scheduleDetailData } = useScheduleDetails(selectedScheduleId);
   const nav = useNavigate();
   const { PinIcon, LikeIcon, CommentIcon, EditIcon } = icons;
+
+  const [region, setRegion] = useState(0);
+  const [country, setCountry] = useState(0);
 
   useEffect(() => {
     if (showSidebar) {
@@ -43,12 +102,18 @@ const PostEditPage = () => {
       try {
         const response = await httpClient.get(`/posts/${postId}`);
         const fetchedPost = response.data;
+
         setPost(fetchedPost);
         setTitle(fetchedPost.title);
+        setRegion(fetchedPost.continent.id);
+        setCountry(fetchedPost.country.id);
         setContent(fetchedPost.contents);
-        const [start, end] = fetchedPost.date.split(" - ").map((date: string) => new Date(date));
-        setDateRange([isNaN(start.getTime()) ? null : start, isNaN(end.getTime()) ? null : end]);
-        setTotalExpense(fetchedPost.totalExpense);
+        setTotalExpense(fetchedPost.totalExpense || "");
+
+        if (fetchedPost.date) {
+          const [start, end] = fetchedPost.date.split(" - ").map((date: string) => new Date(date));
+          setDateRange([isNaN(start.getTime()) ? null : start, isNaN(end.getTime()) ? null : end]);
+        }
       } catch (error) {
         console.error("Error fetching post:", error);
       }
@@ -69,15 +134,57 @@ const PostEditPage = () => {
 
   const handleSave = async () => {
     try {
-      await httpClient.put(`/posts/${postId}`, {
-        title,
-        contents: content,
+      const editorContent = new DOMParser().parseFromString(content, "text/html");
+      const images = editorContent.querySelectorAll("img");
+      let firstImageUrl = "";
+      const imageUrls = [];
+
+      // 이미지 업로드 처리
+      for (let i = 0; i < images.length; i++) {
+        const img = images[i];
+        if (img.src.startsWith("data:")) {
+          const blob = dataURLtoBlob(img.src);
+          if (blob) {
+            const file = new File([blob], `image_${i}.png`, { type: blob.type });
+            const imageUrl = await uploadImage(file);
+            if (imageUrl) {
+              img.src = imageUrl; // src를 업로드된 이미지 URL로 대체
+              imageUrls.push(imageUrl);
+              if (!firstImageUrl) {
+                firstImageUrl = imageUrl;
+              }
+            }
+          } else {
+            console.error("Failed to convert data URL to Blob.");
+          }
+        } else {
+          imageUrls.push(img.src);
+          if (!firstImageUrl) {
+            firstImageUrl = img.src; // 첫 번째 이미지를 썸네일로 사용
+          }
+        }
+      }
+
+      // 이미지 URL 업데이트 후 콘텐츠를 새로 가져옴
+      const updatedContent = new XMLSerializer().serializeToString(editorContent);
+
+      // XML 네임스페이스 제거
+      const cleanedContent = updatedContent.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
+
+      const payload = {
+        title: title,
+        contents: cleanedContent,
         date: `${dateRange[0]?.toISOString().split("T")[0]} - ${dateRange[1]?.toISOString().split("T")[0]}`,
-        totalExpense,
+        totalExpense: totalExpense.toString(),
+        continent: region,
+        country: country,
+        journeyId: selectedScheduleId,
+      };
+
+      await httpClient.patch(`/posts/${postId}`, payload);
+      showAlert("게시물이 수정되었습니다.", "logo", () => {
+        nav(`/post/${postId}`);
       });
-      // showAlert("게시물이 수정되었습니다.", "success", () => {
-      //   nav(`/post/${postId}`);
-      // });
     } catch (error) {
       console.error("Error updating post:", error);
       showAlert("게시물 수정에 실패했습니다.", "error");
@@ -94,6 +201,13 @@ const PostEditPage = () => {
 
   const handleScheduleClick = (scheduleId: number) => {
     setSelectedScheduleId(scheduleId.toString());
+    const selectedSchedule = schedules.find((schedule) => schedule.id === scheduleId);
+    if (selectedSchedule) {
+      const start = new Date(selectedSchedule.startDate);
+      const end = new Date(selectedSchedule.endDate);
+      setDateRange([start, end]);
+      setShowSidebar(false); // Close the sidebar after selecting a schedule
+    }
   };
 
   const handleClickOutside = (event: MouseEvent) => {
@@ -117,6 +231,19 @@ const PostEditPage = () => {
     };
   }, [isDatePickerOpen, showSidebar]);
 
+  const dataURLtoBlob = (dataurl: string) => {
+    const parts = dataurl.split(",");
+    const match = parts[0].match(/:(.*?);/);
+    const mime = match ? match[1] : "application/octet-stream";
+    const bstr = atob(parts[1]);
+    let n = bstr.length;
+    const u8arr = new Uint8Array(n);
+    for (let i = 0; i < n; i++) {
+      u8arr[i] = bstr.charCodeAt(i);
+    }
+    return new Blob([u8arr], { type: mime });
+  };
+
   if (!post) {
     return null;
   }
@@ -124,10 +251,10 @@ const PostEditPage = () => {
   return (
     <ThemeProvider theme={theme}>
       <PostEditPageStyle>
-        <PinIcon />
-        <span>
+        <div className="country">
+          <PinIcon />
           {post.continent.name} ﹥ {post.country.name}
-        </span>
+        </div>
         <h1>
           <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
         </h1>
@@ -171,7 +298,12 @@ const PostEditPage = () => {
           )}
           <div className="edit-expense">
             <span>총 여행 경비</span>
-            <input type="type" value={post.totalExpense} onChange={(e) => setTotalExpense(parseInt(e.target.value))} />
+            <input
+              type="number"
+              value={totalExpense}
+              onChange={(e) => setTotalExpense(parseInt(e.target.value))}
+              className="small-input"
+            />
           </div>
           <div className="edit-plan">
             <p className="edit-schedule" onClick={toggleSidebar}>
@@ -195,6 +327,9 @@ const PostEditPage = () => {
         <div className="content-container">
           <CKEditor
             editor={ClassicEditor}
+            config={{
+              extraPlugins: [MyCustomUploadAdapterPlugin],
+            }}
             data={content}
             onChange={(event, editor) => {
               const data = editor.getData();
@@ -219,7 +354,7 @@ const PostEditPage = () => {
               ) : (
                 schedules?.map((schedule, index) => (
                   <li key={index} onClick={() => handleScheduleClick(schedule.id)}>
-                    <ScheduleCard scheduleProps={schedule} view="list" />
+                    <ScheduleCard scheduleProps={schedule} view="list" disableLink={true} />
                   </li>
                 ))
               )}
@@ -248,7 +383,7 @@ const PostEditPageStyle = styled.div`
     gap: 20px;
     justify-content: center;
     align-items: center;
-    margin-top: 20px;
+    margin: 20px 0px;
   }
   .trip-container {
     display: flex;
@@ -309,6 +444,12 @@ const PostEditPageStyle = styled.div`
     border: 1px solid #e7e7e7;
     border-radius: 4px;
     margin-top: 10px;
+  }
+
+  input[type="number"].small-input {
+    width: 50%;
+    padding: 0.25rem;
+    font-size: ${({ theme }) => theme.fontSize.medium};
   }
 
   textarea {

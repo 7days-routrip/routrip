@@ -7,7 +7,7 @@ import Dropdown from "@/components/common/Dropdown";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/common/Button";
 import { httpClient } from "@/apis/https";
-import { Post } from "@/models/post.model";
+import { DetailPost } from "@/models/post.model";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
 import { PostComment } from "@/models/comment.model";
@@ -15,24 +15,24 @@ import PostCommentCard from "@/components/common/PostComment";
 import PlaceModal from "@/components/common/PlaceModal";
 import { PlaceDetails } from "@/models/place.model";
 
+const StyledLikeIcon = styled(icons.LikeIcon)`
+  fill: ${({ theme }) => theme.color.primary};
+`;
+
+const StyledCommentIcon = styled(icons.CommentIcon)`
+  fill: ${({ theme }) => theme.color.primary};
+`;
+
 const PostDetailPage = () => {
   const { id } = useParams();
   const postId = id ? parseInt(id, 10) : undefined;
-  const { LikeIcon, CommentIcon, DotIcon, PinIcon } = icons;
-  const [post, setPost] = useState<Post | null>(null);
+  const { DotIcon, PinIcon } = icons;
+  const [post, setPost] = useState<DetailPost | null>(null);
   const [comments, setComments] = useState<PostComment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [selectedPlace, setSelectedPlace] = useState<PlaceDetails | null>(null);
-  const [currentUser, setCurrentUser] = useState<string | null>(null); // 현재 사용자 정보 저장
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
   const nav = useNavigate();
-
-  const StyledLikeIcon = styled(LikeIcon)`
-    fill: ${({ theme }) => theme.color.primary};
-  `;
-
-  const StyledCommentIcon = styled(CommentIcon)`
-    fill: ${({ theme }) => theme.color.primary};
-  `;
 
   const fetchPost = async () => {
     try {
@@ -53,7 +53,7 @@ const PostDetailPage = () => {
       const response = await httpClient.get(`/posts/${postId}/comments`);
       if (response.status === 404) {
         console.warn("Comments not found for post:", postId);
-        setComments([]); // 댓글이 없을 경우 빈 배열로 설정
+        setComments([]);
       } else {
         setComments(response.data);
       }
@@ -63,7 +63,7 @@ const PostDetailPage = () => {
   };
 
   useEffect(() => {
-    const nickName = localStorage.getItem("nickName"); // 로컬 스토리지에서 nickName 가져오기
+    const nickName = localStorage.getItem("nickName");
     setCurrentUser(nickName);
 
     if (postId !== undefined) {
@@ -97,7 +97,7 @@ const PostDetailPage = () => {
     try {
       await httpClient.post("/comments", { postId, content: newComment });
       setNewComment("");
-      fetchComments(); // 댓글 등록 후 댓글 목록을 다시 가져옴
+      fetchComments();
     } catch (error) {
       console.error("Error posting comment:", error);
     }
@@ -106,7 +106,7 @@ const PostDetailPage = () => {
   const handleCommentDelete = async (commentId: number) => {
     try {
       await httpClient.delete(`/comments/${commentId}`);
-      fetchComments(); // 댓글 삭제 후 댓글 목록을 다시 가져옴
+      fetchComments();
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
@@ -115,7 +115,7 @@ const PostDetailPage = () => {
   const handleCommentEdit = async (commentId: number, updatedComment: string) => {
     try {
       await httpClient.put(`/comments/${commentId}`, { postId, content: updatedComment });
-      fetchComments(); // 댓글 수정 후 댓글 목록을 다시 가져옴
+      fetchComments();
     } catch (error) {
       console.error("Error editing comment:", error);
     }
@@ -172,7 +172,7 @@ const PostDetailPage = () => {
             {post.commentsNum}
           </div>
           {post.author}
-          {currentUser === post.author && ( // 현재 사용자와 게시글 작성자가 같을 경우에만 수정/삭제 버튼 표시
+          {currentUser === post.author && (
             <Dropdown toggleIcon={<DotIcon />}>
               <DropdownMenu>
                 <DropdownItem>
@@ -188,43 +188,36 @@ const PostDetailPage = () => {
         <p>
           <span>여행한 날짜</span> {post.date}
         </p>
+        <p>
+          <span>총 여행 경비</span> {post.totalExpense}
+        </p>
       </div>
-      <div className="place-container">
-        {post.journeys?.length > 0 ? (
-          post.journeys.map((journey, dayIndex) => (
+      {post.journeys && post.journeys.spots && post.journeys.spots.length > 0 && (
+        <div className="place-container">
+          {post.journeys.spots.map((spotData, dayIndex) => (
             <div key={dayIndex}>
               <PinIcon /> DAY {dayIndex + 1} -{" "}
-              {journey.spots?.length > 0 ? (
-                journey.spots.map((spotData, spotIndex) => (
-                  <div key={spotIndex}>
-                    {spotData.spot?.length > 0 ? (
-                      spotData.spot.map((spot, innerIndex) => (
-                        <span key={innerIndex} onClick={() => handlePlaceClick(spot)}>
-                          {innerIndex > 0 && " • "}
-                          {spot.name}
-                        </span>
-                      ))
-                    ) : (
-                      <span>데이터가 없습니다.</span>
-                    )}
-                  </div>
+              {spotData.spot.length > 0 ? (
+                spotData.spot.map((spot, spotIndex) => (
+                  <span key={spotIndex} onClick={() => handlePlaceClick(spot)}>
+                    {spotIndex > 0 && " • "}
+                    {spot.name}
+                  </span>
                 ))
               ) : (
-                <span>데이터가 없습니다.</span>
+                <span>추가된 일정이 없습니다.</span>
               )}
             </div>
-          ))
-        ) : (
-          <span>데이터가 없습니다.</span>
-        )}
-      </div>
+          ))}
+        </div>
+      )}
       <div className="plan">🗒️ 전체 일정 담아가기</div>
       <div className="content-container" dangerouslySetInnerHTML={{ __html: post.contents }} />
       <div className="btn-wrapper">
         <Button $size="medium" $scheme="primary" $radius="default" onClick={handleLike}>
-          <LikeIcon /> {post.likesNum}
+          <StyledLikeIcon /> {post.likesNum}
         </Button>
-        <Button $size="medium" $scheme="secondary" $radius="default">
+        <Button $size="medium" $scheme="secondary" $radius="default" onClick={() => nav(-1)}>
           목록
         </Button>
       </div>
