@@ -1,0 +1,29 @@
+name: learn-github-actions # github action name (액션 탭에 노출되는 이름)
+on:
+    push:
+      branches: [ deploy/dockerfile ] # deploy/dockerfile 브랜치에 push할 때만 실행
+    pull_request:
+      branches: [ deploy/dockerfile ] # deploy/dockerfile 브랜치에 pull request할 때만 실행
+      paths:
+        - "server/**"
+jobs:
+  build:
+    runs-on: ubuntu-22.04 # OS 환경
+    steps: # 실행할 단계, name은 단계 이름, uses는 사용할 action
+      - name: Checkout source code 
+        uses: actions/checkout@v2
+        
+      - name: My First Step
+        run:
+          npm install
+          npm test
+          npm build
+
+      - name: Cache yarn dependencies
+        uses: actions/cache@v1
+        id: yarn-cache
+        with:
+          path: node_modules
+          key: ${{ runner.os }}-yarn-${{ hashFiles('**/yarn.lock') }}
+          restore-keys: |
+            ${{ runner.os }}-yarn-

@@ -1,14 +1,11 @@
 version: '3.3'
 services:
   frontend:
-    image: 6uamy/taecho-fe:latest
+    image: 6uamy/taecho-fe:v1.0
     ports:
       - "5173:5173"
   backend:
-    image: 6uamy/taecho-be:latest
-    build: 
-      context: ./server
-      dockerfile: Dockerfile
+    image: 6uamy/taecho-be:v1.0
     ports:
       - "1234:1234"
     stdin_open: true
