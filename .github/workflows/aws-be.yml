@@ -39,8 +39,8 @@ jobs:
         echo "SALT_ROUND=$SALT_ROUND" > ./server/.env
         echo "ACCESS_KEY=$AWS_ACCESS_KEY_ID" > ./server/.env
         echo "SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" > ./server/.env
-        echo "S3_BUCKET_REGION=ap-northeast-2" > ./server/.env
         echo "S3_BUCKET_NAME=$S3_BUCKET_NAME" > ./server/.env
+        echo "S3_BUCKET_REGION=$S3_BUCKET_REGION" > ./server/.env
 
       env:
         DB_USER: ${{ secrets.DB_USER }}
