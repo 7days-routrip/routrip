@@ -8,6 +8,7 @@ import { categories } from "@/constants/categories";
 import { useMain } from "@/hooks/useMain";
 import { Post } from "@/models/post.model";
 import styled from "styled-components";
+import WriteTopBtn from "@/components/common/WriteTopBtn";
 
 const dummyPost: Post = {
   id: 1,
@@ -28,6 +29,7 @@ const dummyPost: Post = {
   postsImg: "https://picsum.photos/seed/picsum/200/300",
   createdAt: "2024.03.12",
   contents: "",
+  totalExpense: "",
 };
 
 const MainPage = () => {
@@ -38,6 +40,7 @@ const MainPage = () => {
 
   return (
     <MainPageStyle>
+      <WriteTopBtn isWriting={false} />
       <Banner />
       <SlideSection title="🔥HOT한 여행지는 여기!">
         {bestPosts.map((post) => (

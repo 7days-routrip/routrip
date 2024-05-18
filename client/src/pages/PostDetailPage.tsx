@@ -14,6 +14,7 @@ import { PostComment } from "@/models/comment.model";
 import PostCommentCard from "@/components/common/PostComment";
 import PlaceModal from "@/components/common/PlaceModal";
 import { PlaceDetails } from "@/models/place.model";
+import WriteTopBtn from "@/components/common/WriteTopBtn";
 
 const StyledLikeIcon = styled(icons.LikeIcon)`
   fill: ${({ theme }) => theme.color.primary};
@@ -155,6 +156,7 @@ const PostDetailPage = () => {
 
   return (
     <PostDetailPageStyle>
+      <WriteTopBtn isWriting={true} />
       <PinIcon />
       <span>
         {post.continent.name} ﹥ {post.country.name}

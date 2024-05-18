@@ -14,6 +14,7 @@ import { useSchedule } from "@/hooks/useMypage";
 import { useScheduleDetails } from "@/hooks/useScheduleDetails";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import WriteTopBtn from "@/components/common/WriteTopBtn";
 
 // 이미지 업로드 함수
 const uploadImage = async (file: File) => {
@@ -250,6 +251,7 @@ const PostEditPage = () => {
 
   return (
     <ThemeProvider theme={theme}>
+      <WriteTopBtn isWriting={false} />
       <PostEditPageStyle>
         <div className="country">
           <PinIcon />

@@ -7,6 +7,7 @@ import { ViewMode } from "@/components/common/postCard";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Country, regions } from "@/data/region";
 import RegionCountrySelector from "@/components/common/RegionCountrySelector";
+import WriteTopBtn from "@/components/common/WriteTopBtn";
 
 interface PostPageStyleProps {
   view: ViewMode;
@@ -124,6 +125,7 @@ const PostPage = () => {
 
   return (
     <PostPageStyle view={view} area={area}>
+      <WriteTopBtn isWriting={true} />
       <div className="main-content">
         <div className="control-wrapper">
           <div className="select-wrapper">

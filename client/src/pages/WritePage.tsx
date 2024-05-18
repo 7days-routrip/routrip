@@ -16,6 +16,7 @@ import icons from "@/icons/icons";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
 import { httpClient } from "@/apis/https";
+import WriteTopBtn from "@/components/common/WriteTopBtn";
 
 // 이미지 업로드 함수
 const uploadImage = async (file: File) => {
@@ -257,6 +258,7 @@ const WritePage = () => {
 
   return (
     <WritePageStyle>
+      <WriteTopBtn isWriting={false} />
       <div className="title-content">
         <RegionCountrySelector
           regions={regions}
