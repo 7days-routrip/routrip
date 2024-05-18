@@ -7,14 +7,19 @@ import { DEFAULT_IMAGE } from "./ProfileCard";
 interface Props {
   scheduleProps: ISchedule;
   view: ViewMode;
+  disableLink?: boolean; // 링크 사용 여부를 결정하는 prop 추가
 }
 
-const ScheduleCard = ({ scheduleProps, view }: Props) => {
+const ScheduleCard = ({ scheduleProps, view, disableLink }: Props) => {
   return (
     <ScheduleCardStyle $view={view}>
-      <Link to={`/schedule/${scheduleProps.id}`}>
+      {disableLink ? (
         <SchedulerImageStyle $image={scheduleProps.thumbnail ? scheduleProps.thumbnail : ""} $view={view} />
-      </Link>
+      ) : (
+        <Link to={`/schedule/${scheduleProps.id}`}>
+          <SchedulerImageStyle $image={scheduleProps.thumbnail ? scheduleProps.thumbnail : ""} $view={view} />
+        </Link>
+      )}
       <CardContentStyle>
         <h3 className="card-title">{scheduleProps.title}</h3>
         <div className="card-data">
@@ -28,8 +33,6 @@ const ScheduleCard = ({ scheduleProps, view }: Props) => {
 
 const SchedulerImageStyle = styled(CardImageStyle)<CardImageStyleProps>`
   background-image: url(${({ $image }) => ($image ? $image : DEFAULT_IMAGE)});
-  /* width: ${({ $view }) => ($view === "grid" ? "300px" : "100px")};
-  height: ${({ $view }) => ($view === "grid" ? "150px" : "100px")}; */
   @media (max-width: 768px) {
     width: ${({ $view }) => ($view === "grid" ? "160px" : "100px")};
     height: ${({ $view }) => ($view === "grid" ? "100px" : "100px")};
@@ -37,8 +40,6 @@ const SchedulerImageStyle = styled(CardImageStyle)<CardImageStyleProps>`
 `;
 
 const ScheduleCardStyle = styled(CardStyle)`
-  /* width: ${({ $view }) => ($view === "grid" ? "300px" : "auto")};
-  height: ${({ $view }) => ($view === "grid" ? "250px" : "auto")}; */
   width: 100%;
   overflow: hidden;
   display: flex;
