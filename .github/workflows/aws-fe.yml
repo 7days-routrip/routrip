@@ -25,10 +25,10 @@ jobs:
 
     - name: Generate env
       run: |
-        echo "VITE_BASE_URL=$VITE_BASE_URL" > ./client/.env.development
-        echo "VITE_BASE_URL=$VITE_BASE_URL" > ./client/.env.production
-        echo "VITE_GOOGLE_MAP_API_KEY=$VITE_GOOGLE_MAP_API_KEY" > ./client/.env.development
-        echo "VITE_GOOGLE_MAP_API_KEY=$VITE_GOOGLE_MAP_API_KEY" > ./client/.env.production
+        echo "VITE_BASE_URL=${{VITE_BASE_URL}}" >> ./client/.env.development
+        echo "VITE_BASE_URL=${{VITE_BASE_URL}}" >> ./client/.env.production
+        echo "VITE_GOOGLE_MAP_API_KEY=${{VITE_GOOGLE_MAP_API_KEY}}" >> ./client/.env.development
+        echo "VITE_GOOGLE_MAP_API_KEY=${{VITE_GOOGLE_MAP_API_KEY}}" >> ./client/.env.production
       env:
         VITE_BASE_URL: ${{ secrets.VITE_BASE_URL }}
         VITE_GOOGLE_MAP_API_KEY: ${{ secrets.VITE_GOOGLE_MAP_API_KEY }}
