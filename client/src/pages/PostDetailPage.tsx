@@ -224,20 +224,22 @@ const PostDetailPage = () => {
         </Button>
       </div>
       <div className="comment-container">
-        <form onSubmit={handleCommentSubmit}>
-          <textarea
-            value={newComment}
-            onChange={(e) => setNewComment(e.target.value)}
-            placeholder="댓글을 작성해주세요."
-            rows={3}
-            style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ddd" }}
-          />
-          <div className="btn-submit">
-            <Button type="submit" $size="medium" $scheme="primary" $radius="default">
-              등록
-            </Button>
-          </div>
-        </form>
+        {currentUser ? (
+          <form onSubmit={handleCommentSubmit}>
+            <textarea
+              value={newComment}
+              onChange={(e) => setNewComment(e.target.value)}
+              placeholder="댓글을 작성해주세요."
+              rows={3}
+              style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ddd" }}
+            />
+            <div className="btn-submit">
+              <Button type="submit" $size="medium" $scheme="primary" $radius="default">
+                등록
+              </Button>
+            </div>
+          </form>
+        ) : null}
         {comments.map((comment) => (
           <PostCommentCard
             key={comment.id}
