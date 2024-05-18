@@ -1,4 +1,4 @@
-export interface Post {
+export interface BasicPost {
   id: number;
   title: string;
   date: string;
@@ -20,6 +20,8 @@ export interface Post {
   contents: string;
 }
 
+export interface Post extends BasicPost {}
+
 export interface Pagination {
   page: number;
   totalItems: number;
@@ -28,4 +30,28 @@ export interface Pagination {
 export interface PostList {
   posts: Post[];
   pagination: Pagination;
+}
+
+interface Spot {
+  placeId: string;
+  name: string;
+  tel: string;
+  address: string;
+  openingHours: string[];
+}
+
+interface Journey {
+  id: number;
+  spots: Array<{
+    day: number;
+    spot: Spot[];
+  }>;
+}
+
+export interface DailyPost extends BasicPost {
+  journeys: Journey[];
+}
+
+export interface DetailPost extends BasicPost {
+  journeys?: Journey;
 }
