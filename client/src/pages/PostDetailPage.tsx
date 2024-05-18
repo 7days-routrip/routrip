@@ -119,7 +119,7 @@ const PostDetailPage = () => {
       </span>
       <h1>{post.title}</h1>
       <div className="info-container">
-        <p color={theme.color.commentGray}>작성일 :{post.createAt}</p>
+        <p color={theme.color.commentGray}>작성일 :{post.createdAt}</p>
         <div className="btn-wrapper">
           <div>
             <StyledLikeIcon />

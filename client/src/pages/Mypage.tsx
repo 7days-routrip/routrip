@@ -105,7 +105,9 @@ const Mypage = () => {
             ? posts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
             : null}
           {!isEmptyComments && activeTag[2]
-            ? comments?.map((item, idx) => <CommentCard CommentProps={item} key={idx} />)
+            ? comments?.map((item, idx) => (
+                <CommentCard commentProps={item} key={idx} onDelete={() => {}} onEdit={() => {}} />
+              ))
             : null}
           {!isEmptyLikePosts && activeTag[3]
             ? likePosts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
