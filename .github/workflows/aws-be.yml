@@ -35,10 +35,10 @@ jobs:
         echo "JWT_ACCESS_SECRET=$JWT_ACCESS_SECRET" >> ./server/.env
         echo "JWT_ACCESS_EXPIRED_IN=$JWT_ACCESS_EXPIRED_IN" >> ./server/.env
         echo "JWT_REFRESH_SECRET=$JWT_REFRESH_SECRET" >> ./server/.env
-        echo "JWT_REFRESH_EXPIRED_IN=#JWT_REFRESH_EXPIRED_IN" >> ./server/.env
+        echo "JWT_REFRESH_EXPIRED_IN=$JWT_REFRESH_EXPIRED_IN" >> ./server/.env
         echo "SALT_ROUND=$SALT_ROUND" >> ./server/.env
-        echo "ACCESS_KEY=$AWS_ACCESS_KEY_ID" >> ./server/.env
-        echo "SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" >> ./server/.env
+        echo "ACCESS_KEY=$ACCESS_KEY" >> ./server/.env
+        echo "SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY" >> ./server/.env
         echo "S3_BUCKET_REGION=$S3_BUCKET_REGION" >> ./server/.env
         echo "S3_BUCKET_NAME=$S3_BUCKET_NAME" >> ./server/.env
       env:
@@ -54,8 +54,8 @@ jobs:
         JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
         JWT_REFRESH_EXPIRED_IN: ${{ secrets.JWT_REFRESH_EXPIRED_IN }}
         SALT_ROUND: ${{ secrets.SALT_ROUND }}
-        ACCESS_KEY: ${{ secrets.AWS_ACCESS_KEY_ID }}
-        SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+        SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
         S3_BUCKET_REGION: ${{ secrets.S3_BUCKET_REGION }}
         S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
         
