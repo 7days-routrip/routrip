@@ -141,7 +141,7 @@ const PostDetailPage = () => {
 
   const handleLike = async () => {
     try {
-      await httpClient.post(`/posts/${postId}/like`);
+      await httpClient.post(`/posts/${postId}`);
       setPost((prevPost) =>
         prevPost ? { ...prevPost, likesNum: (parseInt(prevPost.likesNum) + 1).toString() } : prevPost,
       );
