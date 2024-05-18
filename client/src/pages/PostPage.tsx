@@ -38,19 +38,20 @@ const PostPage = () => {
   const clickListBtn = () => setView("list");
   const clickGridBtn = () => setView("grid");
 
-  const fetchPosts = async (reset = false) => {
+  const fetchPosts = async (page: number, reset = false) => {
     setLoading(true);
     try {
       const response = await fetch(
         `http://localhost:1234/api/posts?area=${area}&filter=${countryId}&pages=${page}&limit=${itemsPerPage}`,
       );
       const data = await response.json();
+
       if (reset) {
         setPosts(data.posts);
       } else {
         setPosts((prev) => [...prev, ...data.posts]);
       }
-      setHasMore(data.pagination.page * itemsPerPage < data.pagination.totalPosts);
+      setHasMore(page * itemsPerPage < data.pagination.totalItems);
     } catch (error) {
       console.error("Error fetching posts:", error);
     }
@@ -58,17 +59,24 @@ const PostPage = () => {
   };
 
   useEffect(() => {
-    fetchPosts(true);
+    if (page === 1) {
+      fetchPosts(1, true); // 초기 로드 시 페이지 1을 설정하고 데이터 리셋
+    } else {
+      setPage(1); // 페이지 초기화
+    }
   }, [area, countryId]);
 
   useEffect(() => {
-    if (page > 1) fetchPosts();
+    if (page > 1) {
+      fetchPosts(page);
+    }
   }, [page]);
 
   useEffect(() => {
     const observer = new IntersectionObserver(
       (entries) => {
         if (entries[0].isIntersecting && hasMore && !loading) {
+          console.log("Loader is visible. Fetching next page...");
           setPage((prevPage) => prevPage + 1);
         }
       },
@@ -111,6 +119,8 @@ const PostPage = () => {
     sortOrder === "recent"
       ? [...posts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       : [...posts].sort((a, b) => parseInt(b.likesNum, 10) - parseInt(a.likesNum, 10));
+
+  console.log("Sorted posts:", sortedPosts); // 정렬된 게시물 로그 출력
 
   return (
     <PostPageStyle view={view} area={area}>
