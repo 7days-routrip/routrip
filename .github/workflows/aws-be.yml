@@ -35,6 +35,8 @@ jobs:
         echo "JWT_ACCESS_SECRET=$JWT_ACCESS_SECRET" > ./server/.env
         echo "JWT_ACCESS_EXPIRED_IN=$JWT_ACCESS_EXPIRED_IN" > ./server/.env
         echo "JWT_REFRESH_SECRET=$JWT_REFRESH_SECRET" > ./server/.env
+        echo "JWT_REFRESH_EXPIRED_IN=#JWT_REFRESH_EXPIRED_IN" > ./server/.env
+        echo "SALT_ROUND=$SALT_ROUND" > ./server/.env
       env:
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -46,6 +48,8 @@ jobs:
         JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
         JWT_ACCESS_EXPIRED_IN: ${{ secrets.JWT_ACCESS_EXPIRED_IN }}
         JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+        JWT_REFRESH_EXPIRED_IN: ${{ secrets.JWT_REFRESH_EXPIRED_IN }}
+        SALT_ROUND: ${{ secrets.SALT_ROUND }}
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
