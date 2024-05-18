@@ -33,6 +33,8 @@ jobs:
         echo "DB_LIMIT=$DB_LIMIT" > ./server/.env
         echo "CORS_ORIGIN=$CORS_ORIGIN" > ./server/.env
         echo "JWT_ACCESS_SECRET=$JWT_ACCESS_SECRET" > ./server/.env
+        echo "JWT_ACCESS_EXPIRED_IN=$JWT_ACCESS_EXPIRED_IN" > ./server/.env
+        echo "JWT_REFRESH_SECRET=$JWT_REFRESH_SECRET" > ./server/.env
       env:
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
@@ -42,6 +44,8 @@ jobs:
         DB_LIMIT: ${{ secrets.DB_LIMIT }}
         CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
         JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+        JWT_ACCESS_EXPIRED_IN: ${{ secrets.JWT_ACCESS_EXPIRED_IN }}
+        JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
