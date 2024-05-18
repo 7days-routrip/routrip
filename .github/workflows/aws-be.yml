@@ -41,6 +41,7 @@ jobs:
         echo "SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" > ./server/.env
         echo "S3_BUCKET_REGION=$S3_BUCKET_REGION" > ./server/.env
         echo "S3_BUCKET_NAME=$S3_BUCKET_NAME" > ./server/.env
+        
       env:
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
