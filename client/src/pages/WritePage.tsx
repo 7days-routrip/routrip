@@ -290,7 +290,6 @@ const WritePage = () => {
           {scheduleDetailData.days.map((day, dayIndex) => (
             <div key={dayIndex}>
               <PinIcon />
-
               <span>Day {dayIndex + 1} - </span>
               <span>
                 {day.spots.map((spot, spotIndex) => (
@@ -334,7 +333,7 @@ const WritePage = () => {
             ) : (
               schedules?.map((schedule, index) => (
                 <li key={index} onClick={() => handleScheduleClick(schedule.id)}>
-                  <ScheduleCard scheduleProps={schedule} view="list" />
+                  <ScheduleCard scheduleProps={schedule} view="list" disableLink={true} />
                 </li>
               ))
             )}
