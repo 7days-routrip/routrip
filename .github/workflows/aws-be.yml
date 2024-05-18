@@ -29,12 +29,16 @@ jobs:
         echo "DB_PASSWORD=$DB_PASSWORD" > ./server/.env
         echo "DB_DATABASE=$DB_DATABASE" > ./server/.env
         echo "DB_HOST=$DB_HOST" > ./server/.env
+        echo "DB_PORT=$DB_PORT" > ./server/.env
+        echo "DB_LIMIT=$DB_LIMIT" > ./server/.env
       env:
         DB_USER: ${{ secrets.DB_USER }}
         DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
         DB_DATABASE: ${{ secrets.DB_DATABASE }}
         DB_HOST: ${{ secrets.DB_HOST }}
-        
+        DB_PORT: ${{ secrets.DB_PORT }}
+        DB_LIMIT: ${{ secrets.DB_LIMIT }}
+
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
       with:
