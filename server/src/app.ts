@@ -39,4 +39,5 @@ app.use("/api/comments", commentRouter);
 app.use("/api/mypages", mypageRouter);
 app.use("/api/categories", categoryRouter);
 
+
 export default app;
