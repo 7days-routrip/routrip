@@ -17,6 +17,7 @@ jobs:
   deploy:
     name: Deploy
     runs-on: ubuntu-22.04
+    environment: production
 
     steps:
     - name: Checkout
@@ -29,7 +30,7 @@ jobs:
         echo "DB_DATABASE=$DB_DATABASE" > ./server/.env
         echo "DB_HOST=$DB_HOST" > ./server/.env
         echo "DB_PORT=$DB_PORT" > ./server/.env
-        echo "DB_LIMIT=$DB_LIMIT " > ./server/.env
+        echo "DB_LIMIT=$DB_LIMIT" > ./server/.env
         echo "CORS_ORIGIN=$CORS_ORIGIN" > ./server/.env
         echo "JWT_ACCESS_SECRET=$JWT_ACCESS_SECRET > ./server/.env
         echo "JWT_ACCESS_EXPIRED_IN=$JWT_ACCESS_EXPIRED_IN" > ./server/.env
