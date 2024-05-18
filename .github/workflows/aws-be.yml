@@ -1,4 +1,4 @@
-name: Deploy to ECR (backend)
+name: Deploy to ECR (frontend)
 
 on:
   push:
@@ -8,42 +8,39 @@ env:
   AWS_REGION: ap-northeast-2                   # set this to your preferred AWS region, e.g. us-west-1
   ECR_REPOSITORY: 7days-be # set this to your Amazon ECR repository name
   CONTAINER_NAME: 7days-be           # set this to the name of the container in the
+                                               # containerDefinitions section of your task definition
+
+permissions:
+  contents: read
 
 jobs:
-  build:
-    name: Build and Push to ECR
+  deploy:
+    name: Deploy
     runs-on: ubuntu-22.04
-    defaults:
-      run:
-        working-directory: ./server
+    environment: production
+
     steps:
-    - name: Check out code
+    - name: Checkout
       uses: actions/checkout@v4
-      with:
-        fetch-depth: 2
-
-    - name: Setup Node.js
-      uses: actions/setup-node@v3
-
-    - name: Cache node modules
-      id: cache-node-modules
-      uses: actions/cache@v3
-      env:
-        cache-name: cache-node-modules
-      with:
-        path: server/node_modules
-        key: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-${{ hashFiles('server/package-lock.json') }}
-        restore-keys: |
-          ${{ runner.os }}-build-${{ env.cache-name }}-
-          ${{ runner.os }}-
-
-    - name: Install Dependencies
-      if: ${{ steps.cache-node-modules.outputs.cache-hit != 'true' }}
-      run: npm ci
-
-    - name: Run build
-      run: npm run build
+    
+    - name: Generate env
+      run: |
+        echo "DB_USER=$DB_USER" > ./server/.env
+        echo "DB_PASSWORD=$DB_PASSWORD" > ./server/.env
+        echo "DB_DATABASE=$DB_DATABASE" > ./server/.env
+        echo "DB_HOST=$DB_HOST" > ./server/.env
+        echo "DB_PORT=$DB_PORT" > ./server/.env
+        echo "DB_LIMIT=$DB_LIMIT " > ./server/.env
+        echo "CORS_ORIGIN=$CORS_ORIGIN" > ./server/.env
+        echo "JWT_ACCESS_SECRET=$JWT_ACCESS_SECRET > ./server/.env
+        echo "JWT_ACCESS_EXPIRED_IN=$JWT_ACCESS_EXPIRED_IN" > ./server/.env
+        echo "JWT_REFRESH_SECRET=$JWT_REFRESH_SECRET" > ./server/.env
+        echo "JWT_REFRESH_EXPIRED_IN=$JWT_REFRESH_EXPIRED_IN" > ./server/.env
+        echo "SALT_ROUND=$SALT_ROUND" > ./server/.env
+        echo "ACCESS_KEY=$AWS_ACCESS_KEY_ID" > ./server/.env
+        echo "SECRET_ACCESS_KEY=$AWS_SECRET_ACCESS_KEY" > ./server/.env
+        echo "S3_BUCKET_REGION=$S3_BUCKET_REGION" > ./server/.env
+        echo "S3_BUCKET_NAME=$S3_BUCKET_NAME" > ./server/.env
 
     - name: Configure AWS credentials
       uses: aws-actions/configure-aws-credentials@v1
@@ -66,6 +63,6 @@ jobs:
         # Build a docker container and
         # push it to ECR so that it can
         # be deployed to ECS.
-        docker build --platform linux/amd64 -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG .
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
