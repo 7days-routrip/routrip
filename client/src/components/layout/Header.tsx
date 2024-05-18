@@ -149,6 +149,10 @@ const HeaderStyle = styled.header<HeaderStyleProps>`
       width: 100%;
       gap: 20px;
       align-items: center;
+
+      svg {
+        cursor: pointer;
+      }
     }
   }
 

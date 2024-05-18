@@ -1,54 +1,71 @@
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import { useEffect, useState } from "react";
 import { theme } from "@/styles/theme";
 import icons from "@/icons/icons";
 import Dropdown from "@/components/common/Dropdown";
 import { Link } from "react-router-dom";
 import { Button } from "@/components/common/Button";
 import { httpClient } from "@/apis/https";
-import { useEffect, useState } from "react";
-import { Post } from "@/models/post.model";
+import { DetailPost } from "@/models/post.model";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
-import { useNavigate } from "react-router-dom";
 import { PostComment } from "@/models/comment.model";
 import PostCommentCard from "@/components/common/PostComment";
+import PlaceModal from "@/components/common/PlaceModal";
+import { PlaceDetails } from "@/models/place.model";
+import WriteTopBtn from "@/components/common/WriteTopBtn";
+
+const StyledLikeIcon = styled(icons.LikeIcon)`
+  fill: ${({ theme }) => theme.color.primary};
+`;
+
+const StyledCommentIcon = styled(icons.CommentIcon)`
+  fill: ${({ theme }) => theme.color.primary};
+`;
 
 const PostDetailPage = () => {
   const { id } = useParams();
   const postId = id ? parseInt(id, 10) : undefined;
-  const { LikeIcon, CommentIcon, DotIcon, PinIcon } = icons;
-  const [post, setPost] = useState<Post | null>(null);
+  const { DotIcon, PinIcon } = icons;
+  const [post, setPost] = useState<DetailPost | null>(null);
   const [comments, setComments] = useState<PostComment[]>([]);
   const [newComment, setNewComment] = useState("");
+  const [selectedPlace, setSelectedPlace] = useState<PlaceDetails | null>(null);
+  const [currentUser, setCurrentUser] = useState<string | null>(null);
   const nav = useNavigate();
 
-  const StyledLikeIcon = styled(LikeIcon)`
-    fill: ${({ theme }) => theme.color.primary};
-  `;
+  const fetchPost = async () => {
+    try {
+      const response = await httpClient.get(`/posts/${postId}`);
+      setPost(response.data);
+    } catch (error) {
+      console.error("Error fetching post:", error);
+    }
+  };
 
-  const StyledCommentIcon = styled(CommentIcon)`
-    fill: ${({ theme }) => theme.color.primary};
-  `;
+  const fetchComments = async () => {
+    if (postId === undefined) {
+      console.error("Post ID is undefined");
+      return;
+    }
+
+    try {
+      const response = await httpClient.get(`/posts/${postId}/comments`);
+      if (response.status === 404) {
+        console.warn("Comments not found for post:", postId);
+        setComments([]);
+      } else {
+        setComments(response.data);
+      }
+    } catch (error) {
+      console.error("Error fetching comments:", error);
+    }
+  };
 
   useEffect(() => {
-    const fetchPost = async () => {
-      try {
-        const response = await httpClient.get(`/posts/${postId}`);
-        setPost(response.data);
-      } catch (error) {
-        console.error("Error fetching post:", error);
-      }
-    };
-
-    const fetchComments = async () => {
-      try {
-        const response = await httpClient.get(`/posts/${postId}/comments`);
-        setComments(response.data);
-      } catch (error) {
-        console.error("Error fetching comments:", error);
-      }
-    };
+    const nickName = localStorage.getItem("nickName");
+    setCurrentUser(nickName);
 
     if (postId !== undefined) {
       fetchPost();
@@ -79,9 +96,9 @@ const PostDetailPage = () => {
   const handleCommentSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     try {
-      const response = await httpClient.post("/comments", { postId, content: newComment });
-      setComments([...comments, response.data]);
+      await httpClient.post("/comments", { postId, content: newComment });
       setNewComment("");
+      fetchComments();
     } catch (error) {
       console.error("Error posting comment:", error);
     }
@@ -90,7 +107,7 @@ const PostDetailPage = () => {
   const handleCommentDelete = async (commentId: number) => {
     try {
       await httpClient.delete(`/comments/${commentId}`);
-      setComments(comments.filter((comment) => comment.id !== commentId));
+      fetchComments();
     } catch (error) {
       console.error("Error deleting comment:", error);
     }
@@ -99,11 +116,37 @@ const PostDetailPage = () => {
   const handleCommentEdit = async (commentId: number, updatedComment: string) => {
     try {
       await httpClient.put(`/comments/${commentId}`, { postId, content: updatedComment });
-      setComments(
-        comments.map((comment) => (comment.id === commentId ? { ...comment, content: updatedComment } : comment)),
-      );
+      fetchComments();
     } catch (error) {
       console.error("Error editing comment:", error);
+    }
+  };
+
+  const handlePlaceClick = (spot: any) => {
+    const place: PlaceDetails = {
+      id: spot.placeId,
+      placeName: spot.name,
+      address: spot.address,
+      location: { lat: 0, lng: 0 },
+      tel: spot.tel,
+      openingHours: spot.openingHours,
+      siteUrl: spot.siteurl,
+    };
+    setSelectedPlace(place);
+  };
+
+  const handleModalClose = () => {
+    setSelectedPlace(null);
+  };
+
+  const handleLike = async () => {
+    try {
+      await httpClient.post(`/posts/${postId}/like`);
+      setPost((prevPost) =>
+        prevPost ? { ...prevPost, likesNum: (parseInt(prevPost.likesNum) + 1).toString() } : prevPost,
+      );
+    } catch (error) {
+      console.error("Error liking post:", error);
     }
   };
 
@@ -113,13 +156,14 @@ const PostDetailPage = () => {
 
   return (
     <PostDetailPageStyle>
+      <WriteTopBtn isWriting={true} />
       <PinIcon />
       <span>
         {post.continent.name} ﹥ {post.country.name}
       </span>
       <h1>{post.title}</h1>
       <div className="info-container">
-        <p color={theme.color.commentGray}>작성일 :{post.createdAt}</p>
+        <p color={theme.color.commentGray}>작성일 : {post.createdAt}</p>
         <div className="btn-wrapper">
           <div>
             <StyledLikeIcon />
@@ -130,33 +174,52 @@ const PostDetailPage = () => {
             {post.commentsNum}
           </div>
           {post.author}
-          <Dropdown toggleIcon={<DotIcon />}>
-            <DropdownMenu>
-              <DropdownItem>
-                <StyledLink to={`/post/${postId}/edit`}>수정</StyledLink>
-              </DropdownItem>
-              <DropdownItem onClick={confirmDelete}>삭제</DropdownItem>
-            </DropdownMenu>
-          </Dropdown>
+          {currentUser === post.author && (
+            <Dropdown toggleIcon={<DotIcon />}>
+              <DropdownMenu>
+                <DropdownItem>
+                  <StyledLink to={`/post/${postId}/edit`}>수정</StyledLink>
+                </DropdownItem>
+                <DropdownItem onClick={confirmDelete}>삭제</DropdownItem>
+              </DropdownMenu>
+            </Dropdown>
+          )}
         </div>
       </div>
       <div className="trip-container">
         <p>
           <span>여행한 날짜</span> {post.date}
         </p>
+        <p>
+          <span>총 여행 경비</span> {post.totalExpense}
+        </p>
       </div>
-      <div className="place-container">
-        <PinIcon /> DAY 1 - 장소1 • 장소2
-        <br />
-        <PinIcon /> DAY 2 - 장소1 • 장소2
-      </div>
+      {post.journeys && post.journeys.spots && post.journeys.spots.length > 0 && (
+        <div className="place-container">
+          {post.journeys.spots.map((spotData, dayIndex) => (
+            <div key={dayIndex}>
+              <PinIcon /> DAY {dayIndex + 1} -{" "}
+              {spotData.spot.length > 0 ? (
+                spotData.spot.map((spot, spotIndex) => (
+                  <span key={spotIndex} onClick={() => handlePlaceClick(spot)}>
+                    {spotIndex > 0 && " • "}
+                    {spot.name}
+                  </span>
+                ))
+              ) : (
+                <span>추가된 일정이 없습니다.</span>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
       <div className="plan">🗒️ 전체 일정 담아가기</div>
       <div className="content-container" dangerouslySetInnerHTML={{ __html: post.contents }} />
       <div className="btn-wrapper">
-        <Button $size="medium" $scheme="primary" $radius="default">
-          <LikeIcon /> {post.likesNum}
+        <Button $size="medium" $scheme="primary" $radius="default" onClick={handleLike}>
+          <StyledLikeIcon /> {post.likesNum}
         </Button>
-        <Button $size="medium" $scheme="secondary" $radius="default">
+        <Button $size="medium" $scheme="secondary" $radius="default" onClick={() => nav(-1)}>
           목록
         </Button>
       </div>
@@ -184,6 +247,7 @@ const PostDetailPage = () => {
           />
         ))}
       </div>
+      {selectedPlace && <PlaceModal placeId={selectedPlace.id} onClosed={handleModalClose} />}
     </PostDetailPageStyle>
   );
 };
@@ -192,6 +256,7 @@ const PostDetailPageStyle = styled.div`
   .info-container {
     border-bottom: 1px solid #e7e7e7;
     display: flex;
+    align-items: center;
     justify-content: space-between;
     margin-top: -20px;
   }
@@ -200,7 +265,7 @@ const PostDetailPageStyle = styled.div`
     gap: 20px;
     justify-content: center;
     align-items: center;
-    margin-top: 10px;
+    margin: 30px;
   }
   .trip-container {
     display: flex;
@@ -222,6 +287,7 @@ const PostDetailPageStyle = styled.div`
   .content-container,
   .comment-container {
     border-bottom: 1px solid #e7e7e7;
+    padding-bottom: 10px;
   }
   .content-container .image {
     width: unset;

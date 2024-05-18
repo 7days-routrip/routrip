@@ -16,6 +16,7 @@ import icons from "@/icons/icons";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
 import { httpClient } from "@/apis/https";
+import WriteTopBtn from "@/components/common/WriteTopBtn";
 
 // 이미지 업로드 함수
 const uploadImage = async (file: File) => {
@@ -84,6 +85,7 @@ const WritePage = () => {
   const [countries, setCountries] = useState<Country[]>([]);
   const [showSidebar, setShowSidebar] = useState(false); // 사이드바 상태
   const [selectedScheduleId, setSelectedScheduleId] = useState<string | undefined>(undefined);
+  const [isDatePickerDisabled, setIsDatePickerDisabled] = useState(false); // 날짜 선택 비활성화 상태
 
   const sidebarRef = useRef<HTMLDivElement>(null); // 사이드바 참조 생성
 
@@ -116,10 +118,22 @@ const WritePage = () => {
     };
   }, [showSidebar]);
 
+  useEffect(() => {
+    if (selectedScheduleId && scheduleDetailData) {
+      const start = new Date(scheduleDetailData.startDate);
+      const end = new Date(scheduleDetailData.endDate);
+      setStartDate(start);
+      setEndDate(end);
+      setIsDatePickerDisabled(true); // 날짜 선택 비활성화
+    }
+  }, [selectedScheduleId, scheduleDetailData]);
+
   const handleDateChange = (dates: [Date, Date]) => {
-    const [start, end] = dates;
-    setStartDate(start);
-    setEndDate(end);
+    if (!isDatePickerDisabled) {
+      const [start, end] = dates;
+      setStartDate(start);
+      setEndDate(end);
+    }
   };
 
   const handleSave = async () => {
@@ -244,6 +258,7 @@ const WritePage = () => {
 
   return (
     <WritePageStyle>
+      <WriteTopBtn isWriting={false} />
       <div className="title-content">
         <RegionCountrySelector
           regions={regions}
@@ -269,8 +284,9 @@ const WritePage = () => {
             endDate={endDate}
             onChange={handleDateChange}
             dateFormat="yyyy.MM.dd"
-            isClearable={true}
+            isClearable={!isDatePickerDisabled}
             placeholderText="날짜 범위를 선택하세요"
+            disabled={isDatePickerDisabled} // DatePicker 비활성화 상태 추가
           />
         </label>
         <label>
@@ -290,7 +306,6 @@ const WritePage = () => {
           {scheduleDetailData.days.map((day, dayIndex) => (
             <div key={dayIndex}>
               <PinIcon />
-
               <span>Day {dayIndex + 1} - </span>
               <span>
                 {day.spots.map((spot, spotIndex) => (
@@ -334,7 +349,7 @@ const WritePage = () => {
             ) : (
               schedules?.map((schedule, index) => (
                 <li key={index} onClick={() => handleScheduleClick(schedule.id)}>
-                  <ScheduleCard scheduleProps={schedule} view="list" />
+                  <ScheduleCard scheduleProps={schedule} view="list" disableLink={true} />
                 </li>
               ))
             )}
