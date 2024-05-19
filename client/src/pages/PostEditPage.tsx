@@ -261,7 +261,7 @@ const PostEditPage = () => {
           <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
         </h1>
         <div className="info-container">
-          <p color={theme.color.commentGray}>작성일 : {post.date}</p>
+          <p color={theme.color.commentGray}>작성일 : {post.createdAt}</p>
           <div className="btn-wrapper">
             <div>
               <LikeIcon /> {post.likesNum}
