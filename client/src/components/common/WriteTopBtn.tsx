@@ -7,13 +7,27 @@ const WriteTopBtnStyle = styled.div`
   position: fixed;
   bottom: 80px;
   right: 32px;
-  margin: 20px;
+  margin: 1rem;
   display: flex;
-  gap: 20px;
+  gap: 0.8rem;
   justify-content: center;
   align-items: center;
   z-index: 1;
   min-height: 50px;
+
+  .top-btn{
+    padding: 0.5rem 0.8rem 0.7rem;
+    border: 2px solid ${({ theme}) =>theme.color.primary}
+  }
+  
+  button{
+    box-shadow:0px 0px 4px rgba(0, 0, 0, 0.2);
+    border: 2px solid ${({ theme}) =>theme.color.primary};
+
+  &:hover {
+      opacity:1;
+    }
+  }
 
   @media ${({ theme }) => theme.mediaQuery.mobile} {
     bottom: 20px;
@@ -39,22 +53,23 @@ const WriteTopBtn: React.FC<WriteTopBtnProps> = ({ isWriting }) => {
       {isWriting && (
         <Button
           $size="large"
-          $scheme="secondary"
+          $scheme="primary"
           $radius="write"
           onClick={() => (window.location.href = "/write")}
-          style={{ padding: "0.5rem 0.6rem" }}
+          style={{ padding: "0.6rem 1rem" , fontWeight: "bold" }}
         >
           글쓰기
         </Button>
       )}
       <Button
+        className="top-btn"
         $size="large"
-        $scheme="primary"
+        $scheme="secondary"
         $radius="write"
         onClick={handleScrollTop}
-        style={{ borderRadius: "50%", padding: "0.5rem 0.6rem" }}
+        style={{ borderRadius: "50%" }}
       >
-        <TopIcon color="white" />
+        <TopIcon color="#7aafff" />
       </Button>
     </WriteTopBtnStyle>
   );
