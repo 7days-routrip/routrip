@@ -139,6 +139,7 @@ const PostPage = () => {
                 countries={countries}
                 onRegionChange={handleRegionChange}
                 onCountryChange={handleCountryChange}
+                hideKorea={true}
               />
             ) : null}
             <div className="input-wrapper">
