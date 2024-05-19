@@ -25,6 +25,7 @@ const PostPage = () => {
   const [page, setPage] = useState(1);
   const [hasMore, setHasMore] = useState(true);
   const [loading, setLoading] = useState(false);
+  const [keyword, setKeyword] = useState<string>("");
   const loader = useRef<HTMLDivElement | null>(null);
   const itemsPerPage = 12;
 
@@ -33,6 +34,7 @@ const PostPage = () => {
   const params = new URLSearchParams(location.search);
   const areaParam = params.get("area");
   const countryId = params.get("filter") || "";
+  const searchKeyword = params.get("keyword") || "";
 
   const area: AreaType = areaParam === "home" || areaParam === "abroad" ? areaParam : "home";
 
@@ -43,7 +45,7 @@ const PostPage = () => {
     setLoading(true);
     try {
       const response = await fetch(
-        `http://localhost:1234/api/posts?area=${area}&filter=${countryId}&pages=${page}&limit=${itemsPerPage}`,
+        `http://localhost:1234/api/posts?area=${area}&filter=${countryId}&keyword=${searchKeyword}&pages=${page}&limit=${itemsPerPage}`,
       );
       const data = await response.json();
 
@@ -66,7 +68,7 @@ const PostPage = () => {
     };
 
     resetAndFetchPosts();
-  }, [area, countryId]);
+  }, [area, countryId, searchKeyword]);
 
   useEffect(() => {
     if (page > 1) {
@@ -117,6 +119,13 @@ const PostPage = () => {
     nav({ search: params.toString() });
   };
 
+  const handleKeywordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    const newKeyword = event.target.value;
+    setKeyword(newKeyword);
+    params.set("keyword", newKeyword);
+    nav({ search: params.toString() });
+  };
+
   const sortPosts = (posts: Post[], order: string) => {
     return order === "recent"
       ? [...posts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
@@ -143,7 +152,7 @@ const PostPage = () => {
               />
             ) : null}
             <div className="input-wrapper">
-              <input type="search" placeholder="검색어를 입력하세요." />
+              <input type="search" placeholder="검색어를 입력하세요." value={keyword} onChange={handleKeywordChange} />
               <SearchIcon />
             </div>
           </div>
