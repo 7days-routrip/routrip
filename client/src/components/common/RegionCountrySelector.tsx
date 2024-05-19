@@ -8,6 +8,7 @@ interface RegionCountrySelectorProps {
   countries: Country[];
   onRegionChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
   onCountryChange: (event: React.ChangeEvent<HTMLSelectElement>) => void;
+  hideKorea?: boolean;
 }
 
 const RegionCountrySelector: React.FC<RegionCountrySelectorProps> = ({
@@ -17,7 +18,10 @@ const RegionCountrySelector: React.FC<RegionCountrySelectorProps> = ({
   countries,
   onRegionChange,
   onCountryChange,
+  hideKorea = false,
 }) => {
+  const filteredCountries = hideKorea ? countries.filter((country) => country.name !== "대한민국") : countries;
+
   return (
     <div className="continent-country">
       <select className="continent" onChange={onRegionChange} value={selectedRegion}>
@@ -30,7 +34,7 @@ const RegionCountrySelector: React.FC<RegionCountrySelectorProps> = ({
       </select>
       <select className="country" onChange={onCountryChange} value={selectedCountry}>
         <option value="0">전체</option>
-        {countries.map((country) => (
+        {filteredCountries.map((country) => (
           <option key={country.id} value={country.id}>
             {country.name}
           </option>

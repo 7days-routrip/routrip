@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { PostComment } from "@/models/comment.model";
 import styled from "styled-components";
 import { Button } from "./Button";
@@ -7,11 +7,12 @@ import icons from "@/icons/icons";
 
 interface Props {
   commentProps: PostComment;
+  currentUser: string | null;
   onDelete: () => void;
   onEdit: (updatedComment: string) => void;
 }
 
-const PostCommentCard = ({ commentProps, onDelete, onEdit }: Props) => {
+const PostCommentCard = ({ commentProps, currentUser, onDelete, onEdit }: Props) => {
   const { TrashIcon, EditIcon } = icons;
   const [isEditing, setIsEditing] = useState(false);
   const [editedComment, setEditedComment] = useState(commentProps.content);
@@ -68,14 +69,16 @@ const PostCommentCard = ({ commentProps, onDelete, onEdit }: Props) => {
               </Button>
             </>
           ) : (
-            <>
-              <div onClick={handleEditClick} className="edit-btn">
-                <EditIcon />
-              </div>
-              <div onClick={onDelete} className="edit-btn">
-                <TrashIcon />
-              </div>
-            </>
+            currentUser === commentProps.nickName && (
+              <>
+                <div onClick={handleEditClick} className="edit-btn">
+                  <EditIcon />
+                </div>
+                <div onClick={onDelete} className="edit-btn">
+                  <TrashIcon />
+                </div>
+              </>
+            )
           )}
         </div>
       </div>
@@ -87,7 +90,7 @@ const CommentStyle = styled.div`
   width: 100%;
   min-width: 250px;
   padding: 10px;
-  border-bottom: 1px solid ${({ theme }) => theme.color.borderGray};
+  border-top: 1px solid ${({ theme }) => theme.color.borderGray};
   a {
     color: ${({ theme }) => theme.color.black};
   }

@@ -1,4 +1,4 @@
-import React, { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef } from "react";
 import styled from "styled-components";
 import DatePicker from "react-datepicker";
 import "react-datepicker/dist/react-datepicker.css";
@@ -325,7 +325,7 @@ const WritePage = () => {
           extraPlugins: [MyCustomUploadAdapterPlugin],
         }}
         data={data}
-        onChange={(event, editor) => {
+        onChange={(_event, editor) => {
           const newData = editor.getData();
           if (newData !== data) {
             setData(newData);
@@ -421,7 +421,7 @@ const WritePageStyle = styled.div`
   }
 
   .button-container {
-    margin-top: 20px;
+    margin: 20px 0px;
   }
   .daily-schedule {
     color: ${({ theme }) => theme.color.routeGray};

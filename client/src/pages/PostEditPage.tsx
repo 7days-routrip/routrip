@@ -1,8 +1,6 @@
 import { useParams, useNavigate } from "react-router-dom";
 import styled, { ThemeProvider } from "styled-components";
 import { useEffect, useState, useRef } from "react";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
 import { httpClient } from "@/apis/https";
 import { DetailPost } from "@/models/post.model";
 import { Button } from "@/components/common/Button";
@@ -80,7 +78,6 @@ const PostEditPage = () => {
   const [content, setContent] = useState("");
   const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
   const [totalExpense, setTotalExpense] = useState<number | string>("");
-  const [isDatePickerOpen, setIsDatePickerOpen] = useState(false);
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedScheduleId, setSelectedScheduleId] = useState<string | undefined>(undefined);
   const sidebarRef = useRef<HTMLDivElement>(null);
@@ -140,7 +137,6 @@ const PostEditPage = () => {
       let firstImageUrl = "";
       const imageUrls = [];
 
-      // 이미지 업로드 처리
       for (let i = 0; i < images.length; i++) {
         const img = images[i];
         if (img.src.startsWith("data:")) {
@@ -149,7 +145,7 @@ const PostEditPage = () => {
             const file = new File([blob], `image_${i}.png`, { type: blob.type });
             const imageUrl = await uploadImage(file);
             if (imageUrl) {
-              img.src = imageUrl; // src를 업로드된 이미지 URL로 대체
+              img.src = imageUrl;
               imageUrls.push(imageUrl);
               if (!firstImageUrl) {
                 firstImageUrl = imageUrl;
@@ -161,22 +157,20 @@ const PostEditPage = () => {
         } else {
           imageUrls.push(img.src);
           if (!firstImageUrl) {
-            firstImageUrl = img.src; // 첫 번째 이미지를 썸네일로 사용
+            firstImageUrl = img.src;
           }
         }
       }
 
-      // 이미지 URL 업데이트 후 콘텐츠를 새로 가져옴
       const updatedContent = new XMLSerializer().serializeToString(editorContent);
-
-      // XML 네임스페이스 제거
       const cleanedContent = updatedContent.replace('xmlns="http://www.w3.org/1999/xhtml"', "");
 
       const payload = {
         title: title,
         contents: cleanedContent,
-        date: `${dateRange[0]?.toISOString().split("T")[0]} - ${dateRange[1]?.toISOString().split("T")[0]}`,
-        totalExpense: totalExpense.toString(),
+        startDate: dateRange[0]?.toISOString().split("T")[0],
+        endDate: dateRange[1]?.toISOString().split("T")[0],
+        expense: totalExpense.toString(),
         continent: region,
         country: country,
         journeyId: selectedScheduleId,
@@ -186,14 +180,23 @@ const PostEditPage = () => {
       showAlert("게시물이 수정되었습니다.", "logo", () => {
         nav(`/post/${postId}`);
       });
+
+      // 업데이트된 날짜와 총 여행 경비를 반영하기 위해 상태를 갱신
+      setPost((prevPost) => {
+        if (prevPost) {
+          return {
+            ...prevPost,
+            startDate: payload.startDate,
+            endDate: payload.endDate,
+            totalExpense: payload.expense,
+          };
+        }
+        return prevPost;
+      });
     } catch (error) {
       console.error("Error updating post:", error);
       showAlert("게시물 수정에 실패했습니다.", "error");
     }
-  };
-
-  const handleDateChange = (dates: [Date | null, Date | null]) => {
-    setDateRange(dates);
   };
 
   const toggleSidebar = () => {
@@ -207,7 +210,7 @@ const PostEditPage = () => {
       const start = new Date(selectedSchedule.startDate);
       const end = new Date(selectedSchedule.endDate);
       setDateRange([start, end]);
-      setShowSidebar(false); // Close the sidebar after selecting a schedule
+      setShowSidebar(false);
     }
   };
 
@@ -216,13 +219,10 @@ const PostEditPage = () => {
     if (sidebarRef.current && !sidebarRef.current.contains(target)) {
       setShowSidebar(false);
     }
-    if (isDatePickerOpen && !target.closest(".react-datepicker")) {
-      setIsDatePickerOpen(false);
-    }
   };
 
   useEffect(() => {
-    if (isDatePickerOpen || showSidebar) {
+    if (showSidebar) {
       document.addEventListener("mousedown", handleClickOutside);
     } else {
       document.removeEventListener("mousedown", handleClickOutside);
@@ -230,7 +230,7 @@ const PostEditPage = () => {
     return () => {
       document.removeEventListener("mousedown", handleClickOutside);
     };
-  }, [isDatePickerOpen, showSidebar]);
+  }, [showSidebar]);
 
   const dataURLtoBlob = (dataurl: string) => {
     const parts = dataurl.split(",");
@@ -261,7 +261,7 @@ const PostEditPage = () => {
           <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
         </h1>
         <div className="info-container">
-          <p color={theme.color.commentGray}>작성일 : {post.date}</p>
+          <p color={theme.color.commentGray}>작성일 : {post.createdAt}</p>
           <div className="btn-wrapper">
             <div>
               <LikeIcon /> {post.likesNum}
@@ -276,28 +276,12 @@ const PostEditPage = () => {
           <div className="edit-date">
             <span>여행한 날짜</span>
             <div>
-              {isDatePickerOpen
-                ? `${dateRange[0]?.toLocaleDateString()} - ${dateRange[1]?.toLocaleDateString()}`
-                : post.date}
+              {dateRange[0]?.toLocaleDateString()} - {dateRange[1]?.toLocaleDateString()}
             </div>
             <div>
-              <EditIcon onClick={() => setIsDatePickerOpen(!isDatePickerOpen)} />
+              <EditIcon onClick={toggleSidebar} />
             </div>
           </div>
-          {isDatePickerOpen && (
-            <div className="date-picker-container">
-              <DatePicker
-                selected={dateRange[0]}
-                startDate={dateRange[0]}
-                endDate={dateRange[1]}
-                onChange={handleDateChange}
-                selectsRange
-                inline
-                dateFormat="yyyy.MM.dd"
-                onClickOutside={() => setIsDatePickerOpen(false)}
-              />
-            </div>
-          )}
           <div className="edit-expense">
             <span>총 여행 경비</span>
             <input
@@ -333,7 +317,7 @@ const PostEditPage = () => {
               extraPlugins: [MyCustomUploadAdapterPlugin],
             }}
             data={content}
-            onChange={(event, editor) => {
+            onChange={(_event, editor) => {
               const data = editor.getData();
               setContent(data);
             }}

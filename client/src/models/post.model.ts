@@ -18,6 +18,7 @@ export interface BasicPost {
   postsImg: string;
   createdAt: string;
   contents: string;
+  liked?: boolean;
 }
 
 export interface Post extends BasicPost {}
