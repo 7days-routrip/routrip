@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import { useState } from "react";
 import { PostComment } from "@/models/comment.model";
 import styled from "styled-components";
 import { Button } from "./Button";
@@ -90,7 +90,7 @@ const CommentStyle = styled.div`
   width: 100%;
   min-width: 250px;
   padding: 10px;
-  border-bottom: 1px solid ${({ theme }) => theme.color.borderGray};
+  border-top: 1px solid ${({ theme }) => theme.color.borderGray};
   a {
     color: ${({ theme }) => theme.color.black};
   }
