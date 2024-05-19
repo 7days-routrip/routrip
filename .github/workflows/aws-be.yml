@@ -1,0 +1,130 @@
+name: build image ECR, deploy to EC2 (backend)
+
+on:
+  push:
+    branches: [ "main" ]
+
+env:
+  AWS_REGION: ap-northeast-2
+  ECR_REPOSITORY: 7days-be 
+  CONTAINER_NAME: 7days-be
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    name: Deploy
+    runs-on: ubuntu-22.04
+    environment: production
+
+    steps:
+    - name: Checkout
+      uses: actions/checkout@v4
+    
+    - name: Generate env
+      run: |
+        echo "DB_USER=$DB_USER" >> ./server/.env
+        echo "DB_PASSWORD=$DB_PASSWORD" >> ./server/.env
+        echo "DB_DATABASE=$DB_DATABASE" >> ./server/.env
+        echo "DB_HOST=$DB_HOST" >> ./server/.env
+        echo "DB_PORT=$DB_PORT" >> ./server/.env
+        echo "DB_LIMIT=$DB_LIMIT" >> ./server/.env
+        echo "CORS_ORIGIN=$CORS_ORIGIN" >> ./server/.env
+        echo "JWT_ACCESS_SECRET=$JWT_ACCESS_SECRET" >> ./server/.env
+        echo "JWT_ACCESS_EXPIRED_IN=$JWT_ACCESS_EXPIRED_IN" >> ./server/.env
+        echo "JWT_REFRESH_SECRET=$JWT_REFRESH_SECRET" >> ./server/.env
+        echo "JWT_REFRESH_EXPIRED_IN=$JWT_REFRESH_EXPIRED_IN" >> ./server/.env
+        echo "SALT_ROUND=$SALT_ROUND" >> ./server/.env
+        echo "ACCESS_KEY=$ACCESS_KEY" >> ./server/.env
+        echo "SECRET_ACCESS_KEY=$SECRET_ACCESS_KEY" >> ./server/.env
+        echo "S3_BUCKET_REGION=$S3_BUCKET_REGION" >> ./server/.env
+        echo "S3_BUCKET_NAME=$S3_BUCKET_NAME" >> ./server/.env
+      env:
+        DB_USER: ${{ secrets.DB_USER }}
+        DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        DB_DATABASE: ${{ secrets.DB_DATABASE }}
+        DB_HOST: ${{ secrets.DB_HOST }}
+        DB_PORT: ${{ secrets.DB_PORT }}
+        DB_LIMIT: ${{ secrets.DB_LIMIT }}
+        CORS_ORIGIN: ${{ secrets.CORS_ORIGIN }}
+        JWT_ACCESS_SECRET: ${{ secrets.JWT_ACCESS_SECRET }}
+        JWT_ACCESS_EXPIRED_IN: ${{ secrets.JWT_ACCESS_EXPIRED_IN }}
+        JWT_REFRESH_SECRET: ${{ secrets.JWT_REFRESH_SECRET }}
+        JWT_REFRESH_EXPIRED_IN: ${{ secrets.JWT_REFRESH_EXPIRED_IN }}
+        SALT_ROUND: ${{ secrets.SALT_ROUND }}
+        ACCESS_KEY: ${{ secrets.ACCESS_KEY }}
+        SECRET_ACCESS_KEY: ${{ secrets.SECRET_ACCESS_KEY }}
+        S3_BUCKET_REGION: ${{ secrets.S3_BUCKET_REGION }}
+        S3_BUCKET_NAME: ${{ secrets.S3_BUCKET_NAME }}
+        
+
+    - name: Configure AWS credentials
+      uses: aws-actions/configure-aws-credentials@v1
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ${{ env.AWS_REGION }}
+
+    - name: Login to Amazon ECR
+      id: login-ecr
+      uses: aws-actions/amazon-ecr-login@v1
+
+    - name: ecr image build
+      working-directory: ./server
+      id: build-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker build -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
+
+    - name: ecr image delete
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_IP }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          aws ecr batch-delete-image \
+          --repository-name 7days-be \
+          --image-ids imageTag=tag1 imageTag=latest
+
+    - name: ecr image push
+      working-directory: ./server
+      id: push-image
+      env:
+        ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+        IMAGE_TAG: ${{ github.sha }}
+      run: |
+        docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
+        echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
+
+    - name: EC2 login to ECR
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_IP }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          aws ecr get-login-password --region ap-northeast-2 | sudo docker login --username AWS --password-stdin 180993267331.dkr.ecr.ap-northeast-2.amazonaws.com/
+
+    - name: EC2 container stop and remove
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_IP }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          docker stop routrip-be
+          docker rm routrip-be
+          docker rmi 180993267331.dkr.ecr.ap-northeast-2.amazonaws.com/7days-be:latest
+      
+    - name: ECR image run
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_IP }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          docker run --name routrip-be -d -p 1234:1234 180993267331.dkr.ecr.ap-northeast-2.amazonaws.com/7days-be:latest 
