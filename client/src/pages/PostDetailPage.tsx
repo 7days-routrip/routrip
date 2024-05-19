@@ -1,6 +1,8 @@
+import { addNewSchedule } from "@/apis/schedule.api"; // 추가
+import { SelectedPlace } from "@/stores/addPlaceStore"; // 추가
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react"; // useCallback 추가
 import { theme } from "@/styles/theme";
 import icons from "@/icons/icons";
 import Dropdown from "@/components/common/Dropdown";
@@ -15,6 +17,7 @@ import PostCommentCard from "@/components/common/PostComment";
 import PlaceModal from "@/components/common/PlaceModal";
 import { PlaceDetails } from "@/models/place.model";
 import WriteTopBtn from "@/components/common/WriteTopBtn";
+import { AxiosError } from "axios";
 
 const StyledLikeIcon = styled(icons.LikeIcon)`
   fill: ${({ theme }) => theme.color.primary};
@@ -27,41 +30,53 @@ const StyledCommentIcon = styled(icons.CommentIcon)`
 const PostDetailPage = () => {
   const { id } = useParams();
   const postId = id ? parseInt(id, 10) : undefined;
-  const { DotIcon, PinIcon } = icons;
+  const { DotIcon, PinIcon, LikeIcon } = icons;
   const [post, setPost] = useState<DetailPost | null>(null);
   const [comments, setComments] = useState<PostComment[]>([]);
   const [newComment, setNewComment] = useState("");
   const [selectedPlace, setSelectedPlace] = useState<PlaceDetails | null>(null);
   const [currentUser, setCurrentUser] = useState<string | null>(null);
+  const [isLiked, setIsLiked] = useState(false);
+  const [scheme, setScheme] = useState<"primary" | "secondary">("secondary");
+  const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const nav = useNavigate();
 
-  const fetchPost = async () => {
+  const fetchPost = useCallback(async () => {
+    // useCallback으로 래핑
     try {
       const response = await httpClient.get(`/posts/${postId}`);
-      setPost(response.data);
+      const postData: DetailPost = response.data;
+      setPost(postData);
+      setIsLiked(postData.liked || false); // liked 상태 설정
+      setScheme(postData.liked ? "primary" : "secondary"); // scheme 상태 설정
     } catch (error) {
       console.error("Error fetching post:", error);
     }
-  };
+  }, [postId]); // 의존성 배열 추가
 
-  const fetchComments = async () => {
+  const fetchComments = useCallback(async () => {
+    // useCallback으로 래핑
     if (postId === undefined) {
-      console.error("Post ID is undefined");
+      console.error("Post ID가 undefined입니다.");
       return;
     }
 
     try {
       const response = await httpClient.get(`/posts/${postId}/comments`);
-      if (response.status === 404) {
-        console.warn("Comments not found for post:", postId);
+      setComments(response.data);
+    } catch (error) {
+      if (isAxiosError(error) && error.response && error.response.status === 404) {
+        console.warn("댓글이 없습니다.:", postId);
         setComments([]);
       } else {
-        setComments(response.data);
+        console.error("댓글이 없습니다.:", error);
       }
-    } catch (error) {
-      console.error("Error fetching comments:", error);
     }
-  };
+  }, [postId]); // 의존성 배열 추가
+
+  function isAxiosError(error: any): error is AxiosError {
+    return (error as AxiosError).isAxiosError !== undefined;
+  }
 
   useEffect(() => {
     const nickName = localStorage.getItem("nickName");
@@ -71,7 +86,7 @@ const PostDetailPage = () => {
       fetchPost();
       fetchComments();
     }
-  }, [postId]);
+  }, [postId, fetchPost, fetchComments]); // 의존성 배열에 fetchPost, fetchComments 추가
 
   const handleDelete = async () => {
     try {
@@ -141,12 +156,64 @@ const PostDetailPage = () => {
 
   const handleLike = async () => {
     try {
-      await httpClient.post(`/posts/${postId}`);
-      setPost((prevPost) =>
-        prevPost ? { ...prevPost, likesNum: (parseInt(prevPost.likesNum) + 1).toString() } : prevPost,
-      );
+      if (isLiked) {
+        await httpClient.delete(`/likes/posts/${postId}`);
+        setPost((prevPost) =>
+          prevPost ? { ...prevPost, likesNum: (parseInt(prevPost.likesNum) - 1).toString() } : prevPost,
+        );
+        setScheme("secondary");
+      } else {
+        await httpClient.post(`/likes/posts/${postId}`);
+        setPost((prevPost) =>
+          prevPost ? { ...prevPost, likesNum: (parseInt(prevPost.likesNum) + 1).toString() } : prevPost,
+        );
+        setScheme("primary");
+      }
+      setIsLiked(!isLiked);
     } catch (error) {
-      console.error("Error liking post:", error);
+      console.error("Error:", error);
+    }
+  };
+
+  const handleCopySchedule = async () => {
+    console.log("handleCopySchedule 호출됨");
+    if (isLoading) return; // 이미 로딩 중이면 실행하지 않음
+    setIsLoading(true);
+
+    if (!post || !post.journeys || !post.journeys.spots) {
+      showAlert("일정이 없습니다.", "error");
+      setIsLoading(false);
+      return;
+    }
+
+    const allDaysPlaces: SelectedPlace[][] = post.journeys.spots.map((day) =>
+      day.spot.map((spot) => ({
+        id: spot.placeId,
+        uuid: spot.placeId,
+        placeName: spot.name,
+        address: spot.address,
+        tel: spot.tel,
+        location: { lat: 0, lng: 0 },
+        openingHours: spot.openingHours,
+        // siteUrl: spot.siteUrl,
+      })),
+    );
+
+    const newSchedule = {
+      title: post.title,
+      startDate: new Date(post.date.split("-")[0]),
+      endDate: new Date(post.date.split("-")[1]),
+      allDaysPlaces: allDaysPlaces,
+    };
+
+    try {
+      await addNewSchedule(newSchedule);
+      showAlert("일정이 내 일정에 추가되었습니다.", "logo");
+    } catch (error) {
+      console.error("Error creating schedule:", error);
+      showAlert("일정 추가에 실패했습니다.", "error");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -213,11 +280,13 @@ const PostDetailPage = () => {
           ))}
         </div>
       )}
-      <div className="plan">🗒️ 전체 일정 담아가기</div>
+      <div className="plan" onClick={handleCopySchedule}>
+        🗒️ 전체 일정 담아가기
+      </div>
       <div className="content-container" dangerouslySetInnerHTML={{ __html: post.contents }} />
       <div className="btn-wrapper">
-        <Button $size="medium" $scheme="primary" $radius="default" onClick={handleLike}>
-          <StyledLikeIcon /> {post.likesNum}
+        <Button $size="medium" $scheme={scheme} $radius="default" onClick={handleLike}>
+          <LikeIcon /> {post.likesNum}
         </Button>
         <Button $size="medium" $scheme="secondary" $radius="default" onClick={() => nav(-1)}>
           목록
@@ -240,10 +309,12 @@ const PostDetailPage = () => {
             </div>
           </form>
         ) : null}
+
         {comments.map((comment) => (
           <PostCommentCard
             key={comment.id}
             commentProps={comment}
+            currentUser={currentUser}
             onDelete={() => handleCommentDelete(comment.id)}
             onEdit={(updatedComment: string) => handleCommentEdit(comment.id, updatedComment)}
           />
@@ -272,6 +343,10 @@ const PostDetailPageStyle = styled.div`
   .trip-container {
     display: flex;
     justify-content: space-between;
+  }
+  .plan {
+    font-weight: 600;
+    cursor: pointer;
   }
   span {
     font-size: ${({ theme }) => theme.fontSize.medium};
