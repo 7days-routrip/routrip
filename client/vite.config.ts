@@ -11,4 +11,8 @@ export default defineConfig({
       { find: "@pages", replacement: path.resolve(__dirname, "src/pages") },
     ],
   },
+  server: {
+    port: 5173,
+    host: "0.0.0.0",
+  },
 });
