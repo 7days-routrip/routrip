@@ -101,4 +101,4 @@ jobs:
         username: ${{ secrets.EC2_USERNAME }}
         key: ${{ secrets.EC2_SSH_KEY }}
         script: |
-          docker run -d -p 1234:1234 180993267331.dkr.ecr.ap-northeast-2.amazonaws.com/7days-fe:latest --name rotrip-fe
+          docker run --name routrip-fe -d -p 5173:5173 180993267331.dkr.ecr.ap-northeast-2.amazonaws.com/7days-fe:latest
