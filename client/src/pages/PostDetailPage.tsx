@@ -217,6 +217,10 @@ const PostDetailPage = () => {
     }
   };
 
+  const formatNumber = (num: number | bigint) => {
+    return new Intl.NumberFormat().format(num);
+  };
+
   if (!post) {
     return null;
   }
@@ -228,9 +232,13 @@ const PostDetailPage = () => {
       <span>
         {post.continent.name} ﹥ {post.country.name}
       </span>
-      <h1>{post.title}</h1>
+      <div className="title-container">
+        <h1>{post.title}</h1>
+        <div className="create-day" color={theme.color.commentGray}>
+          작성일 : {post.createdAt}
+        </div>
+      </div>
       <div className="info-container">
-        <p color={theme.color.commentGray}>작성일 : {post.createdAt}</p>
         <div className="btn-wrapper">
           <div>
             <StyledLikeIcon />
@@ -258,7 +266,7 @@ const PostDetailPage = () => {
           <span>여행한 날짜</span> {post.date}
         </p>
         <p>
-          <span>총 여행 경비</span> {post.totalExpense}
+          <span>총 여행 경비</span> {formatNumber(parseInt(post.totalExpense))}
         </p>
       </div>
       {post.journeys && post.journeys.spots && post.journeys.spots.length > 0 && (
@@ -331,21 +339,28 @@ const PostDetailPageStyle = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
-    margin-top: -20px;
+  }
+  .title-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
   }
   .btn-wrapper {
     display: flex;
     gap: 20px;
     justify-content: center;
     align-items: center;
-    margin: 30px;
+    margin-bottom: 20px;
   }
+
   .trip-container {
     display: flex;
+    align-items: center;
     justify-content: space-between;
   }
   .plan {
     font-weight: 600;
+    margin-top: 20px;
     cursor: pointer;
   }
   span {
@@ -358,12 +373,12 @@ const PostDetailPageStyle = styled.div`
   }
   .btn-submit {
     text-align: right;
+    margin: 20px 0px;
   }
 
   .plan,
   .content-container,
   .comment-container {
-    border-bottom: 1px solid #e7e7e7;
     padding-bottom: 10px;
   }
   .content-container .image {
