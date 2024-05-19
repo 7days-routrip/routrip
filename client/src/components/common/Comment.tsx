@@ -10,7 +10,8 @@ interface Props {
 const CommentCard = ({ commentProps }: Props) => {
   const navigate = useNavigate();
   const navHandler = () => {
-    if (commentProps.postId === 0) {
+    // console.log(commentProps.postId);
+    if (commentProps.postId === undefined) {
       showAlert("삭제된 게시판입니다.", "logo");
       return;
     } else {

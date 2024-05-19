@@ -9,6 +9,10 @@ import {
 import { LIMIT } from "@/constants/pagenation";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
+const isLastPage = (totalCnt: number, pages: number) => {
+  return Math.ceil(totalCnt / LIMIT) === pages;
+};
+
 export const useProfile = () => {
   const {
     data: profileData,
@@ -38,9 +42,9 @@ export const useSchedule = () => {
     queryFn: ({ pageParam }) => fetchMySchedule(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const isLastPage = Math.ceil(lastPage.pagination.totalItems / LIMIT) === lastPage.pagination.page;
-
-      return isLastPage ? null : lastPage.pagination.page + 1;
+      return isLastPage(lastPage.pagination.totalItems, lastPage.pagination.page)
+        ? null
+        : Number(lastPage.pagination.page) + 1;
     },
 
     enabled: false,
@@ -73,9 +77,9 @@ export const usePost = () => {
     queryFn: ({ pageParam }) => fetchMyPosts(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const isLastPage = Math.ceil(lastPage.pagination.totalItems / LIMIT) === lastPage.pagination.page;
-
-      return isLastPage ? null : lastPage.pagination.page + 1;
+      return isLastPage(lastPage.pagination.totalItems, lastPage.pagination.page)
+        ? null
+        : Number(lastPage.pagination.page) + 1;
     },
     enabled: false,
   });
@@ -107,9 +111,9 @@ export const useComment = () => {
     queryFn: ({ pageParam }) => fetchMyComments(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const isLastPage = Math.ceil(lastPage.pagination.totalItems / LIMIT) === lastPage.pagination.page;
-
-      return isLastPage ? null : lastPage.pagination.page + 1;
+      return isLastPage(lastPage.pagination.totalItems, lastPage.pagination.page)
+        ? null
+        : Number(lastPage.pagination.page) + 1;
     },
     enabled: false,
   });
@@ -141,9 +145,9 @@ export const useLikePost = () => {
     queryFn: ({ pageParam }) => fetchLikePost(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const isLastPage = Math.ceil(lastPage.pagination.totalItems / LIMIT) === lastPage.pagination.page;
-
-      return isLastPage ? null : lastPage.pagination.page + 1;
+      return isLastPage(lastPage.pagination.totalItems, lastPage.pagination.page)
+        ? null
+        : Number(lastPage.pagination.page) + 1;
     },
     enabled: false,
   });
@@ -175,9 +179,9 @@ export const useLikePlace = () => {
     queryFn: ({ pageParam }) => fetchLikePlace(pageParam),
     initialPageParam: 1,
     getNextPageParam: (lastPage) => {
-      const isLastPage = Math.ceil(lastPage.pagination.totalItems / LIMIT) === lastPage.pagination.page;
-
-      return isLastPage ? null : lastPage.pagination.page + 1;
+      return isLastPage(lastPage.pagination.totalItems, lastPage.pagination.page)
+        ? null
+        : Number(lastPage.pagination.page) + 1;
     },
     enabled: false,
   });
