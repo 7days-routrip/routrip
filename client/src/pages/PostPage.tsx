@@ -60,11 +60,12 @@ const PostPage = () => {
   };
 
   useEffect(() => {
-    if (page === 1) {
-      fetchPosts(1, true); // 초기 로드 시 페이지 1을 설정하고 데이터 리셋
-    } else {
-      setPage(1); // 페이지 초기화
-    }
+    const resetAndFetchPosts = async () => {
+      setPage(1);
+      await fetchPosts(1, true);
+    };
+
+    resetAndFetchPosts();
   }, [area, countryId]);
 
   useEffect(() => {
@@ -116,12 +117,13 @@ const PostPage = () => {
     nav({ search: params.toString() });
   };
 
-  const sortedPosts =
-    sortOrder === "recent"
+  const sortPosts = (posts: Post[], order: string) => {
+    return order === "recent"
       ? [...posts].sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
       : [...posts].sort((a, b) => parseInt(b.likesNum, 10) - parseInt(a.likesNum, 10));
+  };
 
-  console.log("Sorted posts:", sortedPosts); // 정렬된 게시물 로그 출력
+  const sortedPosts = sortPosts(posts, sortOrder);
 
   return (
     <PostPageStyle view={view} area={area}>
