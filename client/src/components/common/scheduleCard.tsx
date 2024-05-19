@@ -5,12 +5,17 @@ import { Link } from "react-router-dom";
 import { DEFAULT_IMAGE } from "./ProfileCard";
 
 interface Props {
-  scheduleProps: ISchedule;
+  scheduleProps?: ISchedule; // scheduleProps를 선택적(prop)을로 변경
   view: ViewMode;
   disableLink?: boolean; // 링크 사용 여부를 결정하는 prop 추가
 }
 
 const ScheduleCard = ({ scheduleProps, view, disableLink }: Props) => {
+  if (!scheduleProps) {
+    // scheduleProps가 없을 경우 기본 내용을 표시하거나 null을 반환
+    return <div>해당하는 항목이 없습니다.</div>;
+  }
+
   return (
     <ScheduleCardStyle $view={view}>
       {disableLink ? (
