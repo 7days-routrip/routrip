@@ -34,7 +34,7 @@ const reqPicksList = async (userId: number, pages: number) => {
       placeImg: place.place.img ? place.place.img : "",
     };
   });
-  return { success: true, count: returnData.length, data: returnData.splice(offset, offset + LIMIT) };
+  return { success: true, count: returnData.length, data: returnData.slice(offset, offset + LIMIT) };
 };
 
 const reqPicksInsertData = async (userId: number, placeId: string) => {
@@ -85,11 +85,11 @@ const reqLikesList = async (userId: number, pages: number) => {
       };
     }),
   ).then((res) => {
-    return res.filter((el) => el);
+    return res.sort((a, b) => b.id - a.id).filter((el) => el);
   });
 
   if (likesResult.length === 0) return { success: false, msg: "find not list" };
-  return { success: true, count: returnData.length, data: returnData.splice(offset, offset + LIMIT) };
+  return { success: true, count: returnData.length, data: returnData.slice(offset, offset + LIMIT) };
 };
 
 const reqLikesInsertData = async (userId: number, postId: number) => {

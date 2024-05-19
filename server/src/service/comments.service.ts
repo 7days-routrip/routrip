@@ -12,28 +12,27 @@ const reqCommentsList = async (userId: number, pages: number) => {
   if (!commentList || commentList.length < 1) return { success: false, msg: "does not exist comments" };
   const retrunCmt = await Promise.all(
     commentList.map(async (cmt) => {
+      console.log(cmt.post);
       if (typeof cmt.post === "undefined") {
         return {
           postId: undefined,
           content: cmt.content,
           postTitle: NOT_FOUND_POST,
-          createDate: await setDateFromat(cmt.createdAt),
+          createdAt: await setDateFromat(cmt.createdAt),
         };
       }
       return {
         postId: cmt.post.id,
         content: cmt.content,
         postTitle: cmt.post.title,
-        createDate: await setDateFromat(cmt.createdAt),
+        createdAt: await setDateFromat(cmt.createdAt),
       };
     }),
   ).then((res) => {
     return res
       .sort((a, b) => {
-        const bDate = new Date(b.createDate).getTime();
-        const aDate = new Date(a.createDate).getTime();
-        console.log(bDate);
-        console.log(aDate);
+        const bDate = new Date(b.createdAt).getTime();
+        const aDate = new Date(a.createdAt).getTime();
         return bDate - aDate;
       })
       .filter((post) => post !== undefined);

@@ -51,24 +51,33 @@ const reqAllPostsList = async (
 
   const responsePostsData = await Promise.all(
     postsData.map(async (post) => {
-      const countryId = String(post.country.id);
+      const countryId = post.country.id;
       if (searchData?.filter && searchData.keyword) {
-        if (post.title.includes(searchData.keyword) && countryId == searchData.filter) {
+        if (post.title.includes(searchData.keyword) && countryId === parseInt(searchData.filter)) {
           return await postsListReturnData(post);
         }
       } else if (searchData?.filter) {
-        if (countryId === searchData.filter) {
+        if (countryId === parseInt(searchData.filter)) {
           return await postsListReturnData(post);
         }
       } else if (searchData?.keyword) {
         if (post.title.includes(searchData.keyword)) {
           return await postsListReturnData(post);
         }
+      } else {
+        return await postsListReturnData(post);
       }
-      return await postsListReturnData(post);
     }),
   ).then((res) => {
-    return res.sort((a, b) => b.id - a.id).filter((post) => post !== undefined);
+    return res
+      .sort((a, b) => {
+        if (a && b) {
+          return b.id - a.id;
+        } else {
+          return -1;
+        }
+      })
+      .filter((post) => post !== undefined);
   });
 
   return {

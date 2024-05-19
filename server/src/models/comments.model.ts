@@ -20,6 +20,6 @@ export class Comments {
   @ManyToOne((type) => Users, { eager: true })
   user!: Users;
 
-  @ManyToOne((type) => Posts)
+  @ManyToOne((type) => Posts, { eager: true })
   post!: Posts;
 }
