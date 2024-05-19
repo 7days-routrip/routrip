@@ -42,6 +42,7 @@ const Mypage = () => {
   const { likePlaces, isEmptyLikePlace, likePlaceRefetch, nextLikePlaces, hasNextPlaces } = useLikePlace();
   const { profileInfo, isProfileLoding } = useProfile();
   const [searchParams, setSearchParams] = useSearchParams();
+  const newSearchParams = new URLSearchParams(searchParams);
 
   const moreRef = useIntersectionObserver(([entry]) => {
     if (entry.isIntersecting) {
@@ -71,7 +72,6 @@ const Mypage = () => {
   });
 
   const handleMypageTag = (idx: number, tag: string) => {
-    const newSearchParams = new URLSearchParams(searchParams);
     const newActiveTag = new Array(5).fill(false);
     newActiveTag[idx] = true;
     setActiveIndex(idx);
@@ -120,7 +120,10 @@ const Mypage = () => {
               $radius="default"
               $scheme={activeTag[idx] ? "primary" : "normal"}
               $size="large"
-              onClick={() => handleMypageTag(idx, item.queryValue)}
+              onClick={() => {
+                newSearchParams.set(QUERYSTRING.TAG, item.queryValue);
+                setSearchParams(newSearchParams);
+              }}
               key={idx}
             >
               {item.name}
