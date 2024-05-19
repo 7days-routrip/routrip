@@ -73,3 +73,32 @@ jobs:
       run: |
         docker push $ECR_REGISTRY/$ECR_REPOSITORY:latest
         echo "image=$ECR_REGISTRY/$ECR_REPOSITORY:latest" >> $GITHUB_OUTPUT
+
+    - name: EC2 login to ECR
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_IP }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          aws ecr get-login-password --region ap-northeast-2 | sudo docker login --username AWS --password-stdin 180993267331.dkr.ecr.ap-northeast-2.amazonaws.com/
+
+    - name: 기존 EC2에서 실행중인 컨테이너 종료
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_IP }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          docker stop rotrip-fe
+          docker rm rotrip-fe
+          docker rmi 180993267331.dkr.ecr.ap-northeast-2.amazonaws.com/7days-fe:latest
+
+    - name: ECR image run
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.EC2_IP }}
+        username: ${{ secrets.EC2_USERNAME }}
+        key: ${{ secrets.EC2_SSH_KEY }}
+        script: |
+          docker run -d -p 1234:1234 180993267331.dkr.ecr.ap-northeast-2.amazonaws.com/7days-fe:latest --name rotrip-fe
