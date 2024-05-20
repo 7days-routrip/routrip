@@ -80,6 +80,7 @@ export const useAuth = () => {
     try {
       const res = await authReset(data);
       showAlert(`${res.data.message}`, "logo");
+      navigate("/login");
       return;
     } catch (error: any) {
       return fetchErrorStatusHandler(error, [400]);

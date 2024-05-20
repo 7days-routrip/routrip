@@ -22,44 +22,44 @@ const PostCard = ({ PostProps, view }: Props) => {
     <PostCardStyle $profile={PostProps.profileImg} $view={view}>
       <Link to={`/post/${PostProps.id}`}>
         <CardImageStyle $image={PostProps.postsImg} $view={view} />
-      </Link>
 
-      <CardContentStyle>
-        <div className="schedule">
-          <div className="route">
-            <PinIcon />
-            <span className="category">
-              <span>{PostProps.continent.name}</span>
-              <span>{PostProps.country.name}</span>
-            </span>
-          </div>
-          <div className="feedback-icon">
-            <div className="comment">
-              <CommentIcon />
-              <span>{PostProps.commentsNum}</span>
+        <CardContentStyle>
+          <div className="schedule">
+            <div className="route">
+              <PinIcon />
+              <span className="category">
+                <span>{PostProps.continent.name}</span>
+                <span>{PostProps.country.name}</span>
+              </span>
             </div>
-            <div className="like">
-              <Likecon />
-              <span>{PostProps.likesNum}</span>
+            <div className="feedback-icon">
+              <div className="comment">
+                <CommentIcon />
+                <span>{PostProps.commentsNum}</span>
+              </div>
+              <div className="like">
+                <Likecon />
+                <span>{PostProps.likesNum}</span>
+              </div>
+            </div>{" "}
+            {/* end : feddback-icon */}
+          </div>
+          <h3 className="card-title">{PostProps.title}</h3>
+          {/* <p className="card-date">여행 기간: {PostProps.date}</p> */}
+          <div className="author-info">
+            <div className="feedback">
+              <div className="writer">
+                <div className="profile-img"></div>
+                <p>{PostProps.author}</p>
+              </div>
             </div>
-          </div>{" "}
-          {/* end : feddback-icon */}
-        </div>
-        <h3 className="card-title">{PostProps.title}</h3>
-        {/* <p className="card-date">여행 기간: {PostProps.date}</p> */}
-        <div className="author-info">
-          <div className="feedback">
-            <div className="writer">
-              <div className="profile-img"></div>
-              <p>{PostProps.author}</p>
+            <div className="scedul-date">
+              <span className="date-text"></span>
+              <span> {PostProps.createdAt}</span>
             </div>
           </div>
-          <div className="scedul-date">
-            <span className="date-text"></span>
-            <span> {PostProps.createdAt}</span>
-          </div>
-        </div>
-      </CardContentStyle>
+        </CardContentStyle>
+      </Link>
     </PostCardStyle>
   );
 };
@@ -212,6 +212,11 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
   position: ${({ $view }) => ($view === "grid" ? "relative" : "unset")};
   overflow: hidden;
   width: 100%;
+
+  a {
+    color: ${({ theme }) => theme.color.black};
+  }
+
   .profile-img {
     background-image: url(${({ $profile }) => ($profile ? `${$profile}` : DEFAULT_IMAGE)});
     background-size: 2rem 1rem;

@@ -72,7 +72,10 @@ const ProfileEditPage = () => {
   };
 
   const onSubmit = (data: ProfileEditProps) => {
-    if (formImage === null && data.nickname === "") return;
+    if (formImage === undefined && data.nickname === "") {
+      showAlert("변경 사항이 없습니다.", "logo");
+      return;
+    }
     if (data.nickname && !nicknameUniqueCheck) {
       setError("nickname", { message: "닉네임 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
       return;
@@ -159,7 +162,7 @@ const ProfileEditPage = () => {
               </div>
               <div className="profile-password">
                 <span>비밀번호</span>
-                <Button $radius="default" $scheme="primary" $size="medium">
+                <Button $radius="default" $scheme="primary" $size="medium" type="button">
                   <Link to={"/me/reset"}>비밀번호 변경</Link>
                 </Button>
               </div>
