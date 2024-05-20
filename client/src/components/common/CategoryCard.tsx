@@ -3,17 +3,31 @@ import { Link } from "react-router-dom";
 import { CardImageStyle } from "./postCard";
 import Title from "./Title";
 import { MainPostCardStyle } from "./MainPostCard";
+import { regions } from "@/data/region";
 
 interface Props {
   id: number;
   name: string;
   img: string;
 }
+const getRegionByCountryId = (countryId: number) => {
+  for (const region of regions) {
+    for (const country of region.countries) {
+      if (country.id === countryId) {
+        return { regionId: region.id, countryId: country.id, regionName: region.name, countryName: country.name };
+      }
+    }
+  }
+  return null;
+};
 
 const CategoryCard = ({ id, name, img }: Props) => {
+  const regionInfo = getRegionByCountryId(id);
   return (
     <CategoryCardStyle>
-      <Link to={`/post?area=abroad&filter=${id}&page=1`}>
+      <Link
+        to={`/post?area=abroad&filter=${id}&region=${regionInfo?.regionId}&country=${regionInfo?.countryId}&page=1`}
+      >
         <CategoryImageStyle $image={img} $view="grid" />
         <div className="info">
           <div className="title">
