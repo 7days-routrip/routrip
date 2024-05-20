@@ -3,7 +3,6 @@ import {
   authLogin,
   authLogout,
   authReset,
-  fetchProfileImage,
   fetchProfileRestPassword,
   isEmailUnique,
   isNicknameUnique,
@@ -122,7 +121,6 @@ export const useAuth = () => {
           "Content-Type": "multipart/form-data",
         },
       });
-      // console.log(res, "response");
       return res;
     } catch (error) {
       // 실패

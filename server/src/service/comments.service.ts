@@ -73,7 +73,6 @@ const addComment = async (userId: number, postId: number, content: string) => {
 
 const updateComment = async (userId: number, postId: number, content: string, commentId: number) => {
   const comment = await commentRepo.findOne({ where: { id: commentId, post: { id: postId }, user: { id: userId } } });
-  console.log(comment);
   if (!comment) throw new Error(BAD_REQUEST_COMMENT);
   comment.content = content;
   const result = await commentRepo.save(comment);

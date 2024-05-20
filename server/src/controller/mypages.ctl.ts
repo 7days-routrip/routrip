@@ -1,4 +1,9 @@
-import { NOT_FOUND_COMMENTS, NOT_FOUND_POSTS, UNAUTHORIZED_NOT_LOGIN } from "@/constants/message";
+import {
+  NOT_FOUND_COMMENTS,
+  NOT_FOUND_PLACES_LIST,
+  NOT_FOUND_POSTS,
+  UNAUTHORIZED_NOT_LOGIN,
+} from "@/constants/message";
 import CommentsSevice from "@/service/comments.service";
 import MypagesService from "@/service/mypages.service";
 import PostsService from "@/service/posts.service";
@@ -81,7 +86,7 @@ const getJourneysList = async (req: Request, res: Response) => {
     if (!user?.isLoggedIn) throw new Error("사용자 정보가 없습니다.\n로그인이 필요한 서비스입니다.");
     const userId = req.user?.id as number;
     const listResult = await MypagesService.getJourneysList(userId, pages);
-    // const journeys = await JourneysService.getJourneysList(user.id as number, pages);
+    if (!listResult.success) throw new Error(listResult.msg);
 
     res.status(StatusCodes.OK).json({
       schedules: listResult.data,
@@ -103,6 +108,7 @@ const getPlaceAllList = async (req: Request, res: Response) => {
       const userId = req.user?.id as number;
       const pages = parseInt(req.query.pages as string);
       const listResult = await MypagesService.getPlaces(userId, pages);
+      if (!listResult.success) throw new Error(listResult.msg);
 
       res.status(StatusCodes.OK).json({
         places: listResult.data,
@@ -118,6 +124,8 @@ const getPlaceAllList = async (req: Request, res: Response) => {
     if (err instanceof Error) {
       if (err.message === "login required")
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+      if (err.message === "does not exist Like Place")
+        return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_PLACES_LIST });
     }
   }
 };

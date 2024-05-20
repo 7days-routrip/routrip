@@ -6,7 +6,6 @@ export type BestPosts = Pick<Post, "id" | "likesNum" | "date" | "title" | "posts
 export const getBestPosts = async () => {
   try {
     const { data } = await httpClient.get<BestPosts[]>("/posts/all/hot");
-    console.log(data);
     return data;
   } catch (err) {
     throw err;
@@ -17,7 +16,6 @@ export const getBestPosts = async () => {
 export const getHomePosts = async () => {
   try {
     const { data } = await httpClient.get<PostList>("/posts?area=home&pages=1");
-    // console.log(data);
     return data;
   } catch (err) {
     throw err;
@@ -28,7 +26,6 @@ export const getHomePosts = async () => {
 export const getAbroadPosts = async () => {
   try {
     const { data } = await httpClient.get<PostList>("/posts?area=abroad&pages=1");
-    // console.log(data);
     return data;
   } catch (err) {
     throw err;

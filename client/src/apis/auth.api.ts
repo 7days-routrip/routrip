@@ -1,6 +1,6 @@
 import { JoinProps, LoginProps } from "@/hooks/useAuth";
-import { httpClient } from "./https";
 import { getToken } from "@/stores/authStore";
+import { httpClient } from "./https";
 
 export const authJoin = async (data: JoinProps) => {
   const response = await httpClient.post("/users/join", data);
@@ -63,11 +63,8 @@ export const fetchProfileImage = async (data: FormData) => {
         "Content-Type": "multipart/form-data",
       },
     });
-    console.log(response, "response");
     return response;
-  } catch (error: any) {
-    console.log(error);
-  }
+  } catch (error: any) {}
 };
 
 // 프로필 수정 - 닉네임 or 이미지랑 같이?
