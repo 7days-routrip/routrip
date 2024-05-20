@@ -92,6 +92,7 @@ export const useAuth = () => {
       const res = await isNicknameUnique({ nickname });
       return res;
     } catch (error: any) {
+      console.log(error, "안나옴?");
       return fetchErrorStatusHandler(error, [400, 409]);
     }
   };

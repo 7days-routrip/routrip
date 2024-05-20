@@ -57,8 +57,12 @@ const ProfileEditPage = () => {
     }
     userNicknameCheck(nickname).then((res) => {
       // res 가 성공 메시지면 이거
-      setNicknameUniqueCheck((prev) => !prev);
-      clearErrors("nickname");
+      if (res.status === 200) {
+        setNicknameUniqueCheck((prev) => !prev);
+        clearErrors("nickname");
+      } else {
+        setError("nickname", { message: `${res.data.message}` }, { shouldFocus: true });
+      }
     });
   };
 
