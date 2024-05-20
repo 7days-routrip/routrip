@@ -13,6 +13,7 @@ import Loading from "@/components/common/Loading";
 interface PostPageStyleProps {
   view: ViewMode;
   area: AreaType;
+  loading: boolean;
 }
 
 const PostPage = () => {
@@ -183,18 +184,20 @@ const PostPage = () => {
       </div>
 
       <div className="post">
-        {loading ? (
-          <Loading />
+        {loading && page === 1 ? (
+          <div className="loading-wrapper">
+            <Loading />
+          </div>
         ) : (
           sortedPosts.map((post, index) => <PostCard key={post.id || index} PostProps={post} view={view} />)
         )}
-        {posts.length > 0 && <div ref={loader} />}
+        {hasMore && !loading && <div ref={loader} />}
       </div>
     </PostPageStyle>
   );
 };
 
-const PostPageStyle = styled.div<PostPageStyleProps & { loading: boolean }>`
+const PostPageStyle = styled.div<PostPageStyleProps>`
   .main-content {
     justify-content: center;
     align-items: center;
@@ -276,21 +279,26 @@ const PostPageStyle = styled.div<PostPageStyleProps & { loading: boolean }>`
     gap: 14px;
     margin: 0 auto;
     padding: 20px 0;
-    position: relative; /* 추가 */
-    min-height: 200px; /* 높이 지정, 로딩 스피너가 가운데 오기 위해 필요 */
+    position: relative;
 
     .none-posts {
       width: 100%;
       margin: 0 auto;
       text-align: center;
     }
-    ${(props) =>
-      props.loading &&
-      `
+
+    .loading-wrapper {
       display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
       justify-content: center;
       align-items: center;
-    `}
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      z-index: 9999;
+    }
   }
   @media screen and (max-width: 1080px) {
     .control-wrapper {
