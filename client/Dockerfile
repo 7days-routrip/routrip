@@ -14,4 +14,5 @@ RUN npm run build
 
 EXPOSE 443
 
-CMD ["npx", "http-server",  "-S", "-C", "certificate.pem", "-p", "443", "--proxy", "https://routrip.prgms-fullcycle.com:443?", "./dist"] 
+# CMD ["npx", "http-server",  "-S", "-C", "certificate.pem", "-p", "443", "--proxy", "https://routrip.prgms-fullcycle.com:443?", "./dist"] 
+CMD ["npx", "http-server", "-p", "80", "./dist", "--proxy", "http://routrip.prgms-fullcycle.com"]
