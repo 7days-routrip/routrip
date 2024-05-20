@@ -1,9 +1,9 @@
-import { httpClient } from "./https";
 import { Comment } from "@/models/comment.model";
-import { Schedule } from "@/models/schedule.model";
-import { Pagination, PostList } from "@/models/post.model";
 import { PlaceDetails } from "@/models/place.model";
+import { Pagination, PostList } from "@/models/post.model";
 import { Profile } from "@/models/profile.model";
+import { Schedule } from "@/models/schedule.model";
+import { httpClient } from "./https";
 
 // 내 프로필
 export const fetchProfile = async () => {
@@ -113,11 +113,11 @@ interface fetchPlaceResponse {
 }
 export const fetchLikePlace = async (page: number) => {
   try {
-    const { data } = await httpClient.get<fetchPlaceResponse>(`/likes/places?pages=${page}`);
+    const { data } = await httpClient.get<fetchPlaceResponse>(`/mypages/places?pages=${page}`);
+    console.log(data);
     return data;
   } catch (error) {
     // 에러 처리
-    console.log(error);
     return {
       places: [],
       pagination: {

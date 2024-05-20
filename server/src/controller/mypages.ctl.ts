@@ -2,7 +2,6 @@ import { NOT_FOUND_COMMENTS, NOT_FOUND_POSTS, UNAUTHORIZED_NOT_LOGIN } from "@/c
 import CommentsSevice from "@/service/comments.service";
 import MypagesService from "@/service/mypages.service";
 import PostsService from "@/service/posts.service";
-import JourneysService from "@/service/journeys.service";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -98,5 +97,30 @@ const getJourneysList = async (req: Request, res: Response) => {
   }
 };
 
-const MypagesController = { commentUserAllList, postUserAllList, userTotalData, getJourneysList };
+const getPlaceAllList = async (req: Request, res: Response) => {
+  try {
+    if (req.user?.isLoggedIn) {
+      const userId = req.user?.id as number;
+      const pages = parseInt(req.query.pages as string);
+      const listResult = await MypagesService.getPlaces(userId, pages);
+
+      res.status(StatusCodes.OK).json({
+        places: listResult.data,
+        pagination: {
+          page: pages,
+          totalItems: listResult.count,
+        },
+      });
+    } else {
+      throw new Error("login required");
+    }
+  } catch (err) {
+    if (err instanceof Error) {
+      if (err.message === "login required")
+        return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
+    }
+  }
+};
+
+const MypagesController = { commentUserAllList, postUserAllList, userTotalData, getJourneysList, getPlaceAllList };
 export default MypagesController;

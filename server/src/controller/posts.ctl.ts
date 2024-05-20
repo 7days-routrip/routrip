@@ -10,7 +10,6 @@ import {
   UNAUTHORIZED_NOT_LOGIN,
 } from "@/constants/message";
 import PostsService from "@/service/posts.service";
-import { __Client } from "@aws-sdk/client-s3";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 

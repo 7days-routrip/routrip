@@ -12,10 +12,9 @@ const reqCommentsList = async (userId: number, pages: number) => {
   if (!commentList || commentList.length < 1) return { success: false, msg: "does not exist comments" };
   const retrunCmt = await Promise.all(
     commentList.map(async (cmt) => {
-      console.log(cmt.post);
       if (typeof cmt.post === "undefined") {
         return {
-          postId: undefined,
+          postId: 0,
           content: cmt.content,
           postTitle: NOT_FOUND_POST,
           createdAt: await setDateFromat(cmt.createdAt),

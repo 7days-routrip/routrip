@@ -100,15 +100,9 @@ const likesPlaceAllData = async (req: Request, res: Response) => {
     if (req.user?.isLoggedIn) {
       const pages = parseInt(req.query.pages as string);
       const userId = req.user.id as number;
-      const listResult = await LikesService.reqPicksList(userId, pages);
+      const listResult = await LikesService.reqPicksList(userId);
       if (!listResult.success) throw new Error(listResult.msg);
-      res.status(StatusCodes.OK).json({
-        places: listResult.data,
-        pagination: {
-          page: pages,
-          totalItems: listResult.count,
-        },
-      });
+      res.status(StatusCodes.OK).json(listResult.data);
     } else {
       throw new Error("login required");
     }

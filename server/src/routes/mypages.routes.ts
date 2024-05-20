@@ -8,5 +8,6 @@ router.get("/comments", authenticateUser, MypagesController.commentUserAllList);
 router.get("/posts", authenticateUser, MypagesController.postUserAllList);
 router.get("/journeys", authenticateUser, MypagesController.getJourneysList);
 router.get("/total-data-quantity", authenticateUser, MypagesController.userTotalData);
+router.get("/places", authenticateUser, MypagesController.getPlaceAllList);
 
 export default router;

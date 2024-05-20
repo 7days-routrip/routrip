@@ -5,8 +5,7 @@ import { Picks } from "@/models/picks.model";
 import { LIMIT } from "@/settings";
 import { getOffset, setDateFromat } from "@/utils/posts.utils";
 
-const reqPicksList = async (userId: number, pages: number) => {
-  const offset = await getOffset(pages, LIMIT);
+const reqPicksList = async (userId: number) => {
   const pickRepo = AppDataSource.getRepository(Picks);
   const picksResult = await pickRepo.find({
     where: { user: { id: userId } },
@@ -34,7 +33,7 @@ const reqPicksList = async (userId: number, pages: number) => {
       placeImg: place.place.img ? place.place.img : "",
     };
   });
-  return { success: true, count: returnData.length, data: returnData.slice(offset, offset + LIMIT) };
+  return { success: true, data: returnData };
 };
 
 const reqPicksInsertData = async (userId: number, placeId: string) => {
