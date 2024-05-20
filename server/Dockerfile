@@ -12,6 +12,6 @@ COPY ./ /usr/src/app
 
 RUN npm run build
 
-EXPOSE 443
+EXPOSE 1234
 
 CMD ["npm", "run", "product"] 
