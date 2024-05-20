@@ -1,27 +1,27 @@
+import { Button } from "@/components/common/Button";
+import Loading from "@/components/common/Loading";
+import ScheduleGoogleMap from "@/components/map/ScheduleGoogleMap";
 import AddNewPlace from "@/components/schedule/AddNewPlace";
+import AddPlaceSchedule from "@/components/schedule/AddPlaceSchedule";
+import BookmarkPlace from "@/components/schedule/BookmarkPlace";
+import DaySchedule from "@/components/schedule/DaySchedule";
 import { PlaceTabContent, PlaceTabs } from "@/components/schedule/PlaceTabs";
 import SelectPlace from "@/components/schedule/SelectPlace";
-import styled from "styled-components";
-import AddPlaceSchedule from "@/components/schedule/AddPlaceSchedule";
-import Icons from "@/icons/icons";
-import { useEffect, useState } from "react";
-import BookmarkPlace from "@/components/schedule/BookmarkPlace";
-import { showAlert } from "@/utils/showAlert";
-import DaySchedule from "@/components/schedule/DaySchedule";
-import { getDuration } from "@/utils/getDuration";
-import { DragDropContext, DropResult } from "@hello-pangea/dnd";
-import { SelectedPlace, useAddPlaceStore } from "@/stores/addPlaceStore";
-import ScheduleGoogleMap from "@/components/map/ScheduleGoogleMap";
-import { useDayPlaceStore } from "@/stores/dayPlaces";
-import { Button } from "@/components/common/Button";
-import { useParams } from "react-router-dom";
-import { convertDateToISOString } from "@/utils/convertDataType";
-import { SchedulePageStyle } from "./SchedulePage";
 import { useScheduleDetails } from "@/hooks/useScheduleDetails";
-import Loading from "@/components/common/Loading";
-import { onDragDropEnd } from "@/utils/onDragDropEnd";
 import { useScheduleEdit } from "@/hooks/useScheduleEdit";
+import Icons from "@/icons/icons";
+import { SelectedPlace, useAddPlaceStore } from "@/stores/addPlaceStore";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
+import { useDayPlaceStore } from "@/stores/dayPlaces";
+import { convertDateToISOString } from "@/utils/convertDataType";
+import { getDuration } from "@/utils/getDuration";
+import { onDragDropEnd } from "@/utils/onDragDropEnd";
+import { showAlert } from "@/utils/showAlert";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+import { useEffect, useState } from "react";
+import { useParams } from "react-router-dom";
+import styled from "styled-components";
+import { SchedulePageStyle } from "./SchedulePage";
 
 const ScheduleEditPage = () => {
   const [title, setTitle] = useState<string>("");
@@ -53,8 +53,6 @@ const ScheduleEditPage = () => {
         showAlert("여행 시작일 또는 도착일을 잘못 입력했어요.\n여행 일자를 다시 선택해주세요.", "logo");
         return;
       }
-
-      console.log(title, editStartDate, editEndDate, dayPlaces);
 
       // 일정 수정 요청
       editScheduleMutate({ id, title, startDate: editStartDate, endDate: editEndDate, allDaysPlaces: dayPlaces });

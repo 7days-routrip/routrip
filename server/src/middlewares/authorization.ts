@@ -7,7 +7,7 @@ import { Picks } from "@/models/picks.model";
 import { Posts } from "@/models/posts.model";
 import { NextFunction, Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
-import { Repository, TreeLevelColumn } from "typeorm";
+import { Repository } from "typeorm";
 
 const setRepo = (type: string) => {
   let repo;
@@ -112,7 +112,6 @@ const authorizePicks = async (req: Request, res: Response, next: NextFunction) =
 const authorization = async (req: Request, res: Response, next: NextFunction) => {
   try {
     if (req.user?.isLoggedIn) {
-      console.log(req.user);
       const itemId: number = parseInt(req.params.id);
       const userId = req.user.id as number;
       let repo;
@@ -155,4 +154,4 @@ const authorization = async (req: Request, res: Response, next: NextFunction) =>
   }
 };
 
-export { authorization, authorizePicks, authorizeLikes };
+export { authorization, authorizeLikes, authorizePicks };

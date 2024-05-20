@@ -1,6 +1,6 @@
 import { Comment } from "@/models/comment.model";
 import { showAlert } from "@/utils/showAlert";
-import { Link, useNavigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
 
 interface Props {
@@ -10,7 +10,6 @@ interface Props {
 const CommentCard = ({ commentProps }: Props) => {
   const navigate = useNavigate();
   const navHandler = () => {
-    // console.log(commentProps.postId);
     if (commentProps.postId === undefined) {
       showAlert("삭제된 게시판입니다.", "logo");
       return;

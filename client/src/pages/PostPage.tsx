@@ -8,6 +8,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Country, regions } from "@/data/region";
 import RegionCountrySelector from "@/components/common/RegionCountrySelector";
 import WriteTopBtn from "@/components/common/WriteTopBtn";
+import Loading from "@/components/common/Loading";
 
 interface PostPageStyleProps {
   view: ViewMode;
@@ -120,10 +121,18 @@ const PostPage = () => {
   };
 
   const handleKeywordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newKeyword = event.target.value;
-    setKeyword(newKeyword);
-    params.set("keyword", newKeyword);
+    setKeyword(event.target.value);
+  };
+
+  const handleSearch = () => {
+    params.set("keyword", keyword);
     nav({ search: params.toString() });
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
   };
 
   const sortPosts = (posts: Post[], order: string) => {
@@ -135,7 +144,7 @@ const PostPage = () => {
   const sortedPosts = sortPosts(posts, sortOrder);
 
   return (
-    <PostPageStyle view={view} area={area}>
+    <PostPageStyle view={view} area={area} loading={loading}>
       <WriteTopBtn isWriting={true} />
       <div className="main-content">
         <div className="control-wrapper">
@@ -152,8 +161,14 @@ const PostPage = () => {
               />
             ) : null}
             <div className="input-wrapper">
-              <input type="search" placeholder="검색어를 입력하세요." value={keyword} onChange={handleKeywordChange} />
-              <SearchIcon />
+              <input
+                type="search"
+                placeholder="검색어를 입력하세요."
+                value={keyword}
+                onChange={handleKeywordChange}
+                onKeyPress={handleKeyPress}
+              />
+              <SearchIcon onClick={handleSearch} />
             </div>
           </div>
           <div className="view-toggle">
@@ -168,8 +183,8 @@ const PostPage = () => {
       </div>
 
       <div className="post">
-        {posts.length === 0 ? (
-          <div className="none-posts">게시글이 없습니다</div>
+        {loading ? (
+          <Loading />
         ) : (
           sortedPosts.map((post, index) => <PostCard key={post.id || index} PostProps={post} view={view} />)
         )}
@@ -179,7 +194,7 @@ const PostPage = () => {
   );
 };
 
-const PostPageStyle = styled.div<PostPageStyleProps>`
+const PostPageStyle = styled.div<PostPageStyleProps & { loading: boolean }>`
   .main-content {
     justify-content: center;
     align-items: center;
@@ -228,6 +243,7 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
 
     svg {
       color: ${({ theme }) => theme.color.commentGray};
+      cursor: pointer;
     }
   }
 
@@ -260,12 +276,21 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
     gap: 14px;
     margin: 0 auto;
     padding: 20px 0;
+    position: relative; /* 추가 */
+    min-height: 200px; /* 높이 지정, 로딩 스피너가 가운데 오기 위해 필요 */
 
     .none-posts {
       width: 100%;
       margin: 0 auto;
       text-align: center;
     }
+    ${(props) =>
+      props.loading &&
+      `
+      display: flex;
+      justify-content: center;
+      align-items: center;
+    `}
   }
   @media screen and (max-width: 1080px) {
     .control-wrapper {
