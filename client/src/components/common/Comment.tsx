@@ -29,7 +29,7 @@ const CommentCard = ({ commentProps }: Props) => {
       </div>
 
       <div className="comment-date">
-        <span>작성일: {commentProps.createdAt}</span>
+        <span>{commentProps.createdAt}</span>
       </div>
     </CommentStyle>
   );
@@ -40,13 +40,13 @@ const CommentStyle = styled.div`
   min-width: 370px;
   padding: 0 1.5rem 0.6rem;
   border-bottom: 1px solid ${({ theme }) => theme.color.borderGray};
-  a {
-    color: ${({ theme }) => theme.color.black};
-  }
-
   display: flex;
   justify-content: space-between;
   align-items: flex-start;
+
+  &:last-child {
+    border-bottom: unset;
+  }
 
   .comment-body {
     width: 500px;
@@ -61,6 +61,15 @@ const CommentStyle = styled.div`
 
   .post-title {
     color: ${({ theme }) => theme.color.commentGray};
+  }
+
+  a {
+    color: ${({ theme }) => theme.color.black};
+  }
+
+  .comment-date span {
+    color: ${({ theme }) => theme.color.commentGray};
+    font-size: ${({ theme }) => theme.fontSize.xsmall};
   }
 `;
 

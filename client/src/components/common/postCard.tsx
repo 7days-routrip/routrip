@@ -21,45 +21,49 @@ const PostCard = ({ PostProps, view }: Props) => {
   return (
     <PostCardStyle $profile={PostProps.profileImg} $view={view}>
       <Link to={`/post/${PostProps.id}`}>
-        <CardImageStyle $image={PostProps.postsImg} $view={view} />
-      </Link>
+        <div className="image-wrapper">
+          <div className="inner">
+            <CardImageStyle $image={PostProps.postsImg} $view={view} className="card-image-style" />
+          </div>
+        </div>
 
-      <CardContentStyle>
-        <div className="schedule">
-          <div className="route">
-            <PinIcon />
-            <span className="category">
-              <span>{PostProps.continent.name}</span>
-              <span>{PostProps.country.name}</span>
-            </span>
-          </div>
-          <div className="feedback-icon">
-            <div className="comment">
-              <CommentIcon />
-              <span>{PostProps.commentsNum}</span>
+        <CardContentStyle>
+          <div className="schedule">
+            <div className="route">
+              <PinIcon />
+              <span className="category">
+                <span>{PostProps.continent.name}</span>
+                <span>{PostProps.country.name}</span>
+              </span>
             </div>
-            <div className="like">
-              <Likecon />
-              <span>{PostProps.likesNum}</span>
+            <div className="feedback-icon">
+              <div className="comment">
+                <CommentIcon />
+                <span>{PostProps.commentsNum}</span>
+              </div>
+              <div className="like">
+                <Likecon />
+                <span>{PostProps.likesNum}</span>
+              </div>
+            </div>{" "}
+            {/* end : feddback-icon */}
+          </div>
+          <h3 className="card-title">{PostProps.title}</h3>
+          {/* <p className="card-date">여행 기간: {PostProps.date}</p> */}
+          <div className="author-info">
+            <div className="feedback">
+              <div className="writer">
+                <div className="profile-img"></div>
+                <p>{PostProps.author}</p>
+              </div>
             </div>
-          </div>{" "}
-          {/* end : feddback-icon */}
-        </div>
-        <h3 className="card-title">{PostProps.title}</h3>
-        {/* <p className="card-date">여행 기간: {PostProps.date}</p> */}
-        <div className="author-info">
-          <div className="feedback">
-            <div className="writer">
-              <div className="profile-img"></div>
-              <p>{PostProps.author}</p>
+            <div className="scedul-date">
+              <span className="date-text"></span>
+              <span> {PostProps.createdAt}</span>
             </div>
           </div>
-          <div className="scedul-date">
-            <span className="date-text"></span>
-            <span> {PostProps.createdAt}</span>
-          </div>
-        </div>
-      </CardContentStyle>
+        </CardContentStyle>
+      </Link>
     </PostCardStyle>
   );
 };
@@ -71,16 +75,18 @@ export interface CardImageStyleProps extends React.ButtonHTMLAttributes<HTMLButt
 
 export const CardImageStyle = styled.div<CardImageStyleProps>`
   display: flex;
-  width: ${({ $view }) => ($view === "grid" ? "380px" : "280px")};
-  height: ${({ $view }) => ($view === "grid" ? "170px" : "150px")};
+  width: 100%;
+  height: 100%;
   background-image: url(${({ $image }) => ($image ? $image : DEFAULT_IMAGE)});
   background-position: center;
   background-size: ${({ $image }) => ($image ? "cover" : "60%")};
   border: 0;
   border-radius: ${({ $view, theme }) => ($view === "grid" ? `${theme.borderRadius.tab}` : `8px 0 0 8px`)};
-
-  position: relative;
-  /* position: ${({ $view }) => ($view === "grid" ? "relative" : "unset")}; */
+  transition: transform 0.3s;
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
 
   &::after {
     content: "";
@@ -106,6 +112,7 @@ export const CardContentStyle = styled.div`
   padding: 1rem;
   overflow: hidden;
   gap: 0.5rem;
+
   * {
     line-height: 1;
   }
@@ -117,7 +124,7 @@ export const CardContentStyle = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
-    line-height: 1.5;
+    color: ${({ theme }) => theme.color.black};
   }
 
   .schedule {
@@ -189,13 +196,12 @@ interface CardStyleProps {
 }
 
 export const CardStyle = styled.div<CardStyleProps>`
-  display: flex;
+  /* display: flex; */
   flex-direction: ${({ $view }) => ($view === "grid" ? "column" : "row")};
-  align-items: center;
+  /* align-items: center; */
   height: ${({ $view }) => ($view === "grid" ? "auto" : "120px")};
   border: 1px solid ${({ theme }) => theme.color.borderGray};
   border-radius: ${({ theme }) => theme.borderRadius.default};
-
   @media (max-width: 768px) {
     /* width: ${({ $view }) => ($view === "grid" ? "175px" : "300px")}; */
     /* height: ${({ $view }) => ($view === "grid" ? "200px" : "110px")}; */
@@ -212,6 +218,28 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
   position: ${({ $view }) => ($view === "grid" ? "relative" : "unset")};
   overflow: hidden;
   width: 100%;
+  a {
+    width: 100%;
+    display: flex;
+    flex-direction: ${({ $view }) => ($view === "grid" ? "column" : "row")};
+  }
+  .image-wrapper {
+    width: ${({ $view }) => ($view === "grid" ? "100%" : "280px")};
+    position: relative;
+    display: flex;
+    justify-content: center;
+    overflow: hidden;
+  }
+  .image-wrapper > .inner {
+    width: 100%;
+    height: ${({ $view }) => ($view === "grid" ? "170px" : "150px")};
+    transition: transform 0.3s;
+  }
+  &:hover {
+    > .image-wrapper > div {
+      transform: scale(1.1);
+    }
+  }
   .profile-img {
     background-image: url(${({ $profile }) => ($profile ? `${$profile}` : DEFAULT_IMAGE)});
     background-size: 2rem 1rem;
@@ -225,6 +253,7 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
   .profile-img + p {
     margin: unset;
     margin-left: 0.5rem;
+    color: ${({ theme }) => theme.color.commentGray};
   }
 
   .comment > :first-child,

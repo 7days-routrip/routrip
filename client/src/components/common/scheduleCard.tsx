@@ -18,13 +18,25 @@ const ScheduleCard = ({ scheduleProps, view, disableLink }: Props) => {
 
   return (
     <ScheduleCardStyle $view={view}>
-      {disableLink ? (
-        <SchedulerImageStyle $image={scheduleProps.thumbnail ? scheduleProps.thumbnail : ""} $view={view} />
-      ) : (
-        <Link to={`/schedule/${scheduleProps.id}`}>
-          <SchedulerImageStyle $image={scheduleProps.thumbnail ? scheduleProps.thumbnail : ""} $view={view} />
-        </Link>
-      )}
+      <div className="image-wrapper">
+        <div className="inner">
+          {disableLink ? (
+            <>
+              <SchedulerImageStyle
+                $image={scheduleProps.thumbnail ? scheduleProps.thumbnail : ""}
+                $view={view}
+                className="card-image-style"
+              />
+            </>
+          ) : (
+            <SchedulerImageStyle
+              $image={scheduleProps.thumbnail ? scheduleProps.thumbnail : ""}
+              $view={view}
+              className="card-image-style"
+            />
+          )}
+        </div>
+      </div>
       <CardContentStyle>
         <h3 className="card-title">{scheduleProps.title}</h3>
         <div className="card-data">
@@ -38,6 +50,14 @@ const ScheduleCard = ({ scheduleProps, view, disableLink }: Props) => {
 
 const SchedulerImageStyle = styled(CardImageStyle)<CardImageStyleProps>`
   background-image: url(${({ $image }) => ($image ? $image : DEFAULT_IMAGE)});
+  transform: unset;
+  position: unset;
+  top: unset;
+  left: unset;
+
+  &::after {
+    /* background: unset; */
+  }
   @media (max-width: 768px) {
     width: ${({ $view }) => ($view === "grid" ? "160px" : "100px")};
     height: ${({ $view }) => ($view === "grid" ? "100px" : "100px")};
@@ -49,6 +69,28 @@ const ScheduleCardStyle = styled(CardStyle)`
   overflow: hidden;
   display: flex;
   flex-direction: ${({ $view }) => ($view === "grid" ? "column" : "row")};
+
+  a {
+    display: flex;
+    width: 100%;
+    color: ${({ theme }) => theme.color.black};
+  }
+  .image-wrapper {
+    overflow: hidden;
+    position: relative;
+    height: ${({ $view }) => ($view === "grid" ? "160px" : "120px")};
+    width: ${({ $view }) => ($view === "grid" ? "100%" : "120px")};
+  }
+
+  .inner {
+    transition: transform 0.3s;
+    height: ${({ $view }) => ($view === "grid" ? "160px" : "120px")};
+  }
+  &:hover {
+    .inner {
+      transform: scale(1.1);
+    }
+  }
   @media (max-width: 768px) {
     width: ${({ $view }) => ($view === "grid" ? "160px" : "auto")};
     height: ${({ $view }) => ($view === "grid" ? "160px" : "auto")};

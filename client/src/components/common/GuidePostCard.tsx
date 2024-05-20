@@ -12,7 +12,9 @@ const GuidePostCard = ({ PostPops }: Props) => {
   return (
     <GuidePostCardStyle>
       <Link to={`/posts/${PostPops.id}`}>
-        <GuideCardImageStyle $image={PostPops.postsImg} $view="grid" />
+        <div className="image-wrapper">
+          <GuideCardImageStyle $image={PostPops.postsImg} $view="grid" className="card-image-style" />
+        </div>
         <div className="info">
           <div className="title">
             <Title size="medium">{PostPops.title}</Title>
@@ -28,6 +30,16 @@ const GuidePostCardStyle = styled.div`
   max-width: 250px;
   min-width: 130px;
   position: relative;
+  .image-wrapper {
+    overflow: hidden;
+    border-radius: ${({ theme }) => theme.borderRadius.default};
+  }
+
+  &:hover {
+    .card-image-style {
+      transform: scale(1.1);
+    }
+  }
   .info {
     display: flex;
     flex-direction: column;
@@ -64,10 +76,10 @@ const GuideCardImageStyle = styled.div<CardImageStyleProps>`
   display: flex;
   height: 280px;
   background-image: url(${({ $image }) => ($image ? $image : DEFAULT_IMAGE)});
-  border-radius: ${({ theme }) => theme.borderRadius.default};
   background-position: center;
   background-size: cover;
   border: 0;
+  transition: transform 0.3s;
 
   @media (max-width: 768px) {
     flex: 1;
