@@ -50,8 +50,8 @@ jobs:
         ECR_REGISTRY: ${{ steps.login-ecr.outputs.registry }}
         IMAGE_TAG: ${{ github.sha }}
       run: |
-        echo "${{secrets.SSL_KEY}}" >> ./client/key.pem
-        echo "${{secrets.SSL_CERT}}" >> ./client/certificate.pem
+        echo "${{secrets.SSL_KEY}}" >> ./key.pem
+        echo "${{secrets.SSL_CERT}}" >> ./certificate.pem
         docker build \
         -t $ECR_REGISTRY/$ECR_REPOSITORY:latest .
 
