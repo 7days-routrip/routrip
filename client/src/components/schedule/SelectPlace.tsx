@@ -1,11 +1,11 @@
-import styled from "styled-components";
-import SearchBox from "./SearchBox";
-import PlaceList from "./PlaceList";
-import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
 import { SearchPlaceApiParams, searchPlaceApi } from "@/apis/place.api";
-import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
 import { useMapStore } from "@/stores/mapStore";
+import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
+import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
+import styled from "styled-components";
+import PlaceList from "./PlaceList";
+import SearchBox from "./SearchBox";
 
 const SelectPlace = () => {
   const { searchKeywordToServer, setSearchKeywordToServer } = useSearchKeywordStore();
@@ -23,7 +23,6 @@ const SelectPlace = () => {
     if (!keyword) return;
 
     const params: SearchPlaceApiParams = { keyword, zoom, lat, lng };
-    console.log(params);
 
     await searchPlaceApi(params, setSearchPlaces);
     setMarkerType("searchApi");

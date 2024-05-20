@@ -10,7 +10,7 @@ import { LIMIT } from "@/constants/pagenation";
 import { useInfiniteQuery, useQuery } from "@tanstack/react-query";
 
 const isLastPage = (totalCnt: number, pages: number) => {
-  return Math.ceil(totalCnt / LIMIT) === pages;
+  return totalCnt === 0 || Math.ceil(totalCnt / LIMIT) === pages;
 };
 
 export const useProfile = () => {

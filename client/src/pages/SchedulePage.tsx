@@ -1,29 +1,29 @@
+import { addNewSchedule } from "@/apis/schedule.api";
+import { Button } from "@/components/common/Button";
+import ScheduleGoogleMap from "@/components/map/ScheduleGoogleMap";
 import AddNewPlace from "@/components/schedule/AddNewPlace";
+import AddPlaceSchedule from "@/components/schedule/AddPlaceSchedule";
+import BookmarkPlace from "@/components/schedule/BookmarkPlace";
+import DaySchedule from "@/components/schedule/DaySchedule";
 import { PlaceTabContent, PlaceTabs } from "@/components/schedule/PlaceTabs";
 import SelectPlace from "@/components/schedule/SelectPlace";
-import styled from "styled-components";
-import AddPlaceSchedule from "@/components/schedule/AddPlaceSchedule";
 import Icons from "@/icons/icons";
-import { useEffect, useState } from "react";
-import BookmarkPlace from "@/components/schedule/BookmarkPlace";
-import { showAlert } from "@/utils/showAlert";
-import DaySchedule from "@/components/schedule/DaySchedule";
-import { getDuration } from "@/utils/getDuration";
-import { DragDropContext, DropResult } from "@hello-pangea/dnd";
 import { SelectedPlace, useAddPlaceStore } from "@/stores/addPlaceStore";
-import ScheduleGoogleMap from "@/components/map/ScheduleGoogleMap";
-import { useDayPlaceStore } from "@/stores/dayPlaces";
-import { Button } from "@/components/common/Button";
-import { addNewSchedule } from "@/apis/schedule.api";
-import { useNavigate } from "react-router-dom";
-import { showConfirm } from "@/utils/showConfirm";
+import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";
 import { useShowMarkerTypeStore } from "@/stores/dayMarkerStore";
+import { useDayPlaceStore } from "@/stores/dayPlaces";
+import { useMapStore } from "@/stores/mapStore";
 import { useNearPlacesStore } from "@/stores/nearPlacesStore";
 import { useSearchKeywordStore } from "@/stores/searchKeywordStore";
-import { onDragDropEnd } from "@/utils/onDragDropEnd";
 import { useSearchPlacesStore } from "@/stores/searchPlaceStore";
-import { useBookmarkPlacesStore } from "@/stores/bookmarkPlacesStore";
-import { useMapStore } from "@/stores/mapStore";
+import { getDuration } from "@/utils/getDuration";
+import { onDragDropEnd } from "@/utils/onDragDropEnd";
+import { showAlert } from "@/utils/showAlert";
+import { showConfirm } from "@/utils/showConfirm";
+import { DragDropContext, DropResult } from "@hello-pangea/dnd";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 const SchedulePage = () => {
   const [title, setTitle] = useState<string>("");
@@ -94,7 +94,6 @@ const SchedulePage = () => {
   useEffect(() => {
     // 새로고침 누를 시, confirm창 보이도록
     resetStore();
-    console.log(mapCenter);
 
     const handleBeforeUnload = (e: BeforeUnloadEvent) => {
       e.preventDefault();

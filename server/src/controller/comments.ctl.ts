@@ -1,7 +1,6 @@
 import {
   BAD_REQUEST_COMMENT,
   INTERNAL_SERVER_ERROR,
-  NOT_FOUND_COMMENTS,
   OK_DELETE_COMMENT,
   OK_UPDATE_COMMENT,
   OK_UPLOAD_COMMENT,
@@ -52,7 +51,6 @@ const addComment = async (req: Request, res: Response) => {
 const updateComment = async (req: Request, res: Response) => {
   const user = req.user;
   const commentId = parseInt(req.params.id);
-  console.log(commentId);
   const { postId, content } = req.body;
   try {
     if (!user?.isLoggedIn) throw new Error(UNAUTHORIZED_NOT_LOGIN);

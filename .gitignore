@@ -132,3 +132,7 @@ dist
 
 # build
 **/build/
+
+# cert
+/server/certificate.pem
+/server/key.pem

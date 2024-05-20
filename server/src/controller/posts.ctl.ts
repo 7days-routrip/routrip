@@ -15,7 +15,6 @@ import { StatusCodes } from "http-status-codes";
 
 const postsRequest = async (req: Request, res: Response) => {
   const inputData = req.body;
-  console.log(inputData);
   const queryRunner = AppDataSource.createQueryRunner();
   await queryRunner.connect();
   await queryRunner.startTransaction();
@@ -79,7 +78,6 @@ const postRequest = async (req: Request, res: Response) => {
     if (!postResult.success) throw new Error(postResult.msg);
     res.status(StatusCodes.OK).json(postResult.data);
   } catch (err) {
-    console.log(err);
     if (err instanceof Error) {
       if (err.message === "does not exist post")
         return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_POST });

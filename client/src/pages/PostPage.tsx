@@ -8,10 +8,12 @@ import { useLocation, useNavigate } from "react-router-dom";
 import { Country, regions } from "@/data/region";
 import RegionCountrySelector from "@/components/common/RegionCountrySelector";
 import WriteTopBtn from "@/components/common/WriteTopBtn";
+import Loading from "@/components/common/Loading";
 
 interface PostPageStyleProps {
   view: ViewMode;
   area: AreaType;
+  loading: boolean;
 }
 
 const PostPage = () => {
@@ -143,7 +145,7 @@ const PostPage = () => {
   const sortedPosts = sortPosts(posts, sortOrder);
 
   return (
-    <PostPageStyle view={view} area={area}>
+    <PostPageStyle view={view} area={area} loading={loading}>
       <WriteTopBtn isWriting={true} />
       <div className="main-content">
         <div className="control-wrapper">
@@ -182,12 +184,14 @@ const PostPage = () => {
       </div>
 
       <div className="post">
-        {posts.length === 0 ? (
-          <div className="none-posts">게시글이 없습니다</div>
+        {loading && page === 1 ? (
+          <div className="loading-wrapper">
+            <Loading />
+          </div>
         ) : (
           sortedPosts.map((post, index) => <PostCard key={post.id || index} PostProps={post} view={view} />)
         )}
-        {posts.length > 0 && <div ref={loader} />}
+        {hasMore && !loading && <div ref={loader} />}
       </div>
     </PostPageStyle>
   );
@@ -275,11 +279,25 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
     gap: 14px;
     margin: 0 auto;
     padding: 20px 0;
+    position: relative;
 
     .none-posts {
       width: 100%;
       margin: 0 auto;
       text-align: center;
+    }
+
+    .loading-wrapper {
+      display: flex;
+      position: fixed;
+      top: 0;
+      left: 0;
+      justify-content: center;
+      align-items: center;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      z-index: 9999;
     }
   }
   @media screen and (max-width: 1080px) {

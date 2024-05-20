@@ -38,7 +38,6 @@ const join = async (email: string, password: string, nickName: string) => {
 
 const reqUserWithdraw = async (userId: number) => {
   const userDropResult = await userRepo.delete(userId);
-  console.log(userDropResult);
   if (!userDropResult.affected || userDropResult.affected < 1) return { success: false, msg: "failed to withdraw" };
   return { success: true };
 };
