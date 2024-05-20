@@ -12,6 +12,6 @@ COPY ./ /usr/src/app
 
 RUN npm run build
 
-EXPOSE 5173
+EXPOSE 80
 
-CMD ["npx", "http-server", "./dist", "-p", "5173"] 
+CMD ["npx", "http-server", "./dist", "-p", "80"] 
