@@ -1,7 +1,6 @@
 import { httpClient } from "@/apis/https";
 import { addNewSchedule } from "@/apis/schedule.api";
 import { Button } from "@/components/common/Button";
-import Dropdown from "@/components/common/Dropdown";
 import PlaceModal from "@/components/common/PlaceModal";
 import PostCommentCard from "@/components/common/PostComment";
 import WriteTopBtn from "@/components/common/WriteTopBtn";
@@ -19,7 +18,6 @@ import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
 import { DEFAULT_IMAGE } from "@/components/common/ProfileCard";
 
-
 const StyledLikeIcon = styled(icons.LikeIcon)`
   fill: ${({ theme }) => theme.color.primary};
 `;
@@ -31,7 +29,7 @@ const StyledCommentIcon = styled(icons.CommentIcon)`
 const PostDetailPage = () => {
   const { id } = useParams();
   const postId = id ? parseInt(id, 10) : undefined;
-  const { DotIcon, PinIcon, LikeIcon, TrashIcon, EditIcon, RightArrowIcon } = icons;
+  const { PinIcon, LikeIcon, TrashIcon, EditIcon, RightArrowIcon } = icons;
   const [post, setPost] = useState<DetailPost | null>(null);
   const [comments, setComments] = useState<PostComment[]>([]);
   const [newComment, setNewComment] = useState("");
@@ -42,9 +40,7 @@ const PostDetailPage = () => {
   const [isLoading, setIsLoading] = useState(false); // 로딩 상태 추가
   const nav = useNavigate();
 
-  const fetchPost = 
-        (async () => {
-    // useCallback으로 래핑
+  const fetchPost = useCallback(async () => {
     try {
       const response = await httpClient.get(`/posts/${postId}`);
       const postData: DetailPost = response.data;
