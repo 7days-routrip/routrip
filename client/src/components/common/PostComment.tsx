@@ -33,52 +33,50 @@ const PostCommentCard = ({ commentProps, currentUser, onDelete, onEdit }: Props)
 
   return (
     <CommentStyle>
-      <div className="test">
-        <div className="profile">
-          <img src={`${commentProps.profileImg ? commentProps.profileImg : DEFAULT_IMAGE}`} alt="댓글창 프로필" />
-        </div>
+      <div className="comment-wrapper">
+        <div className="comment-top">
+          <div className="comment-profile">
+            <img src={`${commentProps.profileImg ? commentProps.profileImg : DEFAULT_IMAGE}`} alt="댓글창 프로필" />
 
-        <div className="comment-body">
-          <div className="comment-text">
             <span>{commentProps.nickName}</span>
           </div>
-          <div className="post-title">
-            {isEditing ? (
-              <textarea
-                value={editedComment}
-                onChange={(e) => setEditedComment(e.target.value)}
-                rows={3}
-                style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ddd" }}
-              />
-            ) : (
-              <span>{commentProps.content}</span>
-            )}
+          <div className="comment-right">
+            <p>{commentProps.createdAt}</p>
+            <div className="edit-panel">
+              {isEditing ? (
+                <>
+                  <Button $size="small" $scheme="primary" $radius="default" onClick={handleSaveClick}>
+                    저장
+                  </Button>
+                  <Button $size="small" $scheme="secondary" $radius="default" onClick={handleCancelClick}>
+                    취소
+                  </Button>
+                </>
+              ) : (
+                currentUser === commentProps.nickName && (
+                  <>
+                    <div onClick={handleEditClick} className="edit-btn">
+                      <EditIcon />
+                    </div>
+                    <div onClick={onDelete} className="edit-btn">
+                      <TrashIcon />
+                    </div>
+                  </>
+                )
+              )}
+            </div>
           </div>
         </div>
-      </div>
-      <div className="comment-date">
-        <p>작성일: {commentProps.createdAt}</p>
-        <div className="edit-panel">
+        <div className="comment-btm">
           {isEditing ? (
-            <>
-              <Button $size="small" $scheme="primary" $radius="default" onClick={handleSaveClick}>
-                저장
-              </Button>
-              <Button $size="small" $scheme="secondary" $radius="default" onClick={handleCancelClick}>
-                취소
-              </Button>
-            </>
+            <textarea
+              value={editedComment}
+              onChange={(e) => setEditedComment(e.target.value)}
+              rows={3}
+              style={{ width: "100%", padding: "0.5rem", borderRadius: "4px", border: "1px solid #ddd" }}
+            />
           ) : (
-            currentUser === commentProps.nickName && (
-              <>
-                <div onClick={handleEditClick} className="edit-btn">
-                  <EditIcon />
-                </div>
-                <div onClick={onDelete} className="edit-btn">
-                  <TrashIcon />
-                </div>
-              </>
-            )
+            <pre>{commentProps.content}</pre>
           )}
         </div>
       </div>
@@ -91,16 +89,49 @@ const CommentStyle = styled.div`
   min-width: 250px;
   padding: 10px;
   border-top: 1px solid ${({ theme }) => theme.color.borderGray};
-  a {
-    color: ${({ theme }) => theme.color.black};
-  }
+
   p {
     font-size: 14px;
   }
-  display: flex;
-  justify-content: space-between;
-  align-items: flex-start;
-  position: relative;
+  .comment-wrapper {
+    display: flex;
+    flex-flow: column;
+  }
+
+  .comment-top {
+    display: flex;
+    justify-content: space-between;
+
+    .comment-profile {
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+      img {
+        width: 2.5rem;
+        height: 2.5rem;
+
+        border: 1px solid ${({ theme }) => theme.color.borderGray};
+        border-radius: 50%;
+      }
+      span {
+        font-size: ${({ theme }) => theme.fontSize.normal};
+      }
+    }
+    .comment-right {
+      display: flex;
+      align-items: center;
+      justify-content: flex-end;
+      gap: 0.5rem;
+    }
+  }
+
+  .comment-btm {
+    pre {
+      font-weight: 400;
+      font-size: ${({ theme }) => theme.fontSize.small};
+      white-space: pre-wrap;
+    }
+  }
 
   .profile > img {
     width: 4rem;
@@ -124,10 +155,17 @@ const CommentStyle = styled.div`
   }
 
   .comment-text {
-    color: ${({ theme }) => theme.color.commentGray};
+    color: ${({ theme }) => theme.color.black};
+    > span {
+      font-size: ${({ theme }) => theme.fontSize.small};
+    }
   }
 
-  .post-title {
+  .comment-content {
+    > span {
+      font-size: ${({ theme }) => theme.fontSize.small};
+      font-weight: 400;
+    }
   }
 
   .comment-date {

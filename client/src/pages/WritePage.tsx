@@ -428,6 +428,22 @@ const WritePageStyle = styled.div`
   .close-button {
     text-align: center;
   }
+
+  @media ${({ theme }) => theme.mediaQuery.mobile} {
+    .info-container {
+      flex-direction: column;
+    }
+    .button-container input {
+      width: 100%;
+    }
+    .continent,
+    .country {
+      width: 100%;
+    }
+    .ck-editor__editable {
+      min-height: 300px;
+    }
+  }
 `;
 
 const Sidebar = styled.div`
@@ -458,6 +474,19 @@ const Sidebar = styled.div`
 
   button {
     margin-top: 20px;
+  }
+  @media ${({ theme }) => theme.mediaQuery.mobile} {
+    .info-container {
+      flex-direction: column;
+      gap: 10px;
+    }
+    .info-container label,
+    .button-container {
+      gap: 10px;
+    }
+    .input {
+      width: 24px;
+    }
   }
 `;
 

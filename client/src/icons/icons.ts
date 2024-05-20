@@ -20,6 +20,9 @@ import { FaSpinner as LoadingIcon } from "@react-icons/all-files/fa/FaSpinner";
 import { FaBars as HamburgerIcon } from "@react-icons/all-files/fa/FaBars";
 import { FaRegUser as MobileUserIcon } from "@react-icons/all-files/fa/FaRegUser";
 import { FaSearch as SearchIcon } from "@react-icons/all-files/fa/FaSearch";
+// import { FaChevronRight as RightArrowIcon } from "@react-icons/all-files/fa/FaChevronRight";
+import { FiChevronRight as RightArrowIcon } from "@react-icons/all-files/fi/FiChevronRight";
+import {} from "@react-icons/all-files/";
 
 const icons = {
   JoinIcon,
@@ -44,6 +47,7 @@ const icons = {
   HamburgerIcon,
   MobileUserIcon,
   SearchIcon,
+  RightArrowIcon,
 };
 
 export default icons;

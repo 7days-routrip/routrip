@@ -12,6 +12,6 @@ COPY ./ /usr/src/app
 
 RUN npm run build
 
-EXPOSE 5173
+EXPOSE 443
 
-CMD ["npx", "http-server", "./dist", "-p", "5173"] 
+CMD ["npx", "http-server", "-S", "-C", "certificate.pem", "./dist", "-p", "443", "--proxy", "https://routrip.prgms-fullcycle.com?"] 
