@@ -1,8 +1,8 @@
-import { addNewSchedule } from "@/apis/schedule.api"; // 추가
-import { SelectedPlace } from "@/stores/addPlaceStore"; // 추가
+import { addNewSchedule } from "@/apis/schedule.api";
+import { SelectedPlace } from "@/stores/addPlaceStore";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useEffect, useState, useCallback } from "react"; // useCallback 추가
+import { useEffect, useState, useCallback } from "react";
 import { theme } from "@/styles/theme";
 import icons from "@/icons/icons";
 import Dropdown from "@/components/common/Dropdown";
@@ -177,7 +177,7 @@ const PostDetailPage = () => {
 
   const handleCopySchedule = async () => {
     console.log("handleCopySchedule 호출됨");
-    if (isLoading) return; // 이미 로딩 중이면 실행하지 않음
+    if (isLoading) return;
     setIsLoading(true);
 
     if (!post || !post.journeys || !post.journeys.spots) {
@@ -228,10 +228,12 @@ const PostDetailPage = () => {
   return (
     <PostDetailPageStyle>
       <WriteTopBtn isWriting={true} />
-      <PinIcon />
-      <span>
-        {post.continent.name} ﹥ {post.country.name}
-      </span>
+      <div className="region-container">
+        <PinIcon />
+        <div>
+          {post.continent.name} ﹥ {post.country.name}
+        </div>
+      </div>
       <div className="title-container">
         <h1>{post.title}</h1>
         <div className="create-day" color={theme.color.commentGray}>
@@ -266,7 +268,7 @@ const PostDetailPage = () => {
           <span>여행한 날짜</span> {post.date}
         </p>
         <p>
-          <span>총 여행 경비</span> {formatNumber(parseInt(post.totalExpense))}
+          <span>총 여행 경비</span> {formatNumber(parseInt(post.totalExpense))}원
         </p>
       </div>
       {post.journeys && post.journeys.spots && post.journeys.spots.length > 0 && (
@@ -339,6 +341,15 @@ const PostDetailPageStyle = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  .region-container {
+    margin-top: 10px;
+    color: ${({ theme }) => theme.color.routeGray};
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: ${({ theme }) => theme.fontSize.large};
+    font-weight: 600;
   }
   .title-container {
     display: flex;
