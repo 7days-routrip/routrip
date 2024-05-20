@@ -228,10 +228,12 @@ const PostDetailPage = () => {
   return (
     <PostDetailPageStyle>
       <WriteTopBtn isWriting={true} />
-      <PinIcon />
-      <span>
-        {post.continent.name} ﹥ {post.country.name}
-      </span>
+      <div className="region-container">
+        <PinIcon />
+        <div>
+          {post.continent.name} ﹥ {post.country.name}
+        </div>
+      </div>
       <div className="title-container">
         <h1>{post.title}</h1>
         <div className="create-day" color={theme.color.commentGray}>
@@ -339,6 +341,15 @@ const PostDetailPageStyle = styled.div`
     display: flex;
     align-items: center;
     justify-content: space-between;
+  }
+  .region-container {
+    margin-top: 10px;
+    color: ${({ theme }) => theme.color.routeGray};
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: ${({ theme }) => theme.fontSize.large};
+    font-weight: 600;
   }
   .title-container {
     display: flex;
