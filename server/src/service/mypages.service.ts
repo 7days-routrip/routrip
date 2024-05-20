@@ -51,7 +51,7 @@ const getJourneysList = async (userId: number, pages: number) => {
     }),
   );
 
-  return { success: true, count: responseJourneyData.length, data: responseJourneyData.splice(offset, offset + LIMIT) };
+  return { success: true, count: responseJourneyData.length, data: responseJourneyData.slice(offset, offset + LIMIT) };
 };
 const MypagesService = { getAllUserData, getJourneysList };
 export default MypagesService;
