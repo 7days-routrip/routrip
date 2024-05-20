@@ -18,6 +18,7 @@ import PlaceModal from "@/components/common/PlaceModal";
 import { PlaceDetails } from "@/models/place.model";
 import WriteTopBtn from "@/components/common/WriteTopBtn";
 import { AxiosError } from "axios";
+import { DEFAULT_IMAGE } from "@/components/common/ProfileCard";
 
 const StyledLikeIcon = styled(icons.LikeIcon)`
   fill: ${({ theme }) => theme.color.primary};
@@ -30,7 +31,7 @@ const StyledCommentIcon = styled(icons.CommentIcon)`
 const PostDetailPage = () => {
   const { id } = useParams();
   const postId = id ? parseInt(id, 10) : undefined;
-  const { DotIcon, PinIcon, LikeIcon } = icons;
+  const { DotIcon, PinIcon, LikeIcon, TrashIcon, EditIcon, RightArrowIcon } = icons;
   const [post, setPost] = useState<DetailPost | null>(null);
   const [comments, setComments] = useState<PostComment[]>([]);
   const [newComment, setNewComment] = useState("");
@@ -231,36 +232,46 @@ const PostDetailPage = () => {
       <div className="region-container">
         <PinIcon />
         <div>
-          {post.continent.name} ﹥ {post.country.name}
+          {post.continent.name} <RightArrowIcon />
+          {post.country.name}
         </div>
       </div>
       <div className="title-container">
         <h1>{post.title}</h1>
         <div className="create-day" color={theme.color.commentGray}>
-          작성일 : {post.createdAt}
+          {post.createdAt.substring(0, 11)}
         </div>
       </div>
       <div className="info-container">
-        <div className="btn-wrapper">
-          <div>
-            <StyledLikeIcon />
-            {post.likesNum}
+        <div className="info-wrapper">
+          <div className="info-left">
+            <div className="profile">
+              <img src={`${post.profileImg ? post.profileImg : DEFAULT_IMAGE}`} alt="profile" />
+            </div>
+            <span>{post.author}</span>
           </div>
-          <div>
-            <StyledCommentIcon />
-            {post.commentsNum}
-          </div>
-          {post.author}
-          {currentUser === post.author && (
-            <Dropdown toggleIcon={<DotIcon />}>
-              <DropdownMenu>
-                <DropdownItem>
+          <div className="info-right">
+            <div>
+              <StyledLikeIcon />
+              {post.likesNum}
+            </div>
+            <div>
+              <StyledCommentIcon />
+              {post.commentsNum}
+            </div>
+            {currentUser === post.author && (
+              <div className="writer-panel">
+                <div className="edit-panel">
+                  <EditIcon />
                   <StyledLink to={`/post/${postId}/edit`}>수정</StyledLink>
-                </DropdownItem>
-                <DropdownItem onClick={confirmDelete}>삭제</DropdownItem>
-              </DropdownMenu>
-            </Dropdown>
-          )}
+                </div>
+                <div className="delete-panel">
+                  <TrashIcon />
+                  <DropdownItem onClick={confirmDelete}>삭제</DropdownItem>
+                </div>
+              </div>
+            )}
+          </div>
         </div>
       </div>
       <div className="trip-container">
@@ -274,18 +285,22 @@ const PostDetailPage = () => {
       {post.journeys && post.journeys.spots && post.journeys.spots.length > 0 && (
         <div className="place-container">
           {post.journeys.spots.map((spotData, dayIndex) => (
-            <div key={dayIndex}>
-              <PinIcon /> DAY {dayIndex + 1} -{" "}
-              {spotData.spot.length > 0 ? (
-                spotData.spot.map((spot, spotIndex) => (
-                  <span key={spotIndex} onClick={() => handlePlaceClick(spot)}>
-                    {spotIndex > 0 && " • "}
-                    {spot.name}
-                  </span>
-                ))
-              ) : (
-                <span>추가된 일정이 없습니다.</span>
-              )}
+            <div key={dayIndex} className="days">
+              <div className="day">
+                <PinIcon /> DAY {dayIndex + 1}{" "}
+              </div>
+              <div className="route">
+                {spotData.spot.length > 0 ? (
+                  spotData.spot.map((spot, spotIndex) => (
+                    <span key={spotIndex} onClick={() => handlePlaceClick(spot)} className="item">
+                      {spotIndex > 0 && <RightArrowIcon />}
+                      {spot.name}
+                    </span>
+                  ))
+                ) : (
+                  <span>추가된 일정이 없습니다.</span>
+                )}
+              </div>
             </div>
           ))}
         </div>
@@ -340,6 +355,7 @@ const PostDetailPageStyle = styled.div`
     border-bottom: 1px solid #e7e7e7;
     display: flex;
     align-items: center;
+    width: 100%;
     justify-content: space-between;
   }
   .region-container {
@@ -348,20 +364,38 @@ const PostDetailPageStyle = styled.div`
     display: flex;
     align-items: center;
     gap: 4px;
-    font-size: ${({ theme }) => theme.fontSize.large};
-    font-weight: 600;
+    font-size: ${({ theme }) => theme.fontSize.medium};
+    font-weight: 400;
+
+    > div {
+      display: flex;
+      align-items: center;
+    }
   }
   .title-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
+    h1 {
+      margin: 0 0 10px 0;
+    }
   }
+
+  .create-day {
+    color: ${({ theme }) => theme.color.commentGray};
+  }
+  .info-wrapper,
   .btn-wrapper {
     display: flex;
+    width: inherit;
     gap: 20px;
     justify-content: center;
     align-items: center;
     margin-bottom: 20px;
+  }
+
+  .info-wrapper {
+    justify-content: space-between;
   }
 
   .trip-container {
@@ -380,7 +414,30 @@ const PostDetailPageStyle = styled.div`
   }
 
   .place-container {
-    color: ${({ theme }) => theme.color.routeGray};
+    .days {
+      display: flex;
+      gap: 1rem;
+    }
+    .day {
+      color: ${({ theme }) => theme.color.routeGray};
+      font-size: ${({ theme }) => theme.fontSize.small};
+      font-weight: 500;
+    }
+
+    .route {
+      display: flex;
+      > span {
+        font-size: ${({ theme }) => theme.fontSize.xsmall};
+        font-weight: 400;
+      }
+      .item {
+        display: flex;
+        align-items: center;
+      }
+    }
+    > div {
+      cursor: pointer;
+    }
   }
   .btn-submit {
     text-align: right;
@@ -392,19 +449,60 @@ const PostDetailPageStyle = styled.div`
   .comment-container {
     padding-bottom: 10px;
   }
+
+  .comment-container {
+    textarea {
+      resize: none;
+    }
+  }
   .content-container .image {
     width: unset;
     height: unset;
   }
   .content-container img {
-    width: 100%;
-    height: 100%;
     height: auto;
     display: block;
     margin: 20px auto;
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  }
+
+  .writer-panel {
+    a {
+      width: auto;
+    }
+  }
+
+  .profile > img {
+    width: 2.5rem;
+    border-radius: 50%;
+    border: 1px solid ${({ theme }) => theme.color.borderGray};
+  }
+  .info-left,
+  .info-right {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+  }
+
+  .info-right {
+    gap: 1.5rem;
+
+    div {
+      display: flex;
+      align-items: center;
+      gap: 0.3rem;
+    }
+  }
+
+  .writer-panel,
+  .edit-panel,
+  .delete-panel {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 0.5rem;
   }
 `;
 
