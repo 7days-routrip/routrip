@@ -390,11 +390,6 @@ const PostEditPageStyle = styled.div`
     gap: 10px;
     align-items: center;
   }
-  .edit-expense {
-    display: flex;
-    gap: 10px;
-    align-items: center;
-  }
 
   .date-picker-container {
     margin-top: 10px;

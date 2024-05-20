@@ -177,7 +177,7 @@ const PostDetailPage = () => {
 
   const handleCopySchedule = async () => {
     console.log("handleCopySchedule 호출됨");
-    if (isLoading) return; // 이미 로딩 중이면 실행하지 않음
+    if (isLoading) return;
     setIsLoading(true);
 
     if (!post || !post.journeys || !post.journeys.spots) {
@@ -266,7 +266,7 @@ const PostDetailPage = () => {
           <span>여행한 날짜</span> {post.date}
         </p>
         <p>
-          <span>총 여행 경비</span> {formatNumber(parseInt(post.totalExpense))}
+          <span>총 여행 경비</span> {formatNumber(parseInt(post.totalExpense))}원
         </p>
       </div>
       {post.journeys && post.journeys.spots && post.journeys.spots.length > 0 && (
