@@ -76,7 +76,8 @@ const PostEditPage = () => {
   const [post, setPost] = useState<DetailPost | null>(null);
   const [title, setTitle] = useState("");
   const [content, setContent] = useState("");
-  const [dateRange, setDateRange] = useState<[Date | null, Date | null]>([null, null]);
+  const [startDate, setStartDate] = useState<Date | null>(null);
+  const [endDate, setEndDate] = useState<Date | null>(null);
   const [totalExpense, setTotalExpense] = useState<number | string>("");
   const [showSidebar, setShowSidebar] = useState(false);
   const [selectedScheduleId, setSelectedScheduleId] = useState<string | undefined>(undefined);
@@ -84,10 +85,11 @@ const PostEditPage = () => {
   const { schedules, isEmptySchedules, scheduleRefetch } = useSchedule();
   const { scheduleDetailData } = useScheduleDetails(selectedScheduleId);
   const nav = useNavigate();
-  const { PinIcon, LikeIcon, CommentIcon, EditIcon } = icons;
+  const { PinIcon, LikeIcon, CommentIcon, EditIcon, RightArrowIcon } = icons;
 
   const [region, setRegion] = useState(0);
   const [country, setCountry] = useState(0);
+  const [newSchedule, setNewSchedule] = useState(false);
 
   useEffect(() => {
     if (showSidebar) {
@@ -100,18 +102,19 @@ const PostEditPage = () => {
       try {
         const response = await httpClient.get(`/posts/${postId}`);
         const fetchedPost = response.data;
+        console.log(fetchedPost);
 
         setPost(fetchedPost);
         setTitle(fetchedPost.title);
         setRegion(fetchedPost.continent.id);
         setCountry(fetchedPost.country.id);
         setContent(fetchedPost.contents);
-        setTotalExpense(fetchedPost.totalExpense || "");
 
-        if (fetchedPost.date) {
-          const [start, end] = fetchedPost.date.split(" - ").map((date: string) => new Date(date));
-          setDateRange([isNaN(start.getTime()) ? null : start, isNaN(end.getTime()) ? null : end]);
-        }
+        const [start, end] = fetchedPost.date.split("-").map((dateStr: string | number | Date) => new Date(dateStr));
+        setStartDate(start);
+        setEndDate(end);
+
+        setTotalExpense(fetchedPost.totalExpense || "");
       } catch (error) {
         console.error("Error fetching post:", error);
       }
@@ -126,7 +129,9 @@ const PostEditPage = () => {
     if (selectedScheduleId && scheduleDetailData) {
       const start = new Date(scheduleDetailData.startDate);
       const end = new Date(scheduleDetailData.endDate);
-      setDateRange([start, end]);
+      setStartDate(start);
+      setEndDate(end);
+      setNewSchedule(true);
     }
   }, [selectedScheduleId, scheduleDetailData]);
 
@@ -168,8 +173,8 @@ const PostEditPage = () => {
       const payload = {
         title: title,
         contents: cleanedContent,
-        startDate: dateRange[0]?.toISOString().split("T")[0],
-        endDate: dateRange[1]?.toISOString().split("T")[0],
+        startDate: startDate?.toISOString().split("T")[0],
+        endDate: endDate?.toISOString().split("T")[0],
         expense: totalExpense.toString(),
         continent: region,
         country: country,
@@ -209,7 +214,8 @@ const PostEditPage = () => {
     if (selectedSchedule) {
       const start = new Date(selectedSchedule.startDate);
       const end = new Date(selectedSchedule.endDate);
-      setDateRange([start, end]);
+      setStartDate(start);
+      setEndDate(end);
       setShowSidebar(false);
     }
   };
@@ -276,7 +282,7 @@ const PostEditPage = () => {
           <div className="edit-date">
             <span>여행한 날짜</span>
             <div>
-              {dateRange[0]?.toLocaleDateString()} - {dateRange[1]?.toLocaleDateString()}
+              {startDate ? startDate.toLocaleDateString() : ""} - {endDate ? endDate.toLocaleDateString() : ""}
             </div>
             <div>
               <EditIcon onClick={toggleSidebar} />
@@ -298,17 +304,58 @@ const PostEditPage = () => {
           </div>
         </div>
         <div className="place-container">
-          {scheduleDetailData?.days.map((day, index) => (
-            <div key={index}>
-              <PinIcon /> DAY {index + 1} -{" "}
-              {day.spots.map((spot, i) => (
-                <span key={i}>
-                  {spot.placeName} {i < day.spots.length - 1 && "• "}{" "}
-                </span>
+          {!newSchedule && post.journeys && post.journeys.spots && post.journeys.spots.length > 0 && (
+            <div>
+              {post.journeys.spots.map((spotData, dayIndex) => (
+                <div key={dayIndex} className="days">
+                  <div className="day">
+                    <PinIcon /> DAY {dayIndex + 1}{" "}
+                  </div>
+                  <div className="route">
+                    {spotData.spot.length > 0 ? (
+                      spotData.spot.map((spot, spotIndex) => (
+                        <span key={spotIndex} className="item">
+                          {spotIndex > 0 && (
+                            <span className="arrow-item">
+                              {" "}
+                              <RightArrowIcon />
+                            </span>
+                          )}
+                          {spot.name}
+                        </span>
+                      ))
+                    ) : (
+                      <div className="plan-item">추가된 일정이 없습니다.</div>
+                    )}
+                  </div>
+                </div>
               ))}
-              <br />
             </div>
-          ))}
+          )}
+          {newSchedule &&
+            scheduleDetailData?.days.map((day, index) => (
+              <div key={index} className="days">
+                <div className="day">
+                  <PinIcon /> DAY {index + 1}{" "}
+                </div>
+                <div className="route">
+                  {day.spots.length > 0 ? (
+                    day.spots.map((spot, i) => (
+                      <span key={i} className="item">
+                        {i > 0 && (
+                          <span className="arrow-item">
+                            <RightArrowIcon />
+                          </span>
+                        )}
+                        {spot.placeName}
+                      </span>
+                    ))
+                  ) : (
+                    <div>추가된 일정이 없습니다.</div>
+                  )}
+                </div>
+              </div>
+            ))}
         </div>
         <div className="content-container">
           <CKEditor
@@ -324,11 +371,11 @@ const PostEditPage = () => {
           />
         </div>
         <div className="btn-wrapper">
-          <Button $size="medium" $scheme="primary" $radius="default" onClick={handleSave}>
-            저장
-          </Button>
           <Button $size="medium" $scheme="secondary" $radius="default" onClick={() => nav(-1)}>
             취소
+          </Button>
+          <Button $size="medium" $scheme="primary" $radius="default" onClick={handleSave}>
+            저장
           </Button>
         </div>
         {showSidebar && (
@@ -383,6 +430,7 @@ const PostEditPageStyle = styled.div`
 
   .place-container {
     color: ${({ theme }) => theme.color.routeGray};
+    margin-top: 20px;
   }
 
   .edit-date {
@@ -431,6 +479,19 @@ const PostEditPageStyle = styled.div`
     width: 50%;
     padding: 0.25rem;
     font-size: ${({ theme }) => theme.fontSize.medium};
+  }
+  .item {
+    font-weight: 400;
+    font-size: ${({ theme }) => theme.fontSize.small};
+  }
+
+  .days {
+    display: flex;
+    gap: 10px;
+  }
+  .day {
+    display: flex;
+    align-items: center;
   }
 
   textarea {
