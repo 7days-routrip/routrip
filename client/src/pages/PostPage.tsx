@@ -120,10 +120,18 @@ const PostPage = () => {
   };
 
   const handleKeywordChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    const newKeyword = event.target.value;
-    setKeyword(newKeyword);
-    params.set("keyword", newKeyword);
+    setKeyword(event.target.value);
+  };
+
+  const handleSearch = () => {
+    params.set("keyword", keyword);
     nav({ search: params.toString() });
+  };
+
+  const handleKeyPress = (event: React.KeyboardEvent<HTMLInputElement>) => {
+    if (event.key === "Enter") {
+      handleSearch();
+    }
   };
 
   const sortPosts = (posts: Post[], order: string) => {
@@ -152,8 +160,14 @@ const PostPage = () => {
               />
             ) : null}
             <div className="input-wrapper">
-              <input type="search" placeholder="검색어를 입력하세요." value={keyword} onChange={handleKeywordChange} />
-              <SearchIcon />
+              <input
+                type="search"
+                placeholder="검색어를 입력하세요."
+                value={keyword}
+                onChange={handleKeywordChange}
+                onKeyPress={handleKeyPress}
+              />
+              <SearchIcon onClick={handleSearch} />
             </div>
           </div>
           <div className="view-toggle">
@@ -228,6 +242,7 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
 
     svg {
       color: ${({ theme }) => theme.color.commentGray};
+      cursor: pointer;
     }
   }
 
