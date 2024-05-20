@@ -1,22 +1,22 @@
-import { useEffect, useState, useRef } from "react";
-import styled from "styled-components";
-import DatePicker from "react-datepicker";
-import "react-datepicker/dist/react-datepicker.css";
-import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { httpClient } from "@/apis/https";
 import { Button } from "@/components/common/Button";
-import { theme } from "@/styles/theme";
-import { Country, regions } from "@/data/region";
 import RegionCountrySelector from "@/components/common/RegionCountrySelector";
+import WriteTopBtn from "@/components/common/WriteTopBtn";
 import ScheduleCard from "@/components/common/scheduleCard";
+import { Country, regions } from "@/data/region";
 import { useSchedule } from "@/hooks/useMypage";
 import { useScheduleDetails } from "@/hooks/useScheduleDetails";
-import { useNavigate } from "react-router-dom";
 import icons from "@/icons/icons";
+import { theme } from "@/styles/theme";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
-import { httpClient } from "@/apis/https";
-import WriteTopBtn from "@/components/common/WriteTopBtn";
+import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { useEffect, useRef, useState } from "react";
+import DatePicker from "react-datepicker";
+import "react-datepicker/dist/react-datepicker.css";
+import { useNavigate } from "react-router-dom";
+import styled from "styled-components";
 
 // 이미지 업로드 함수
 const uploadImage = async (file: File) => {
@@ -203,7 +203,6 @@ const WritePage = () => {
       if (response.status !== 200) {
         throw new Error(`Failed to save post. Status code: ${response.status}`);
       }
-      console.log("저장 성공:", response.data);
       showAlert("게시글 작성이 완료되었습니다.", "logo", () => {
         if (selectedCountry === 1) {
           nav("/post?area=home");

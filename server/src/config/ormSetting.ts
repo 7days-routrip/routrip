@@ -1,4 +1,3 @@
-
 import { Comments } from "@/models/comments.model";
 import { Continents } from "@/models/continents.model";
 import { Countries } from "@/models/countries.model";
@@ -31,6 +30,5 @@ export const AppDataSource = new DataSource({
 AppDataSource.initialize()
   .then(() => {})
   .catch((error) => {
-    console.log(error);
+    console.error(error);
   });
-

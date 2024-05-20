@@ -1,6 +1,6 @@
 import { Place, PlaceDetails } from "@/models/place.model";
-import { httpClient } from "./https";
 import { showAlert } from "@/utils/showAlert";
+import { httpClient } from "./https";
 
 // 백엔드 서버로 장소 검색 요청
 export interface SearchPlaceApiParams {
@@ -15,7 +15,6 @@ export const searchPlaceApi = async (params: SearchPlaceApiParams, setPlaces: (p
     setPlaces(data);
     return data;
   } catch (err: any) {
-    console.log(err);
     if (err.response.status === 404) {
       // showAlert(err.response.message,"error")
       showAlert("검색 결과가 없습니다.\n신규 장소로 먼저 등록해 주세요.", "error");

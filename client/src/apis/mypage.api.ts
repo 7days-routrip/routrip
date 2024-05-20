@@ -11,8 +11,6 @@ export const fetchProfile = async () => {
     const { data } = await httpClient.get<Profile>("/mypages/total-data-quantity");
     return data;
   } catch (error: any) {
-    // 에러 처리
-    console.log(error);
     if (error.response.status === 404) {
     }
     return {
@@ -54,8 +52,6 @@ export const fetchMyPosts = async (page: number) => {
     const { data } = await httpClient.get<PostList>(`/mypages/posts?pages=${page}`);
     return data;
   } catch (error) {
-    // 에러 처리
-    console.log(error);
     return {
       posts: [],
       pagination: {
@@ -76,8 +72,6 @@ export const fetchMyComments = async (page: number) => {
     const { data } = await httpClient.get<fetchCommentResponse>(`/mypages/comments?pages=${page}`);
     return data;
   } catch (error) {
-    // 에러 처리
-    console.log(error);
     return {
       comments: [],
       pagination: {
@@ -94,8 +88,6 @@ export const fetchLikePost = async (page: number) => {
     const { data } = await httpClient.get<PostList>(`/likes/posts?pages=${page}`);
     return data;
   } catch (error) {
-    // 에러 처리
-    console.log(error);
     return {
       posts: [],
       pagination: {
@@ -114,16 +106,18 @@ interface fetchPlaceResponse {
 export const fetchLikePlace = async (page: number) => {
   try {
     const { data } = await httpClient.get<fetchPlaceResponse>(`/mypages/places?pages=${page}`);
-    console.log(data);
     return data;
-  } catch (error) {
+  } catch (error: any) {
     // 에러 처리
-    return {
-      places: [],
-      pagination: {
-        totalItems: 0,
-        page: 1,
-      },
-    };
+    if (error.response.status === 404) {
+      return {
+        places: [],
+        pagination: {
+          totalItems: 0,
+          page: 1,
+        },
+      };
+    }
+    throw error;
   }
 };

@@ -1,5 +1,5 @@
-import styled from "styled-components";
 import Icons from "@/icons/icons";
+import styled from "styled-components";
 
 interface Props {
   placeholder: string;
@@ -10,8 +10,6 @@ interface Props {
 
 const SearchBox = ({ placeholder, searchKeyword, requestHandler, setSearchKeyword }: Props) => {
   const handleSearch = () => {
-    // 구글로 검색 요청하는지 백엔드 서버로 검색 요청하는지 구분하는 type props나 핸들러 함수를 추가로 받아야 함
-    console.log(`검색 요청: ${searchKeyword}`);
     requestHandler(searchKeyword);
   };
 

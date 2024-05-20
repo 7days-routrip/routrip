@@ -1,18 +1,18 @@
-import { useParams, useNavigate } from "react-router-dom";
-import styled, { ThemeProvider } from "styled-components";
-import { useEffect, useState, useRef } from "react";
 import { httpClient } from "@/apis/https";
-import { DetailPost } from "@/models/post.model";
 import { Button } from "@/components/common/Button";
-import { showAlert } from "@/utils/showAlert";
-import icons from "@/icons/icons";
-import { theme } from "@/styles/theme";
+import WriteTopBtn from "@/components/common/WriteTopBtn";
 import ScheduleCard from "@/components/common/scheduleCard";
 import { useSchedule } from "@/hooks/useMypage";
 import { useScheduleDetails } from "@/hooks/useScheduleDetails";
-import { CKEditor } from "@ckeditor/ckeditor5-react";
+import icons from "@/icons/icons";
+import { DetailPost } from "@/models/post.model";
+import { theme } from "@/styles/theme";
+import { showAlert } from "@/utils/showAlert";
 import ClassicEditor from "@ckeditor/ckeditor5-build-classic";
-import WriteTopBtn from "@/components/common/WriteTopBtn";
+import { CKEditor } from "@ckeditor/ckeditor5-react";
+import { useEffect, useRef, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import styled, { ThemeProvider } from "styled-components";
 
 // 이미지 업로드 함수
 const uploadImage = async (file: File) => {

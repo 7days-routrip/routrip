@@ -1,23 +1,22 @@
-import { addNewSchedule } from "@/apis/schedule.api";
-import { SelectedPlace } from "@/stores/addPlaceStore";
-import { useParams, useNavigate } from "react-router-dom";
-import styled from "styled-components";
-import { useEffect, useState, useCallback } from "react";
-import { theme } from "@/styles/theme";
-import icons from "@/icons/icons";
-import Dropdown from "@/components/common/Dropdown";
-import { Link } from "react-router-dom";
-import { Button } from "@/components/common/Button";
 import { httpClient } from "@/apis/https";
+import { addNewSchedule } from "@/apis/schedule.api";
+import { Button } from "@/components/common/Button";
+import Dropdown from "@/components/common/Dropdown";
+import PlaceModal from "@/components/common/PlaceModal";
+import PostCommentCard from "@/components/common/PostComment";
+import WriteTopBtn from "@/components/common/WriteTopBtn";
+import icons from "@/icons/icons";
+import { PostComment } from "@/models/comment.model";
+import { PlaceDetails } from "@/models/place.model";
 import { DetailPost } from "@/models/post.model";
+import { SelectedPlace } from "@/stores/addPlaceStore";
+import { theme } from "@/styles/theme";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
-import { PostComment } from "@/models/comment.model";
-import PostCommentCard from "@/components/common/PostComment";
-import PlaceModal from "@/components/common/PlaceModal";
-import { PlaceDetails } from "@/models/place.model";
-import WriteTopBtn from "@/components/common/WriteTopBtn";
 import { AxiosError } from "axios";
+import { useCallback, useEffect, useState } from "react";
+import { Link, useNavigate, useParams } from "react-router-dom";
+import styled from "styled-components";
 
 const StyledLikeIcon = styled(icons.LikeIcon)`
   fill: ${({ theme }) => theme.color.primary};
@@ -176,7 +175,6 @@ const PostDetailPage = () => {
   };
 
   const handleCopySchedule = async () => {
-    console.log("handleCopySchedule 호출됨");
     if (isLoading) return;
     setIsLoading(true);
 
