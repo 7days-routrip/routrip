@@ -80,6 +80,7 @@ export const useAuth = () => {
     try {
       const res = await authReset(data);
       showAlert(`${res.data.message}`, "logo");
+      navigate("/login");
       return;
     } catch (error: any) {
       return fetchErrorStatusHandler(error, [400]);
@@ -91,6 +92,7 @@ export const useAuth = () => {
       const res = await isNicknameUnique({ nickname });
       return res;
     } catch (error: any) {
+      console.log(error, "안나옴?");
       return fetchErrorStatusHandler(error, [400, 409]);
     }
   };

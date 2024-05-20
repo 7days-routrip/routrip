@@ -69,7 +69,7 @@ const ProfileResetPassword = () => {
             </fieldset>
           </div>
           <div className="input-button">
-            <Button $radius="default" $scheme="normal" $size="medium">
+            <Button $radius="default" $scheme="normal" $size="medium" type="button">
               <Link to={"/me"}>취소</Link>
             </Button>
             <Button $radius="default" $scheme="primary" $size="medium" type="submit">

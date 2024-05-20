@@ -5,7 +5,7 @@ import { emailOptions, passwordOptions } from "@/config/registerOptions";
 import { Button } from "@/components/common/Button";
 import { LoginProps, useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import icons from "@/icons/icons";
 import { useEffect, useState } from "react";
 import { emailRegex } from "@/constants/regexPatterns";
@@ -26,7 +26,7 @@ const RestPage = () => {
     watch,
     formState: { errors },
   } = useForm<ResetPasswordProps>();
-
+  const navigate = useNavigate();
   const [notAuthenticated, setNotAuthenticated] = useState(true);
   const watchEmail = watch("email");
   const onEmailConfirm = () => {
@@ -76,7 +76,7 @@ const RestPage = () => {
             />
 
             {errors.email && <small className="error-text">{errors.email.message}</small>}
-            {!notAuthenticated && <small className="successs-text">인증이 완료 되었습니다.</small>}
+            {!notAuthenticated && <small className="success-text">인증이 완료 되었습니다.</small>}
           </fieldset>
           <fieldset className="input-section">
             <InputText
