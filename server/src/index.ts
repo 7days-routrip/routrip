@@ -1,6 +1,6 @@
-import app from "@/app";
+import app, { server } from "@/app";
 
-const PORT = 1234;
-app.listen(PORT, () => {
-  console.log(`${PORT} 접속 완료`);
+const PORT = 443;
+server.listen(PORT, () => {
+  console.log("HTTPS server listening on port " + PORT);
 });

@@ -11,11 +11,19 @@ import cookieParser from "cookie-parser";
 import cors from "cors";
 import express, { NextFunction, Request, Response } from "express";
 import "reflect-metadata";
+import fs from "fs";
+import https from "https";
+
+const options = {
+  key: fs.readFileSync("./key.pem"),
+  cert: fs.readFileSync("./certificate.pem"),
+};
 
 const app = express();
+export const server = https.createServer(options, app);
 
-app.use(express.json({limit : '10mb'}));
-app.use(express.urlencoded({ limit : '10mb', extended: false }));
+app.use(express.json({ limit: "10mb" }));
+app.use(express.urlencoded({ limit: "10mb", extended: false }));
 
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   console.error(err);
