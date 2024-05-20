@@ -9,6 +9,7 @@ import { Country, regions } from "@/data/region";
 import RegionCountrySelector from "@/components/common/RegionCountrySelector";
 import WriteTopBtn from "@/components/common/WriteTopBtn";
 import Loading from "@/components/common/Loading";
+import { httpClient } from "@/apis/https";
 
 interface PostPageStyleProps {
   view: ViewMode;
@@ -46,10 +47,10 @@ const PostPage = () => {
   const fetchPosts = async (page: number, reset = false) => {
     setLoading(true);
     try {
-      const response = await fetch(
-        `http://localhost:1234/api/posts?area=${area}&filter=${countryId}&keyword=${searchKeyword}&pages=${page}&limit=${itemsPerPage}`,
+      const response = await httpClient.get(
+        `/posts?area=${area}&filter=${countryId}&keyword=${searchKeyword}&pages=${page}&limit=${itemsPerPage}`,
       );
-      const data = await response.json();
+      const data = response.data;
 
       if (reset) {
         setPosts(data.posts);
