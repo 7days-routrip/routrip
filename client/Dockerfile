@@ -14,4 +14,4 @@ RUN npm run build
 
 EXPOSE 80
 
-CMD ["npx", "http-server", "./dist", "-p", "80"] 
+CMD ["npx", "http-server", "./dist", "-p", "80", "--proxy", "http://routrip.prgms-fullcycle.com?"] 
