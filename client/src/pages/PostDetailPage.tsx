@@ -1,8 +1,8 @@
-import { addNewSchedule } from "@/apis/schedule.api"; // 추가
-import { SelectedPlace } from "@/stores/addPlaceStore"; // 추가
+import { addNewSchedule } from "@/apis/schedule.api";
+import { SelectedPlace } from "@/stores/addPlaceStore";
 import { useParams, useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import { useEffect, useState, useCallback } from "react"; // useCallback 추가
+import { useEffect, useState, useCallback } from "react";
 import { theme } from "@/styles/theme";
 import icons from "@/icons/icons";
 import Dropdown from "@/components/common/Dropdown";
