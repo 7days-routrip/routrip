@@ -22,7 +22,7 @@ export const AppDataSource = new DataSource({
   database: DB_DATABASE,
   timezone: "Asia/Seoul",
   synchronize: true,
-  logging: true,
+  logging: false,
   connectTimeout: 30000,
   entities: [Users, Comments, Continents, Countries, Journeys, Likes, Picks, Places, Posts, RouteDays, Routes, DaySeq],
 });
