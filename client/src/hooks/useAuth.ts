@@ -7,6 +7,7 @@ import {
   isEmailUnique,
   isNicknameUnique,
   profileNicknameUpdate,
+  fetchUserResign,
 } from "@/apis/auth.api";
 import { httpClient } from "@/apis/https";
 import { useAuthStore } from "@/stores/authStore";
@@ -92,7 +93,7 @@ export const useAuth = () => {
       const res = await isNicknameUnique({ nickname });
       return res;
     } catch (error: any) {
-      console.log(error, "안나옴?");
+      // console.log(error, "안나옴?");
       return fetchErrorStatusHandler(error, [400, 409]);
     }
   };
@@ -146,6 +147,17 @@ export const useAuth = () => {
     } catch (error) {}
   };
 
+  const userResign = () => {
+    try {
+      const res = fetchUserResign().then((res) => {
+        if (res?.status === 200) {
+          showAlert("탈퇴되었습니다.", "logo");
+        }
+      });
+      return res;
+    } catch (error) {}
+  };
+
   return {
     userLogin,
     userJoin,
@@ -156,5 +168,6 @@ export const useAuth = () => {
     userUpdate,
     userNewPasswordReset,
     userProfileImage,
+    userResign,
   };
 };

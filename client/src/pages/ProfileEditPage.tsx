@@ -5,13 +5,15 @@ import Title from "@/components/common/Title";
 import InputText from "@/components/common/Input";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/common/Button";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { useForm } from "react-hook-form";
 import { useAuth } from "@/hooks/useAuth";
 import { nicknameRegex } from "@/constants/regexPatterns";
 import { profileNicknameOptions } from "@/config/registerOptions";
 import { useProfile } from "@/hooks/useMypage";
 import { showAlert } from "@/utils/showAlert";
+import { showConfirm } from "@/utils/showConfirm";
+import { useAuthStore } from "@/stores/authStore";
 
 const dummyData: Profile = {
   nickName: "김하늘누리",
@@ -29,7 +31,8 @@ interface ProfileEditProps {
 }
 
 const ProfileEditPage = () => {
-  const { userNicknameCheck } = useAuth();
+  const { userNicknameCheck, userResign } = useAuth();
+  const { storeLogout } = useAuthStore();
   const { profileInfo, profileRefetch } = useProfile();
   const {
     register,
@@ -44,6 +47,7 @@ const ProfileEditPage = () => {
   const [preview, setPreview] = useState<string>("");
   const [formImage, setFormImage] = useState<File | null>();
   const { userUpdate, userProfileImage } = useAuth();
+  const navigate = useNavigate();
 
   const checkNickname = () => {
     const nickname = getValues().nickname;
@@ -73,6 +77,15 @@ const ProfileEditPage = () => {
     } else {
       setImgFile(null);
     }
+  };
+
+  const handleResign = () => {
+    showConfirm("정말 회원 탈퇴 하시겠습니까?", () =>
+      userResign()?.then(() => {
+        storeLogout();
+        navigate("/");
+      }),
+    );
   };
 
   const onSubmit = (data: ProfileEditProps) => {
@@ -172,7 +185,7 @@ const ProfileEditPage = () => {
               </div>
               <div className="profile-resign">
                 <span>회원 정보를 삭제하시겠어요?</span>
-                <Link to={"/"}>회원 탈퇴</Link>
+                <span onClick={() => handleResign()}>회원 탈퇴</span>
               </div>
             </div>
           </div>
