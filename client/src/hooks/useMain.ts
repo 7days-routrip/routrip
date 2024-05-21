@@ -10,7 +10,7 @@ export const useMain = () => {
 
     
   const { data: recommendPosts, isLoading: isrecommendPostsLoading } = useQuery({
-    queryKey: [queryKey.abroadPosts],
+    queryKey: [queryKey.recommendPosts],
     queryFn: getRecommendPosts,
   });
 
