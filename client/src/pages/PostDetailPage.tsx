@@ -151,8 +151,12 @@ const PostDetailPage = () => {
   const handleModalClose = () => {
     setSelectedPlace(null);
   };
-
   const handleLike = async () => {
+    if (!currentUser) {
+      showAlert("로그인 후 이용 가능합니다.", "error");
+      return;
+    }
+
     try {
       if (isLiked) {
         await httpClient.delete(`/likes/posts/${postId}`);
@@ -457,10 +461,10 @@ const PostDetailPageStyle = styled.div`
     margin: unset;
   }
   .content-container img {
-    height: auto;
-    max-width: 80%;
+    max-height: 400px;
+    width: auto;
     display: block;
-    // margin: 20px auto;
+    margin-bottom: 20px
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

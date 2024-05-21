@@ -91,7 +91,7 @@ const WritePage = () => {
 
   const { schedules, isEmptySchedules, scheduleRefetch } = useSchedule(); // 일정 데이터 가져오기
   const { scheduleDetailData, isScheduleDetailsLoading } = useScheduleDetails(selectedScheduleId); // 일정 세부 데이터 가져오기
-  const { PinIcon } = icons;
+  const { PinIcon, RightArrowIcon } = icons;
   const nav = useNavigate();
 
   useEffect(() => {
@@ -139,6 +139,11 @@ const WritePage = () => {
   const handleSave = async () => {
     if (!title.trim()) {
       showAlert("제목을 입력해 주세요", "error");
+      return;
+    }
+
+    if (!startDate || !endDate) {
+      showAlert("날짜를 선택해 주세요", "error");
       return;
     }
 
@@ -291,7 +296,7 @@ const WritePage = () => {
         <label>
           총 여행 경비
           <input
-            type="number"
+            type="type"
             placeholder="금액을 입력해주세요.(숫자만 입력)"
             onChange={(e) => setExpense(parseInt(e.target.value))}
           />
@@ -305,11 +310,11 @@ const WritePage = () => {
           {scheduleDetailData.days.map((day, dayIndex) => (
             <div key={dayIndex}>
               <PinIcon />
-              <span>Day {dayIndex + 1} - </span>
-              <span>
+              <span className="day-index">Day {dayIndex + 1} </span>
+              <span className="place-item">
                 {day.spots.map((spot, spotIndex) => (
                   <span key={spotIndex}>
-                    {spotIndex > 0 && "•"}
+                    {spotIndex > 0 && <RightArrowIcon />}
                     {spot.placeName}
                   </span>
                 ))}
@@ -371,7 +376,6 @@ const WritePageStyle = styled.div`
     gap: 10px;
     align-items: center;
     justify-content: center;
-    margin-top: 20px;
   }
   .title {
     width: 100%;
@@ -395,10 +399,18 @@ const WritePageStyle = styled.div`
     gap: 10px;
     align-items: center;
   }
+  .day-index {
+    margin-left: 4px;
+  }
   .continent,
   .country {
     width: 120px;
     padding: 8px 12px;
+  }
+  .place-item {
+    color: ${({ theme }) => theme.color.black};
+    font-size: ${({ theme }) => theme.fontSize.xsmall};
+    margin-left: 0.5rem;
   }
 
   select {
@@ -424,6 +436,7 @@ const WritePageStyle = styled.div`
   }
   .daily-schedule {
     color: ${({ theme }) => theme.color.routeGray};
+    margin-bottom: 10px;
   }
   .close-button {
     text-align: center;

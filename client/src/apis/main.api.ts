@@ -12,6 +12,17 @@ export const getBestPosts = async () => {
   }
 };
 
+// 루트립의 추천 루트
+export type RecommendPosts = Pick<Post, "id" |"title" | "postsImg" >;
+export const getRecommendPosts = async () => {
+  try {
+    const { data } = await httpClient.get<BestPosts[]>("/posts/routrip/recommend");
+    return data;
+  } catch (err) {
+    throw err;
+  }
+};
+
 // 국내 여행지 요청
 export const getHomePosts = async () => {
   try {

@@ -266,46 +266,35 @@ const PostEditPage = () => {
         <h1>
           <input type="text" value={title} onChange={(e) => setTitle(e.target.value)} />
         </h1>
-        <div className="info-container">
-          <p color={theme.color.commentGray}>작성일 : {post.createdAt}</p>
-          <div className="btn-wrapper">
-            <div>
-              <LikeIcon /> {post.likesNum}
-            </div>
-            <div>
-              <CommentIcon /> {post.commentsNum}
-            </div>
-            {post.author}
-          </div>
-        </div>
+
         <div className="trip-container">
-          <div className="edit-date">
-            <span>여행한 날짜</span>
-            <div>
-              {startDate ? startDate.toLocaleDateString() : ""} - {endDate ? endDate.toLocaleDateString() : ""}
+          <div className="edit-info">
+            <div className="edit-date">
+              <div className="date-title">여행한 날짜</div>
+              <div>
+                {startDate ? startDate.toLocaleDateString() : ""} - {endDate ? endDate.toLocaleDateString() : ""}
+              </div>
             </div>
-            <div>
-              <EditIcon onClick={toggleSidebar} />
+            <div className="edit-expense">
+              <div className="expense-title">총 여행 경비</div>
+              <input
+                type="type"
+                value={totalExpense}
+                onChange={(e) => setTotalExpense(parseInt(e.target.value))}
+                className="small-input"
+              />
             </div>
-          </div>
-          <div className="edit-expense">
-            <span>총 여행 경비</span>
-            <input
-              type="number"
-              value={totalExpense}
-              onChange={(e) => setTotalExpense(parseInt(e.target.value))}
-              className="small-input"
-            />
-          </div>
-          <div className="edit-plan">
-            <p className="edit-schedule" onClick={toggleSidebar}>
-              내 일정 수정하기
-            </p>
+            <div className="edit-plan">
+              <p className="edit-schedule" onClick={toggleSidebar}>
+                내 일정 수정하기
+              </p>
+            </div>
           </div>
         </div>
+
         <div className="place-container">
           {!newSchedule && post.journeys && post.journeys.spots && post.journeys.spots.length > 0 && (
-            <div>
+            <div className="place-container">
               {post.journeys.spots.map((spotData, dayIndex) => (
                 <div key={dayIndex} className="days">
                   <div className="day">
@@ -325,7 +314,7 @@ const PostEditPage = () => {
                         </span>
                       ))
                     ) : (
-                      <div className="plan-item">추가된 일정이 없습니다.</div>
+                      <div className="plan-item no-schedule">추가된 일정이 없습니다.</div>
                     )}
                   </div>
                 </div>
@@ -351,12 +340,13 @@ const PostEditPage = () => {
                       </span>
                     ))
                   ) : (
-                    <div>추가된 일정이 없습니다.</div>
+                    <div className="plan-item no-schedule">추가된 일정이 없습니다.</div>
                   )}
                 </div>
               </div>
             ))}
         </div>
+
         <div className="content-container">
           <CKEditor
             editor={ClassicEditor}
@@ -404,12 +394,24 @@ const PostEditPage = () => {
   );
 };
 
+// 스타일 정의는 동일하게 유지합니다.
 const PostEditPageStyle = styled.div`
   .info-container {
     border-bottom: 1px solid #e7e7e7;
     display: flex;
     justify-content: space-between;
-    margin-top: -20px;
+  }
+  h1 {
+    margin: 0px;
+  }
+  .country {
+    margin-top: 10px;
+    color: ${({ theme }) => theme.color.routeGray};
+    display: flex;
+    align-items: center;
+    gap: 4px;
+    font-size: ${({ theme }) => theme.fontSize.medium};
+    font-weight: 400;
   }
   .btn-wrapper {
     display: flex;
@@ -421,22 +423,43 @@ const PostEditPageStyle = styled.div`
   .trip-container {
     display: flex;
     justify-content: space-between;
-    gap: 10px;
+    align-items: center;
+    span {
+      margin: 0 0 10px 0;
+    }
   }
-  span {
+  .date-title,
+  .expense-title {
     font-size: ${({ theme }) => theme.fontSize.medium};
     font-weight: bold;
+    display: flex;
+  }
+  .expense-title {
+    margin-right: 0.5rem;
+  }
+
+  .edit-info {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    width: 100%;
   }
 
   .place-container {
-    color: ${({ theme }) => theme.color.routeGray};
-    margin-top: 20px;
+    color: ${({ theme }) => theme.color.black};
+    margin-bottom: 20px;
+  }
+  .edit-expense {
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .edit-date {
     display: flex;
     gap: 10px;
     align-items: center;
+    justify-content: center;
   }
 
   .date-picker-container {
@@ -477,12 +500,14 @@ const PostEditPageStyle = styled.div`
 
   input[type="number"].small-input {
     width: 50%;
-    padding: 0.25rem;
     font-size: ${({ theme }) => theme.fontSize.medium};
   }
   .item {
     font-weight: 400;
-    font-size: ${({ theme }) => theme.fontSize.small};
+    font-size: ${({ theme }) => theme.fontSize.xsmall};
+  }
+  .item-plan {
+    font-size: ${({ theme }) => theme.fontSize.xsmall};
   }
 
   .days {
@@ -492,10 +517,39 @@ const PostEditPageStyle = styled.div`
   .day {
     display: flex;
     align-items: center;
+    color: ${({ theme }) => theme.color.routeGray};
+    gap: 4px;
   }
 
   textarea {
     min-height: 200px;
+  }
+  .no-schedule {
+    font-size: ${({ theme }) => theme.fontSize.xsmall};
+  }
+
+  @media (max-width: 768px) {
+    .trip-container {
+      flex-direction: column;
+      align-items: flex-start;
+    }
+    .edit-info {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .edit-expense,
+    .edit-date {
+      justify-content: flex-start;
+      gap: 10px;
+    }
+    input[type="number"].small-input {
+      width: 100%;
+    }
+    .btn-wrapper {
+      flex-direction: column;
+      gap: 10px;
+    }
   }
 `;
 
@@ -527,6 +581,13 @@ const Sidebar = styled.div`
 
   button {
     margin-top: 20px;
+  }
+
+  @media ${({ theme }) => theme.mediaQuery.mobile} {
+    width: 100%;
+    height: 50%;
+    top: auto;
+    bottom: 0;
   }
 `;
 

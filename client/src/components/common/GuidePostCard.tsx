@@ -5,8 +5,10 @@ import { Link } from "react-router-dom";
 import { CardImageStyle, CardImageStyleProps } from "./postCard";
 import Title from "./Title";
 import { DEFAULT_IMAGE } from "./ProfileCard";
+import { RecommendPosts } from "@/apis/main.api";
+
 interface Props {
-  PostPops: IPost;
+  PostPops: RecommendPosts;
 }
 const GuidePostCard = ({ PostPops }: Props) => {
   return (

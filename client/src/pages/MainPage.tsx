@@ -10,32 +10,10 @@ import { Post } from "@/models/post.model";
 import styled from "styled-components";
 import WriteTopBtn from "@/components/common/WriteTopBtn";
 
-const dummyPost: Post = {
-  id: 1,
-  title: "서울 여행 가이드",
-  date: "2024.05.18-2024.05.22",
-  author: "김아무개",
-  profileImg: "",
-  continent: {
-    id: 1,
-    name: "대한민국",
-  },
-  country: {
-    id: 1,
-    name: "서울",
-  },
-  commentsNum: "999",
-  likesNum: "999",
-  postsImg: "https://picsum.photos/seed/picsum/200/300",
-  createdAt: "2024.03.12",
-  contents: "",
-  totalExpense: "",
-};
-
 const MainPage = () => {
-  const { bestPosts, homePosts, abroadPosts, isBestPostsLoading, isHomePostsLoading, isAbroadPostsLoading } = useMain();
+  const { bestPosts,recommendPosts, homePosts, abroadPosts, isBestPostsLoading, isrecommendPostsLoading,isHomePostsLoading, isAbroadPostsLoading } = useMain();
 
-  if (!bestPosts || !homePosts || !abroadPosts || isBestPostsLoading || isHomePostsLoading || isAbroadPostsLoading)
+  if (!bestPosts ||!recommendPosts ||!homePosts || !abroadPosts || isBestPostsLoading || isrecommendPostsLoading||isHomePostsLoading || isAbroadPostsLoading)
     return <Loading />;
 
   return (
@@ -43,7 +21,7 @@ const MainPage = () => {
       <WriteTopBtn isWriting={false} />
       <Banner />
       <SlideSection title="🔥HOT한 여행지는 여기!">
-        {bestPosts.map((post) => (
+        {bestPosts.length > 0 && bestPosts.map((post) => (
           <MainPostCard key={post.id} PostPops={post} />
         ))}
       </SlideSection>
@@ -64,20 +42,20 @@ const MainPage = () => {
       <div className="guide-post-container">
         <h2>📌루트립의 추천 루트</h2>
         <div className="guide-posts">
-          {Array.from({ length: 4 }, (_, i) => (
-            <GuidePostCard key={i} PostPops={dummyPost} />
+          {recommendPosts.length > 0 && recommendPosts.map((post, i) => (
+            <GuidePostCard key={i} PostPops={post} />
           ))}
         </div>
       </div>
 
       <SlideSection title="🚗국내 여행지">
-        {homePosts.posts.map((post: Post) => (
+        {homePosts.posts.length > 0 && homePosts.posts.map((post: Post) => (
           <MainPostCard key={post.id} PostPops={post} />
         ))}
       </SlideSection>
 
       <SlideSection title="✈️해외 여행지">
-        {abroadPosts.posts.map((post: Post) => (
+        {abroadPosts.posts.length > 0 && abroadPosts.posts.map((post: Post) => (
           <MainPostCard key={post.id} PostPops={post} />
         ))}
       </SlideSection>

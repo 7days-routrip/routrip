@@ -23,13 +23,13 @@ const TAGLIST = [
 
 // 더미 데이터들
 const dummyData: Profile = {
-  nickName: "김하늘누리",
+  nickName: "",
   profileImg: "",
-  journeysNum: 5,
-  postsNum: 5,
-  commentsNum: 88,
-  likePostsNum: 81,
-  likeSpotsNum: 50,
+  journeysNum: 0,
+  postsNum: 0,
+  commentsNum: 0,
+  likePostsNum: 0,
+  likeSpotsNum: 0,
 };
 
 const Mypage = () => {
