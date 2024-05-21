@@ -445,6 +445,10 @@ const WritePageStyle = styled.div`
   @media ${({ theme }) => theme.mediaQuery.mobile} {
     .info-container {
       flex-direction: column;
+      margin-top: 10px;
+    }
+    .plan {
+      margin-top: 0px;
     }
     .button-container input {
       width: 100%;
