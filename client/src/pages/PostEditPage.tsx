@@ -528,27 +528,44 @@ const PostEditPageStyle = styled.div`
     font-size: ${({ theme }) => theme.fontSize.xsmall};
   }
 
-  @media (max-width: 768px) {
-    .trip-container {
-      flex-direction: column;
-      align-items: flex-start;
-    }
+  @media ${({ theme }) => theme.mediaQuery.mobile} {
     .edit-info {
       flex-direction: column;
       align-items: flex-start;
-      gap: 10px;
+      margin-top: 10px;
+      gap: 1rem;
     }
     .edit-expense,
     .edit-date {
       justify-content: flex-start;
       gap: 10px;
     }
+    .days {
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .day {
+      white-space: nowrap;
+    }
     input[type="number"].small-input {
       width: 100%;
     }
     .btn-wrapper {
-      flex-direction: column;
       gap: 10px;
+    }
+    .trip-container {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 10px;
+    }
+    .date-title,
+    .expense-title {
+      font-size: ${({ theme }) => theme.fontSize.small};
+    }
+    .edit-date,
+    .edit-expense {
+      justify-content: flex-start;
     }
   }
 `;

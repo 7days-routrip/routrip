@@ -1,4 +1,5 @@
 import React from "react";
+import styled from "styled-components";
 import { Region, Country } from "@/data/region";
 
 interface RegionCountrySelectorProps {
@@ -23,7 +24,7 @@ const RegionCountrySelector: React.FC<RegionCountrySelectorProps> = ({
   const filteredCountries = hideKorea ? countries.filter((country) => country.name !== "대한민국") : countries;
 
   return (
-    <div className="continent-country">
+    <StyledContainer>
       <select className="continent" onChange={onRegionChange} value={selectedRegion}>
         <option value="0">전체</option>
         {regions.map((region) => (
@@ -40,8 +41,27 @@ const RegionCountrySelector: React.FC<RegionCountrySelectorProps> = ({
           </option>
         ))}
       </select>
-    </div>
+    </StyledContainer>
   );
 };
+
+const StyledContainer = styled.div`
+  display: flex;
+  gap: 10px;
+
+  .continent,
+  .country {
+    padding: 5px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+  }
+
+  @media (max-width: 768px) {
+    .continent,
+    .country {
+      width: 100%;
+    }
+  }
+`;
 
 export default RegionCountrySelector;
