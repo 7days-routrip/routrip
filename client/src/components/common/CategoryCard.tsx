@@ -81,6 +81,10 @@ const CategoryCardStyle = styled(MainPostCardStyle)`
     .title > h1 {
       font-size: 1rem;
     }
+
+    .card-image-style {
+      height: 60px;
+    }
   }
 `;
 
