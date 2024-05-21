@@ -14,16 +14,23 @@ import ScheduleDetailPage from "@/pages/ScheduleDetailPage";
 import ScheduleEditPage from "@/pages/ScheduleEditPage";
 import SchedulePage from "@/pages/SchedulePage";
 import WritePage from "@/pages/WritePage";
-import { Navigate, createBrowserRouter } from "react-router-dom";
+import { Navigate, createBrowserRouter, useNavigate } from "react-router-dom";
+import { showAlert } from "@/utils/showAlert";
 
 interface Props {
   children: React.ReactNode;
 }
 
 const PrivateRoute = ({ children }: Props) => {
+  const navigate = useNavigate();
   const token = localStorage.getItem("token");
+  
+  if (!token) { 
+    showAlert("로그인이 필요한 서비스입니다.\n로그인 후 이용해주세요.", "logo", ()=> navigate("/login"))
+    return;
+  } 
 
-  return token ? <>{children}</> : <Navigate to="/login" replace />;
+  return <>{children}</>;
 };
 
 const ErrorLayoutWrapper = () => (
