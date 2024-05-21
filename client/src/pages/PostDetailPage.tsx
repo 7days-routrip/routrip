@@ -3,6 +3,7 @@ import { addNewSchedule } from "@/apis/schedule.api";
 import { Button } from "@/components/common/Button";
 import PlaceModal from "@/components/common/PlaceModal";
 import PostCommentCard from "@/components/common/PostComment";
+import { DEFAULT_IMAGE } from "@/components/common/ProfileCard";
 import WriteTopBtn from "@/components/common/WriteTopBtn";
 import icons from "@/icons/icons";
 import { PostComment } from "@/models/comment.model";
@@ -16,7 +17,6 @@ import { AxiosError } from "axios";
 import { useCallback, useEffect, useState } from "react";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import styled from "styled-components";
-import { DEFAULT_IMAGE } from "@/components/common/ProfileCard";
 
 const StyledLikeIcon = styled(icons.LikeIcon)`
   fill: ${({ theme }) => theme.color.primary};
@@ -454,11 +454,13 @@ const PostDetailPageStyle = styled.div`
   .content-container .image {
     width: unset;
     height: unset;
+    margin: unset;
   }
   .content-container img {
     height: auto;
+    max-width: 80%;
     display: block;
-    margin: 20px auto;
+    // margin: 20px auto;
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);

@@ -1,15 +1,12 @@
 import { AppDataSource } from "@/config/ormSetting";
 import { Comments } from "@/models/comments.model";
+import { DaySeq } from "@/models/daySeq.model";
 import { Likes } from "@/models/likes.model";
 import { Posts } from "@/models/posts.model";
-import { iPostsInsertProps, iSearchDataProps, iSpotData, iSpots } from "@/types/posts.types";
-import { getOffset, setAreaType, setDateFromat } from "@/utils/posts.utils";
-import { Not } from "typeorm";
-import { Journeys } from "@/models/journeys.model";
-import { Routes } from "@/models/routes.model";
 import { RouteDays } from "@/models/routeDays.model";
-import { DaySeq } from "@/models/daySeq.model";
 import { LIMIT } from "@/settings";
+import { iPostsInsertProps, iSearchDataProps } from "@/types/posts.types";
+import { getOffset, setAreaType, setDateFromat } from "@/utils/posts.utils";
 
 const postRepo = AppDataSource.getRepository(Posts);
 const routeDaysRepo = AppDataSource.getRepository(RouteDays);
@@ -52,20 +49,22 @@ const reqAllPostsList = async (
   const responsePostsData = await Promise.all(
     postsData.map(async (post) => {
       const countryId = post.country.id;
-      if (searchData?.filter && searchData.keyword) {
-        if (post.title.includes(searchData.keyword) && countryId === parseInt(searchData.filter)) {
+      if (post.user.nickName !== "Routrip") {
+        if (searchData?.filter && searchData.keyword) {
+          if (post.title.includes(searchData.keyword) && countryId === parseInt(searchData.filter)) {
+            return await postsListReturnData(post);
+          }
+        } else if (searchData?.filter) {
+          if (countryId === parseInt(searchData.filter)) {
+            return await postsListReturnData(post);
+          }
+        } else if (searchData?.keyword) {
+          if (post.title.includes(searchData.keyword)) {
+            return await postsListReturnData(post);
+          }
+        } else {
           return await postsListReturnData(post);
         }
-      } else if (searchData?.filter) {
-        if (countryId === parseInt(searchData.filter)) {
-          return await postsListReturnData(post);
-        }
-      } else if (searchData?.keyword) {
-        if (post.title.includes(searchData.keyword)) {
-          return await postsListReturnData(post);
-        }
-      } else {
-        return await postsListReturnData(post);
       }
     }),
   ).then((res) => {
