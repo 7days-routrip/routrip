@@ -142,8 +142,8 @@ const WritePage = () => {
       return;
     }
 
-    if (!selectedScheduleId) {
-      showAlert("일정을 선택해 주세요", "error");
+    if (!startDate || !endDate) {
+      showAlert("날짜를 선택해 주세요", "error");
       return;
     }
 
