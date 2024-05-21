@@ -1,17 +1,17 @@
 import InputText from "@/components/common/Input";
 import { DEFAULT_IMAGE } from "@/components/common/ProfileCard";
-import styled from "styled-components";
-import { useForm } from "react-hook-form";
 import { JoinProps, useAuth } from "@/hooks/useAuth";
+import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
+import styled from "styled-components";
 
-import icons from "@/icons/icons";
-import Title from "@/components/common/Title";
 import { Button } from "@/components/common/Button";
+import Title from "@/components/common/Title";
 import { emailOptions, nicknameOptions, passwordOptions } from "@/config/registerOptions";
-import { useState } from "react";
 import { emailRegex, nicknameRegex } from "@/constants/regexPatterns";
+import icons from "@/icons/icons";
 import { showAlert } from "@/utils/showAlert";
+import { useState } from "react";
 
 export const placeholderHander = (text: string) => {
   return `${text} 입력해주세요.`;
@@ -26,7 +26,7 @@ export const allowedDomains = [
   "daum.net",
   "kakao.com",
   "routrip.com",
-  "test.com",
+  "gmail.com",
 ];
 
 export const domainAuth = (email: string) => {
