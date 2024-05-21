@@ -3,8 +3,8 @@ import { Post as IPost } from "@/models/post.model";
 
 import styled from "styled-components";
 // import { DEFAULT_IMAGE } from "./ProfileCard";
-import DEFAULT_IMAGE from "/assets/images/logo-profile2.png";
 import { Link } from "react-router-dom";
+import DEFAULT_IMAGE from "/assets/images/logo-profile2.png";
 
 export type ViewMode = "grid" | "list";
 export type AreaType = "home" | "abroad" | null;

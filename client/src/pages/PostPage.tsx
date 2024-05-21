@@ -38,9 +38,19 @@ const PostPage = () => {
   const params = new URLSearchParams(location.search);
   const areaParam = params.get("area");
   const countryId = params.get("filter") || "";
+  const regionId = params.get("region") || "";
   const searchKeyword = params.get("keyword") || "";
 
   const area: AreaType = areaParam === "home" || areaParam === "abroad" ? areaParam : "home";
+
+  useEffect(() => {
+    if (regionId && countryId) {
+      setSelectedRegion(parseInt(regionId));
+      setSelectedCountry(parseInt(countryId));
+      const region = regions.find((region) => region.id === parseInt(regionId));
+      setCountries(region ? region.countries : []);
+    }
+  }, [regionId, countryId]);
 
   const clickListBtn = () => setView("list");
   const clickGridBtn = () => setView("grid");
@@ -109,6 +119,8 @@ const PostPage = () => {
     setSelectedRegion(regionId);
     setSelectedCountry(0);
     params.delete("filter");
+    params.delete("region");
+    params.delete("country");
     nav({ search: params.toString() });
   };
 
@@ -117,8 +129,10 @@ const PostPage = () => {
     setSelectedCountry(countryId);
     if (countryId === 0) {
       params.delete("filter");
+      params.delete("country");
     } else {
       params.set("filter", countryId.toString());
+      params.set("country", countryId.toString());
     }
     nav({ search: params.toString() });
   };
