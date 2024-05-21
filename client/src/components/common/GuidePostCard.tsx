@@ -13,7 +13,7 @@ interface Props {
 const GuidePostCard = ({ PostPops }: Props) => {
   return (
     <GuidePostCardStyle>
-      <Link to={`/posts/${PostPops.id}`}>
+      <Link to={`/post/${PostPops.id}`}>
         <div className="image-wrapper">
           <GuideCardImageStyle $image={PostPops.postsImg} $view="grid" className="card-image-style" />
         </div>
