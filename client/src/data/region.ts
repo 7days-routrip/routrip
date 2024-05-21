@@ -18,6 +18,7 @@ export const regions: Region[] = [
       { id: 2, name: "일본" },
       { id: 3, name: "중국" },
       { id: 4, name: "대만" },
+      { id: 34, name: "홍콩/마카오" },
     ],
   },
   {
@@ -47,6 +48,7 @@ export const regions: Region[] = [
       { id: 19, name: "체코/슬로바키아" },
       { id: 20, name: "폴란드" },
       { id: 21, name: "터키" },
+      { id: 32, name: "오스트리아" },
     ],
   },
   {
