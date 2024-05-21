@@ -91,10 +91,18 @@ const reqHotPosts = async () => {
   if (postData.length === 0) return { success: false, msg: "empty list of posts" };
   const hot10Data = await Promise.all(
     postData.map((post) => {
-      return postsHot10ReturnData(post);
+      if (post.user.type !== "관리자") return postsHot10ReturnData(post);
     }),
   ).then((res) => {
-    return res.sort((a, b) => b.likesNum - a.likesNum || b.id - a.id).slice(0, 12);
+    return res
+      .sort((a, b) => {
+        if (a && b) {
+          return b.likesNum - a.likesNum || b.id - a.id;
+        } else {
+          return -1;
+        }
+      })
+      .slice(0, 12);
   });
   return { success: true, hot10Data };
 };
@@ -102,7 +110,7 @@ const reqRecommendPosts = async () => {
   const postsResult = await postRepo.find();
   const posts = await Promise.all(
     postsResult.map(async (post) => {
-      if (post.user.nickName === "Routrip") {
+      if (post.user.type === "관리자") {
         return {
           id: post.id,
           title: post.title,
@@ -111,7 +119,7 @@ const reqRecommendPosts = async () => {
       }
     }),
   ).then((res) => {
-    return res.slice(0, 4).filter((el) => el);
+    return res.filter((el) => el).slice(0, 4);
   });
   if (posts.length === 0) return { success: false, msg: "empty list of posts" };
   return { success: true, posts };
