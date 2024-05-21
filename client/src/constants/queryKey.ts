@@ -6,6 +6,7 @@ export const queryKey = {
   bookmarkPlaces: "bookmarkPlaces",
   scheduleDetails: "scheduleDetails",
   bestPosts: "mainBestPosts",
+  recommendPosts: "recommendPosts",
   homePosts: "homePosts",
   abroadPosts: "abroadPosts",
   placeDetails: "placeDetails",
