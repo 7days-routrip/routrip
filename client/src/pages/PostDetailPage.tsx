@@ -151,8 +151,12 @@ const PostDetailPage = () => {
   const handleModalClose = () => {
     setSelectedPlace(null);
   };
-
   const handleLike = async () => {
+    if (!currentUser) {
+      showAlert("로그인 후 이용 가능합니다.", "error");
+      return;
+    }
+
     try {
       if (isLiked) {
         await httpClient.delete(`/likes/posts/${postId}`);

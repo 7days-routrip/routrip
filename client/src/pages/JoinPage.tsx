@@ -172,7 +172,7 @@ const JoinPage = () => {
                 <Link to="/login">로그인하러 가기</Link>
               </div>
             </div>
-            <div className="social-login">
+            {/* <div className="social-login">
               <div className="hr-sect">
                 <div className="hr-line"></div>
                 <span>간편 로그인</span>
@@ -182,7 +182,7 @@ const JoinPage = () => {
                 <div className="iconImge"></div>
                 <div className="iconImge"></div>
               </div>
-            </div>
+            </div> */}
           </div>
         </form>
       </JoinPageStyle>
