@@ -91,3 +91,11 @@ export const fetchProfileRestPassword = async (data: profileResetProps) => {
     // 실패
   }
 };
+
+//탈퇴
+export const fetchUserResign = async () => {
+  try {
+    const response = await httpClient.delete<authMessageResponse>("/users");
+    return response;
+  } catch (error) {}
+};
