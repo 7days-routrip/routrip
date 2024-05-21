@@ -142,6 +142,11 @@ const WritePage = () => {
       return;
     }
 
+    if (!selectedScheduleId) {
+      showAlert("일정을 선택해 주세요", "error");
+      return;
+    }
+
     const editorContent = new DOMParser().parseFromString(data, "text/html");
     const images = editorContent.querySelectorAll("img");
     let firstImageUrl = "";
@@ -291,7 +296,7 @@ const WritePage = () => {
         <label>
           총 여행 경비
           <input
-            type="number"
+            type="type"
             placeholder="금액을 입력해주세요.(숫자만 입력)"
             onChange={(e) => setExpense(parseInt(e.target.value))}
           />
