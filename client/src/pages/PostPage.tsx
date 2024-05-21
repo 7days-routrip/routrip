@@ -15,6 +15,7 @@ interface PostPageStyleProps {
   view: ViewMode;
   area: AreaType;
   loading: boolean;
+  $isExist: boolean;
 }
 
 const PostPage = () => {
@@ -157,10 +158,12 @@ const PostPage = () => {
       : [...posts].sort((a, b) => parseInt(b.likesNum, 10) - parseInt(a.likesNum, 10));
   };
 
+  let $isExist;
   const sortedPosts = sortPosts(posts, sortOrder);
+  sortedPosts.length !== 0 ? ($isExist = true) : ($isExist = false);
 
   return (
-    <PostPageStyle view={view} area={area} loading={loading}>
+    <PostPageStyle view={view} area={area} loading={loading} $isExist={$isExist}>
       <WriteTopBtn isWriting={true} />
       <div className="main-content">
         <div className="control-wrapper">
@@ -203,10 +206,16 @@ const PostPage = () => {
           <div className="loading-wrapper">
             <Loading />
           </div>
+        ) : sortedPosts.length !== 0 ? (
+          <>
+            {sortedPosts.map((post, index) => (
+              <PostCard key={post.id || index} PostProps={post} view={view} />
+            ))}
+            {hasMore && !loading && <div ref={loader} />}
+          </>
         ) : (
-          sortedPosts.map((post, index) => <PostCard key={post.id || index} PostProps={post} view={view} />)
+          <div className="no-data">게시글이 존재하지 않습니다.</div>
         )}
-        {hasMore && !loading && <div ref={loader} />}
       </div>
     </PostPageStyle>
   );
@@ -218,7 +227,7 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
     align-items: center;
     max-width: ${(props) => (props.view === "list" ? "790px" : "1080px")};
     border-bottom: 1px solid #e7e7e7;
-    padding: 20px 0px;
+    padding: 1rem 0px;
     margin: 0 auto;
   }
 
@@ -240,6 +249,11 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
     display: flex;
     gap: 10px;
     align-items: center;
+
+    > select {
+      border: 1px solid ${({ theme }) => theme.color.commentGray};
+      border-radius: ${({ theme }) => theme.borderRadius.default};
+    }
   }
   .continent,
   .country {
@@ -271,6 +285,10 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
     padding: 0 8px;
     font-size: 16px;
     outline: none;
+
+    &::placeholder {
+      font-size: ${({ theme }) => theme.fontSize.xsmall};
+    }
   }
 
   .view-toggle {
@@ -287,21 +305,20 @@ const PostPageStyle = styled.div<PostPageStyleProps>`
   }
 
   .post {
-    display: grid;
+    display: ${(props) => (props.$isExist ? "grid" : "flex")};
     grid-template-columns: ${(props) =>
       props.view === "grid" ? "repeat(auto-fill, minmax(32%, auto))" : "repeat(auto-fill, minmax(100%, auto))"};
     max-width: ${(props) => (props.view === "grid" ? "unset" : "790px")};
     gap: 14px;
     margin: 0 auto;
-    padding: 20px 0;
+    padding-top: 1rem;
+    padding-bottom: 1rem;
     position: relative;
 
-    .none-posts {
+    .no-data {
       width: 100%;
-      margin: 0 auto;
       text-align: center;
     }
-
     .loading-wrapper {
       display: flex;
       position: fixed;

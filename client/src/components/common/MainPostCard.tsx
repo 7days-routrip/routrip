@@ -14,7 +14,9 @@ const MainPostCard = ({ PostPops }: Props) => {
   return (
     <MainPostCardStyle>
       <Link to={`/post/${PostPops.id}`}>
-        <MainCardImageStyle $image={PostPops.postsImg} $view="grid" />
+        <div className="image-wrapper">
+          <MainCardImageStyle $image={PostPops.postsImg} $view="grid" className="card-image-style" />
+        </div>
         <div className="info">
           <div className="date">
             <small>{PostPops.date}</small>
@@ -38,6 +40,27 @@ const MainPostCard = ({ PostPops }: Props) => {
 export const MainPostCardStyle = styled.div`
   position: relative;
   width: 100%;
+
+  a {
+    display: flex;
+  }
+
+  .image-wrapper {
+    overflow: hidden;
+    width: 100%;
+    border-radius: ${({ theme }) => theme.borderRadius.default};
+  }
+
+  .card-image-style {
+    position: unset;
+    transform: unset;
+    height: 180px;
+  }
+  &:hover {
+    .card-image-style {
+      transform: scale(1.1);
+    }
+  }
 
   h1 {
     margin: 0;
@@ -116,7 +139,6 @@ const MainCardImageStyle = styled(CardImageStyle)`
   border-radius: ${({ theme }) => theme.borderRadius.default};
   width: 100%;
   background-size: cover;
-
   &::after {
     background: none;
   }

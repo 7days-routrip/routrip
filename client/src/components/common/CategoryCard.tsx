@@ -1,9 +1,9 @@
-import styled from "styled-components";
-import { Link } from "react-router-dom";
-import { CardImageStyle } from "./postCard";
-import Title from "./Title";
-import { MainPostCardStyle } from "./MainPostCard";
 import { regions } from "@/data/region";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import { MainPostCardStyle } from "./MainPostCard";
+import Title from "./Title";
+import { CardImageStyle } from "./postCard";
 
 interface Props {
   id: number;
@@ -28,7 +28,9 @@ const CategoryCard = ({ id, name, img }: Props) => {
       <Link
         to={`/post?area=abroad&filter=${id}&region=${regionInfo?.regionId}&country=${regionInfo?.countryId}&page=1`}
       >
-        <CategoryImageStyle $image={img} $view="grid" />
+        <div className="image-wrapper">
+          <CategoryImageStyle $image={img} $view="grid" className="card-image-style" />
+        </div>
         <div className="info">
           <div className="title">
             <Title size="medium">{name}</Title>
@@ -42,6 +44,22 @@ const CategoryCard = ({ id, name, img }: Props) => {
 const CategoryCardStyle = styled(MainPostCardStyle)`
   width: 80px;
   height: 80px;
+
+  .image-wrapper {
+    border-radius: 50%;
+  }
+
+  .card-image-style {
+    position: unset;
+    height: 80px;
+    transform: scale(1);
+    transition: transform 0.3s;
+  }
+  &:hover {
+    .card-image-style {
+      transform: scale(1.4);
+    }
+  }
   .info {
     justify-content: center;
     align-self: center;

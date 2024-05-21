@@ -52,7 +52,7 @@ const ProfileCardStyle = styled.div`
   display: flex;
   justify-content: flex-start;
   align-items: center;
-  margin-bottom: 1.5rem;
+  margin-bottom: 1rem;
 
   background-color: ${({ theme }) => theme.color.primary};
   color: ${({ theme }) => theme.color.white};

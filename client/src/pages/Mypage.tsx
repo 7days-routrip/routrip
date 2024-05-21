@@ -11,6 +11,7 @@ import LikePlaceCard from "@/components/common/LikePlaceCard";
 import ProfileCard from "@/components/common/ProfileCard";
 import { QUERYSTRING } from "@/constants/querystring";
 import { useIntersectionObserver } from "@/hooks/useIntersectionObserver";
+import { Link } from "react-router-dom";
 
 const TAGLIST = [
   { name: "일정 모음", queryValue: "schedules" },
@@ -132,7 +133,11 @@ const Mypage = () => {
         </MypageTapStyle>
         <div className="contents">
           {!isEmptySchedules && activeTag[0]
-            ? schedules?.map((item, idx) => <ScheduleCard scheduleProps={item} key={idx} view="grid" />)
+            ? schedules?.map((item, idx) => (
+                <Link to={`/schedule/${item.id}`} className="schedule-item">
+                  <ScheduleCard scheduleProps={item} key={idx} view="grid" />
+                </Link>
+              ))
             : null}
           {!isEmptyPosts && activeTag[1]
             ? posts?.map((item, idx) => <PostCard PostProps={item} key={idx} view="grid" />)
@@ -173,10 +178,16 @@ export const MypageStyle = styled.div<MypageStyleProps>`
   .contents {
     display: ${({ $commentsView }) => ($commentsView ? "flex" : "grid")};
     grid-template-columns: ${({ $likePlaceView }) =>
-      $likePlaceView ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(32%, auto))"};
+      $likePlaceView ? "repeat(2, 1fr)" : "repeat(auto-fill, minmax(32.8%, auto))"};
     gap: 0.5rem;
     flex-direction: column;
     place-items: center;
+    padding-bottom: 1rem;
+  }
+
+  .schedule-item {
+    width: 100%;
+    color: ${({ theme }) => theme.color.black};
   }
 
   @media (max-width: 768px) {
