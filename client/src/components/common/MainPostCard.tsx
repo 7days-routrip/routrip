@@ -1,10 +1,10 @@
-import styled from "styled-components";
-import { CardImageStyle } from "./postCard";
-import Title from "./Title";
-import icons from "@/icons/icons";
-import { Link } from "react-router-dom";
-import { Post } from "@/models/post.model";
 import { BestPosts } from "@/apis/main.api";
+import icons from "@/icons/icons";
+import { Post } from "@/models/post.model";
+import { Link } from "react-router-dom";
+import styled from "styled-components";
+import Title from "./Title";
+import { CardImageStyle } from "./postCard";
 interface Props {
   PostPops: Post | BestPosts;
 }
@@ -132,13 +132,16 @@ export const MainPostCardStyle = styled.div`
   @media (max-width: 768px) {
     /* max-width: 170px; */
     /* height: 100px; */
+    .card-image-style {
+      height: 120px;
+    }
   }
 `;
 
 const MainCardImageStyle = styled(CardImageStyle)`
   border-radius: ${({ theme }) => theme.borderRadius.default};
   width: 100%;
-  background-size: cover;
+  background-size: ${({ $image }) => ($image ? "cover" : "60%")};
   &::after {
     background: none;
   }

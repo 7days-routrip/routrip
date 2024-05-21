@@ -1,8 +1,7 @@
 import { Schedule as ISchedule } from "@/models/schedule.model";
 import styled from "styled-components";
-import { CardContentStyle, CardImageStyle, CardImageStyleProps, CardStyle, ViewMode } from "./postCard";
-import { Link } from "react-router-dom";
 import { DEFAULT_IMAGE } from "./ProfileCard";
+import { CardContentStyle, CardImageStyle, CardImageStyleProps, CardStyle, ViewMode } from "./postCard";
 
 interface Props {
   scheduleProps?: ISchedule; // scheduleProps를 선택적(prop)을로 변경
@@ -94,6 +93,13 @@ const ScheduleCardStyle = styled(CardStyle)`
   @media (max-width: 768px) {
     width: ${({ $view }) => ($view === "grid" ? "160px" : "auto")};
     height: ${({ $view }) => ($view === "grid" ? "160px" : "auto")};
+
+    .image-wrapper {
+      height: ${({ $view }) => ($view === "grid" ? "auto" : "120px")};
+    }
+    .inner {
+      height: ${({ $view }) => ($view === "grid" ? "100px" : "120px")};
+    }
   }
 `;
 

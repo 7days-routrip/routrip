@@ -82,11 +82,11 @@ export const CardImageStyle = styled.div<CardImageStyleProps>`
   background-size: ${({ $image }) => ($image ? "cover" : "60%")};
   border: 0;
   border-radius: ${({ $view, theme }) => ($view === "grid" ? `${theme.borderRadius.tab}` : `8px 0 0 8px`)};
-  transition: transform 0.3s;
-  position: absolute;
-  top: 50%;
-  left: 50%;
-  transform: translate(-50%, -50%);
+  // transition: transform 0.3s;
+  // position: absolute;
+  // top: 50%;
+  // left: 50%;
+  // transform: translate(-50%, -50%);
 
   &::after {
     content: "";
@@ -124,6 +124,7 @@ export const CardContentStyle = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
+    line-height: 1.5;
     color: ${({ theme }) => theme.color.black};
   }
 
@@ -233,10 +234,11 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
   .image-wrapper > .inner {
     width: 100%;
     height: ${({ $view }) => ($view === "grid" ? "170px" : "150px")};
+    transform: scale(1);
     transition: transform 0.3s;
   }
   &:hover {
-    > .image-wrapper > div {
+    .image-wrapper > div {
       transform: scale(1.1);
     }
   }
@@ -311,6 +313,10 @@ const PostCardStyle = styled(CardStyle)<PostCardStyleProps>`
   @media (max-width: 768px) {
     font-size: ${({ theme }) => theme.fontSize.xsmall};
     flex-direction: ${({ $view }) => ($view === "grid" ? "column" : "row")};
+    .image-wrapper > .inner {
+      width: 100%;
+      height: ${({ $view }) => ($view === "grid" ? "100px" : "150px")};
+    }
   }
 `;
 

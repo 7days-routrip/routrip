@@ -102,7 +102,7 @@ const reqRecommendPosts = async () => {
   const postsResult = await postRepo.find();
   const posts = await Promise.all(
     postsResult.map(async (post) => {
-      if (post.user.nickName === "routrip") {
+      if (post.user.nickName === "Routrip") {
         return {
           id: post.id,
           title: post.title,
@@ -170,6 +170,7 @@ const reqPostData = async (postId: number, userId: number | undefined) => {
     id: postData.id,
     title: postData.title,
     author: postData.user.nickName,
+    profileImg: postData.user.profileImg,
     contents: postData.content,
     totalExpense: postData.expense,
     date: startDate + "-" + endDate,
