@@ -6,7 +6,6 @@ import {
 } from "@/constants/message";
 import CommentsSevice from "@/service/comments.service";
 import MypagesService from "@/service/mypages.service";
-import PostsService from "@/service/posts.service";
 import { Request, Response } from "express";
 import { StatusCodes } from "http-status-codes";
 
@@ -41,7 +40,7 @@ const postUserAllList = async (req: Request, res: Response) => {
     if (req.user?.isLoggedIn) {
       const userId = req.user.id as number;
       const pages = parseInt(req.query?.pages as string);
-      const listResult = await PostsService.reqAllPostsList(pages, undefined, userId, undefined, "list");
+      const listResult = await MypagesService.getPosts(userId, pages);
       if (listResult.success === false) throw new Error(listResult.msg);
       res.status(StatusCodes.OK).json({
         posts: listResult.data,
@@ -58,7 +57,7 @@ const postUserAllList = async (req: Request, res: Response) => {
     if (err instanceof Error) {
       if (err.message === "login required")
         return res.status(StatusCodes.UNAUTHORIZED).json({ message: UNAUTHORIZED_NOT_LOGIN });
-      if (err.message === "empty list of posts")
+      if (err.message === "does not exist posts")
         return res.status(StatusCodes.NOT_FOUND).json({ message: NOT_FOUND_POSTS });
     }
   }

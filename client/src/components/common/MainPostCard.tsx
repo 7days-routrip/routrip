@@ -55,6 +55,7 @@ export const MainPostCardStyle = styled.div`
     position: unset;
     transform: unset;
     height: 180px;
+    transition: transform 0.3s;
   }
   &:hover {
     .card-image-style {

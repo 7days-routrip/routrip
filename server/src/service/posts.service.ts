@@ -290,5 +290,6 @@ const PostsService = {
   // reqImageUpload,
   reqHotPosts,
   reqRecommendPosts,
+  postsListReturnData,
 };
 export default PostsService;
