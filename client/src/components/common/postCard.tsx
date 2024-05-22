@@ -27,7 +27,7 @@ const PostCard = ({ PostProps, view }: Props) => {
           </div>
         </div>
 
-        <CardContentStyle>
+        <CardContentStyle $view={view}>
           <div className="schedule">
             <div className="route">
               <PinIcon />
@@ -103,8 +103,10 @@ export const CardImageStyle = styled.div<CardImageStyleProps>`
     background-size: ${({ $image }) => ($image ? "cover" : "30%")};
   }
 `;
-
-export const CardContentStyle = styled.div`
+interface CardContentStyleProps {
+  $view: string;
+}
+export const CardContentStyle = styled.div<CardContentStyleProps>`
   display: flex;
   width: 100%;
   flex-direction: column;
@@ -124,7 +126,7 @@ export const CardContentStyle = styled.div`
     text-overflow: ellipsis;
     white-space: nowrap;
     width: 100%;
-    line-height: 1.5;
+    line-height: ${({ $view }) => ($view === "grid" ? "1.5" : "1")};
     color: ${({ theme }) => theme.color.black};
   }
 
