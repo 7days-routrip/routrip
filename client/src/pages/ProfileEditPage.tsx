@@ -16,7 +16,7 @@ import { showConfirm } from "@/utils/showConfirm";
 import { useAuthStore } from "@/stores/authStore";
 
 const dummyData: Profile = {
-  nickName: "김하늘누리",
+  nickName: "",
   profileImg: "",
   journeysNum: 5,
   postsNum: 5,
