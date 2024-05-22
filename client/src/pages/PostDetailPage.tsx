@@ -1,4 +1,3 @@
-// 나머지 코드
 import { httpClient } from "@/apis/https";
 import { addNewSchedule } from "@/apis/schedule.api";
 import { Button } from "@/components/common/Button";
@@ -71,7 +70,7 @@ const PostDetailPage = () => {
         console.error("댓글이 없습니다.:", error);
       }
     }
-  }, [postId]); // 의존성 배열 추가
+  }, [postId]);
 
   function isAxiosError(error: any): error is AxiosError {
     return (error as AxiosError).isAxiosError !== undefined;
@@ -85,7 +84,7 @@ const PostDetailPage = () => {
       fetchPost();
       fetchComments();
     }
-  }, [postId, fetchPost, fetchComments]); // 의존성 배열에 fetchPost, fetchComments 추가
+  }, [postId, fetchPost, fetchComments]);
 
   const handleDelete = async () => {
     try {
@@ -201,10 +200,22 @@ const PostDetailPage = () => {
       })),
     );
 
+    const addHours = (date: string | number | Date, hours: number) => {
+      const result = new Date(date);
+      result.setHours(result.getHours() + hours);
+      return result;
+    };
+
     const newSchedule = {
       title: post.title,
-      startDate: new Date(new Date(post.date.split("-")[0]).toLocaleString("en-US", { timeZone: "Asia/Seoul" })),
-      endDate: new Date(new Date(post.date.split("-")[1]).toLocaleString("en-US", { timeZone: "Asia/Seoul" })),
+      startDate: addHours(
+        new Date(new Date(post.date.split("-")[0]).toLocaleString("en-US", { timeZone: "Asia/Seoul" })),
+        9,
+      ),
+      endDate: addHours(
+        new Date(new Date(post.date.split("-")[1]).toLocaleString("en-US", { timeZone: "Asia/Seoul" })),
+        9,
+      ),
       allDaysPlaces: allDaysPlaces,
     };
     try {
@@ -512,9 +523,8 @@ const PostDetailPageStyle = styled.div`
       align-items: flex-start;
       gap: 1rem;
     }
-    .info-container{
-      display:flex;
-      
+    .info-container {
+      display: flex;
     }
     .trip-container {
       flex-direction: column;
@@ -536,8 +546,8 @@ const PostDetailPageStyle = styled.div`
         display: flex;
         flex-wrap: wrap;
         gap: 4px;
-        margin-top:-4px;
-        
+        margin-top: -4px;
+
         > span {
           display: flex;
           align-items: center;
@@ -546,7 +556,6 @@ const PostDetailPageStyle = styled.div`
     }
     .content-container img {
       max-width: 100%;
-
     }
   }
 `;
