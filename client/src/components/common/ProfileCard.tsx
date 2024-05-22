@@ -1,4 +1,5 @@
 import { Profile } from "@/models/profile.model";
+import { useEffect } from "react";
 import styled from "styled-components";
 
 export const DEFAULT_IMAGE = "https://7days-bucket.s3.ap-northeast-2.amazonaws.com/profile-default.png";
@@ -90,7 +91,9 @@ const ProfileCardStyle = styled.div`
 
   @media (max-width: 768px) {
     width: 100%;
-    min-width: 370px;
+    font-size: 9px;
+    justify-content: center;
+    min-width: 320px;
     padding: 0;
     height: 100px;
   }

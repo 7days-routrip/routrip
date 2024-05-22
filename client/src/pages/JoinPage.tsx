@@ -27,6 +27,7 @@ export const allowedDomains = [
   "kakao.com",
   "routrip.com",
   "gmail.com",
+  "test.com",
 ];
 
 export const domainAuth = (email: string) => {

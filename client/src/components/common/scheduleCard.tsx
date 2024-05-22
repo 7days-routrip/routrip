@@ -58,7 +58,7 @@ const SchedulerImageStyle = styled(CardImageStyle)<CardImageStyleProps>`
     /* background: unset; */
   }
   @media (max-width: 768px) {
-    width: ${({ $view }) => ($view === "grid" ? "160px" : "100px")};
+    width: ${({ $view }) => ($view === "grid" ? "100%" : "100px")};
     height: ${({ $view }) => ($view === "grid" ? "100px" : "100px")};
   }
 `;
@@ -91,7 +91,7 @@ const ScheduleCardStyle = styled(CardStyle)`
     }
   }
   @media (max-width: 768px) {
-    width: ${({ $view }) => ($view === "grid" ? "160px" : "auto")};
+    width: ${({ $view }) => ($view === "grid" ? "100%" : "auto")};
     height: ${({ $view }) => ($view === "grid" ? "160px" : "auto")};
 
     .image-wrapper {

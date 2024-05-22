@@ -45,6 +45,7 @@ const ProfileEditPage = () => {
   const [nicknameUniqueCheck, setNicknameUniqueCheck] = useState(false);
   const [imgFile, setImgFile] = useState<File | null>();
   const [preview, setPreview] = useState<string>("");
+  const [previewUpdate, setPreviewUpdate] = useState<boolean>(false);
   const [formImage, setFormImage] = useState<File | null>();
   const { userUpdate, userProfileImage } = useAuth();
   const navigate = useNavigate();
@@ -104,8 +105,10 @@ const ProfileEditPage = () => {
       userProfileImage(formImage);
     }
     clearErrors;
-    showAlert("수정이 완료되었습니다.", "logo");
-    profileRefetch();
+    showAlert("수정이 완료되었습니다.", "logo", () => {
+      profileRefetch();
+    });
+    // setPreviewUpdate(true);
   };
 
   useEffect(() => {
@@ -115,6 +118,7 @@ const ProfileEditPage = () => {
       reader.onloadend = () => {
         const imgString = reader.result as string;
         setPreview(imgString);
+        setPreviewUpdate(false);
       };
       reader.readAsDataURL(imgFile);
     } else {
@@ -127,7 +131,12 @@ const ProfileEditPage = () => {
   }, [profileInfo]);
   return (
     <ProfileEditPageStyle>
-      <ProfileCard ProfileProps={profileInfo ? profileInfo : dummyData} />
+      <ProfileCard
+        ProfileProps={profileInfo ? profileInfo : dummyData}
+        previewImg={preview}
+        update={previewUpdate}
+        profileRefetch={profileRefetch}
+      />
       <main className="edit-main">
         <Title size="large">사용자 프로필 수정</Title>
         <form onSubmit={handleSubmit(onSubmit)}>

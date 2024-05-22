@@ -41,7 +41,7 @@ const Mypage = () => {
   const { comments, isEmptyComment, commentsRefetch, nextComments, hasNextComments } = useComment();
   const { likePosts, isEmptyLikePosts, likePostRefetch, nextLikePosts, hasNextLikePost } = useLikePost();
   const { likePlaces, isEmptyLikePlace, likePlaceRefetch, nextLikePlaces, hasNextPlaces } = useLikePlace();
-  const { profileInfo, isProfileLoding } = useProfile();
+  const { profileInfo, isProfileLoding, profileRefetch } = useProfile();
   const [searchParams, setSearchParams] = useSearchParams();
   const newSearchParams = new URLSearchParams(searchParams);
 
@@ -113,7 +113,10 @@ const Mypage = () => {
 
   return (
     <MypageStyle $commentsView={activeTag[2]} $likePlaceView={activeTag[4]}>
-      <ProfileCard ProfileProps={!isProfileLoding && profileInfo ? profileInfo : dummyData} />
+      <ProfileCard
+        ProfileProps={!isProfileLoding && profileInfo ? profileInfo : dummyData}
+        profileRefetch={profileRefetch}
+      />
       <div className="main">
         <MypageTapStyle>
           {TAGLIST.map((item, idx) => (
@@ -150,7 +153,12 @@ const Mypage = () => {
             : null}
           {!isEmptyLikePlace && activeTag[4]
             ? likePlaces?.map((item, idx) => (
-                <LikePlaceCard PlaceProps={item} likePlaceRefetch={likePlaceRefetch} key={idx} />
+                <LikePlaceCard
+                  PlaceProps={item}
+                  likePlaceRefetch={likePlaceRefetch}
+                  profileRefetch={profileRefetch}
+                  key={idx}
+                />
               ))
             : null}
         </div>
@@ -190,9 +198,12 @@ export const MypageStyle = styled.div<MypageStyleProps>`
     color: ${({ theme }) => theme.color.black};
   }
 
+  /* $likePlaceView ? "repeat(2, 1fr)" : }; */
+
   @media (max-width: 768px) {
     .contents {
-      grid-template-columns: ${({ $likePlaceView }) => ($likePlaceView ? "repeat(1, 1fr)" : "repeat(2, 1fr)")};
+      grid-template-columns: ${({ $likePlaceView }) =>
+        $likePlaceView ? "repeat(1, 1fr)" : "repeat(auto-fill, minmax(48%, auto))"};
     }
   }
 `;

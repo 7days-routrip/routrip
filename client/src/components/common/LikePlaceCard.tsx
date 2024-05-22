@@ -8,15 +8,17 @@ import { useState } from "react";
 interface Props {
   PlaceProps: PlaceDetails;
   likePlaceRefetch: () => void;
+  profileRefetch: () => void;
 }
 
-const LikePlaceCard = ({ PlaceProps, likePlaceRefetch }: Props) => {
+const LikePlaceCard = ({ PlaceProps, likePlaceRefetch, profileRefetch }: Props) => {
   const MarkIcon = icons.BookmarkIcon;
   const [isModalOpen, setIsModalOpen] = useState(false);
 
   const hondleOnClosed = () => {
     setIsModalOpen(false);
     likePlaceRefetch();
+    profileRefetch();
   };
 
   return (
