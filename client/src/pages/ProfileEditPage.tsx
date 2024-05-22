@@ -104,9 +104,9 @@ const ProfileEditPage = () => {
     if (formImage) {
       userProfileImage(formImage);
     }
-    clearErrors;
     showAlert("수정이 완료되었습니다.", "logo", () => {
       profileRefetch();
+      clearErrors("nickname");
     });
     // setPreviewUpdate(true);
   };
