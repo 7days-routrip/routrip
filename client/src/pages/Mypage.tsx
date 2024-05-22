@@ -113,10 +113,7 @@ const Mypage = () => {
 
   return (
     <MypageStyle $commentsView={activeTag[2]} $likePlaceView={activeTag[4]}>
-      <ProfileCard
-        ProfileProps={!isProfileLoding && profileInfo ? profileInfo : dummyData}
-        profileRefetch={profileRefetch}
-      />
+      <ProfileCard ProfileProps={!isProfileLoding && profileInfo ? profileInfo : dummyData} />
       <div className="main">
         <MypageTapStyle>
           {TAGLIST.map((item, idx) => (

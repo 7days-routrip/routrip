@@ -131,12 +131,7 @@ const ProfileEditPage = () => {
   }, [profileInfo]);
   return (
     <ProfileEditPageStyle>
-      <ProfileCard
-        ProfileProps={profileInfo ? profileInfo : dummyData}
-        previewImg={preview}
-        update={previewUpdate}
-        profileRefetch={profileRefetch}
-      />
+      <ProfileCard ProfileProps={profileInfo ? profileInfo : dummyData} />
       <main className="edit-main">
         <Title size="large">사용자 프로필 수정</Title>
         <form onSubmit={handleSubmit(onSubmit)}>
