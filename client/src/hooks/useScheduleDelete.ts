@@ -8,7 +8,7 @@ export const useScheduleDelete = (id: string | undefined) => {
 
   const { mutate: deleteScheduleMutate } = useMutation({
     mutationFn: () => (id ? deleteSchedule(id) : Promise.resolve(null)),
-    onSuccess: () => navigate("/mypage"),
+    onSuccess: () => navigate("/mypage?tag=schedules"),
     onError: (err: any) => {
       showAlert("알 수 없는 오류가 발생했습니다.\n문제가 지속될 경우 고객센터로 문의해주세요.", "error");
       console.error(err);
