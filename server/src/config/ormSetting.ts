@@ -24,6 +24,7 @@ export const AppDataSource = new DataSource({
   synchronize: true,
   logging: true,
   connectTimeout: 30000,
+  poolSize: 1000,
   entities: [Users, Comments, Continents, Countries, Journeys, Likes, Picks, Places, Posts, RouteDays, Routes, DaySeq],
 });
 

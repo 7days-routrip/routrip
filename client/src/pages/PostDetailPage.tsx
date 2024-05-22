@@ -1,3 +1,4 @@
+// 나머지 코드
 import { httpClient } from "@/apis/https";
 import { addNewSchedule } from "@/apis/schedule.api";
 import { Button } from "@/components/common/Button";
@@ -202,11 +203,10 @@ const PostDetailPage = () => {
 
     const newSchedule = {
       title: post.title,
-      startDate: new Date(post.date.split("-")[0]),
-      endDate: new Date(post.date.split("-")[1]),
+      startDate: new Date(new Date(post.date.split("-")[0]).toLocaleString("en-US", { timeZone: "Asia/Seoul" })),
+      endDate: new Date(new Date(post.date.split("-")[1]).toLocaleString("en-US", { timeZone: "Asia/Seoul" })),
       allDaysPlaces: allDaysPlaces,
     };
-
     try {
       await addNewSchedule(newSchedule);
       showAlert("일정이 내 일정에 추가되었습니다.", "logo");
@@ -545,7 +545,8 @@ const PostDetailPageStyle = styled.div`
       }
     }
     .content-container img {
-      width: 100%;
+      max-width: 100%;
+
     }
   }
 `;
