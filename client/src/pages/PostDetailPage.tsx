@@ -316,9 +316,11 @@ const PostDetailPage = () => {
           ))}
         </div>
       )}
-      <div className="plan" onClick={handleCopySchedule}>
-        🗒️ 전체 일정 담아가기
-      </div>
+      {post.journeys && post.journeys.spots && post.journeys.spots.length > 0 && (
+        <div className="plan" onClick={handleCopySchedule}>
+          🗒️ 전체 일정 담아가기
+        </div>
+      )}
       <div className="content-container" dangerouslySetInnerHTML={{ __html: post.contents }} />
       <div className="btn-wrapper">
         <Button $size="medium" $scheme={scheme} $radius="default" onClick={handleLike}>
