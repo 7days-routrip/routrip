@@ -465,7 +465,7 @@ const PostDetailPageStyle = styled.div`
     max-height: 400px;
     width: auto;
     display: block;
-    margin-bottom: 20px
+    margin-bottom: 20px;
     object-fit: contain;
     border-radius: 8px;
     box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
@@ -529,7 +529,7 @@ const PostDetailPageStyle = styled.div`
       .day {
         display: flex;
         align-items: center;
-        gap: 4px
+        gap: 4px;
         white-space: nowrap;
       }
       .route {
