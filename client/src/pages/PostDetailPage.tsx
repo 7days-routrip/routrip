@@ -200,22 +200,12 @@ const PostDetailPage = () => {
       })),
     );
 
-    const addHours = (date: string | number | Date, hours: number) => {
-      const result = new Date(date);
-      result.setHours(result.getHours() + hours);
-      return result;
-    };
+    const [startDateStr, endDateStr] = post.date.split("-");
 
     const newSchedule = {
       title: post.title,
-      startDate: addHours(
-        new Date(new Date(post.date.split("-")[0]).toLocaleString("en-US", { timeZone: "Asia/Seoul" })),
-        9,
-      ),
-      endDate: addHours(
-        new Date(new Date(post.date.split("-")[1]).toLocaleString("en-US", { timeZone: "Asia/Seoul" })),
-        9,
-      ),
+      startDate: new Date(`${startDateStr.trim()}T00:00:00+09:00`),
+      endDate: new Date(`${endDateStr.trim()}T23:59:59+09:00`),
       allDaysPlaces: allDaysPlaces,
     };
     try {
@@ -558,6 +548,7 @@ const PostDetailPageStyle = styled.div`
     }
     .content-container img {
       max-width: 100%;
+      height: auto;
     }
   }
 `;
