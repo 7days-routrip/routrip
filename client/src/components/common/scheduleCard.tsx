@@ -36,7 +36,7 @@ const ScheduleCard = ({ scheduleProps, view, disableLink }: Props) => {
           )}
         </div>
       </div>
-      <CardContentStyle>
+      <CardContentStyle $view={view}>
         <h3 className="card-title">{scheduleProps.title}</h3>
         <div className="card-data">
           <small className="date-start">{scheduleProps.startDate} ~ </small>
