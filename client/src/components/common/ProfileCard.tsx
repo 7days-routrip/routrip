@@ -59,6 +59,7 @@ const ProfileCardStyle = styled.div`
 
   .profile-info {
     display: flex;
+    flex: 1;
     flex-direction: column;
     justify-content: center;
     width: 100%;
