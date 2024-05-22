@@ -140,10 +140,19 @@ const modify = async (id: number, title: string, startDate: Date, endDate: Date,
 
     const foundJourneyId = foundJourney.id;
     const foundRouteId = foundJourney.route.id;
-    const deletedJourneyResult = await transactionalEntityManager.getRepository(Journeys).delete(id);
+    let updatedJourney = await transactionalEntityManager.getRepository(Journeys).update(id, {
+      title: title,
+      startDate: startDate,
+      endDate: endDate,
+      user: (new Users().id = user.id),
+    });
+    const updateRouteNullResult = await transactionalEntityManager
+      .getRepository(Journeys)
+      .query(`UPDATE journeys SET routeId = NULL WHERE id = ${id}`);
+
     const deletedRouteResult = await transactionalEntityManager.getRepository(Routes).delete(foundRouteId);
 
-    if (deletedJourneyResult.affected === 0 || deletedRouteResult.affected === 0)
+    if (updateRouteNullResult.affected === 0 || deletedRouteResult.affected === 0)
       throw new Error(INTERNAL_SERVER_ERROR_DELETE_JOURNEY);
 
     //일정 다시 추가 부분
@@ -188,17 +197,12 @@ const modify = async (id: number, title: string, startDate: Date, endDate: Date,
       dayCnt++;
     }
 
-    const journey = new Journeys();
-    journey.id = foundJourneyId;
-    journey.title = title;
-    journey.thumbnail = thumbnail;
-    journey.startDate = startDate;
-    journey.endDate = endDate;
-    journey.route = savedRoute;
+    updatedJourney = await transactionalEntityManager.getRepository(Journeys).update(id, {
+      route: savedRoute,
+      thumbnail: thumbnail,
+    });
 
-    journey.user = new Users().id = user.id;
-
-    transactionalEntityManager.getRepository(Journeys).save(journey);
+    if (!updatedJourney) throw new Error(INTERNAL_SERVER_ERROR_UPLOAD_JOURNEY);
   });
 };
 
