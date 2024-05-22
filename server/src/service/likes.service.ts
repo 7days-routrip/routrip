@@ -68,7 +68,7 @@ const reqLikesList = async (userId: number, pages: number) => {
         title: like.post.title,
         date: (await setDateFromat(like.post.startDate)) + "-" + (await setDateFromat(like.post.endDate)),
         createdAt: await setDateFromat(like.post.createdAt),
-        author: like.user.nickName,
+        author: like.post.user.nickName,
         profileImg: like.user.profileImg ? like.user.profileImg : "",
         continent: {
           id: like.post.continent.id,
