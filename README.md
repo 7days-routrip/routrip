@@ -2,21 +2,14 @@
 ![image](https://github.com/7days-routrip/routrip/assets/66871221/bd89a73f-8621-4a7d-940f-bbfa1a51939b)
 
 
-## 프로젝 소개
+## 프로젝트 소개
 자신만의 여행 일정을 계획하고 다른 사람들과 여행기를 공유할 수 있는 웹 서비스입니다.
 
 ## 주요 기능
-- 유저기능
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/12e1c456-0e3c-493f-bea5-eabbf9e49283)
-
-- 사용자 정보 수정
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/bcb25e60-eab0-4abd-995a-916b5563f2ff)
-
-- 마이페이지
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/5faa97f8-a070-4a44-baaf-afd5ec61998a)
 
 - 일정
   ![image](https://github.com/7days-routrip/routrip/assets/66871221/da504533-eb91-4822-b172-2653e92cc04a)
+  
   ![image](https://github.com/7days-routrip/routrip/assets/66871221/7a1b87ff-e9c9-44df-be42-075f92cd35ae)
 
 - 게시판
