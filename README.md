@@ -34,7 +34,7 @@
   #CORS
   CORS_ORIGIN=
   
-  WT =>
+  # JWT
   JWT_ACCESS_SECRET=
   JWT_ACCESS_EXPIRED_IN=
   JWT_REFRESH_SECRET=
@@ -68,7 +68,7 @@ npm i
 #### server 실행
 
 ```
-npm run start
+npm start
 ```
 
 #### client 실행
