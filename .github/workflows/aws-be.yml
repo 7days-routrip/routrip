@@ -3,6 +3,8 @@ name: build image ECR, deploy to EC2 (backend)
 on:
   push:
     branches: [ "main" ]
+    paths:
+      - 'server/**'
 
 env:
   AWS_REGION: ap-northeast-2
