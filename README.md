@@ -8,14 +8,15 @@
 ## 주요 기능
 
 - 일정
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/da504533-eb91-4822-b172-2653e92cc04a)
-  
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/7a1b87ff-e9c9-44df-be42-075f92cd35ae)
+  ![image](https://github.com/7days-routrip/routrip/assets/66871221/296be73d-e7b2-4679-84b4-c66360860a0a)
+
+  ![image](https://github.com/7days-routrip/routrip/assets/66871221/b24b0ebb-a68f-4ed9-838a-c3e1accae7ce)
 
 - 게시판
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/95fb29d8-9897-4482-8451-198cb03b31d8)
+  ![image](https://github.com/7days-routrip/routrip/assets/66871221/0edfec16-af73-4cb7-8e8d-c7aa4ae6a099)
+  
+  ![image](https://github.com/7days-routrip/routrip/assets/66871221/1af6cd14-3f52-45cb-9367-38bfb9eec4d0)
 
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/89736b76-0bf1-4635-ac12-3c49a129db0b)
 
 ## 시작하기
 이 지침은 개발 및 테스트 목적으로 로컬 머신에 프로젝트를 설정하고 실행하는 방법을 안내합니다. 프로젝트를 라이브 시스템에 배포하는 방법에 대한 설명은 배포 섹션을 참조하세요.
