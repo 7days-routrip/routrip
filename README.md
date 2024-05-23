@@ -9,15 +9,45 @@
 </br>
 
 ## 🔎주요 기능
-### 1) 여행 일정 계획 및 수정
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/0ad688b8-04f6-43b0-9ac3-dbc53a9cec7f)
+### 1) 여행 일정 계획 등록 및 조회
+<table>
+    <tr>
+      <td align="center">PC</td>
+      <td align="center">모바일</td>
+    </tr>
+    <tr>
+      <td align="center" width="70%"><img src="https://github.com/7days-routrip/routrip/assets/79950091/b7f8109e-6011-4cb1-921a-204fbede240f" /></td>
+      <td align="center" width="30%"><img src="https://github.com/7days-routrip/routrip/assets/79950091/0ead3816-4c48-4519-8e9a-c91fc354c568" /></td>
+    </tr>
+    <tr>
+      <td align="center">PC</td>
+      <td align="center">모바일</td>
+    </tr>
+    <tr>
+      <td align="center" width="70%"><img src="https://github.com/7days-routrip/routrip/assets/79950091/40aafa73-579a-427e-a138-3e3269dc7814" /></td>
+      <td align="center" width="30%"><img src="https://github.com/7days-routrip/routrip/assets/79950091/8b413f72-9bf0-4834-9d2c-6e4772353fee" /></td>
+    </tr>
+ </table>
 
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/b24b0ebb-a68f-4ed9-838a-c3e1accae7ce)
-
-### 2) 여행 게시글 작성 및 목록(공유 커뮤니티)
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/0edfec16-af73-4cb7-8e8d-c7aa4ae6a099)
-  
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/1af6cd14-3f52-45cb-9367-38bfb9eec4d0)
+### 2) 여행 게시글 작성 및 조회(공유 커뮤니티)
+<table>
+    <tr>
+      <td align="center">PC</td>
+      <td align="center">모바일</td>
+    </tr>
+    <tr>
+      <td align="center" width="70%"><img src="https://github.com/7days-routrip/routrip/assets/79950091/5c102e4c-b59f-4267-8f37-0efcc8ee8e92" /></td>
+      <td align="center" width="30%"><img src="https://github.com/7days-routrip/routrip/assets/79950091/ca0b2c91-1a65-4d89-91ee-5acb3d8a42e0" /></td>
+    </tr>
+    <tr>
+      <td align="center">PC</td>
+      <td align="center">모바일</td>
+    </tr>
+    <tr>
+      <td align="center" width="70%"><img src="https://github.com/7days-routrip/routrip/assets/79950091/09cc8d18-48ae-4b26-8ded-8f80aa46ac23" /></td>
+      <td align="center" width="30%"><img src="https://github.com/7days-routrip/routrip/assets/79950091/69cc7e34-61f8-4ee3-9565-9adf9b82b04f" /></td>
+    </tr>
+ </table>
 
 </br>
 
