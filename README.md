@@ -8,7 +8,7 @@
 ## 주요 기능
 
 - 일정
-  ![image](https://github.com/7days-routrip/routrip/assets/66871221/296be73d-e7b2-4679-84b4-c66360860a0a)
+  ![image](https://github.com/7days-routrip/routrip/assets/66871221/0ad688b8-04f6-43b0-9ac3-dbc53a9cec7f)
 
   ![image](https://github.com/7days-routrip/routrip/assets/66871221/b24b0ebb-a68f-4ed9-838a-c3e1accae7ce)
 
