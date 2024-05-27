@@ -1,5 +1,6 @@
 # ✈️routrip
-![image](https://github.com/7days-routrip/routrip/assets/66871221/bd89a73f-8621-4a7d-940f-bbfa1a51939b)
+![메인화면](https://github.com/7days-routrip/routrip/assets/93701887/46c06527-f90f-454b-a1fe-083fd09e2144)
+
 
 </br>
 
