@@ -43,14 +43,13 @@ const ProfileEditPage = () => {
     formState: { errors },
   } = useForm<ProfileEditProps>();
   const [nicknameUniqueCheck, setNicknameUniqueCheck] = useState(false);
-  const [imgFile, setImgFile] = useState<File | null>();
+  const [imgFile, setImgFile] = useState<File | undefined>();
   const [preview, setPreview] = useState<string>("");
-  const [previewUpdate, setPreviewUpdate] = useState<boolean>(false);
-  const [formImage, setFormImage] = useState<File | null>();
+  const [formImage, setFormImage] = useState<File | undefined>();
   const { userUpdate, userProfileImage } = useAuth();
   const navigate = useNavigate();
 
-  const checkNickname = () => {
+  const checkNickname = async () => {
     const nickname = getValues().nickname;
     if (!nicknameRegex.test(nickname)) {
       setError(
@@ -60,15 +59,13 @@ const ProfileEditPage = () => {
       );
       return;
     }
-    userNicknameCheck(nickname).then((res) => {
-      // res 가 성공 메시지면 이거
-      if (res.status === 200) {
-        setNicknameUniqueCheck((prev) => !prev);
-        clearErrors("nickname");
-      } else {
-        setError("nickname", { message: `${res.data.message}` }, { shouldFocus: true });
-      }
-    });
+    const res = await userNicknameCheck(nickname);
+    if (res.status === 200) {
+      setNicknameUniqueCheck((prev) => !prev);
+      clearErrors("nickname");
+    } else {
+      setError("nickname", { message: `${res.data.message}` }, { shouldFocus: true });
+    }
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
@@ -76,7 +73,7 @@ const ProfileEditPage = () => {
     if (file && file.type.substring(0, 5) === "image") {
       setImgFile(file);
     } else {
-      setImgFile(null);
+      setImgFile(undefined);
     }
   };
 
@@ -116,7 +113,6 @@ const ProfileEditPage = () => {
       reader.onloadend = () => {
         const imgString = reader.result as string;
         setPreview(imgString);
-        setPreviewUpdate(false);
       };
       reader.readAsDataURL(imgFile);
     } else {
