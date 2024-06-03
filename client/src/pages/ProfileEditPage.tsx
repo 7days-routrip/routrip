@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import ProfileCard, { DEFAULT_IMAGE } from "@/components/common/ProfileCard";
+import ProfileCard from "@/components/common/ProfileCard";
 import { Profile } from "@/models/profile.model";
 import Title from "@/components/common/Title";
 import InputText from "@/components/common/Input";
@@ -14,6 +14,7 @@ import { useProfile } from "@/hooks/useMypage";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
 import { useAuthStore } from "@/stores/authStore";
+import { DEFAULT_IMAGE } from "@/constants/defaultImage";
 
 const dummyData: Profile = {
   nickName: "",

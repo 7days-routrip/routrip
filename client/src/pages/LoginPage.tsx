@@ -1,12 +1,14 @@
-import { JoinPageStyle, WrapperStyle, allowedDomains, placeholderHander } from "./JoinPage";
+import { JoinPageStyle, WrapperStyle, placeholderHander } from "./JoinPage";
 import Title from "@/components/common/Title";
-import { LoginProps, useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import icons from "@/icons/icons";
 import { useForm } from "react-hook-form";
 import InputText from "@/components/common/Input";
-import { emailOptions, passwordOptions } from "@/config/registerOptions";
+import { emailOptions } from "@/config/registerOptions";
 import { Button } from "@/components/common/Button";
 import { Link } from "react-router-dom";
+import { allowedDomains } from "@/constants/domains";
+import { LoginProps } from "@/models/user.model";
 
 const LoginPage = () => {
   const { userLogin } = useAuth();

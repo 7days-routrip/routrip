@@ -1,34 +1,21 @@
 import InputText from "@/components/common/Input";
-import { DEFAULT_IMAGE } from "@/components/common/ProfileCard";
-import { JoinProps, useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
-
 import { Button } from "@/components/common/Button";
 import Title from "@/components/common/Title";
 import { emailOptions, nicknameOptions, passwordOptions } from "@/config/registerOptions";
 import { emailRegex, nicknameRegex } from "@/constants/regexPatterns";
 import icons from "@/icons/icons";
-import { showAlert } from "@/utils/showAlert";
 import { useState } from "react";
+import { allowedDomains } from "@/constants/domains";
+import { DEFAULT_IMAGE } from "@/constants/defaultImage";
+import { joinFormProps } from "@/models/user.model";
 
 export const placeholderHander = (text: string) => {
   return `${text} 입력해주세요.`;
 };
-export interface joinFormProps extends JoinProps {
-  passwordConfirm: string;
-}
-export const allowedDomains = [
-  "naver.com",
-  "github.com",
-  "yahoo.com",
-  "daum.net",
-  "kakao.com",
-  "routrip.com",
-  "gmail.com",
-  "test.com",
-];
 
 export const domainAuth = (email: string) => {
   const [, domain] = email.split("@");

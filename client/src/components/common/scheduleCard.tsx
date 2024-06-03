@@ -1,7 +1,7 @@
 import { Schedule as ISchedule } from "@/models/schedule.model";
 import styled from "styled-components";
-import { DEFAULT_IMAGE } from "./ProfileCard";
 import { CardContentStyle, CardImageStyle, CardImageStyleProps, CardStyle, ViewMode } from "./postCard";
+import { DEFAULT_IMAGE } from "@/constants/defaultImage";
 
 interface Props {
   scheduleProps?: ISchedule; // scheduleProps를 선택적(prop)을로 변경
