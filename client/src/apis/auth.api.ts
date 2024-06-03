@@ -55,23 +55,30 @@ export const authReset = async (data: LoginProps) => {
   return response;
 };
 
+interface profileImageResponse {
+  url: string;
+}
+
 // 프로필 이미지 먼저 보내기
 export const fetchProfileImage = async (data: FormData) => {
   try {
-    const response = await httpClient.post("/users/upload/profile", data, {
+    const response = await httpClient.post<profileImageResponse>("/users/upload/profile", data, {
       headers: {
         "Content-Type": "multipart/form-data",
       },
     });
     return response;
-  } catch (error: any) {}
+  } catch (error) {}
 };
 
-// 프로필 수정 - 닉네임 or 이미지랑 같이?
-
-export const profileNicknameUpdate = async (data: string) => {
+// 프로필 수정 - 닉네임, 이미지랑 같이
+interface profileUpdateProps {
+  nickname: string | undefined;
+  profileImg: string | undefined;
+}
+export const profileUpdate = async (data: profileUpdateProps) => {
   try {
-    const response = await httpClient.patch<authMessageResponse>("/users/me", { nickName: data });
+    const response = await httpClient.patch<authMessageResponse>("/users/me", data);
     return response;
   } catch (error) {
     // 실패

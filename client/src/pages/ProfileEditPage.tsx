@@ -16,13 +16,13 @@ import { showConfirm } from "@/utils/showConfirm";
 import { useAuthStore } from "@/stores/authStore";
 
 const dummyData: Profile = {
-  nickName: "김하늘누리",
+  nickName: "",
   profileImg: "",
-  journeysNum: 5,
-  postsNum: 5,
-  commentsNum: 88,
-  likePostsNum: 81,
-  likeSpotsNum: 50,
+  journeysNum: 0,
+  postsNum: 0,
+  commentsNum: 0,
+  likePostsNum: 0,
+  likeSpotsNum: 0,
 };
 
 interface ProfileEditProps {
@@ -89,7 +89,7 @@ const ProfileEditPage = () => {
     );
   };
 
-  const onSubmit = (data: ProfileEditProps) => {
+  const onSubmit = async (data: ProfileEditProps) => {
     if (formImage === undefined && data.nickname === "") {
       showAlert("변경 사항이 없습니다.", "logo");
       return;
@@ -98,17 +98,15 @@ const ProfileEditPage = () => {
       setError("nickname", { message: "닉네임 중복 검사를 먼저 해주세요." }, { shouldFocus: true });
       return;
     }
-    if (nicknameUniqueCheck) {
-      userUpdate(data.nickname);
-    }
-    if (formImage) {
-      userProfileImage(formImage);
-    }
-    clearErrors;
+
+    const profileImageUrl = formImage ? await userProfileImage(formImage) : undefined;
+    const updateNickname = data.nickname ? data.nickname : undefined;
+
+    await userUpdate(updateNickname, profileImageUrl);
     showAlert("수정이 완료되었습니다.", "logo", () => {
+      clearErrors();
       profileRefetch();
     });
-    // setPreviewUpdate(true);
   };
 
   useEffect(() => {

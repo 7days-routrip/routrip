@@ -6,8 +6,9 @@ import {
   fetchProfileRestPassword,
   isEmailUnique,
   isNicknameUnique,
-  profileNicknameUpdate,
   fetchUserResign,
+  fetchProfileImage,
+  profileUpdate,
 } from "@/apis/auth.api";
 import { httpClient } from "@/apis/https";
 import { useAuthStore } from "@/stores/authStore";
@@ -68,15 +69,6 @@ export const useAuth = () => {
     }
   };
 
-  // const userEmailComfirm = async (email: string) => {
-  //   try {
-  //     const EmailComfirmRes = await authEmailComfirm(email);
-  //     return EmailComfirmRes;
-  //   } catch (error: any) {
-  //     // 이메일 확인 과정 실패
-  //   }
-  // };
-
   const userPasswordReset = async (data: LoginProps) => {
     try {
       const res = await authReset(data);
@@ -93,7 +85,6 @@ export const useAuth = () => {
       const res = await isNicknameUnique({ nickname });
       return res;
     } catch (error: any) {
-      // console.log(error, "안나옴?");
       return fetchErrorStatusHandler(error, [400, 409]);
     }
   };
@@ -111,7 +102,9 @@ export const useAuth = () => {
     try {
       const res = await authLogout();
       return res;
-    } catch (error: any) {}
+    } catch (error) {
+      return fetchErrorStatusHandler(error, []);
+    }
   };
 
   const userProfileImage = async (file: File) => {
@@ -119,20 +112,19 @@ export const useAuth = () => {
       if (!file) return;
       const formData = new FormData();
       formData.append("profile", file);
-      const res = await httpClient.post("/users/upload/profile", formData, {
-        headers: {
-          "Content-Type": "multipart/form-data",
-        },
-      });
+      const res = await fetchProfileImage(formData);
+      if (res === undefined) {
+        throw new Error("Failed to upload image to S3.");
+      }
       return res;
     } catch (error) {
-      // 실패
+      return fetchErrorStatusHandler(error, []);
     }
   };
 
-  const userUpdate = async (data: string) => {
+  const userUpdate = async (nickname: string | undefined, profileImg: string | undefined) => {
     try {
-      const res = await profileNicknameUpdate(data);
+      const res = await profileUpdate({ nickname, profileImg });
       return res;
     } catch (error) {
       //  실패
