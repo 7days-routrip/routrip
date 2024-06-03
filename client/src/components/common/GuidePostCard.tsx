@@ -4,8 +4,9 @@ import { Post as IPost } from "@/models/post.model";
 import { Link } from "react-router-dom";
 import { CardImageStyle, CardImageStyleProps } from "./postCard";
 import Title from "./Title";
-import { DEFAULT_IMAGE } from "./ProfileCard";
+
 import { RecommendPosts } from "@/apis/main.api";
+import { DEFAULT_IMAGE } from "@/constants/defaultImage";
 
 interface Props {
   PostPops: RecommendPosts;

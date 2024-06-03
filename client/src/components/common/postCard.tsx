@@ -2,9 +2,8 @@ import icons from "@/icons/icons";
 import { Post as IPost } from "@/models/post.model";
 
 import styled from "styled-components";
-// import { DEFAULT_IMAGE } from "./ProfileCard";
 import { Link } from "react-router-dom";
-import DEFAULT_IMAGE from "/assets/images/logo-profile2.png";
+import { DEFAULT_IMAGE } from "@/constants/defaultImage";
 
 export type ViewMode = "grid" | "list";
 export type AreaType = "home" | "abroad" | null;
@@ -82,11 +81,6 @@ export const CardImageStyle = styled.div<CardImageStyleProps>`
   background-size: ${({ $image }) => ($image ? "cover" : "60%")};
   border: 0;
   border-radius: ${({ $view, theme }) => ($view === "grid" ? `${theme.borderRadius.tab}` : `8px 0 0 8px`)};
-  // transition: transform 0.3s;
-  // position: absolute;
-  // top: 50%;
-  // left: 50%;
-  // transform: translate(-50%, -50%);
 
   &::after {
     content: "";

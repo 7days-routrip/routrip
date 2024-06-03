@@ -2,8 +2,8 @@ import { useState } from "react";
 import { PostComment } from "@/models/comment.model";
 import styled from "styled-components";
 import { Button } from "./Button";
-import { DEFAULT_IMAGE } from "./ProfileCard";
 import icons from "@/icons/icons";
+import { DEFAULT_IMAGE } from "@/constants/defaultImage";
 
 interface Props {
   commentProps: PostComment;
