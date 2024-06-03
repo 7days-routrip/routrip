@@ -18,7 +18,6 @@ const ProfileResetPassword = () => {
     register,
     handleSubmit,
     setError,
-
     formState: { errors },
   } = useForm<ResetPasswordProps>();
   const { userNewPasswordReset } = useAuth();

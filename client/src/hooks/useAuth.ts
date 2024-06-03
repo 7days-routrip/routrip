@@ -10,7 +10,6 @@ import {
   fetchProfileImage,
   profileUpdate,
 } from "@/apis/auth.api";
-import { httpClient } from "@/apis/https";
 import { useAuthStore } from "@/stores/authStore";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
@@ -60,7 +59,6 @@ export const useAuth = () => {
   const userJoin = async (data: JoinProps) => {
     try {
       const res = await authJoin(data);
-
       showConfirm(res.message, () => {
         navigate("/login");
       });

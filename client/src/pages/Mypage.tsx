@@ -33,7 +33,6 @@ const dummyData: Profile = {
 };
 
 const Mypage = () => {
-  // const [scrollPosition, setScrollPosition] = useState<number>(0);
   const [activeTag, setActiveTag] = useState([true, false, false, false, false]);
   const [activeIndex, setActiveIndex] = useState(0);
   const { schedules, isEmptySchedules, scheduleRefetch, nextSchedules, hasNextSchedules } = useSchedule();

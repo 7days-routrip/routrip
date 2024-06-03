@@ -50,7 +50,7 @@ const JoinPage = () => {
   const [emailUniqueCheck, setEmailUniqueCheck] = useState(false);
   const [nicknameUniqueCheck, setNicknameUniqueCheck] = useState(false);
 
-  const checkEmail = () => {
+  const checkEmail = async () => {
     const email = getValues().email;
     if (!emailRegex.test(email)) {
       setError("email", { message: "이메일형식이 올바르지 않습니다." }, { shouldFocus: true });
@@ -60,19 +60,19 @@ const JoinPage = () => {
       setError("email", { message: "허용되지 않는 이메일 도메인입니다." }, { shouldFocus: true });
       return;
     }
-    userEmailCheck(email).then((res) => {
-      if (res.status === 200) {
-        setEmailUniqueCheck((prev) => !prev);
-        clearErrors("email");
-      } else if (res.status === 409) {
-        setError("email", { message: res.data.message }, { shouldFocus: true });
-      } else {
-        showAlert(res.data.message, "error");
-      }
-    });
+
+    const res = await userEmailCheck(email);
+    if (res.status === 200) {
+      setEmailUniqueCheck((prev) => !prev);
+      clearErrors("email");
+    } else if (res.status === 409) {
+      setError("email", { message: res.data.message }, { shouldFocus: true });
+    } else {
+      showAlert(res.data.message, "error");
+    }
   };
 
-  const checkNickname = () => {
+  const checkNickname = async () => {
     const nickname = getValues().nickname;
     if (!nicknameRegex.test(nickname)) {
       setError(
@@ -82,15 +82,14 @@ const JoinPage = () => {
       );
       return;
     }
-    userNicknameCheck(nickname).then((res) => {
-      // res 가 성공 메시지면 이거
-      if (res.status === 200) {
-        setNicknameUniqueCheck((prev) => !prev);
-        clearErrors("nickname");
-      } else if (res.status === 409) {
-        setError("nickname", { message: res.data.message }, { shouldFocus: true });
-      }
-    });
+
+    const res = await userNicknameCheck(nickname);
+    if (res.status === 200) {
+      setNicknameUniqueCheck((prev) => !prev);
+      clearErrors("nickname");
+    } else if (res.status === 409) {
+      setError("nickname", { message: res.data.message }, { shouldFocus: true });
+    }
   };
 
   const onSubmit = (data: joinFormProps) => {
@@ -104,9 +103,9 @@ const JoinPage = () => {
     }
 
     // 비밀번호 대조
-    if (data.password === data.passwordConfirm) {
-      userJoin(data);
-    } else setError("passwordConfirm", { message: "비밀번호가 일치 하지 않습니다." }, { shouldFocus: true });
+    data.password === data.passwordConfirm
+      ? userJoin(data)
+      : setError("passwordConfirm", { message: "비밀번호가 일치 하지 않습니다." }, { shouldFocus: true });
   };
   return (
     <WrapperStyle>
