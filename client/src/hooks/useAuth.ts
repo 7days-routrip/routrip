@@ -13,6 +13,7 @@ import {
 import { useAuthStore } from "@/stores/authStore";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
+import { UseFormClearErrors, UseFormSetError } from "react-hook-form";
 
 import { useNavigate } from "react-router-dom";
 
@@ -78,20 +79,61 @@ export const useAuth = () => {
     }
   };
 
-  const userNicknameCheck = async (nickname: string) => {
+  interface userNicknameCheckProps {
+    nickname: string;
+    setNicknameUniqueCheck: React.Dispatch<React.SetStateAction<boolean>>;
+    clearErrors: UseFormClearErrors<any>;
+    setError: UseFormSetError<any>;
+  }
+
+  const userNicknameCheck = async ({
+    nickname,
+    setNicknameUniqueCheck,
+    clearErrors,
+    setError,
+  }: userNicknameCheckProps) => {
     try {
       const res = await isNicknameUnique({ nickname });
-      return res;
+      if (res.status === 200) {
+        setNicknameUniqueCheck((prev) => !prev);
+        clearErrors("nickname");
+      }
+      return;
     } catch (error: any) {
+      if (error.status === 409) {
+        setError("nickname", { message: `${error.data.message}` }, { shouldFocus: true });
+        return;
+      } else if (error.status === 400) {
+        showAlert(error.data.message, "error");
+        return;
+      }
       return fetchErrorStatusHandler(error, [400, 409]);
     }
   };
 
-  const userEmailCheck = async (email: string) => {
+  interface userEmailCheckProps {
+    email: string;
+    setEmailUniqueCheck: React.Dispatch<React.SetStateAction<boolean>>;
+    clearErrors: UseFormClearErrors<any>;
+    setError: UseFormSetError<any>;
+  }
+
+  const userEmailCheck = async ({ email, setEmailUniqueCheck, clearErrors, setError }: userEmailCheckProps) => {
     try {
       const res = await isEmailUnique({ email });
-      return res;
+      if (res.status === 200) {
+        setEmailUniqueCheck((prev) => !prev);
+        clearErrors("email");
+      }
+      return;
     } catch (error: any) {
+      if (error.status === 409) {
+        setError("email", { message: error.data.message }, { shouldFocus: true });
+        return;
+      } else if (error.status === 400) {
+        showAlert(error.data.message, "error");
+        return;
+      }
       return fetchErrorStatusHandler(error, [400, 409]);
     }
   };

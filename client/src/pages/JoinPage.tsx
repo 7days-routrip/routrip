@@ -61,15 +61,7 @@ const JoinPage = () => {
       return;
     }
 
-    const res = await userEmailCheck(email);
-    if (res.status === 200) {
-      setEmailUniqueCheck((prev) => !prev);
-      clearErrors("email");
-    } else if (res.status === 409) {
-      setError("email", { message: res.data.message }, { shouldFocus: true });
-    } else {
-      showAlert(res.data.message, "error");
-    }
+    await userEmailCheck({ email, setEmailUniqueCheck, clearErrors, setError });
   };
 
   const checkNickname = async () => {
@@ -83,13 +75,7 @@ const JoinPage = () => {
       return;
     }
 
-    const res = await userNicknameCheck(nickname);
-    if (res.status === 200) {
-      setNicknameUniqueCheck((prev) => !prev);
-      clearErrors("nickname");
-    } else if (res.status === 409) {
-      setError("nickname", { message: res.data.message }, { shouldFocus: true });
-    }
+    await userNicknameCheck({ nickname, setNicknameUniqueCheck, clearErrors, setError });
   };
 
   const onSubmit = (data: joinFormProps) => {
