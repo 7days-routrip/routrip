@@ -4,7 +4,6 @@ import InputText from "@/components/common/Input";
 import { Button } from "@/components/common/Button";
 import { useForm } from "react-hook-form";
 import { passwordOptions } from "@/config/registerOptions";
-import { fetchProfileRestPassword } from "@/apis/auth.api";
 import { Link } from "react-router-dom";
 import { useAuth } from "@/hooks/useAuth";
 interface ResetPasswordProps {
