@@ -21,7 +21,6 @@ const TAGLIST = [
   { name: "찜한 장소", queryValue: "like-places" },
 ];
 
-// 더미 데이터들
 const dummyData: Profile = {
   nickName: "",
   profileImg: "",

@@ -3,16 +3,13 @@ import Title from "@/components/common/Title";
 import InputText from "@/components/common/Input";
 import { emailOptions, passwordOptions } from "@/config/registerOptions";
 import { Button } from "@/components/common/Button";
-import { LoginProps, useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Link, useNavigate } from "react-router-dom";
 import icons from "@/icons/icons";
 import { useEffect, useState } from "react";
 import { emailRegex } from "@/constants/regexPatterns";
-
-interface ResetPasswordProps extends LoginProps {
-  passwordConfirm: string;
-}
+import { LoginProps, ResetPasswordProps } from "@/models/user.model";
 
 const RestPage = () => {
   const LoginIcon = icons.LoginIcon;
@@ -29,7 +26,7 @@ const RestPage = () => {
   const navigate = useNavigate();
   const [notAuthenticated, setNotAuthenticated] = useState(true);
   const watchEmail = watch("email");
-  const onEmailConfirm = () => {
+  const onEmailConfirm = async () => {
     const email = getValues().email;
     if (!emailRegex.test(email)) {
       setError("email", { message: "이메일형식이 올바르지 않습니다." }, { shouldFocus: true });
@@ -39,11 +36,8 @@ const RestPage = () => {
       setError("email", { message: "허용되지 않는 이메일 도메인입니다." }, { shouldFocus: true });
       return;
     }
-    userEmailCheck(email).then((res) => {
-      // res 가 성공 메시지면 이거
-      setNotAuthenticated((prev) => !prev);
-      clearErrors("email");
-    });
+    await userEmailCheck({ email, clearErrors, setEmailUniqueCheck: setNotAuthenticated, setError });
+    navigate("/");
   };
 
   const onSubmit = (data: LoginProps) => {

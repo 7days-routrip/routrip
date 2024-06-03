@@ -10,23 +10,13 @@ import {
   fetchProfileImage,
   profileUpdate,
 } from "@/apis/auth.api";
+import { JoinProps, LoginProps } from "@/models/user.model";
 import { useAuthStore } from "@/stores/authStore";
 import { showAlert } from "@/utils/showAlert";
 import { showConfirm } from "@/utils/showConfirm";
 import { UseFormClearErrors, UseFormSetError } from "react-hook-form";
 
 import { useNavigate } from "react-router-dom";
-
-// 로그인
-export interface LoginProps {
-  email: string;
-  password: string;
-}
-
-// 로그인
-export interface JoinProps extends LoginProps {
-  nickname: string;
-}
 
 export const fetchErrorStatusHandler = (error: any, statusList: number[]) => {
   if (statusList.includes(error.response.status)) {

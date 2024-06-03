@@ -1,5 +1,5 @@
 import InputText from "@/components/common/Input";
-import { JoinProps, useAuth } from "@/hooks/useAuth";
+import { useAuth } from "@/hooks/useAuth";
 import { useForm } from "react-hook-form";
 import { Link } from "react-router-dom";
 import styled from "styled-components";
@@ -11,13 +11,11 @@ import icons from "@/icons/icons";
 import { useState } from "react";
 import { allowedDomains } from "@/constants/domains";
 import { DEFAULT_IMAGE } from "@/constants/defaultImage";
+import { joinFormProps } from "@/models/user.model";
 
 export const placeholderHander = (text: string) => {
   return `${text} 입력해주세요.`;
 };
-export interface joinFormProps extends JoinProps {
-  passwordConfirm: string;
-}
 
 export const domainAuth = (email: string) => {
   const [, domain] = email.split("@");
