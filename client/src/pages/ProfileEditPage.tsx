@@ -59,13 +59,7 @@ const ProfileEditPage = () => {
       );
       return;
     }
-    const res = await userNicknameCheck(nickname);
-    if (res.status === 200) {
-      setNicknameUniqueCheck((prev) => !prev);
-      clearErrors("nickname");
-    } else {
-      setError("nickname", { message: `${res.data.message}` }, { shouldFocus: true });
-    }
+    await userNicknameCheck({ nickname, setNicknameUniqueCheck, clearErrors, setError });
   };
 
   const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
