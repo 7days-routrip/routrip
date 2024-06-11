@@ -69,29 +69,31 @@ export const useAuth = () => {
     }
   };
 
-  interface userNicknameCheckProps {
-    nickname: string;
-    setNicknameUniqueCheck: React.Dispatch<React.SetStateAction<boolean>>;
+  // check 공통 인터페이스 정의
+  interface UserCheckProps {
     clearErrors: UseFormClearErrors<any>;
     setError: UseFormSetError<any>;
   }
 
-  const userNicknameCheck = async ({
-    nickname,
-    setNicknameUniqueCheck,
-    clearErrors,
-    setError,
-  }: userNicknameCheckProps) => {
+  // check 핸들러
+  const handleUserCheck = async <T>(
+    checkFunction: (data: T) => Promise<any>,
+    data: T,
+    field: string,
+    setUniqueCheck: React.Dispatch<React.SetStateAction<boolean>>,
+    clearErrors: UseFormClearErrors<any>,
+    setError: UseFormSetError<any>,
+  ) => {
     try {
-      const res = await isNicknameUnique({ nickname });
+      const res = await checkFunction(data);
       if (res.status === 200) {
-        setNicknameUniqueCheck((prev) => !prev);
-        clearErrors("nickname");
+        setUniqueCheck((prev) => !prev);
+        clearErrors(field);
       }
-      return;
+      return res;
     } catch (error: any) {
       if (error.status === 409) {
-        setError("nickname", { message: `${error.data.message}` }, { shouldFocus: true });
+        setError(field, { message: error.data.message }, { shouldFocus: true });
         return;
       } else if (error.status === 400) {
         showAlert(error.data.message, "error");
@@ -101,31 +103,29 @@ export const useAuth = () => {
     }
   };
 
-  interface userEmailCheckProps {
-    email: string;
-    setEmailUniqueCheck: React.Dispatch<React.SetStateAction<boolean>>;
-    clearErrors: UseFormClearErrors<any>;
-    setError: UseFormSetError<any>;
+  // 닉네임 체크 인터페이스 정의
+  interface UserNicknameCheckProps extends UserCheckProps {
+    nickname: string;
+    setNicknameUniqueCheck: React.Dispatch<React.SetStateAction<boolean>>;
   }
 
-  const userEmailCheck = async ({ email, setEmailUniqueCheck, clearErrors, setError }: userEmailCheckProps) => {
-    try {
-      const res = await isEmailUnique({ email });
-      if (res.status === 200) {
-        setEmailUniqueCheck((prev) => !prev);
-        clearErrors("email");
-      }
-      return;
-    } catch (error: any) {
-      if (error.status === 409) {
-        setError("email", { message: error.data.message }, { shouldFocus: true });
-        return;
-      } else if (error.status === 400) {
-        showAlert(error.data.message, "error");
-        return;
-      }
-      return fetchErrorStatusHandler(error, [400, 409]);
-    }
+  const userNicknameCheck = async ({
+    nickname,
+    setNicknameUniqueCheck,
+    clearErrors,
+    setError,
+  }: UserNicknameCheckProps) => {
+    return handleUserCheck(isNicknameUnique, { nickname }, "nickname", setNicknameUniqueCheck, clearErrors, setError);
+  };
+
+  // 이메일 체크 인터페이스 정의
+  interface UserEmailCheckProps extends UserCheckProps {
+    email: string;
+    setEmailUniqueCheck: React.Dispatch<React.SetStateAction<boolean>>;
+  }
+
+  const userEmailCheck = async ({ email, setEmailUniqueCheck, clearErrors, setError }: UserEmailCheckProps) => {
+    return handleUserCheck(isEmailUnique, { email }, "email", setEmailUniqueCheck, clearErrors, setError);
   };
 
   const userLogout = async () => {
