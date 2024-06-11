@@ -50,7 +50,7 @@ const handleUserCheck = async <T>(
       showAlert(error.data.message, "error");
       return;
     }
-    return fetchErrorStatusHandler(error, [400, 409]);
+    return fetchErrorStatusHandler(error, []);
   }
 };
 
