@@ -1,6 +1,6 @@
-import { JoinProps, LoginProps } from "@/hooks/useAuth";
 import { getToken } from "@/stores/authStore";
 import { httpClient } from "./https";
+import { JoinProps, LoginProps } from "@/models/user.model";
 
 export const authJoin = async (data: JoinProps) => {
   const response = await httpClient.post("/users/join", data);
