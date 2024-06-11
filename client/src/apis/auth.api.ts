@@ -1,6 +1,6 @@
-import { JoinProps, LoginProps } from "@/hooks/useAuth";
 import { getToken } from "@/stores/authStore";
 import { httpClient } from "./https";
+import { JoinProps, LoginProps } from "@/models/user.model";
 
 export const authJoin = async (data: JoinProps) => {
   const response = await httpClient.post("/users/join", data);
@@ -61,14 +61,12 @@ interface profileImageResponse {
 
 // 프로필 이미지 먼저 보내기
 export const fetchProfileImage = async (data: FormData) => {
-  try {
-    const response = await httpClient.post<profileImageResponse>("/users/upload/profile", data, {
-      headers: {
-        "Content-Type": "multipart/form-data",
-      },
-    });
-    return response;
-  } catch (error) {}
+  const response = await httpClient.post<profileImageResponse>("/users/upload/profile", data, {
+    headers: {
+      "Content-Type": "multipart/form-data",
+    },
+  });
+  return response;
 };
 
 // 프로필 수정 - 닉네임, 이미지랑 같이
@@ -77,12 +75,8 @@ interface profileUpdateProps {
   profileImg: string | undefined;
 }
 export const profileUpdate = async (data: profileUpdateProps) => {
-  try {
-    const response = await httpClient.patch<authMessageResponse>("/users/me", data);
-    return response;
-  } catch (error) {
-    // 실패
-  }
+  const response = await httpClient.patch<authMessageResponse>("/users/me", data);
+  return response;
 };
 
 // 프로필 수정 - 비밀번호 변경
@@ -91,18 +85,12 @@ export interface profileResetProps {
   newPassword: string;
 }
 export const fetchProfileRestPassword = async (data: profileResetProps) => {
-  try {
-    const response = await httpClient.patch<authMessageResponse>("/users/me/reset", data);
-    return response;
-  } catch (error) {
-    // 실패
-  }
+  const response = await httpClient.patch<authMessageResponse>("/users/me/reset", data);
+  return response;
 };
 
 //탈퇴
 export const fetchUserResign = async () => {
-  try {
-    const response = await httpClient.delete<authMessageResponse>("/users");
-    return response;
-  } catch (error) {}
+  const response = await httpClient.delete<authMessageResponse>("/users");
+  return response;
 };

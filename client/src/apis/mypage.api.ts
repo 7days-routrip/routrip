@@ -11,8 +11,6 @@ export const fetchProfile = async () => {
     const { data } = await httpClient.get<Profile>("/mypages/total-data-quantity");
     return data;
   } catch (error: any) {
-    if (error.response.status === 404) {
-    }
     return {
       journeysNum: 0,
       postsNum: 0,
@@ -109,15 +107,12 @@ export const fetchLikePlace = async (page: number) => {
     return data;
   } catch (error: any) {
     // 에러 처리
-    if (error.response.status === 404) {
-      return {
-        places: [],
-        pagination: {
-          totalItems: 0,
-          page: 1,
-        },
-      };
-    }
-    throw error;
+    return {
+      places: [],
+      pagination: {
+        totalItems: 0,
+        page: 1,
+      },
+    };
   }
 };
